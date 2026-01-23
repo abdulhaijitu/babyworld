@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { WhatsAppButton } from "./WhatsAppButton";
+import { SocialLinks } from "./SocialLinks";
 import babyWorldLogo from "@/assets/baby-world-logo.png";
 
 export function Footer() {
@@ -36,6 +37,15 @@ export function Footer() {
               {t("footer.description")}
             </p>
             <p className="text-sm font-medium opacity-90">{t("hero.learnPlay")}</p>
+            
+            {/* Social Links */}
+            <div className="space-y-2">
+              <p className="text-xs opacity-60">
+                {t("footer.followUs")}
+              </p>
+              <SocialLinks variant="footer" />
+            </div>
+            
             <WhatsAppButton variant="footer" />
           </div>
 
