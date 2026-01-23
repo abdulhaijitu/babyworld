@@ -48,7 +48,10 @@ import {
   FerrisWheel,
   Baby,
   Users,
-  Zap
+  Zap,
+  Upload,
+  X,
+  Image as ImageIcon
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -63,6 +66,7 @@ interface Ride {
   price: number;
   category: RideCategory;
   is_active: boolean;
+  image_url: string | null;
   created_at: string;
 }
 
@@ -77,7 +81,8 @@ const defaultFormData = {
   name_bn: '',
   price: 0,
   category: 'kids' as RideCategory,
-  is_active: true
+  is_active: true,
+  image_url: '' as string
 };
 
 export default function AdminRides() {
@@ -89,6 +94,7 @@ export default function AdminRides() {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [selectedRide, setSelectedRide] = useState<Ride | null>(null);
   const [formData, setFormData] = useState(defaultFormData);
+  const [uploading, setUploading] = useState(false);
 
   // Fetch rides
   const { data: rides = [], isLoading } = useQuery({
@@ -112,7 +118,8 @@ export default function AdminRides() {
         name_bn: data.name_bn || null,
         price: data.price,
         category: data.category,
-        is_active: data.is_active
+        is_active: data.is_active,
+        image_url: data.image_url || null
       });
       if (error) throw error;
     },
@@ -136,7 +143,8 @@ export default function AdminRides() {
         name_bn: data.name_bn || null,
         price: data.price,
         category: data.category,
-        is_active: data.is_active
+        is_active: data.is_active,
+        image_url: data.image_url || null
       }).eq('id', id);
       if (error) throw error;
     },
@@ -187,6 +195,52 @@ export default function AdminRides() {
     setSelectedRide(null);
   };
 
+  // Image upload handler
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error(language === 'bn' ? 'শুধু ইমেজ ফাইল আপলোড করুন' : 'Please upload an image file');
+      return;
+    }
+
+    // Validate file size (max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error(language === 'bn' ? 'ইমেজ ২MB এর বেশি হতে পারবে না' : 'Image must be less than 2MB');
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('ride-images')
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('ride-images')
+        .getPublicUrl(fileName);
+
+      setFormData(prev => ({ ...prev, image_url: publicUrl }));
+      toast.success(language === 'bn' ? 'ইমেজ আপলোড হয়েছে!' : 'Image uploaded!');
+    } catch (error: any) {
+      console.error('Upload error:', error);
+      toast.error(error.message || (language === 'bn' ? 'আপলোড ব্যর্থ' : 'Upload failed'));
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const removeImage = () => {
+    setFormData(prev => ({ ...prev, image_url: '' }));
+  };
+
   const handleEdit = (ride: Ride) => {
     setSelectedRide(ride);
     setFormData({
@@ -194,7 +248,8 @@ export default function AdminRides() {
       name_bn: ride.name_bn || '',
       price: ride.price,
       category: ride.category,
-      is_active: ride.is_active
+      is_active: ride.is_active,
+      image_url: ride.image_url || ''
     });
     setEditOpen(true);
   };
@@ -286,6 +341,7 @@ export default function AdminRides() {
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead className="w-[60px]"></TableHead>
                     <TableHead>{language === 'bn' ? 'নাম' : 'Name'}</TableHead>
                     <TableHead>{language === 'bn' ? 'ক্যাটাগরি' : 'Category'}</TableHead>
                     <TableHead>{language === 'bn' ? 'মূল্য' : 'Price'}</TableHead>
@@ -298,6 +354,19 @@ export default function AdminRides() {
                     const catInfo = CATEGORY_INFO[ride.category];
                     return (
                       <TableRow key={ride.id}>
+                        <TableCell>
+                          {ride.image_url ? (
+                            <img 
+                              src={ride.image_url} 
+                              alt={ride.name}
+                              className="w-10 h-10 rounded-lg object-cover"
+                            />
+                          ) : (
+                            <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center">
+                              <ImageIcon className="w-5 h-5 text-muted-foreground" />
+                            </div>
+                          )}
+                        </TableCell>
                         <TableCell>
                           <div>
                             <p className="font-medium">{ride.name}</p>
@@ -421,6 +490,49 @@ export default function AdminRides() {
               />
               <Label>{language === 'bn' ? 'সক্রিয়' : 'Active'}</Label>
             </div>
+
+            {/* Image Upload */}
+            <div className="space-y-2">
+              <Label>{language === 'bn' ? 'রাইড ছবি' : 'Ride Image'}</Label>
+              {formData.image_url ? (
+                <div className="relative w-full h-32 rounded-lg overflow-hidden border">
+                  <img 
+                    src={formData.image_url} 
+                    alt="Preview" 
+                    className="w-full h-full object-cover"
+                  />
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    className="absolute top-2 right-2 h-6 w-6"
+                    onClick={removeImage}
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </div>
+              ) : (
+                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
+                  {uploading ? (
+                    <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                  ) : (
+                    <>
+                      <Upload className="h-8 w-8 text-muted-foreground mb-2" />
+                      <span className="text-sm text-muted-foreground">
+                        {language === 'bn' ? 'ছবি আপলোড করুন' : 'Upload image'}
+                      </span>
+                    </>
+                  )}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageUpload}
+                    disabled={uploading}
+                  />
+                </label>
+              )}
+            </div>
           </div>
 
           <DialogFooter>
@@ -499,6 +611,49 @@ export default function AdminRides() {
                 onCheckedChange={(checked) => setFormData(prev => ({ ...prev, is_active: checked }))}
               />
               <Label>{language === 'bn' ? 'সক্রিয়' : 'Active'}</Label>
+            </div>
+
+            {/* Image Upload */}
+            <div className="space-y-2">
+              <Label>{language === 'bn' ? 'রাইড ছবি' : 'Ride Image'}</Label>
+              {formData.image_url ? (
+                <div className="relative w-full h-32 rounded-lg overflow-hidden border">
+                  <img 
+                    src={formData.image_url} 
+                    alt="Preview" 
+                    className="w-full h-full object-cover"
+                  />
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    className="absolute top-2 right-2 h-6 w-6"
+                    onClick={removeImage}
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </div>
+              ) : (
+                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
+                  {uploading ? (
+                    <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                  ) : (
+                    <>
+                      <Upload className="h-8 w-8 text-muted-foreground mb-2" />
+                      <span className="text-sm text-muted-foreground">
+                        {language === 'bn' ? 'ছবি আপলোড করুন' : 'Upload image'}
+                      </span>
+                    </>
+                  )}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageUpload}
+                    disabled={uploading}
+                  />
+                </label>
+              )}
             </div>
           </div>
 
