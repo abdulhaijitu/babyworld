@@ -128,6 +128,12 @@ const translations: Record<Language, Record<string, string>> = {
     "events.gallery": "Celebration Moments",
     "events.viewAll": "View All Packages",
     
+    // Events Page Gallery
+    "eventsPage.gallery.label": "Photo Gallery",
+    "eventsPage.gallery.title": "Memories from Our Celebrations",
+    "eventsPage.gallery.description": "See the joy and excitement from previous birthday parties hosted at Baby World.",
+    "eventsPage.gallery.note": "More photos available upon request",
+    
     // Events Page (Dedicated)
     "eventsPage.hero.badge": "Birthday & Special Events",
     "eventsPage.hero.title": "Create Unforgettable",
@@ -142,7 +148,12 @@ const translations: Record<Language, Record<string, string>> = {
     "eventsPage.packages.ageRange": "Ages 1–10 years",
     "eventsPage.packages.selectPackage": "Select Package",
     "eventsPage.packages.selectedPackage": "Selected",
-    "eventsPage.packages.priceNote": "Pricing available upon request",
+    "eventsPage.packages.startingFrom": "starting",
+    "eventsPage.packages.price.basic": "৳5,000",
+    "eventsPage.packages.price.premium": "৳8,500",
+    "eventsPage.packages.price.grand": "৳15,000",
+    "eventsPage.packages.price.custom": "৳20,000+",
+    "eventsPage.packages.priceNote": "Final price based on requirements",
     "eventsPage.packages.customName": "Custom Event",
     "eventsPage.packages.customDesc": "Tailored to your unique requirements",
     "eventsPage.packages.feature.5hours": "5+ hours exclusive area",
@@ -209,6 +220,24 @@ const translations: Record<Language, Record<string, string>> = {
     "contact.hoursLine2": "Friday: 3:00 PM – 9:00 PM",
     "contact.getDirections": "Get Directions",
     "contact.mapComingSoon": "Interactive map coming soon",
+    
+    // Contact Form
+    "contactForm.title": "Send Us a Message",
+    "contactForm.description": "Have questions about our services? Fill out the form and we'll get back to you.",
+    "contactForm.name": "Your Name",
+    "contactForm.namePlaceholder": "Enter your full name",
+    "contactForm.phone": "Phone Number",
+    "contactForm.phonePlaceholder": "Enter your phone number",
+    "contactForm.email": "Email (Optional)",
+    "contactForm.emailPlaceholder": "Enter your email address",
+    "contactForm.message": "Your Message",
+    "contactForm.messagePlaceholder": "How can we help you?",
+    "contactForm.submit": "Send Message",
+    "contactForm.sending": "Sending...",
+    "contactForm.successTitle": "Message Sent!",
+    "contactForm.successMessage": "Thank you for reaching out. Our team will respond to your message within 24 hours.",
+    "contactForm.sendAnother": "Send Another Message",
+    "contactForm.note": "We typically respond within 24 hours",
     
     // Footer
     "footer.description": "A safe, hygienic, and joyful indoor playground for children aged 1–10 years. Where kids learn & play in a supervised, nurturing environment.",
@@ -333,6 +362,12 @@ const translations: Record<Language, Record<string, string>> = {
     "events.gallery": "সেলিব্রেশন মোমেন্টস",
     "events.viewAll": "সব প্যাকেজ দেখুন",
     
+    // Events Page Gallery
+    "eventsPage.gallery.label": "ফটো গ্যালারি",
+    "eventsPage.gallery.title": "আমাদের উদযাপনের স্মৃতি",
+    "eventsPage.gallery.description": "বেবি ওয়ার্ল্ডে আয়োজিত আগের জন্মদিনের পার্টিগুলোর আনন্দ ও উত্তেজনা দেখুন।",
+    "eventsPage.gallery.note": "অনুরোধে আরও ছবি পাওয়া যাবে",
+    
     // Events Page (Dedicated)
     "eventsPage.hero.badge": "জন্মদিন ও বিশেষ ইভেন্ট",
     "eventsPage.hero.title": "অবিস্মরণীয়",
@@ -347,7 +382,12 @@ const translations: Record<Language, Record<string, string>> = {
     "eventsPage.packages.ageRange": "১–১০ বছর বয়সী",
     "eventsPage.packages.selectPackage": "প্যাকেজ নির্বাচন",
     "eventsPage.packages.selectedPackage": "নির্বাচিত",
-    "eventsPage.packages.priceNote": "অনুরোধে মূল্য জানানো হবে",
+    "eventsPage.packages.startingFrom": "থেকে শুরু",
+    "eventsPage.packages.price.basic": "৳৫,০০০",
+    "eventsPage.packages.price.premium": "৳৮,৫০০",
+    "eventsPage.packages.price.grand": "৳১৫,০০০",
+    "eventsPage.packages.price.custom": "৳২০,০০০+",
+    "eventsPage.packages.priceNote": "চূড়ান্ত মূল্য চাহিদা অনুযায়ী",
     "eventsPage.packages.customName": "কাস্টম ইভেন্ট",
     "eventsPage.packages.customDesc": "আপনার বিশেষ চাহিদা অনুযায়ী",
     "eventsPage.packages.feature.5hours": "৫+ ঘণ্টা এক্সক্লুসিভ এরিয়া",
@@ -414,6 +454,24 @@ const translations: Record<Language, Record<string, string>> = {
     "contact.hoursLine2": "শুক্রবার: বিকাল ৩:০০ – রাত ৯:০০",
     "contact.getDirections": "দিকনির্দেশনা নিন",
     "contact.mapComingSoon": "ইন্টারেক্টিভ ম্যাপ শীঘ্রই আসছে",
+    
+    // Contact Form
+    "contactForm.title": "আমাদের মেসেজ পাঠান",
+    "contactForm.description": "আমাদের সেবা সম্পর্কে প্রশ্ন আছে? ফর্মটি পূরণ করুন এবং আমরা আপনাকে জানাব।",
+    "contactForm.name": "আপনার নাম",
+    "contactForm.namePlaceholder": "আপনার পুরো নাম লিখুন",
+    "contactForm.phone": "ফোন নম্বর",
+    "contactForm.phonePlaceholder": "আপনার ফোন নম্বর লিখুন",
+    "contactForm.email": "ইমেইল (ঐচ্ছিক)",
+    "contactForm.emailPlaceholder": "আপনার ইমেইল ঠিকানা লিখুন",
+    "contactForm.message": "আপনার বার্তা",
+    "contactForm.messagePlaceholder": "আমরা কীভাবে আপনাকে সাহায্য করতে পারি?",
+    "contactForm.submit": "মেসেজ পাঠান",
+    "contactForm.sending": "পাঠানো হচ্ছে...",
+    "contactForm.successTitle": "মেসেজ পাঠানো হয়েছে!",
+    "contactForm.successMessage": "যোগাযোগ করার জন্য ধন্যবাদ। আমাদের টিম ২৪ ঘণ্টার মধ্যে আপনার বার্তার উত্তর দেবে।",
+    "contactForm.sendAnother": "আরেকটি মেসেজ পাঠান",
+    "contactForm.note": "আমরা সাধারণত ২৪ ঘণ্টার মধ্যে উত্তর দিই",
     
     // Footer
     "footer.description": "১–১০ বছর বয়সী শিশুদের জন্য একটি নিরাপদ, পরিচ্ছন্ন এবং আনন্দদায়ক ইনডোর প্লেগ্রাউন্ড। যেখানে শিশুরা তত্ত্বাবধানে থাকা পরিবেশে শেখে ও খেলে।",
