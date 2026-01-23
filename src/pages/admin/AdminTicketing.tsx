@@ -57,6 +57,9 @@ import { bn } from 'date-fns/locale';
 import { StatsCardSkeleton, TableRowSkeleton } from '@/components/admin/AdminSkeleton';
 import { PrintableTicket } from '@/components/admin/PrintableTicket';
 import { QRScannerDialog } from '@/components/admin/QRScannerDialog';
+import { CounterTicketForm } from '@/components/admin/ticketing/CounterTicketForm';
+import { TicketSuccessDialog } from '@/components/admin/ticketing/TicketSuccessDialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface TicketType {
   id: string;
@@ -95,6 +98,9 @@ export default function AdminTicketing() {
   const [selectedTicket, setSelectedTicket] = useState<TicketType | null>(null);
   const [sendingSMS, setSendingSMS] = useState<string | null>(null);
   const [gateActionLoading, setGateActionLoading] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState('list');
+  const [createdTicket, setCreatedTicket] = useState<any>(null);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   
   const [newTicket, setNewTicket] = useState({
     ticket_type: 'hourly_play',
@@ -105,6 +111,13 @@ export default function AdminTicketing() {
     guardian_phone: '',
     notes: ''
   });
+
+  const handleTicketCreated = (ticket: any) => {
+    setCreatedTicket(ticket);
+    setShowSuccessDialog(true);
+    fetchTickets();
+    setActiveTab('list');
+  };
 
   const fetchTickets = useCallback(async () => {
     setLoading(true);
@@ -373,111 +386,28 @@ export default function AdminTicketing() {
 
         <div className="flex items-center gap-2">
           <QRScannerDialog />
-          
-          <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="w-4 h-4 mr-2" />
-                {language === 'bn' ? 'নতুন টিকেট' : 'New Ticket'}
-              </Button>
-            </DialogTrigger>
-          <DialogContent className="max-w-md">
-            <DialogHeader>
-              <DialogTitle>{language === 'bn' ? 'নতুন টিকেট তৈরি' : 'Create New Ticket'}</DialogTitle>
-              <DialogDescription>
-                {language === 'bn' ? 'ফিজিক্যাল কাউন্টার টিকেট' : 'Physical counter ticket'}
-              </DialogDescription>
-            </DialogHeader>
-            
-            <div className="space-y-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>{language === 'bn' ? 'তারিখ' : 'Date'}</Label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button variant="outline" className="w-full justify-start">
-                        <CalendarDays className="w-4 h-4 mr-2" />
-                        {format(newTicket.slot_date, 'dd MMM yyyy')}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                      <Calendar
-                        mode="single"
-                        selected={newTicket.slot_date}
-                        onSelect={(date) => date && setNewTicket({...newTicket, slot_date: date})}
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label>{language === 'bn' ? 'সময়' : 'Time Slot'}</Label>
-                  <Select value={newTicket.time_slot} onValueChange={(v) => setNewTicket({...newTicket, time_slot: v})}>
-                    <SelectTrigger>
-                      <SelectValue placeholder={language === 'bn' ? 'সিলেক্ট' : 'Select'} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {timeSlots.map(slot => (
-                        <SelectItem key={slot} value={slot}>{slot}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label>{language === 'bn' ? 'শিশুর নাম' : 'Child Name'}</Label>
-                <Input
-                  value={newTicket.child_name}
-                  onChange={(e) => setNewTicket({...newTicket, child_name: e.target.value})}
-                  placeholder={language === 'bn' ? 'ঐচ্ছিক' : 'Optional'}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label>{language === 'bn' ? 'অভিভাবকের নাম' : 'Guardian Name'} *</Label>
-                <Input
-                  value={newTicket.guardian_name}
-                  onChange={(e) => setNewTicket({...newTicket, guardian_name: e.target.value})}
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label>{language === 'bn' ? 'ফোন নম্বর' : 'Phone'} *</Label>
-                <Input
-                  value={newTicket.guardian_phone}
-                  onChange={(e) => setNewTicket({...newTicket, guardian_phone: e.target.value})}
-                  placeholder="01XXXXXXXXX"
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label>{language === 'bn' ? 'নোট' : 'Notes'}</Label>
-                <Textarea
-                  value={newTicket.notes}
-                  onChange={(e) => setNewTicket({...newTicket, notes: e.target.value})}
-                  rows={2}
-                />
-              </div>
-            </div>
-            
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setCreateOpen(false)}>
-                {language === 'bn' ? 'বাতিল' : 'Cancel'}
-              </Button>
-              <Button onClick={handleCreateTicket} disabled={creating}>
-                {creating && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                {language === 'bn' ? 'তৈরি করুন' : 'Create'}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-          </Dialog>
         </div>
       </div>
 
-      {/* Stats */}
+      {/* Tabs for List and Create */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid w-full max-w-md grid-cols-2">
+          <TabsTrigger value="list">
+            {language === 'bn' ? 'টিকেট তালিকা' : 'Ticket List'}
+          </TabsTrigger>
+          <TabsTrigger value="create">
+            <Plus className="w-4 h-4 mr-2" />
+            {language === 'bn' ? 'নতুন টিকেট' : 'Create Ticket'}
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Create Tab - Counter Ticket Form */}
+        <TabsContent value="create" className="mt-6">
+          <CounterTicketForm onSuccess={handleTicketCreated} />
+        </TabsContent>
+
+        {/* List Tab */}
+        <TabsContent value="list" className="mt-6 space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="pb-2">
@@ -711,6 +641,8 @@ export default function AdminTicketing() {
           )}
         </CardContent>
       </Card>
+        </TabsContent>
+      </Tabs>
 
       {/* Print Dialog */}
       <Dialog open={printOpen} onOpenChange={setPrintOpen}>
@@ -739,6 +671,13 @@ export default function AdminTicketing() {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Success Dialog */}
+      <TicketSuccessDialog
+        open={showSuccessDialog}
+        onClose={() => setShowSuccessDialog(false)}
+        ticket={createdTicket}
+      />
     </div>
   );
 }
