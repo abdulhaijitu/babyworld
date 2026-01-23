@@ -56,6 +56,7 @@ import { format, parseISO } from 'date-fns';
 import { bn } from 'date-fns/locale';
 import { StatsCardSkeleton, TableRowSkeleton } from '@/components/admin/AdminSkeleton';
 import { PrintableTicket } from '@/components/admin/PrintableTicket';
+import { QRScannerDialog } from '@/components/admin/QRScannerDialog';
 
 interface TicketType {
   id: string;
@@ -370,13 +371,16 @@ export default function AdminTicketing() {
           </p>
         </div>
 
-        <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              {language === 'bn' ? 'নতুন টিকেট' : 'New Ticket'}
-            </Button>
-          </DialogTrigger>
+        <div className="flex items-center gap-2">
+          <QRScannerDialog />
+          
+          <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="w-4 h-4 mr-2" />
+                {language === 'bn' ? 'নতুন টিকেট' : 'New Ticket'}
+              </Button>
+            </DialogTrigger>
           <DialogContent className="max-w-md">
             <DialogHeader>
               <DialogTitle>{language === 'bn' ? 'নতুন টিকেট তৈরি' : 'Create New Ticket'}</DialogTitle>
@@ -469,7 +473,8 @@ export default function AdminTicketing() {
               </Button>
             </DialogFooter>
           </DialogContent>
-        </Dialog>
+          </Dialog>
+        </div>
       </div>
 
       {/* Stats */}
