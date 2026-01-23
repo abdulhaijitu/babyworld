@@ -302,6 +302,7 @@ const translations: Record<Language, Record<string, string>> = {
     "footer.contact": "Contact",
     "footer.rights": "All rights reserved.",
     "footer.ageRange": "Ages 1–10 Years",
+    "footer.followUs": "Follow Us | আমাদের অনুসরণ করুন",
   },
   bn: {
     // Navigation
@@ -593,6 +594,7 @@ const translations: Record<Language, Record<string, string>> = {
     "footer.contact": "যোগাযোগ",
     "footer.rights": "সর্বস্বত্ব সংরক্ষিত।",
     "footer.ageRange": "১–১০ বছর বয়সী",
+    "footer.followUs": "আমাদের অনুসরণ করুন | Follow Us",
   },
 };
 

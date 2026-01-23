@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { SOCIAL_LINKS } from "./SocialLinks";
 
 interface SEOHeadProps {
   page: "home" | "play-booking" | "birthday-events" | "contact";
@@ -146,7 +147,10 @@ export function SEOHead({ page }: SEOHeadProps) {
           ],
           "priceRange": "৳৳",
           "image": ogImages.home,
-          "sameAs": []
+          "sameAs": [
+            SOCIAL_LINKS.facebook,
+            SOCIAL_LINKS.youtube
+          ]
         })}
       </script>
     </Helmet>

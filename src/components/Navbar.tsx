@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { LanguageToggle } from "./LanguageToggle";
 import { ThemeToggle } from "./ThemeToggle";
 import { WhatsAppButton } from "./WhatsAppButton";
+import { SocialLinks } from "./SocialLinks";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 import babyWorldLogo from "@/assets/baby-world-logo.png";
@@ -75,6 +76,9 @@ export function Navbar() {
           </div>
 
           <div className="hidden lg:flex items-center gap-3">
+            {/* Social Links - Desktop only, subtle */}
+            <SocialLinks variant="header" />
+            <div className="w-px h-5 bg-border mx-1" />
             <ThemeToggle />
             <LanguageToggle />
             <WhatsAppButton variant="navbar" />
