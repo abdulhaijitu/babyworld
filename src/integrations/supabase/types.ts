@@ -70,6 +70,176 @@ export type Database = {
           },
         ]
       }
+      employees: {
+        Row: {
+          created_at: string
+          email: string | null
+          hire_date: string | null
+          id: string
+          name: string
+          notes: string | null
+          phone: string
+          role: Database["public"]["Enums"]["employee_role"]
+          status: Database["public"]["Enums"]["employee_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          hire_date?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          phone: string
+          role?: Database["public"]["Enums"]["employee_role"]
+          status?: Database["public"]["Enums"]["employee_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          hire_date?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          phone?: string
+          role?: Database["public"]["Enums"]["employee_role"]
+          status?: Database["public"]["Enums"]["employee_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      food_items: {
+        Row: {
+          category: Database["public"]["Enums"]["food_category"]
+          created_at: string
+          id: string
+          image_url: string | null
+          is_available: boolean
+          name: string
+          name_bn: string | null
+          price: number
+          updated_at: string
+        }
+        Insert: {
+          category?: Database["public"]["Enums"]["food_category"]
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          is_available?: boolean
+          name: string
+          name_bn?: string | null
+          price?: number
+          updated_at?: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["food_category"]
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          is_available?: boolean
+          name?: string
+          name_bn?: string | null
+          price?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      food_order_items: {
+        Row: {
+          created_at: string
+          food_item_id: string
+          id: string
+          order_id: string
+          quantity: number
+          total_price: number
+          unit_price: number
+        }
+        Insert: {
+          created_at?: string
+          food_item_id: string
+          id?: string
+          order_id: string
+          quantity?: number
+          total_price: number
+          unit_price: number
+        }
+        Update: {
+          created_at?: string
+          food_item_id?: string
+          id?: string
+          order_id?: string
+          quantity?: number
+          total_price?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "food_order_items_food_item_id_fkey"
+            columns: ["food_item_id"]
+            isOneToOne: false
+            referencedRelation: "food_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "food_order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "food_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      food_orders: {
+        Row: {
+          created_at: string
+          customer_name: string | null
+          id: string
+          notes: string | null
+          order_number: string
+          payment_type: Database["public"]["Enums"]["food_payment_type"]
+          status: Database["public"]["Enums"]["food_order_status"]
+          subtotal: number
+          ticket_id: string | null
+          total: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_name?: string | null
+          id?: string
+          notes?: string | null
+          order_number: string
+          payment_type?: Database["public"]["Enums"]["food_payment_type"]
+          status?: Database["public"]["Enums"]["food_order_status"]
+          subtotal?: number
+          ticket_id?: string | null
+          total?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_name?: string | null
+          id?: string
+          notes?: string | null
+          order_number?: string
+          payment_type?: Database["public"]["Enums"]["food_payment_type"]
+          status?: Database["public"]["Enums"]["food_order_status"]
+          subtotal?: number
+          ticket_id?: string | null
+          total?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "food_orders_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payments: {
         Row: {
           amount: number
@@ -126,6 +296,47 @@ export type Database = {
           },
         ]
       }
+      roster_shifts: {
+        Row: {
+          created_at: string
+          employee_id: string
+          end_time: string
+          id: string
+          notes: string | null
+          shift_date: string
+          start_time: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          employee_id: string
+          end_time: string
+          id?: string
+          notes?: string | null
+          shift_date: string
+          start_time: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          employee_id?: string
+          end_time?: string
+          id?: string
+          notes?: string | null
+          shift_date?: string
+          start_time?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "roster_shifts_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       slots: {
         Row: {
           created_at: string
@@ -158,6 +369,68 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      tickets: {
+        Row: {
+          booking_id: string | null
+          child_name: string | null
+          created_at: string
+          guardian_name: string
+          guardian_phone: string
+          id: string
+          notes: string | null
+          slot_date: string
+          source: Database["public"]["Enums"]["ticket_source"]
+          status: Database["public"]["Enums"]["ticket_status"]
+          ticket_number: string
+          ticket_type: string
+          time_slot: string | null
+          updated_at: string
+          used_at: string | null
+        }
+        Insert: {
+          booking_id?: string | null
+          child_name?: string | null
+          created_at?: string
+          guardian_name: string
+          guardian_phone: string
+          id?: string
+          notes?: string | null
+          slot_date: string
+          source?: Database["public"]["Enums"]["ticket_source"]
+          status?: Database["public"]["Enums"]["ticket_status"]
+          ticket_number: string
+          ticket_type?: string
+          time_slot?: string | null
+          updated_at?: string
+          used_at?: string | null
+        }
+        Update: {
+          booking_id?: string | null
+          child_name?: string | null
+          created_at?: string
+          guardian_name?: string
+          guardian_phone?: string
+          id?: string
+          notes?: string | null
+          slot_date?: string
+          source?: Database["public"]["Enums"]["ticket_source"]
+          status?: Database["public"]["Enums"]["ticket_status"]
+          ticket_number?: string
+          ticket_type?: string
+          time_slot?: string | null
+          updated_at?: string
+          used_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tickets_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
@@ -197,7 +470,14 @@ export type Database = {
       app_role: "admin" | "user"
       booking_status: "confirmed" | "pending" | "cancelled"
       booking_type: "hourly_play" | "birthday_event" | "private_event"
+      employee_role: "staff" | "supervisor" | "manager"
+      employee_status: "active" | "inactive"
+      food_category: "snacks" | "drinks" | "meals"
+      food_order_status: "pending" | "served" | "cancelled"
+      food_payment_type: "cash" | "online" | "pending"
       slot_status: "available" | "booked"
+      ticket_source: "online" | "physical"
+      ticket_status: "active" | "used" | "cancelled"
       ticket_type: "child_guardian" | "child_only" | "group"
     }
     CompositeTypes: {
@@ -329,7 +609,14 @@ export const Constants = {
       app_role: ["admin", "user"],
       booking_status: ["confirmed", "pending", "cancelled"],
       booking_type: ["hourly_play", "birthday_event", "private_event"],
+      employee_role: ["staff", "supervisor", "manager"],
+      employee_status: ["active", "inactive"],
+      food_category: ["snacks", "drinks", "meals"],
+      food_order_status: ["pending", "served", "cancelled"],
+      food_payment_type: ["cash", "online", "pending"],
       slot_status: ["available", "booked"],
+      ticket_source: ["online", "physical"],
+      ticket_status: ["active", "used", "cancelled"],
       ticket_type: ["child_guardian", "child_only", "group"],
     },
   },

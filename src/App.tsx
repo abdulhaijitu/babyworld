@@ -12,10 +12,15 @@ import BirthdayEvents from "./pages/BirthdayEvents";
 import Contact from "./pages/Contact";
 import Gallery from "./pages/Gallery";
 import AdminLogin from "./pages/AdminLogin";
-import AdminDashboard from "./pages/AdminDashboard";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentCancel from "./pages/PaymentCancel";
 import NotFound from "./pages/NotFound";
+
+// Admin pages with layout
+import AdminLayout from "./pages/admin/AdminLayout";
+import AdminDashboardContent from "./pages/admin/AdminDashboardContent";
+import AdminTicketing from "./pages/admin/AdminTicketing";
+import AdminFoodSales from "./pages/admin/AdminFoodSales";
 
 const queryClient = new QueryClient();
 
@@ -35,7 +40,18 @@ const App = () => (
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/gallery" element={<Gallery />} />
                 <Route path="/admin/login" element={<AdminLogin />} />
-                <Route path="/admin" element={<AdminDashboard />} />
+                
+                {/* Admin routes with sidebar layout */}
+                <Route path="/admin" element={<AdminLayout />}>
+                  <Route index element={<AdminDashboardContent />} />
+                  <Route path="ticketing" element={<AdminTicketing />} />
+                  <Route path="food" element={<AdminFoodSales />} />
+                  <Route path="employees" element={<div className="p-8"><h1 className="text-2xl font-bold">Employees & Roster</h1><p className="text-muted-foreground mt-2">Coming soon...</p></div>} />
+                  <Route path="bookings" element={<div className="p-8"><h1 className="text-2xl font-bold">Bookings</h1><p className="text-muted-foreground mt-2">Coming soon...</p></div>} />
+                  <Route path="events" element={<div className="p-8"><h1 className="text-2xl font-bold">Events</h1><p className="text-muted-foreground mt-2">Coming soon...</p></div>} />
+                  <Route path="settings" element={<div className="p-8"><h1 className="text-2xl font-bold">Settings</h1><p className="text-muted-foreground mt-2">Coming soon...</p></div>} />
+                </Route>
+                
                 <Route path="/payment-success" element={<PaymentSuccess />} />
                 <Route path="/payment-cancel" element={<PaymentCancel />} />
                 <Route path="*" element={<NotFound />} />
