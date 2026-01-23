@@ -18,6 +18,7 @@ export function EventPackages({ selectedPackage, onSelectPackage }: EventPackage
       name: t("events.basicName"),
       description: t("events.basicDesc"),
       duration: "2",
+      price: t("eventsPage.packages.price.basic"),
       features: [
         t("events.feature.2hours"),
         t("events.feature.basicDecor"),
@@ -30,6 +31,7 @@ export function EventPackages({ selectedPackage, onSelectPackage }: EventPackage
       name: t("events.premiumName"),
       description: t("events.premiumDesc"),
       duration: "3",
+      price: t("eventsPage.packages.price.premium"),
       features: [
         t("events.feature.3hours"),
         t("events.feature.themeDecor"),
@@ -44,6 +46,7 @@ export function EventPackages({ selectedPackage, onSelectPackage }: EventPackage
       name: t("events.grandName"),
       description: t("events.grandDesc"),
       duration: "4",
+      price: t("eventsPage.packages.price.grand"),
       features: [
         t("events.feature.4hours"),
         t("events.feature.customTheme"),
@@ -58,6 +61,7 @@ export function EventPackages({ selectedPackage, onSelectPackage }: EventPackage
       name: t("eventsPage.packages.customName"),
       description: t("eventsPage.packages.customDesc"),
       duration: "5+",
+      price: t("eventsPage.packages.price.custom"),
       features: [
         t("eventsPage.packages.feature.5hours"),
         t("eventsPage.packages.feature.fullCustom"),
@@ -164,9 +168,19 @@ export function EventPackages({ selectedPackage, onSelectPackage }: EventPackage
                       </span>
                     </div>
 
-                    {/* Price Placeholder */}
-                    <div className="pt-2 border-t border-border">
-                      <div className="h-5 w-32 bg-muted rounded animate-pulse mb-3" />
+                    {/* Price */}
+                    <div className="pt-4 border-t border-border">
+                      <div className="flex items-baseline gap-1 mb-1">
+                        <span className={cn(
+                          "text-2xl font-bold",
+                          isSelected ? "text-secondary" : "text-foreground"
+                        )}>
+                          {pkg.price}
+                        </span>
+                        <span className="text-sm text-muted-foreground">
+                          {t("eventsPage.packages.startingFrom")}
+                        </span>
+                      </div>
                       <p className="text-xs text-muted-foreground">
                         {t("eventsPage.packages.priceNote")}
                       </p>

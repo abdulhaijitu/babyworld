@@ -1,6 +1,7 @@
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollFadeIn, ScaleIn } from "./ScrollAnimations";
+import { ContactForm } from "./ContactForm";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export function ContactSection() {
@@ -101,25 +102,8 @@ export function ContactSection() {
             </ScrollFadeIn>
           </div>
 
-          {/* Map Placeholder */}
-          <ScaleIn delay={0.2}>
-            <div className="w-full h-full min-h-[400px] bg-muted rounded-3xl overflow-hidden flex items-center justify-center">
-              <div className="text-center space-y-4 p-8">
-                <div className="w-16 h-16 mx-auto bg-primary/10 rounded-full flex items-center justify-center">
-                  <MapPin className="w-8 h-8 text-primary" />
-                </div>
-                <div>
-                  <p className="font-semibold text-foreground">
-                    Jannat Tower, Lalbagh
-                  </p>
-                  <p className="text-sm text-muted-foreground">Dhaka 1211</p>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  {t("contact.mapComingSoon")}
-                </p>
-              </div>
-            </div>
-          </ScaleIn>
+          {/* Contact Form */}
+          <ContactForm />
         </div>
       </div>
     </section>
