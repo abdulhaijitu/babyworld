@@ -117,28 +117,29 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
       if (phone && phone.length >= 11) {
         setIsCheckingMembership(true);
         try {
-          const { data } = await supabase.functions.invoke('manage-membership', {
-            body: { phone },
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-          });
+          // Check membership by phone using direct query (edge function may not be deployed)
+          const today = new Date().toISOString().split('T')[0];
+          const { data: membership } = await supabase
+            .from('memberships')
+            .select('*')
+            .eq('phone', phone)
+            .eq('status', 'active')
+            .gte('valid_till', today)
+            .lte('valid_from', today)
+            .maybeSingle();
           
-          // Add action parameter to URL
-          const { data: result } = await supabase.functions.invoke('manage-membership?action=get-by-phone', {
-            body: { phone },
-          });
-          
-          if (result?.found && result?.membership) {
+          if (membership) {
             setMembershipInfo({
-              id: result.membership.id,
-              member_name: result.membership.member_name,
-              discount_percent: result.membership.discount_percent,
-              valid_till: result.membership.valid_till,
+              id: membership.id,
+              member_name: membership.member_name,
+              discount_percent: membership.discount_percent,
+              valid_till: membership.valid_till,
             });
           } else {
             setMembershipInfo(null);
           }
         } catch (error) {
+          console.error('Membership check error:', error);
           setMembershipInfo(null);
         } finally {
           setIsCheckingMembership(false);
