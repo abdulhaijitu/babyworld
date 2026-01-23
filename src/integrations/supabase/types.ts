@@ -529,8 +529,53 @@ export type Database = {
           },
         ]
       }
+      ride_reviews: {
+        Row: {
+          created_at: string
+          id: string
+          is_approved: boolean | null
+          rating: number
+          review_text: string | null
+          reviewer_name: string
+          reviewer_phone: string | null
+          ride_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_approved?: boolean | null
+          rating: number
+          review_text?: string | null
+          reviewer_name: string
+          reviewer_phone?: string | null
+          ride_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_approved?: boolean | null
+          rating?: number
+          review_text?: string | null
+          reviewer_name?: string
+          reviewer_phone?: string | null
+          ride_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ride_reviews_ride_id_fkey"
+            columns: ["ride_id"]
+            isOneToOne: false
+            referencedRelation: "rides"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rides: {
         Row: {
+          avg_rating: number | null
           category: Database["public"]["Enums"]["ride_category"]
           created_at: string
           id: string
@@ -539,9 +584,11 @@ export type Database = {
           name: string
           name_bn: string | null
           price: number
+          review_count: number | null
           updated_at: string
         }
         Insert: {
+          avg_rating?: number | null
           category?: Database["public"]["Enums"]["ride_category"]
           created_at?: string
           id?: string
@@ -550,9 +597,11 @@ export type Database = {
           name: string
           name_bn?: string | null
           price?: number
+          review_count?: number | null
           updated_at?: string
         }
         Update: {
+          avg_rating?: number | null
           category?: Database["public"]["Enums"]["ride_category"]
           created_at?: string
           id?: string
@@ -561,6 +610,7 @@ export type Database = {
           name?: string
           name_bn?: string | null
           price?: number
+          review_count?: number | null
           updated_at?: string
         }
         Relationships: []

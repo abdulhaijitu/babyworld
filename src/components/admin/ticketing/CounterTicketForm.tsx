@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { format } from 'date-fns';
 import { bn } from 'date-fns/locale';
-import { CalendarIcon, Plus, Minus, Ticket, Users, Baby, Footprints, Loader2, CheckCircle, Crown } from 'lucide-react';
+import { CalendarIcon, Plus, Minus, Ticket, Users, Baby, Footprints, Loader2, CheckCircle, Crown, Star, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -42,6 +42,9 @@ interface Ride {
   price: number;
   is_active: boolean;
   category: RideCategory;
+  image_url: string | null;
+  avg_rating: number | null;
+  review_count: number | null;
 }
 
 const CATEGORY_INFO: Record<RideCategory, { label: string; label_bn: string; color: string }> = {
@@ -535,22 +538,59 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                               <div
                                 key={ride.id}
                                 className={cn(
-                                  'p-3 rounded-lg border cursor-pointer transition-all',
-                                  isSelected ? 'border-primary bg-primary/5' : 'hover:border-primary/50'
+                                  'p-3 rounded-lg border cursor-pointer transition-all overflow-hidden',
+                                  isSelected ? 'border-primary bg-primary/5 ring-2 ring-primary/20' : 'hover:border-primary/50 hover:shadow-md'
                                 )}
                                 onClick={() => toggleRide(ride.id)}
                               >
-                                <div className="flex items-center justify-between mb-2">
-                                  <Checkbox 
-                                    checked={isSelected} 
-                                    onCheckedChange={() => toggleRide(ride.id)}
-                                    onClick={(e) => e.stopPropagation()}
-                                  />
-                                  <Badge variant="secondary">৳{ride.price}</Badge>
+                                {/* Ride Image */}
+                                <div className="relative w-full h-20 mb-2 rounded-md overflow-hidden bg-muted">
+                                  {ride.image_url ? (
+                                    <img 
+                                      src={ride.image_url} 
+                                      alt={ride.name}
+                                      className="w-full h-full object-cover"
+                                    />
+                                  ) : (
+                                    <div className="w-full h-full flex items-center justify-center">
+                                      <ImageIcon className="h-8 w-8 text-muted-foreground/50" />
+                                    </div>
+                                  )}
+                                  {/* Checkbox overlay */}
+                                  <div className="absolute top-1 left-1">
+                                    <Checkbox 
+                                      checked={isSelected} 
+                                      onCheckedChange={() => toggleRide(ride.id)}
+                                      onClick={(e) => e.stopPropagation()}
+                                      className="bg-background/80 backdrop-blur-sm"
+                                    />
+                                  </div>
+                                  {/* Price badge overlay */}
+                                  <div className="absolute top-1 right-1">
+                                    <Badge variant="secondary" className="text-xs bg-background/80 backdrop-blur-sm">
+                                      ৳{ride.price}
+                                    </Badge>
+                                  </div>
                                 </div>
-                                <p className="font-medium text-sm">
+
+                                {/* Ride Info */}
+                                <p className="font-medium text-sm line-clamp-1">
                                   {language === 'bn' ? ride.name_bn || ride.name : ride.name}
                                 </p>
+
+                                {/* Rating */}
+                                {ride.avg_rating && ride.avg_rating > 0 && (
+                                  <div className="flex items-center gap-1 mt-1">
+                                    <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                                    <span className="text-xs text-muted-foreground">
+                                      {Number(ride.avg_rating).toFixed(1)}
+                                      {ride.review_count && ride.review_count > 0 && (
+                                        <span className="ml-1">({ride.review_count})</span>
+                                      )}
+                                    </span>
+                                  </div>
+                                )}
+
                                 {isSelected && (
                                   <div className="mt-2" onClick={(e) => e.stopPropagation()}>
                                     <CounterButton
