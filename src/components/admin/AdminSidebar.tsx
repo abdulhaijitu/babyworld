@@ -11,7 +11,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Menu,
-  X,
   LogOut,
   Clock,
   FileBarChart,
@@ -20,7 +19,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useUserRoles, type AppRole } from '@/hooks/useUserRoles';
 import babyWorldLogo from '@/assets/baby-world-logo.png';
 
 interface MenuItem {
@@ -29,19 +29,20 @@ interface MenuItem {
   labelBn: string;
   icon: React.ElementType;
   path: string;
+  requiredRoles?: AppRole[];
 }
 
-const menuItems: MenuItem[] = [
+const allMenuItems: MenuItem[] = [
   { id: 'dashboard', label: 'Dashboard', labelBn: 'ড্যাশবোর্ড', icon: LayoutDashboard, path: '/admin' },
-  { id: 'ticketing', label: 'Ticketing', labelBn: 'টিকেটিং', icon: Ticket, path: '/admin/ticketing' },
-  { id: 'food', label: 'Food Sales', labelBn: 'খাবার বিক্রয়', icon: UtensilsCrossed, path: '/admin/food' },
-  { id: 'employees', label: 'Employees', labelBn: 'কর্মী', icon: Users, path: '/admin/employees' },
-  { id: 'roster', label: 'Roster', labelBn: 'রোস্টার', icon: Clock, path: '/admin/roster' },
-  { id: 'bookings', label: 'Bookings', labelBn: 'বুকিং', icon: CalendarDays, path: '/admin/bookings' },
-  { id: 'events', label: 'Events', labelBn: 'ইভেন্ট', icon: PartyPopper, path: '/admin/events' },
-  { id: 'reports', label: 'Reports', labelBn: 'রিপোর্ট', icon: FileBarChart, path: '/admin/reports' },
-  { id: 'users', label: 'Users', labelBn: 'ইউজার', icon: Shield, path: '/admin/users' },
-  { id: 'settings', label: 'Settings', labelBn: 'সেটিংস', icon: Settings, path: '/admin/settings' },
+  { id: 'ticketing', label: 'Ticketing', labelBn: 'টিকেটিং', icon: Ticket, path: '/admin/ticketing', requiredRoles: ['admin', 'manager', 'staff'] },
+  { id: 'food', label: 'Food Sales', labelBn: 'খাবার বিক্রয়', icon: UtensilsCrossed, path: '/admin/food', requiredRoles: ['admin', 'manager', 'staff'] },
+  { id: 'employees', label: 'Employees', labelBn: 'কর্মী', icon: Users, path: '/admin/employees', requiredRoles: ['admin'] },
+  { id: 'roster', label: 'Roster', labelBn: 'রোস্টার', icon: Clock, path: '/admin/roster', requiredRoles: ['admin', 'manager'] },
+  { id: 'bookings', label: 'Bookings', labelBn: 'বুকিং', icon: CalendarDays, path: '/admin/bookings', requiredRoles: ['admin', 'manager', 'staff'] },
+  { id: 'events', label: 'Events', labelBn: 'ইভেন্ট', icon: PartyPopper, path: '/admin/events', requiredRoles: ['admin', 'manager'] },
+  { id: 'reports', label: 'Reports', labelBn: 'রিপোর্ট', icon: FileBarChart, path: '/admin/reports', requiredRoles: ['admin', 'manager'] },
+  { id: 'users', label: 'Users', labelBn: 'ইউজার', icon: Shield, path: '/admin/users', requiredRoles: ['admin'] },
+  { id: 'settings', label: 'Settings', labelBn: 'সেটিংস', icon: Settings, path: '/admin/settings', requiredRoles: ['admin'] },
 ];
 
 interface AdminSidebarProps {
@@ -62,6 +63,23 @@ function SidebarContent({
   const location = useLocation();
   const navigate = useNavigate();
   const { language } = useLanguage();
+  const { roles, isAdmin, loading: rolesLoading } = useUserRoles();
+
+  // Filter menu items based on user roles
+  const menuItems = useMemo(() => {
+    return allMenuItems.filter(item => {
+      // If no roles required, show to everyone
+      if (!item.requiredRoles || item.requiredRoles.length === 0) {
+        return true;
+      }
+      // Admin sees everything
+      if (isAdmin) {
+        return true;
+      }
+      // Check if user has any of the required roles
+      return item.requiredRoles.some(role => roles.includes(role));
+    });
+  }, [roles, isAdmin]);
 
   const handleNavigate = (path: string) => {
     navigate(path);
