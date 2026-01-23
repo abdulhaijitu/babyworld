@@ -19,7 +19,8 @@ import {
   Crown,
   Receipt,
   TrendingUp,
-  FerrisWheel
+  FerrisWheel,
+  Star
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -49,6 +50,7 @@ const allMenuItems: MenuItem[] = [
   { id: 'bookings', label: 'Bookings', labelBn: 'বুকিং', icon: CalendarDays, path: '/admin/bookings', requiredRoles: ['admin', 'manager', 'staff'] },
   { id: 'events', label: 'Events', labelBn: 'ইভেন্ট', icon: PartyPopper, path: '/admin/events', requiredRoles: ['admin', 'manager'] },
   { id: 'rides', label: 'Rides', labelBn: 'রাইড', icon: FerrisWheel, path: '/admin/rides', requiredRoles: ['admin'] },
+  { id: 'ride-reviews', label: 'Ride Reviews', labelBn: 'রাইড রিভিউ', icon: Star, path: '/admin/ride-reviews', requiredRoles: ['admin', 'manager'] },
   { id: 'reports', label: 'Reports', labelBn: 'রিপোর্ট', icon: FileBarChart, path: '/admin/reports', requiredRoles: ['admin', 'manager'] },
   { id: 'profit', label: 'Profit & Loss', labelBn: 'লাভ-ক্ষতি', icon: TrendingUp, path: '/admin/profit', requiredRoles: ['admin', 'manager'] },
   { id: 'users', label: 'Users', labelBn: 'ইউজার', icon: Shield, path: '/admin/users', requiredRoles: ['admin'] },
