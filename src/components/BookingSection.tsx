@@ -57,8 +57,8 @@ export function BookingSection() {
   const selectedSlotData = timeSlots.find((slot) => slot.id === selectedSlot);
 
   return (
-    <section id="booking" className="py-24 bg-background">
-      <div className="container mx-auto">
+    <section id="booking" className="py-16 sm:py-20 lg:py-24 bg-background overflow-hidden">
+      <div className="container mx-auto px-4 sm:px-6">
         {/* Header */}
         <ScrollFadeIn className="text-center max-w-2xl mx-auto mb-12 space-y-4">
           <span className="text-sm font-semibold text-primary uppercase tracking-wider">
@@ -252,8 +252,8 @@ export function BookingSection() {
           </ScrollFadeIn>
         </div>
 
-        {/* Summary Panel - Mobile (Sticky Bottom) */}
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 p-4 bg-background/95 backdrop-blur-md border-t border-border">
+        {/* Summary Panel - Mobile (Sticky Bottom) - positioned above bottom nav */}
+        <div className="lg:hidden fixed bottom-20 left-0 right-0 z-30 p-4 bg-card/98 backdrop-blur-lg border-t border-border shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.1)]">
           <BookingSummaryMobile
             selectedDate={selectedDate}
             selectedSlotData={selectedSlotData}
@@ -261,8 +261,8 @@ export function BookingSection() {
           />
         </div>
 
-        {/* Spacer for mobile sticky panel */}
-        <div className="lg:hidden h-32" />
+        {/* Spacer for mobile sticky panel + bottom nav */}
+        <div className="lg:hidden h-48" />
       </div>
     </section>
   );

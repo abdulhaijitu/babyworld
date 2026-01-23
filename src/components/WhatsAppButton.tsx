@@ -53,13 +53,13 @@ export function WhatsAppButton({ variant = "navbar", className }: WhatsAppButton
     );
   }
 
-  // Floating button
+  // Floating button - positioned above mobile bottom nav
   return (
     <a
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className={`fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-110 ${className}`}
+      className={`fixed bottom-24 lg:bottom-6 right-4 lg:right-6 z-40 flex items-center justify-center w-14 h-14 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95 ${className}`}
       aria-label="Chat on WhatsApp"
     >
       <WhatsAppIcon className="w-7 h-7" />

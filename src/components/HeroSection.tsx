@@ -14,7 +14,7 @@ export function HeroSection() {
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center pt-20 overflow-hidden"
+      className="relative min-h-[100svh] flex items-center pt-20 pb-8 overflow-hidden"
     >
       {/* Beautiful gradient background inspired by logo */}
       <div className="absolute inset-0">
@@ -79,7 +79,7 @@ export function HeroSection() {
             </motion.div>
 
             <motion.h1 
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight text-balance"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight text-balance"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.6 }}
@@ -100,13 +100,13 @@ export function HeroSection() {
 
             {/* Trust badges */}
             <motion.div 
-              className="flex flex-wrap gap-6"
+              className="flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-6"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.6 }}
             >
               <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-success/10 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-full bg-success/10 flex items-center justify-center flex-shrink-0">
                   <Shield className="w-5 h-5 text-success" />
                 </div>
                 <span className="text-sm font-medium text-foreground">
@@ -114,7 +114,7 @@ export function HeroSection() {
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-info/10 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-full bg-info/10 flex items-center justify-center flex-shrink-0">
                   <Clock className="w-5 h-5 text-info" />
                 </div>
                 <span className="text-sm font-medium text-foreground">
@@ -125,15 +125,15 @@ export function HeroSection() {
 
             {/* CTAs */}
             <motion.div 
-              className="flex flex-col sm:flex-row gap-4"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.6 }}
             >
-              <Button size="lg" className="shadow-button" asChild>
+              <Button size="lg" className="shadow-button w-full sm:w-auto touch-target" asChild>
                 <Link to="/play-booking">{t("hero.viewOptions")}</Link>
               </Button>
-              <Button size="lg" variant="outline" className="border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground" asChild>
+              <Button size="lg" variant="outline" className="border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground w-full sm:w-auto touch-target" asChild>
                 <Link to="/birthday-events">{t("hero.birthdayEvents")}</Link>
               </Button>
             </motion.div>
