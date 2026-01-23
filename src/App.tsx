@@ -29,6 +29,7 @@ import AdminEvents from "./pages/admin/AdminEvents";
 import AdminSettings from "./pages/admin/AdminSettings";
 import AdminReports from "./pages/admin/AdminReports";
 import AdminUsers from "./pages/admin/AdminUsers";
+import AdminMemberships from "./pages/admin/AdminMemberships";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +54,7 @@ const App = () => (
                 <Route path="/admin" element={<AdminLayout />}>
                   <Route index element={<AdminDashboardContent />} />
                   <Route path="ticketing" element={<AdminTicketing />} />
+                  <Route path="memberships" element={<AdminMemberships />} />
                   <Route path="gate-logs" element={<AdminGateLogs />} />
                   <Route path="food" element={<AdminFoodSales />} />
                   <Route path="employees" element={<AdminEmployees />} />
