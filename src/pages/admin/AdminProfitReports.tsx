@@ -23,7 +23,9 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   BarChart3,
-  PieChart
+  PieChart,
+  Download,
+  Printer
 } from 'lucide-react';
 
 import {
@@ -127,22 +129,69 @@ export default function AdminProfitReports() {
     fill: EXPENSE_CATEGORY_LABELS[e.category]?.color || '#64748b'
   }));
 
+  // Export to CSV
+  const exportToCSV = () => {
+    if (!profitData) return;
+    
+    const headers = ['Date', 'Ticket Revenue', 'Food Revenue', 'Total Revenue', 'Expenses', 'Profit/Loss'];
+    const rows = dailyBreakdown.map((d: { date: string; ticketRevenue: number; foodRevenue: number; expenses: number; profit: number }) => [
+      d.date,
+      d.ticketRevenue,
+      d.foodRevenue,
+      d.ticketRevenue + d.foodRevenue,
+      d.expenses,
+      d.profit
+    ]);
+    
+    // Add summary row
+    rows.push([]);
+    rows.push(['SUMMARY']);
+    rows.push(['Total Revenue', summary.totalRevenue]);
+    rows.push(['Total Expenses', summary.totalExpenses]);
+    rows.push(['Net Profit/Loss', summary.netProfit]);
+    rows.push(['Profit Margin', `${summary.profitMargin}%`]);
+    
+    // Add expense breakdown
+    rows.push([]);
+    rows.push(['EXPENSE BREAKDOWN']);
+    expenseBreakdown.forEach((e: { category: string; amount: number; percentage: number }) => {
+      rows.push([EXPENSE_CATEGORY_LABELS[e.category]?.en || e.category, e.amount, `${e.percentage}%`]);
+    });
+    
+    const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `profit-report-${format(startDate, 'yyyy-MM-dd')}-to-${format(endDate, 'yyyy-MM-dd')}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // Print Report
+  const handlePrint = () => {
+    window.print();
+  };
+
   return (
-    <div className="p-4 md:p-6 lg:p-8 space-y-6">
+    <div className="p-4 md:p-6 lg:p-8 space-y-6 print:p-0">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
-            <BarChart3 className="w-6 h-6" />
+            <BarChart3 className="w-6 h-6 print:hidden" />
             {language === 'bn' ? 'লাভ-ক্ষতি রিপোর্ট' : 'Profit & Loss Report'}
           </h1>
           <p className="text-muted-foreground">
             {language === 'bn' ? 'আয়, ব্যয় এবং নিট লাভ বিশ্লেষণ' : 'Revenue, expenses and net profit analysis'}
           </p>
+          <p className="text-sm text-muted-foreground print:block hidden">
+            {format(startDate, 'dd MMM yyyy')} - {format(endDate, 'dd MMM yyyy')}
+          </p>
         </div>
 
-        {/* Date Range Controls */}
-        <div className="flex flex-wrap items-center gap-2">
+        {/* Date Range & Export Controls */}
+        <div className="flex flex-wrap items-center gap-2 print:hidden">
           <Button variant="outline" size="sm" onClick={setThisWeek}>
             {language === 'bn' ? 'এই সপ্তাহ' : 'This Week'}
           </Button>
@@ -171,6 +220,18 @@ export default function AdminProfitReports() {
               />
             </PopoverContent>
           </Popover>
+          
+          {/* Export Buttons */}
+          <div className="flex gap-1 ml-2">
+            <Button variant="outline" size="sm" onClick={exportToCSV} disabled={!profitData}>
+              <Download className="w-4 h-4 mr-1" />
+              CSV
+            </Button>
+            <Button variant="outline" size="sm" onClick={handlePrint}>
+              <Printer className="w-4 h-4 mr-1" />
+              {language === 'bn' ? 'প্রিন্ট' : 'Print'}
+            </Button>
+          </div>
         </div>
       </div>
 
