@@ -249,10 +249,12 @@ export default function AdminFoodSales() {
         return sum + (item?.price || 0) * oi.quantity;
       }, 0);
 
+      const orderNumber = generateOrderNumber();
+
       const { data: orderData, error: orderError } = await supabase
         .from('food_orders')
         .insert([{
-          order_number: generateOrderNumber(),
+          order_number: orderNumber,
           customer_name: orderCustomer || null,
           status: 'pending',
           payment_type: orderPaymentType,
@@ -283,6 +285,25 @@ export default function AdminFoodSales() {
       if (itemsError) throw itemsError;
 
       toast.success(language === 'bn' ? 'অর্ডার তৈরি হয়েছে' : 'Order created');
+
+      // Send payment notification for food order (non-blocking)
+      if (orderCustomer) {
+        // Extract phone from customer name if provided in format "Name - Phone"
+        const phoneMatch = orderCustomer.match(/(\d{11})/);
+        if (phoneMatch) {
+          supabase.functions.invoke('food-payment-notify', {
+            body: {
+              order_id: orderData.id,
+              order_number: orderNumber,
+              customer_name: orderCustomer.split('-')[0].trim(),
+              customer_phone: phoneMatch[1],
+              total: total,
+              payment_type: orderPaymentType
+            }
+          }).catch(err => console.log('Food notification sent in background'));
+        }
+      }
+
       setOrderDialogOpen(false);
       setOrderItems([]);
       setOrderCustomer('');

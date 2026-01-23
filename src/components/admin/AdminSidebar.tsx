@@ -20,7 +20,8 @@ import {
   Receipt,
   TrendingUp,
   FerrisWheel,
-  Star
+  Star,
+  MessageSquare
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -53,6 +54,7 @@ const allMenuItems: MenuItem[] = [
   { id: 'ride-reviews', label: 'Ride Reviews', labelBn: 'রাইড রিভিউ', icon: Star, path: '/admin/ride-reviews', requiredRoles: ['admin', 'manager'] },
   { id: 'reports', label: 'Reports', labelBn: 'রিপোর্ট', icon: FileBarChart, path: '/admin/reports', requiredRoles: ['admin', 'manager'] },
   { id: 'profit', label: 'Profit & Loss', labelBn: 'লাভ-ক্ষতি', icon: TrendingUp, path: '/admin/profit', requiredRoles: ['admin', 'manager'] },
+  { id: 'notifications', label: 'Notifications', labelBn: 'নোটিফিকেশন', icon: MessageSquare, path: '/admin/notifications', requiredRoles: ['admin', 'manager'] },
   { id: 'users', label: 'Users', labelBn: 'ইউজার', icon: Shield, path: '/admin/users', requiredRoles: ['admin'] },
   { id: 'settings', label: 'Settings', labelBn: 'সেটিংস', icon: Settings, path: '/admin/settings', requiredRoles: ['admin'] },
 ];

@@ -2,6 +2,64 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { corsHeaders } from '../_shared/cors.ts';
 import { createAdminClient } from '../_shared/supabase-admin.ts';
 
+// Send payment notification via edge function
+async function sendPaymentNotification(
+  phone: string,
+  message: string,
+  channel: 'sms' | 'whatsapp' | 'both',
+  referenceId: string,
+  referenceType: 'ticket' | 'food_order' | 'booking'
+) {
+  const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
+  const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
+
+  try {
+    const response = await fetch(`${supabaseUrl}/functions/v1/send-notification`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${supabaseKey}`
+      },
+      body: JSON.stringify({
+        phone,
+        message,
+        channel,
+        reference_id: referenceId,
+        reference_type: referenceType
+      })
+    });
+
+    const result = await response.json();
+    console.log('Payment notification result:', result);
+    return result;
+  } catch (error) {
+    console.error('Payment notification error:', error);
+    return null;
+  }
+}
+
+// Get notification settings from database
+async function getNotificationSettings(supabase: ReturnType<typeof createAdminClient>) {
+  try {
+    const { data } = await supabase
+      .from('settings')
+      .select('value')
+      .eq('key', 'notification_channels')
+      .maybeSingle();
+    
+    if (data?.value) {
+      const value = data.value as Record<string, boolean>;
+      return {
+        sms: value.sms !== false,
+        whatsapp: value.whatsapp !== false
+      };
+    }
+  } catch (error) {
+    console.error('Failed to get notification settings:', error);
+  }
+  return { sms: true, whatsapp: false };
+}
+
 serve(async (req) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
@@ -89,7 +147,7 @@ serve(async (req) => {
       console.error('Payment update error:', updateError);
     }
 
-    // Update booking payment status and send SMS
+    // Update booking payment status and send notifications
     if (payment.booking_id) {
       const { data: booking } = await supabase
         .from('bookings')
@@ -98,30 +156,38 @@ serve(async (req) => {
         .select()
         .single();
 
-      // Send SMS on successful payment
+      // Send notifications on successful payment
       if (status === 'COMPLETED' && booking) {
-        try {
-          const smsMessage = `Baby World পেমেন্ট সফল! ৳${amount}
-তারিখ: ${booking.slot_date}
-সময়: ${booking.time_slot}
-ট্রান্সাকশন: ${transaction_id || 'N/A'}
-ধন্যবাদ ${booking.parent_name}!`;
-          
-          await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/send-sms`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${Deno.env.get('SUPABASE_ANON_KEY')}`
-            },
-            body: JSON.stringify({
-              phone: booking.parent_phone,
-              message: smsMessage
-            })
-          });
-          console.log('Payment SMS sent to:', booking.parent_phone);
-        } catch (smsError) {
-          console.error('Payment SMS failed:', smsError);
+        const notifSettings = await getNotificationSettings(supabase);
+        
+        // Determine channel based on settings
+        let channel: 'sms' | 'whatsapp' | 'both' = 'sms';
+        if (notifSettings.sms && notifSettings.whatsapp) {
+          channel = 'both';
+        } else if (notifSettings.whatsapp) {
+          channel = 'whatsapp';
         }
+
+        // Bilingual message
+        const smsMessage = `✅ Baby World পেমেন্ট সফল!
+৳${amount} | তারিখ: ${booking.slot_date}
+সময়: ${booking.time_slot}
+ধন্যবাদ ${booking.parent_name}!
+
+Payment Successful!
+Amount: ৳${amount}
+Date: ${booking.slot_date}
+Slot: ${booking.time_slot}`;
+
+        await sendPaymentNotification(
+          booking.parent_phone,
+          smsMessage,
+          channel,
+          payment.id,
+          'booking'
+        );
+
+        console.log('Payment notification sent to:', booking.parent_phone);
       }
     }
 

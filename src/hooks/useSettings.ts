@@ -41,6 +41,8 @@ interface NotificationSettings {
   smsBooking: boolean;
   emailPayment: boolean;
   smsPayment: boolean;
+  whatsappEnabled: boolean;
+  smsEnabled: boolean;
 }
 
 // Default values
@@ -88,7 +90,9 @@ const defaultNotifications: NotificationSettings = {
   emailBooking: true,
   smsBooking: true,
   emailPayment: true,
-  smsPayment: false
+  smsPayment: false,
+  whatsappEnabled: false,
+  smsEnabled: true
 };
 
 export function useSettings() {
@@ -177,7 +181,18 @@ export function useSettings() {
                   emailBooking: value.emailBooking !== false,
                   smsBooking: value.smsBooking !== false,
                   emailPayment: value.emailPayment !== false,
-                  smsPayment: value.smsPayment === true
+                  smsPayment: value.smsPayment === true,
+                  whatsappEnabled: value.whatsappEnabled === true,
+                  smsEnabled: value.smsEnabled !== false
+                }));
+              }
+              break;
+            case 'notification_channels':
+              if (value) {
+                setNotifications(prev => ({
+                  ...prev,
+                  smsEnabled: value.sms !== false,
+                  whatsappEnabled: value.whatsapp === true
                 }));
               }
               break;
@@ -287,12 +302,20 @@ export function useSettings() {
   const saveNotifications = async () => {
     setSaving(true);
     try {
-      await saveSetting('notifications', {
-        emailBooking: notifications.emailBooking,
-        smsBooking: notifications.smsBooking,
-        emailPayment: notifications.emailPayment,
-        smsPayment: notifications.smsPayment
-      }, 'general');
+      await Promise.all([
+        saveSetting('notifications', {
+          emailBooking: notifications.emailBooking,
+          smsBooking: notifications.smsBooking,
+          emailPayment: notifications.emailPayment,
+          smsPayment: notifications.smsPayment,
+          whatsappEnabled: notifications.whatsappEnabled,
+          smsEnabled: notifications.smsEnabled
+        }, 'general'),
+        saveSetting('notification_channels', {
+          sms: notifications.smsEnabled,
+          whatsapp: notifications.whatsappEnabled
+        }, 'notifications')
+      ]);
       return true;
     } catch (error) {
       console.error('Error saving notifications:', error);
