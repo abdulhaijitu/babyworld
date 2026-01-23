@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { WhatsAppButton } from "./WhatsAppButton";
 
 export function Footer() {
   const { t } = useLanguage();
@@ -26,6 +27,7 @@ export function Footer() {
               {t("footer.description")}
             </p>
             <p className="text-sm font-medium opacity-90">{t("hero.learnPlay")}</p>
+            <WhatsAppButton variant="footer" />
           </div>
 
           {/* Quick Links */}
