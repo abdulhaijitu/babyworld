@@ -22,6 +22,7 @@ export type Database = {
           notes: string | null
           parent_name: string
           parent_phone: string
+          payment_status: string
           slot_date: string
           slot_id: string | null
           status: Database["public"]["Enums"]["booking_status"]
@@ -36,6 +37,7 @@ export type Database = {
           notes?: string | null
           parent_name: string
           parent_phone: string
+          payment_status?: string
           slot_date: string
           slot_id?: string | null
           status?: Database["public"]["Enums"]["booking_status"]
@@ -50,6 +52,7 @@ export type Database = {
           notes?: string | null
           parent_name?: string
           parent_phone?: string
+          payment_status?: string
           slot_date?: string
           slot_id?: string | null
           status?: Database["public"]["Enums"]["booking_status"]
@@ -63,6 +66,62 @@ export type Database = {
             columns: ["slot_id"]
             isOneToOne: false
             referencedRelation: "slots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          amount: number
+          booking_id: string | null
+          created_at: string
+          currency: string
+          fee: number | null
+          id: string
+          invoice_id: string
+          metadata: Json | null
+          payment_method: string | null
+          sender_number: string | null
+          status: string
+          transaction_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          booking_id?: string | null
+          created_at?: string
+          currency?: string
+          fee?: number | null
+          id?: string
+          invoice_id: string
+          metadata?: Json | null
+          payment_method?: string | null
+          sender_number?: string | null
+          status?: string
+          transaction_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          booking_id?: string | null
+          created_at?: string
+          currency?: string
+          fee?: number | null
+          id?: string
+          invoice_id?: string
+          metadata?: Json | null
+          payment_method?: string | null
+          sender_number?: string | null
+          status?: string
+          transaction_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
             referencedColumns: ["id"]
           },
         ]
@@ -100,14 +159,42 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
+      app_role: "admin" | "user"
       booking_status: "confirmed" | "pending" | "cancelled"
       booking_type: "hourly_play" | "birthday_event" | "private_event"
       slot_status: "available" | "booked"
@@ -239,6 +326,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["admin", "user"],
       booking_status: ["confirmed", "pending", "cancelled"],
       booking_type: ["hourly_play", "birthday_event", "private_event"],
       slot_status: ["available", "booked"],
