@@ -468,10 +468,40 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
             {rides.length > 0 && (
               <Card>
                 <CardHeader className="pb-4">
-                  <CardTitle>{language === 'bn' ? 'রাইড যোগ করুন (ঐচ্ছিক)' : 'Add Rides (Optional)'}</CardTitle>
-                  <CardDescription>
-                    {language === 'bn' ? 'অতিরিক্ত রাইড নির্বাচন করুন' : 'Select additional rides'}
-                  </CardDescription>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle>{language === 'bn' ? 'রাইড যোগ করুন (ঐচ্ছিক)' : 'Add Rides (Optional)'}</CardTitle>
+                      <CardDescription>
+                        {language === 'bn' ? 'অতিরিক্ত রাইড নির্বাচন করুন' : 'Select additional rides'}
+                      </CardDescription>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const allRides: Record<string, number> = {};
+                          rides.forEach(ride => {
+                            allRides[ride.id] = 1;
+                          });
+                          setSelectedRides(allRides);
+                        }}
+                      >
+                        {language === 'bn' ? 'সব সিলেক্ট' : 'Select All'}
+                      </Button>
+                      {Object.keys(selectedRides).length > 0 && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setSelectedRides({})}
+                        >
+                          {language === 'bn' ? 'বাদ দিন' : 'Clear'}
+                        </Button>
+                      )}
+                    </div>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
