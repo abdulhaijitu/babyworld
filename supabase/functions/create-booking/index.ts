@@ -159,6 +159,29 @@ serve(async (req) => {
       );
     }
 
+    // Send SMS notification (non-blocking)
+    try {
+      const smsMessage = `Baby World বুকিং কনফার্ম! 
+তারিখ: ${date}
+সময়: ${time_slot}
+ধন্যবাদ ${cleanName}!`;
+      
+      await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/send-sms`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${Deno.env.get('SUPABASE_ANON_KEY')}`
+        },
+        body: JSON.stringify({
+          phone: cleanPhone,
+          message: smsMessage
+        })
+      });
+    } catch (smsError) {
+      console.error('SMS notification failed:', smsError);
+      // Don't fail the booking if SMS fails
+    }
+
     // Return success response
     return new Response(
       JSON.stringify({ 
