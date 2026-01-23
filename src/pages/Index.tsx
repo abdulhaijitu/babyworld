@@ -6,10 +6,12 @@ import { TrustSection } from "@/components/TrustSection";
 import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { SEOHead } from "@/components/SEOHead";
 
 const Index = () => {
   return (
     <PageTransition>
+      <SEOHead page="home" />
       <div className="min-h-screen bg-background">
         <Navbar />
         <main>

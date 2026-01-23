@@ -40,6 +40,7 @@ const timeSlots = generateTimeSlots();
 export function BookingSection() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
+  const [childCount, setChildCount] = useState(1);
   const { t } = useLanguage();
 
   const today = startOfDay(new Date());
@@ -47,6 +48,10 @@ export function BookingSection() {
 
   const handleSlotSelect = (slotId: string) => {
     setSelectedSlot(slotId === selectedSlot ? null : slotId);
+  };
+
+  const handleChildCountChange = (count: number) => {
+    setChildCount(count);
   };
 
   const selectedSlotData = timeSlots.find((slot) => slot.id === selectedSlot);
@@ -130,6 +135,39 @@ export function BookingSection() {
                   </p>
                 </div>
               )}
+
+              {/* Group Booking - Child Count */}
+              <div className="mt-6 pt-6 border-t border-border">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-8 h-8 rounded-lg bg-secondary/10 flex items-center justify-center">
+                    <Users className="w-4 h-4 text-secondary" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-foreground text-sm">{t("booking.groupBooking")}</h4>
+                    <p className="text-xs text-muted-foreground">{t("booking.selectChildren")}</p>
+                  </div>
+                </div>
+                
+                <div className="flex gap-2">
+                  {[1, 2, 3, 4, 5].map((count) => (
+                    <button
+                      key={count}
+                      onClick={() => handleChildCountChange(count)}
+                      className={cn(
+                        "flex-1 py-3 rounded-xl text-sm font-medium transition-all duration-200",
+                        childCount === count
+                          ? "bg-secondary text-secondary-foreground shadow-md"
+                          : "bg-muted text-muted-foreground hover:bg-muted/80"
+                      )}
+                    >
+                      {count}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-muted-foreground mt-2 text-center">
+                  {childCount} {t("booking.childrenSelectedLabel")}
+                </p>
+              </div>
             </div>
           </ScrollFadeIn>
 
@@ -209,6 +247,7 @@ export function BookingSection() {
             <BookingSummary
               selectedDate={selectedDate}
               selectedSlotData={selectedSlotData}
+              childCount={childCount}
             />
           </ScrollFadeIn>
         </div>
@@ -218,6 +257,7 @@ export function BookingSection() {
           <BookingSummaryMobile
             selectedDate={selectedDate}
             selectedSlotData={selectedSlotData}
+            childCount={childCount}
           />
         </div>
 
@@ -231,11 +271,13 @@ export function BookingSection() {
 interface SummaryProps {
   selectedDate: Date | undefined;
   selectedSlotData: { label: string } | undefined;
+  childCount: number;
 }
 
 function generateWhatsAppBookingMessage(
   selectedDate: Date,
   selectedSlotData: { label: string },
+  childCount: number,
   language: string
 ) {
   const greeting = language === "bn" 
@@ -245,14 +287,15 @@ function generateWhatsAppBookingMessage(
   const bookingLabel = language === "bn" ? "প্লে সেশন বুকিং অনুরোধ" : "Play Session Booking Request";
   const dateLabel = language === "bn" ? "তারিখ" : "Date";
   const timeLabel = language === "bn" ? "সময়" : "Time";
-  const ticketLabel = language === "bn" ? "টিকেট" : "Ticket";
-  const ticketType = language === "bn" ? "১ শিশু + ১ অভিভাবক" : "1 Child + 1 Guardian";
+  const childrenLabel = language === "bn" ? "শিশু সংখ্যা" : "Number of Children";
+  const guardiansLabel = language === "bn" ? "অভিভাবক সংখ্যা" : "Number of Guardians";
   
   let message = `${greeting}\n\n`;
   message += `📋 ${bookingLabel}\n\n`;
   message += `📅 ${dateLabel}: ${format(selectedDate, "dd MMMM, yyyy")}\n`;
   message += `⏰ ${timeLabel}: ${selectedSlotData.label}\n`;
-  message += `🎫 ${ticketLabel}: ${ticketType}\n\n`;
+  message += `👶 ${childrenLabel}: ${childCount}\n`;
+  message += `👨‍👩‍👧 ${guardiansLabel}: ${childCount}\n\n`;
   message += language === "bn" 
     ? "অনুগ্রহ করে এই স্লট নিশ্চিত করুন।" 
     : "Please confirm this slot for me.";
@@ -260,13 +303,13 @@ function generateWhatsAppBookingMessage(
   return encodeURIComponent(message);
 }
 
-function BookingSummary({ selectedDate, selectedSlotData }: SummaryProps) {
+function BookingSummary({ selectedDate, selectedSlotData, childCount }: SummaryProps) {
   const isComplete = selectedDate && selectedSlotData;
   const { t, language } = useLanguage();
 
   const handleWhatsAppBooking = () => {
     if (selectedDate && selectedSlotData) {
-      const message = generateWhatsAppBookingMessage(selectedDate, selectedSlotData, language);
+      const message = generateWhatsAppBookingMessage(selectedDate, selectedSlotData, childCount, language);
       const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
       window.open(whatsappUrl, "_blank");
     }
@@ -305,12 +348,14 @@ function BookingSummary({ selectedDate, selectedSlotData }: SummaryProps) {
           </div>
         </div>
 
-        {/* Ticket Type */}
+        {/* Children Count */}
         <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-xl">
           <Users className="w-5 h-5 text-muted-foreground" />
           <div>
             <p className="text-xs text-muted-foreground">{t("booking.ticket")}</p>
-            <p className="font-medium text-foreground">{t("booking.ticketType")}</p>
+            <p className="font-medium text-foreground">
+              {childCount} {language === "bn" ? "শিশু" : childCount === 1 ? "Child" : "Children"} + {childCount} {language === "bn" ? "অভিভাবক" : childCount === 1 ? "Guardian" : "Guardians"}
+            </p>
           </div>
         </div>
 
@@ -350,13 +395,13 @@ function BookingSummary({ selectedDate, selectedSlotData }: SummaryProps) {
   );
 }
 
-function BookingSummaryMobile({ selectedDate, selectedSlotData }: SummaryProps) {
+function BookingSummaryMobile({ selectedDate, selectedSlotData, childCount }: SummaryProps) {
   const isComplete = selectedDate && selectedSlotData;
   const { t, language } = useLanguage();
 
   const handleWhatsAppBooking = () => {
     if (selectedDate && selectedSlotData) {
-      const message = generateWhatsAppBookingMessage(selectedDate, selectedSlotData, language);
+      const message = generateWhatsAppBookingMessage(selectedDate, selectedSlotData, childCount, language);
       const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
       window.open(whatsappUrl, "_blank");
     }
@@ -370,7 +415,9 @@ function BookingSummaryMobile({ selectedDate, selectedSlotData }: SummaryProps) 
             <p className="text-sm font-medium text-foreground truncate">
               {format(selectedDate!, "dd MMM")} • {selectedSlotData?.label}
             </p>
-            <p className="text-xs text-muted-foreground">{t("booking.ticketType")}</p>
+            <p className="text-xs text-muted-foreground">
+              {childCount} {language === "bn" ? "শিশু" : childCount === 1 ? "Child" : "Children"} + {childCount} {language === "bn" ? "অভিভাবক" : childCount === 1 ? "Guardian" : "Guardians"}
+            </p>
           </div>
         ) : (
           <p className="text-sm text-muted-foreground">{t("booking.selectDateTime")}</p>
