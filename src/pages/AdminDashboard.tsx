@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useAdminBookings, Booking } from '@/hooks/useAdminBookings';
@@ -59,7 +59,6 @@ import {
   Search,
   TrendingUp,
   Banknote,
-  Filter,
   X
 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -67,12 +66,14 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { format, parseISO, startOfMonth, endOfMonth, isWithinInterval, startOfWeek, endOfWeek } from 'date-fns';
 import { bn } from 'date-fns/locale';
 import babyWorldLogo from '@/assets/baby-world-logo.png';
+import { AdminDashboardSkeleton, TableRowSkeleton } from '@/components/admin/AdminSkeleton';
+import { AdminErrorState } from '@/components/admin/AdminErrorState';
 
 const PRICE_PER_TICKET = 300;
 
 export default function AdminDashboard() {
-  const { user, isAdmin, loading: authLoading, signOut } = useAuth();
-  const { bookings, loading: bookingsLoading, error, refetch, updateBookingStatus, cancelBooking } = useAdminBookings();
+  const { user, isAdmin, loading: authLoading, error: authError, signOut } = useAuth();
+  const { bookings, loading: bookingsLoading, error: bookingsError, refetch, updateBookingStatus, cancelBooking } = useAdminBookings();
   const navigate = useNavigate();
   const { language } = useLanguage();
   
@@ -90,18 +91,29 @@ export default function AdminDashboard() {
   const [dateFilter, setDateFilter] = useState<Date | undefined>(undefined);
   const [dateRangeFilter, setDateRangeFilter] = useState<string>('all');
 
+  // Retrying state
+  const [retrying, setRetrying] = useState(false);
+
+  // Handle retry for data fetch errors
+  const handleRetry = useCallback(async () => {
+    setRetrying(true);
+    await refetch();
+    setRetrying(false);
+  }, [refetch]);
+
+  // Redirect to login if not authenticated (only after auth loading completes)
   useEffect(() => {
     if (!authLoading && !user) {
       navigate('/admin/login');
     }
   }, [user, authLoading, navigate]);
 
+  // Show error toast if user is not admin (but only after auth loading)
   useEffect(() => {
     if (!authLoading && user && !isAdmin) {
       toast.error(language === 'bn' ? 'অ্যাডমিন অ্যাক্সেস নেই' : 'No admin access');
-      navigate('/');
     }
-  }, [isAdmin, authLoading, user, navigate, language]);
+  }, [isAdmin, authLoading, user, language]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -163,6 +175,8 @@ export default function AdminDashboard() {
         return <Badge variant="outline" className="text-yellow-600"><CreditCard className="w-3 h-3 mr-1" /> {language === 'bn' ? 'অপেক্ষমাণ' : 'Pending'}</Badge>;
       case 'failed':
         return <Badge variant="destructive"><CreditCard className="w-3 h-3 mr-1" /> {language === 'bn' ? 'ব্যর্থ' : 'Failed'}</Badge>;
+      case 'refunded':
+        return <Badge variant="outline" className="text-blue-600"><Undo2 className="w-3 h-3 mr-1" /> {language === 'bn' ? 'রিফান্ড' : 'Refunded'}</Badge>;
       default:
         return <Badge variant="secondary"><CreditCard className="w-3 h-3 mr-1" /> {language === 'bn' ? 'অপরিশোধিত' : 'Unpaid'}</Badge>;
     }
@@ -249,12 +263,24 @@ export default function AdminDashboard() {
   
   const hasActiveFilters = searchQuery || statusFilter !== 'all' || paymentFilter !== 'all' || dateFilter || dateRangeFilter !== 'all';
 
+  // Show skeleton while auth is loading
   if (authLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
+    return <AdminDashboardSkeleton />;
+  }
+
+  // Show error state for auth errors
+  if (authError) {
+    return <AdminErrorState type="auth" message={authError} />;
+  }
+
+  // Show permission error if user exists but is not admin
+  if (user && !isAdmin) {
+    return <AdminErrorState type="permission" />;
+  }
+
+  // Show login required if no user
+  if (!user) {
+    return <AdminErrorState type="auth" />;
   }
 
   return (
@@ -280,11 +306,11 @@ export default function AdminDashboard() {
 
       <main className="container mx-auto px-4 py-8 space-y-8">
         {/* Revenue Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
             <CardHeader className="pb-2">
               <CardDescription>{language === 'bn' ? 'আজকের আয়' : "Today's Revenue"}</CardDescription>
-              <CardTitle className="text-3xl">৳{todayRevenue.toLocaleString()}</CardTitle>
+              <CardTitle className="text-2xl md:text-3xl">৳{todayRevenue.toLocaleString()}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center text-muted-foreground text-sm">
@@ -297,7 +323,7 @@ export default function AdminDashboard() {
           <Card>
             <CardHeader className="pb-2">
               <CardDescription>{language === 'bn' ? 'এই সপ্তাহে' : 'This Week'}</CardDescription>
-              <CardTitle className="text-3xl">৳{weeklyRevenue.toLocaleString()}</CardTitle>
+              <CardTitle className="text-2xl md:text-3xl">৳{weeklyRevenue.toLocaleString()}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center text-muted-foreground text-sm">
@@ -310,7 +336,7 @@ export default function AdminDashboard() {
           <Card>
             <CardHeader className="pb-2">
               <CardDescription>{language === 'bn' ? 'এই মাসে' : 'This Month'}</CardDescription>
-              <CardTitle className="text-3xl">৳{monthlyRevenue.toLocaleString()}</CardTitle>
+              <CardTitle className="text-2xl md:text-3xl">৳{monthlyRevenue.toLocaleString()}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center text-muted-foreground text-sm">
@@ -323,7 +349,7 @@ export default function AdminDashboard() {
           <Card className="bg-gradient-to-br from-green-500/10 to-green-500/5 border-green-500/20">
             <CardHeader className="pb-2">
               <CardDescription>{language === 'bn' ? 'মোট আয়' : 'Total Revenue'}</CardDescription>
-              <CardTitle className="text-3xl">৳{totalRevenue.toLocaleString()}</CardTitle>
+              <CardTitle className="text-2xl md:text-3xl">৳{totalRevenue.toLocaleString()}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center text-muted-foreground text-sm">
@@ -335,11 +361,11 @@ export default function AdminDashboard() {
         </div>
 
         {/* Booking Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card>
             <CardHeader className="pb-2">
               <CardDescription>{language === 'bn' ? 'মোট বুকিং' : 'Total Bookings'}</CardDescription>
-              <CardTitle className="text-3xl">{bookings.length}</CardTitle>
+              <CardTitle className="text-2xl md:text-3xl">{bookings.length}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center text-muted-foreground text-sm">
@@ -352,7 +378,7 @@ export default function AdminDashboard() {
           <Card>
             <CardHeader className="pb-2">
               <CardDescription>{language === 'bn' ? 'আজকের বুকিং' : "Today's Bookings"}</CardDescription>
-              <CardTitle className="text-3xl">{todayBookings.length}</CardTitle>
+              <CardTitle className="text-2xl md:text-3xl">{todayBookings.length}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center text-muted-foreground text-sm">
@@ -365,7 +391,7 @@ export default function AdminDashboard() {
           <Card>
             <CardHeader className="pb-2">
               <CardDescription>{language === 'bn' ? 'নিশ্চিত বুকিং' : 'Confirmed'}</CardDescription>
-              <CardTitle className="text-3xl text-green-600">{confirmedBookings.length}</CardTitle>
+              <CardTitle className="text-2xl md:text-3xl text-green-600">{confirmedBookings.length}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center text-muted-foreground text-sm">
@@ -378,7 +404,7 @@ export default function AdminDashboard() {
           <Card>
             <CardHeader className="pb-2">
               <CardDescription>{language === 'bn' ? 'পেমেন্ট সম্পন্ন' : 'Paid'}</CardDescription>
-              <CardTitle className="text-3xl text-primary">{paidBookings.length}</CardTitle>
+              <CardTitle className="text-2xl md:text-3xl text-primary">{paidBookings.length}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center text-muted-foreground text-sm">
@@ -401,8 +427,8 @@ export default function AdminDashboard() {
                     : `Showing ${filteredBookings.length} bookings`}
                 </CardDescription>
               </div>
-              <Button variant="outline" size="sm" onClick={refetch} disabled={bookingsLoading}>
-                <RefreshCw className={`w-4 h-4 mr-2 ${bookingsLoading ? 'animate-spin' : ''}`} />
+              <Button variant="outline" size="sm" onClick={handleRetry} disabled={bookingsLoading || retrying}>
+                <RefreshCw className={`w-4 h-4 mr-2 ${(bookingsLoading || retrying) ? 'animate-spin' : ''}`} />
                 {language === 'bn' ? 'রিফ্রেশ' : 'Refresh'}
               </Button>
             </div>
@@ -488,14 +514,41 @@ export default function AdminDashboard() {
             </div>
           </CardHeader>
           <CardContent>
-            {error ? (
-              <div className="text-center py-8 text-destructive">
-                <AlertCircle className="w-8 h-8 mx-auto mb-2" />
-                <p>{error}</p>
+            {bookingsError ? (
+              <div className="text-center py-8">
+                <AlertCircle className="w-12 h-12 mx-auto mb-4 text-destructive" />
+                <p className="text-destructive font-medium mb-2">
+                  {language === 'bn' ? 'ডেটা লোড করতে সমস্যা হয়েছে' : 'Failed to load data'}
+                </p>
+                <p className="text-sm text-muted-foreground mb-4">{bookingsError}</p>
+                <Button onClick={handleRetry} disabled={retrying}>
+                  <RefreshCw className={`w-4 h-4 mr-2 ${retrying ? 'animate-spin' : ''}`} />
+                  {language === 'bn' ? 'আবার চেষ্টা করুন' : 'Try Again'}
+                </Button>
               </div>
             ) : bookingsLoading ? (
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{language === 'bn' ? 'তারিখ ও সময়' : 'Date & Time'}</TableHead>
+                      <TableHead>{language === 'bn' ? 'অভিভাবক' : 'Parent'}</TableHead>
+                      <TableHead>{language === 'bn' ? 'ফোন' : 'Phone'}</TableHead>
+                      <TableHead>{language === 'bn' ? 'স্ট্যাটাস' : 'Status'}</TableHead>
+                      <TableHead>{language === 'bn' ? 'পেমেন্ট' : 'Payment'}</TableHead>
+                      <TableHead className="text-right">{language === 'bn' ? 'অ্যাকশন' : 'Actions'}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <tbody>
+                    {[1, 2, 3, 4, 5].map(i => (
+                      <TableRowSkeleton key={i} />
+                    ))}
+                  </tbody>
+                </Table>
+                <div className="text-center py-4 text-sm text-muted-foreground">
+                  <Loader2 className="w-4 h-4 animate-spin inline-block mr-2" />
+                  {language === 'bn' ? 'বুকিং ডেটা লোড হচ্ছে...' : 'Loading booking data...'}
+                </div>
               </div>
             ) : filteredBookings.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
