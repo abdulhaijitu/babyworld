@@ -123,6 +123,12 @@ const translations: Record<Language, Record<string, string>> = {
     "testimonials.parent3.name": "Nusrat Jahan",
     "testimonials.parent3.role": "Mother of 3",
     "testimonials.parent3.quote": "As a mother of three, I appreciate the age-appropriate play zones. Each of my children finds something they love. The trained staff gives me peace of mind.",
+    "testimonials.parent4.name": "Rafiqul Islam",
+    "testimonials.parent4.role": "Father of twins",
+    "testimonials.parent4.quote": "My twins love coming here every weekend. The variety of activities keeps them engaged for hours. It's worth every taka for their happiness!",
+    "testimonials.parent5.name": "Tahmina Begum",
+    "testimonials.parent5.role": "Grandmother",
+    "testimonials.parent5.quote": "I bring my grandchildren here often. The staff is so helpful, and the facility is always spotlessly clean. A wonderful place for family time.",
     "testimonials.trustStatement": "Join hundreds of happy families who trust Baby World",
     
     // Events Section (Home page preview)
@@ -438,6 +444,12 @@ const translations: Record<Language, Record<string, string>> = {
     "testimonials.parent3.name": "নুসরাত জাহান",
     "testimonials.parent3.role": "৩ সন্তানের মা",
     "testimonials.parent3.quote": "তিন সন্তানের মা হিসেবে, আমি বয়স-উপযোগী প্লে জোনগুলো সত্যিই পছন্দ করি। আমার প্রতিটি সন্তান তাদের পছন্দের কিছু খুঁজে পায়। প্রশিক্ষিত স্টাফ আমাকে মানসিক শান্তি দেয়।",
+    "testimonials.parent4.name": "রফিকুল ইসলাম",
+    "testimonials.parent4.role": "যমজ সন্তানের বাবা",
+    "testimonials.parent4.quote": "আমার যমজ বাচ্চারা প্রতি সপ্তাহান্তে এখানে আসতে ভালোবাসে। বিভিন্ন ধরনের কার্যকলাপ তাদের ঘণ্টার পর ঘণ্টা ব্যস্ত রাখে। তাদের আনন্দের জন্য প্রতিটি টাকা সার্থক!",
+    "testimonials.parent5.name": "তাহমিনা বেগম",
+    "testimonials.parent5.role": "দাদি/নানি",
+    "testimonials.parent5.quote": "আমি প্রায়ই আমার নাতি-নাতনিদের এখানে আনি। স্টাফরা খুবই সহায়ক এবং সুবিধাটি সবসময় ঝকঝকে পরিষ্কার। পারিবারিক সময়ের জন্য চমৎকার জায়গা।",
     "testimonials.trustStatement": "শত শত সুখী পরিবারের সাথে যোগ দিন যারা বেবি ওয়ার্ল্ডকে বিশ্বাস করে",
     
     // Events Section (Home page preview)
