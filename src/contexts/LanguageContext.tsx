@@ -283,9 +283,9 @@ const translations: Record<Language, Record<string, string>> = {
     "eventsFAQ.contactUs": "Contact us",
     
     // Promo Banner
-    "promo.badge": "🎉 Winter Special!",
-    "promo.message": "Get 20% off on birthday party bookings this January",
-    "promo.validUntil": "Valid until Jan 31",
+    "promo.badge": "🎈 Eid Special!",
+    "promo.message": "Book birthday parties for Eid holidays – Get 15% off!",
+    "promo.validUntil": "Valid until Apr 15",
     "promo.cta": "Book Now",
     
     // Footer
@@ -566,9 +566,9 @@ const translations: Record<Language, Record<string, string>> = {
     "eventsFAQ.contactUs": "যোগাযোগ করুন",
     
     // Promo Banner
-    "promo.badge": "🎉 শীতকালীন অফার!",
-    "promo.message": "জানুয়ারিতে জন্মদিনের পার্টি বুকিংয়ে ২০% ছাড়",
-    "promo.validUntil": "৩১ জানুয়ারি পর্যন্ত",
+    "promo.badge": "🎈 ঈদ স্পেশাল!",
+    "promo.message": "ঈদের ছুটিতে জন্মদিনের পার্টি বুক করুন – ১৫% ছাড় পান!",
+    "promo.validUntil": "১৫ এপ্রিল পর্যন্ত",
     "promo.cta": "এখনই বুক করুন",
     
     // Footer

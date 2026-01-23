@@ -1,30 +1,79 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Shield, Star, Clock } from "lucide-react";
+import { Shield, Clock } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import celebration1 from "@/assets/celebration-1.jpg";
+import celebration2 from "@/assets/celebration-2.jpg";
+import celebration3 from "@/assets/celebration-3.jpg";
+import celebration4 from "@/assets/celebration-4.jpg";
 
 export function HeroSection() {
   const { t } = useLanguage();
+
+  // Floating animation variants
+  const floatAnimation = {
+    initial: { y: 0 },
+    animate: {
+      y: [-8, 8, -8],
+      transition: { duration: 4, repeat: Infinity, ease: "easeInOut" as const }
+    }
+  };
+
+  const floatDelayed = {
+    initial: { y: 0 },
+    animate: {
+      y: [6, -6, 6],
+      transition: { duration: 5, repeat: Infinity, ease: "easeInOut" as const, delay: 0.5 }
+    }
+  };
+
+  const bounceAnimation = {
+    initial: { scale: 1 },
+    animate: {
+      scale: [1, 1.1, 1],
+      transition: { duration: 2, repeat: Infinity, ease: "easeInOut" as const }
+    }
+  };
 
   return (
     <section
       id="home"
       className="relative min-h-screen flex items-center pt-20 overflow-hidden"
     >
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-accent via-background to-background" />
+      {/* Beautiful gradient background inspired by logo */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/5" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-accent/30 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-info/10 via-transparent to-transparent" />
+      </div>
       
-      {/* Decorative circles */}
+      {/* Animated decorative blobs */}
       <motion.div 
-        className="absolute top-20 right-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl"
-        animate={{ scale: [1, 1.1, 1], opacity: [0.5, 0.7, 0.5] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-20 right-[10%] w-80 h-80 bg-gradient-to-br from-primary/15 to-secondary/10 rounded-full blur-3xl"
+        animate={{ 
+          scale: [1, 1.2, 1], 
+          opacity: [0.4, 0.6, 0.4],
+          x: [0, 20, 0]
+        }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div 
-        className="absolute bottom-20 left-10 w-96 h-96 bg-secondary/10 rounded-full blur-3xl"
-        animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.6, 0.4] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        className="absolute bottom-10 left-[5%] w-96 h-96 bg-gradient-to-tr from-secondary/10 to-accent/15 rounded-full blur-3xl"
+        animate={{ 
+          scale: [1, 1.15, 1], 
+          opacity: [0.3, 0.5, 0.3],
+          y: [0, -30, 0]
+        }}
+        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+      />
+      <motion.div 
+        className="absolute top-1/2 right-[30%] w-64 h-64 bg-gradient-to-bl from-info/10 to-primary/5 rounded-full blur-3xl"
+        animate={{ 
+          scale: [1, 1.1, 1], 
+          opacity: [0.2, 0.4, 0.2]
+        }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
       />
 
       <div className="container relative mx-auto">
@@ -37,12 +86,17 @@ export function HeroSection() {
             transition={{ duration: 0.7, ease: [0.21, 0.47, 0.32, 0.98] }}
           >
             <motion.div 
-              className="inline-flex items-center gap-2 px-4 py-2 bg-card rounded-full shadow-card"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-card rounded-full shadow-card border border-primary/10"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2, duration: 0.5 }}
             >
-              <Star className="w-4 h-4 text-secondary" />
+              <motion.span 
+                className="text-lg"
+                {...bounceAnimation}
+              >
+                ⭐
+              </motion.span>
               <span className="text-sm font-medium text-foreground">
                 {t("hero.badge")}
               </span>
@@ -76,16 +130,16 @@ export function HeroSection() {
               transition={{ delay: 0.5, duration: 0.6 }}
             >
               <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
-                  <Shield className="w-5 h-5 text-primary" />
+                <div className="w-10 h-10 rounded-full bg-success/10 flex items-center justify-center">
+                  <Shield className="w-5 h-5 text-success" />
                 </div>
                 <span className="text-sm font-medium text-foreground">
                   {t("hero.safeEnvironment")}
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
-                  <Clock className="w-5 h-5 text-primary" />
+                <div className="w-10 h-10 rounded-full bg-info/10 flex items-center justify-center">
+                  <Clock className="w-5 h-5 text-info" />
                 </div>
                 <span className="text-sm font-medium text-foreground">
                   {t("hero.hourlyPlay")}
@@ -100,16 +154,16 @@ export function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.6 }}
             >
-              <Button size="lg" variant="hero" asChild>
+              <Button size="lg" className="shadow-button" asChild>
                 <Link to="/play-booking">{t("hero.viewOptions")}</Link>
               </Button>
-              <Button size="lg" variant="heroOutline" asChild>
+              <Button size="lg" variant="outline" className="border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground" asChild>
                 <Link to="/birthday-events">{t("hero.birthdayEvents")}</Link>
               </Button>
             </motion.div>
           </motion.div>
 
-          {/* Hero Visual */}
+          {/* Hero Visual - Image Gallery with Animations */}
           <motion.div 
             className="relative hidden lg:block"
             initial={{ opacity: 0, scale: 0.95 }}
@@ -117,43 +171,106 @@ export function HeroSection() {
             transition={{ delay: 0.4, duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }}
           >
             <div className="relative w-full aspect-square max-w-lg mx-auto">
-              {/* Main card */}
-              <div className="absolute inset-0 bg-card rounded-3xl shadow-card-hover overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-secondary/20" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center space-y-4 p-8">
-                    <motion.div 
-                      className="w-24 h-24 mx-auto bg-primary/10 rounded-full flex items-center justify-center"
-                      animate={{ y: [0, -10, 0] }}
-                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      <span className="text-5xl">🎈</span>
-                    </motion.div>
-                    <h3 className="text-2xl font-bold text-foreground">
-                      Baby World
-                    </h3>
-                    <p className="text-lg text-primary font-medium font-bangla">
-                      বেবি ওয়ার্ল্ড
-                    </p>
-                    <p className="text-muted-foreground">{t("hero.learnPlay")}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Floating elements */}
+              {/* Main large image */}
               <motion.div 
-                className="absolute -top-4 -right-4 w-20 h-20 bg-secondary/20 rounded-2xl flex items-center justify-center"
-                animate={{ y: [0, -12, 0] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                className="absolute top-8 left-8 w-[70%] aspect-[4/5] rounded-3xl overflow-hidden shadow-card-hover border-4 border-card z-10"
+                {...floatAnimation}
               >
-                <span className="text-3xl">🧸</span>
+                <img 
+                  src={celebration1} 
+                  alt="Children playing at Baby World" 
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent" />
               </motion.div>
+
+              {/* Top right image */}
               <motion.div 
-                className="absolute -bottom-4 -left-4 w-16 h-16 bg-primary/20 rounded-xl flex items-center justify-center"
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                className="absolute -top-4 right-0 w-[45%] aspect-square rounded-2xl overflow-hidden shadow-card border-4 border-card z-20"
+                {...floatDelayed}
               >
-                <span className="text-2xl">🎨</span>
+                <img 
+                  src={celebration2} 
+                  alt="Birthday celebration" 
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-transparent" />
+              </motion.div>
+
+              {/* Bottom right image */}
+              <motion.div 
+                className="absolute bottom-4 right-4 w-[40%] aspect-[3/4] rounded-2xl overflow-hidden shadow-card border-4 border-card z-20"
+                initial={{ y: 0 }}
+                animate={{ y: [-5, 10, -5] }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+              >
+                <img 
+                  src={celebration3} 
+                  alt="Kids enjoying activities" 
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-tl from-info/10 to-transparent" />
+              </motion.div>
+
+              {/* Floating child-themed elements */}
+              <motion.div 
+                className="absolute -top-6 left-[20%] w-16 h-16 bg-primary/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg z-30"
+                animate={{ 
+                  y: [0, -15, 0],
+                  rotate: [0, 10, 0]
+                }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <span className="text-3xl">🎈</span>
+              </motion.div>
+
+              <motion.div 
+                className="absolute bottom-[30%] -left-4 w-14 h-14 bg-secondary/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg z-30"
+                animate={{ 
+                  y: [0, 12, 0],
+                  rotate: [0, -8, 0]
+                }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+              >
+                <span className="text-2xl">🧸</span>
+              </motion.div>
+
+              <motion.div 
+                className="absolute top-[40%] -right-2 w-12 h-12 bg-success/20 backdrop-blur-sm rounded-lg flex items-center justify-center shadow-lg z-30"
+                animate={{ 
+                  y: [0, -10, 0],
+                  scale: [1, 1.1, 1]
+                }}
+                transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+              >
+                <span className="text-xl">🎨</span>
+              </motion.div>
+
+              <motion.div 
+                className="absolute -bottom-2 left-[30%] w-14 h-14 bg-info/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg z-30"
+                animate={{ 
+                  y: [0, -8, 0],
+                  x: [0, 5, 0]
+                }}
+                transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+              >
+                <span className="text-2xl">🎪</span>
+              </motion.div>
+
+              {/* Small decorative image */}
+              <motion.div 
+                className="absolute bottom-0 left-0 w-20 h-20 rounded-xl overflow-hidden shadow-card border-2 border-card z-20"
+                animate={{ 
+                  rotate: [-5, 5, -5],
+                  scale: [1, 1.05, 1]
+                }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <img 
+                  src={celebration4} 
+                  alt="Happy kids" 
+                  className="w-full h-full object-cover"
+                />
               </motion.div>
             </div>
           </motion.div>
