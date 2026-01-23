@@ -14,7 +14,8 @@ import {
   Ticket,
   UtensilsCrossed,
   TrendingUp,
-  Printer
+  Printer,
+  BarChart3
 } from 'lucide-react';
 import { format, startOfMonth, endOfMonth } from 'date-fns';
 import { bn } from 'date-fns/locale';
@@ -25,6 +26,7 @@ import { TicketSalesReport } from '@/components/admin/reports/TicketSalesReport'
 import { FoodSalesReport } from '@/components/admin/reports/FoodSalesReport';
 import { RevenueReport } from '@/components/admin/reports/RevenueReport';
 import { PrintableReport } from '@/components/admin/reports/PrintableReport';
+import { ComparisonCharts } from '@/components/admin/reports/ComparisonCharts';
 import { cn } from '@/lib/utils';
 
 type DateRangeType = 'today' | 'week' | 'month' | 'custom';
@@ -164,10 +166,14 @@ export default function AdminReports() {
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <TabsList className="grid w-full sm:w-auto grid-cols-4">
+          <TabsList className="grid w-full sm:w-auto grid-cols-5">
             <TabsTrigger value="overview" className="gap-2">
               <TrendingUp className="w-4 h-4 hidden sm:inline" />
               {language === 'bn' ? 'সারাংশ' : 'Overview'}
+            </TabsTrigger>
+            <TabsTrigger value="comparison" className="gap-2">
+              <BarChart3 className="w-4 h-4 hidden sm:inline" />
+              {language === 'bn' ? 'তুলনা' : 'Compare'}
             </TabsTrigger>
             <TabsTrigger value="tickets" className="gap-2">
               <Ticket className="w-4 h-4 hidden sm:inline" />
@@ -208,6 +214,11 @@ export default function AdminReports() {
         {/* Overview Tab */}
         <TabsContent value="overview" className="mt-6">
           <RevenueReport data={data} isLoading={isLoading} />
+        </TabsContent>
+
+        {/* Comparison Tab - Weekly & Monthly */}
+        <TabsContent value="comparison" className="mt-6">
+          <ComparisonCharts />
         </TabsContent>
 
         {/* Tickets Tab */}
