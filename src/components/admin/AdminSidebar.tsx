@@ -13,7 +13,9 @@ import {
   Menu,
   X,
   LogOut,
-  Clock
+  Clock,
+  FileBarChart,
+  Shield
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -37,6 +39,8 @@ const menuItems: MenuItem[] = [
   { id: 'roster', label: 'Roster', labelBn: 'রোস্টার', icon: Clock, path: '/admin/roster' },
   { id: 'bookings', label: 'Bookings', labelBn: 'বুকিং', icon: CalendarDays, path: '/admin/bookings' },
   { id: 'events', label: 'Events', labelBn: 'ইভেন্ট', icon: PartyPopper, path: '/admin/events' },
+  { id: 'reports', label: 'Reports', labelBn: 'রিপোর্ট', icon: FileBarChart, path: '/admin/reports' },
+  { id: 'users', label: 'Users', labelBn: 'ইউজার', icon: Shield, path: '/admin/users' },
   { id: 'settings', label: 'Settings', labelBn: 'সেটিংস', icon: Settings, path: '/admin/settings' },
 ];
 
