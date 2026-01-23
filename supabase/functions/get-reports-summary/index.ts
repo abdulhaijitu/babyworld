@@ -15,8 +15,23 @@ serve(async (req) => {
 
   try {
     const supabase = createAdminClient();
-    const body: ReportParams = await req.json();
-    const { start_date, end_date, report_type = 'overview' } = body;
+    
+    let start_date: string;
+    let end_date: string;
+    let report_type: string = 'overview';
+
+    // Support both GET (query params) and POST (body)
+    if (req.method === 'GET') {
+      const url = new URL(req.url);
+      start_date = url.searchParams.get('start_date') || url.searchParams.get('date') || new Date().toISOString().split('T')[0];
+      end_date = url.searchParams.get('end_date') || url.searchParams.get('date') || new Date().toISOString().split('T')[0];
+      report_type = url.searchParams.get('report_type') || 'overview';
+    } else {
+      const body: ReportParams = await req.json();
+      start_date = body.start_date;
+      end_date = body.end_date;
+      report_type = body.report_type || 'overview';
+    }
 
     if (!start_date || !end_date) {
       return new Response(
