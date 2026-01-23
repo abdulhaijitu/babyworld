@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Printer, X, Check, Clock, User, Phone, Calendar, Ticket } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import babyWorldLogo from '@/assets/baby-world-logo.png';
 
 interface TicketSuccessDialogProps {
   open: boolean;
@@ -79,6 +80,11 @@ export function TicketSuccessDialog({ open, onClose, ticket, rideNames = {} }: T
               margin-bottom: 16px;
               padding-bottom: 16px;
               border-bottom: 1px dashed #ddd;
+            }
+            .header img {
+              height: 50px;
+              margin: 0 auto 8px;
+              display: block;
             }
             .logo { 
               font-size: 28px; 
@@ -247,9 +253,13 @@ export function TicketSuccessDialog({ open, onClose, ticket, rideNames = {} }: T
         </DialogHeader>
 
         <div ref={printRef} className="space-y-4">
-          {/* Header */}
+          {/* Header with Logo */}
           <div className="header text-center">
-            <p className="logo text-2xl font-bold text-primary">Baby World</p>
+            <img 
+              src={babyWorldLogo} 
+              alt="Baby World" 
+              className="h-12 mx-auto mb-1"
+            />
             <p className="text-sm text-muted-foreground">Indoor Playground</p>
           </div>
 

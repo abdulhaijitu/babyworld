@@ -534,6 +534,7 @@ export type Database = {
           category: Database["public"]["Enums"]["ride_category"]
           created_at: string
           id: string
+          image_url: string | null
           is_active: boolean
           name: string
           name_bn: string | null
@@ -544,6 +545,7 @@ export type Database = {
           category?: Database["public"]["Enums"]["ride_category"]
           created_at?: string
           id?: string
+          image_url?: string | null
           is_active?: boolean
           name: string
           name_bn?: string | null
@@ -554,6 +556,7 @@ export type Database = {
           category?: Database["public"]["Enums"]["ride_category"]
           created_at?: string
           id?: string
+          image_url?: string | null
           is_active?: boolean
           name?: string
           name_bn?: string | null
