@@ -64,6 +64,8 @@ import { format, parseISO, startOfMonth, endOfMonth, isWithinInterval, startOfWe
 import { bn } from 'date-fns/locale';
 import { useState, useCallback } from 'react';
 import { TableRowSkeleton } from '@/components/admin/AdminSkeleton';
+import { QuickActions } from '@/components/admin/QuickActions';
+import { ActivityLogCard } from '@/components/admin/ActivityLogCard';
 
 const PRICE_PER_TICKET = 300;
 
@@ -284,6 +286,14 @@ export default function AdminDashboardContent() {
             </div>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Quick Actions and Activity Log */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <QuickActions />
+        <div className="lg:col-span-2">
+          <ActivityLogCard />
+        </div>
       </div>
 
       {/* Quick Stats */}
