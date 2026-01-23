@@ -64,6 +64,22 @@ export function useAdminBookings() {
     }
   };
 
+  const cancelBooking = async (bookingId: string, refund: boolean = false, reason?: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('cancel-booking', {
+        body: { booking_id: bookingId, refund, reason }
+      });
+
+      if (error) throw error;
+
+      await fetchBookings();
+      return data;
+    } catch (err) {
+      console.error('Error cancelling booking:', err);
+      return null;
+    }
+  };
+
   useEffect(() => {
     fetchBookings();
 
@@ -88,5 +104,5 @@ export function useAdminBookings() {
     };
   }, []);
 
-  return { bookings, loading, error, refetch: fetchBookings, updateBookingStatus };
+  return { bookings, loading, error, refetch: fetchBookings, updateBookingStatus, cancelBooking };
 }

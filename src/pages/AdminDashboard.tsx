@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useAdminBookings, Booking } from '@/hooks/useAdminBookings';
@@ -17,8 +17,20 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 import { 
   LogOut, 
   RefreshCw, 
@@ -31,7 +43,9 @@ import {
   XCircle,
   AlertCircle,
   CreditCard,
-  Phone
+  Phone,
+  Ban,
+  Undo2
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -41,9 +55,16 @@ import babyWorldLogo from '@/assets/baby-world-logo.png';
 
 export default function AdminDashboard() {
   const { user, isAdmin, loading: authLoading, signOut } = useAuth();
-  const { bookings, loading: bookingsLoading, error, refetch, updateBookingStatus } = useAdminBookings();
+  const { bookings, loading: bookingsLoading, error, refetch, updateBookingStatus, cancelBooking } = useAdminBookings();
   const navigate = useNavigate();
   const { language } = useLanguage();
+  
+  // Cancel dialog state
+  const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [cancelReason, setCancelReason] = useState('');
+  const [withRefund, setWithRefund] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -69,6 +90,31 @@ export default function AdminDashboard() {
       toast.success(language === 'bn' ? 'স্ট্যাটাস আপডেট হয়েছে' : 'Status updated');
     } else {
       toast.error(language === 'bn' ? 'আপডেট ব্যর্থ হয়েছে' : 'Update failed');
+    }
+  };
+
+  const openCancelDialog = (booking: Booking) => {
+    setSelectedBooking(booking);
+    setCancelReason('');
+    setWithRefund(booking.payment_status === 'paid');
+    setCancelDialogOpen(true);
+  };
+
+  const handleCancelBooking = async () => {
+    if (!selectedBooking) return;
+    
+    setCancelling(true);
+    const result = await cancelBooking(selectedBooking.id, withRefund, cancelReason);
+    setCancelling(false);
+    
+    if (result?.success) {
+      toast.success(language === 'bn' ? 'বুকিং বাতিল হয়েছে' : 'Booking cancelled');
+      if (result.refund) {
+        toast.info(language === 'bn' ? 'রিফান্ড প্রক্রিয়াধীন' : 'Refund processing required');
+      }
+      setCancelDialogOpen(false);
+    } else {
+      toast.error(language === 'bn' ? 'বাতিল ব্যর্থ হয়েছে' : 'Cancellation failed');
     }
   };
 
@@ -287,13 +333,14 @@ export default function AdminDashboard() {
                                 <AlertCircle className="w-4 h-4 mr-2 text-yellow-600" />
                                 {language === 'bn' ? 'অপেক্ষমাণ করুন' : 'Set Pending'}
                               </DropdownMenuItem>
+                              <DropdownMenuSeparator />
                               <DropdownMenuItem 
-                                onClick={() => handleStatusChange(booking.id, 'cancelled')}
+                                onClick={() => openCancelDialog(booking)}
                                 disabled={booking.status === 'cancelled'}
                                 className="text-destructive"
                               >
-                                <XCircle className="w-4 h-4 mr-2" />
-                                {language === 'bn' ? 'বাতিল করুন' : 'Cancel'}
+                                <Ban className="w-4 h-4 mr-2" />
+                                {language === 'bn' ? 'বাতিল ও রিফান্ড' : 'Cancel & Refund'}
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -307,6 +354,71 @@ export default function AdminDashboard() {
           </CardContent>
         </Card>
       </main>
+
+      {/* Cancel Booking Dialog */}
+      <Dialog open={cancelDialogOpen} onOpenChange={setCancelDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Ban className="w-5 h-5 text-destructive" />
+              {language === 'bn' ? 'বুকিং বাতিল করুন' : 'Cancel Booking'}
+            </DialogTitle>
+            <DialogDescription>
+              {selectedBooking && (
+                <span>
+                  {selectedBooking.parent_name} - {selectedBooking.slot_date} ({selectedBooking.time_slot})
+                </span>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label>{language === 'bn' ? 'বাতিলের কারণ' : 'Cancellation Reason'}</Label>
+              <Textarea
+                placeholder={language === 'bn' ? 'কারণ লিখুন (ঐচ্ছিক)' : 'Enter reason (optional)'}
+                value={cancelReason}
+                onChange={(e) => setCancelReason(e.target.value)}
+              />
+            </div>
+            
+            {selectedBooking?.payment_status === 'paid' && (
+              <div className="flex items-center space-x-2 p-3 bg-muted rounded-lg">
+                <Checkbox
+                  id="refund"
+                  checked={withRefund}
+                  onCheckedChange={(checked) => setWithRefund(checked as boolean)}
+                />
+                <div className="grid gap-1.5 leading-none">
+                  <Label htmlFor="refund" className="flex items-center gap-2 cursor-pointer">
+                    <Undo2 className="w-4 h-4" />
+                    {language === 'bn' ? 'রিফান্ড করুন' : 'Process Refund'}
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    {language === 'bn' 
+                      ? 'পেমেন্ট গেটওয়ে থেকে ম্যানুয়াল রিফান্ড করতে হবে'
+                      : 'Manual refund required via payment gateway'}
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCancelDialogOpen(false)}>
+              {language === 'bn' ? 'না' : 'No'}
+            </Button>
+            <Button 
+              variant="destructive" 
+              onClick={handleCancelBooking}
+              disabled={cancelling}
+            >
+              {cancelling && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              {language === 'bn' ? 'বাতিল নিশ্চিত করুন' : 'Confirm Cancel'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
