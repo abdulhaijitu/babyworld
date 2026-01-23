@@ -15,16 +15,30 @@ serve(async (req) => {
 
   try {
     const supabase = createAdminClient();
-    const body: ProfitRequest = await req.json();
+    
+    let start_date: string;
+    let end_date: string;
+    let group_by: string = 'daily';
 
-    if (!body.start_date || !body.end_date) {
+    // Support both GET (query params) and POST (body)
+    if (req.method === 'GET') {
+      const url = new URL(req.url);
+      start_date = url.searchParams.get('start_date') || '';
+      end_date = url.searchParams.get('end_date') || '';
+      group_by = url.searchParams.get('group_by') || 'daily';
+    } else {
+      const body: ProfitRequest = await req.json();
+      start_date = body.start_date;
+      end_date = body.end_date;
+      group_by = body.group_by || 'daily';
+    }
+
+    if (!start_date || !end_date) {
       return new Response(
         JSON.stringify({ error: 'start_date and end_date are required' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
-
-    const { start_date, end_date, group_by = 'daily' } = body;
 
     // Get ticket revenue
     const { data: tickets } = await supabase
