@@ -64,7 +64,8 @@ import {
   Printer,
   MessageSquare,
   Calendar as CalendarIcon,
-  List
+  List,
+  Wallet
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -75,6 +76,8 @@ import { ManualBookingForm } from '@/components/admin/bookings/ManualBookingForm
 import { BookingPrintTicket } from '@/components/admin/bookings/BookingPrintTicket';
 import { BookingCalendarView } from '@/components/admin/bookings/BookingCalendarView';
 import { useSendSMS } from '@/hooks/useSendSMS';
+import { BookingExport } from '@/components/admin/bookings/BookingExport';
+import { PaymentCollectionDialog } from '@/components/admin/bookings/PaymentCollectionDialog';
 
 interface Booking {
   id: string;
@@ -127,6 +130,10 @@ export default function AdminBookings() {
 
   // View mode
   const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list');
+
+  // Payment collection dialog
+  const [paymentOpen, setPaymentOpen] = useState(false);
+  const [paymentBooking, setPaymentBooking] = useState<Booking | null>(null);
 
   const fetchBookings = useCallback(async () => {
     setLoading(true);
@@ -353,6 +360,7 @@ export default function AdminBookings() {
             <Plus className="w-4 h-4 mr-2" />
             {language === 'bn' ? 'নতুন বুকিং' : 'New Booking'}
           </Button>
+          <BookingExport bookings={filteredBookings} />
           <Button variant="outline" size="sm" onClick={fetchBookings} disabled={loading}>
             <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
             {language === 'bn' ? 'রিফ্রেশ' : 'Refresh'}
@@ -580,6 +588,16 @@ export default function AdminBookings() {
                                 <MessageSquare className="w-4 h-4 mr-2" />
                                 {language === 'bn' ? 'SMS পাঠান' : 'Send SMS'}
                               </DropdownMenuItem>
+                              <DropdownMenuItem 
+                                onClick={() => {
+                                  setPaymentBooking(booking);
+                                  setPaymentOpen(true);
+                                }}
+                                disabled={booking.payment_status === 'paid' || booking.status === 'cancelled'}
+                              >
+                                <Wallet className="w-4 h-4 mr-2" />
+                                {language === 'bn' ? 'পেমেন্ট নিন' : 'Collect Payment'}
+                              </DropdownMenuItem>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem 
                                 onClick={() => handleStatusChange(booking.id, 'confirmed')}
@@ -762,6 +780,14 @@ export default function AdminBookings() {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Payment Collection Dialog */}
+      <PaymentCollectionDialog
+        booking={paymentBooking}
+        open={paymentOpen}
+        onOpenChange={setPaymentOpen}
+        onSuccess={fetchBookings}
+      />
     </div>
   );
 }
