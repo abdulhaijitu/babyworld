@@ -1,5 +1,6 @@
 import { Gift, Camera, Cake, Music } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ScrollFadeIn, StaggerContainer, StaggerItem } from "./ScrollAnimations";
 
 const packages = [
   {
@@ -39,7 +40,7 @@ export function EventsSection() {
     <section id="events" className="py-24 bg-card">
       <div className="container mx-auto">
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
+        <ScrollFadeIn className="text-center max-w-2xl mx-auto mb-16 space-y-4">
           <span className="text-sm font-semibold text-secondary uppercase tracking-wider">
             Birthday & Events
           </span>
@@ -50,78 +51,79 @@ export function EventsSection() {
             Create magical memories with a birthday celebration at Baby World.
             Safe, joyful, and unforgettable experiences await!
           </p>
-        </div>
+        </ScrollFadeIn>
 
         {/* Packages */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-3 gap-8" staggerDelay={0.15}>
           {packages.map((pkg) => (
-            <div
-              key={pkg.name}
-              className={`relative bg-background rounded-3xl p-8 transition-all duration-300 hover:shadow-card-hover ${
-                pkg.popular
-                  ? "ring-2 ring-secondary shadow-card-hover"
-                  : "shadow-card"
-              }`}
-            >
-              {pkg.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="px-4 py-1 bg-secondary text-secondary-foreground text-xs font-semibold rounded-full">
-                    Most Popular
-                  </span>
-                </div>
-              )}
+            <StaggerItem key={pkg.name}>
+              <div
+                className={`relative bg-background rounded-3xl p-8 transition-all duration-300 hover:shadow-card-hover h-full ${
+                  pkg.popular
+                    ? "ring-2 ring-secondary shadow-card-hover"
+                    : "shadow-card"
+                }`}
+              >
+                {pkg.popular && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                    <span className="px-4 py-1 bg-secondary text-secondary-foreground text-xs font-semibold rounded-full">
+                      Most Popular
+                    </span>
+                  </div>
+                )}
 
-              <div className="space-y-6">
-                <div
-                  className={`w-14 h-14 rounded-2xl flex items-center justify-center ${
-                    pkg.popular ? "bg-secondary/10" : "bg-primary/10"
-                  }`}
-                >
-                  <pkg.icon
-                    className={`w-7 h-7 ${
-                      pkg.popular ? "text-secondary" : "text-primary"
+                <div className="space-y-6">
+                  <div
+                    className={`w-14 h-14 rounded-2xl flex items-center justify-center ${
+                      pkg.popular ? "bg-secondary/10" : "bg-primary/10"
                     }`}
-                  />
+                  >
+                    <pkg.icon
+                      className={`w-7 h-7 ${
+                        pkg.popular ? "text-secondary" : "text-primary"
+                      }`}
+                    />
+                  </div>
+
+                  <div>
+                    <h3 className="text-xl font-bold text-foreground mb-2">
+                      {pkg.name}
+                    </h3>
+                    <p className="text-muted-foreground text-sm">
+                      {pkg.description}
+                    </p>
+                  </div>
+
+                  <ul className="space-y-3">
+                    {pkg.features.map((feature) => (
+                      <li
+                        key={feature}
+                        className="flex items-center gap-2 text-sm text-muted-foreground"
+                      >
+                        <div
+                          className={`w-1.5 h-1.5 rounded-full ${
+                            pkg.popular ? "bg-secondary" : "bg-primary"
+                          }`}
+                        />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <Button
+                    variant={pkg.popular ? "secondary" : "outline"}
+                    className="w-full"
+                  >
+                    Inquire Now
+                  </Button>
                 </div>
-
-                <div>
-                  <h3 className="text-xl font-bold text-foreground mb-2">
-                    {pkg.name}
-                  </h3>
-                  <p className="text-muted-foreground text-sm">
-                    {pkg.description}
-                  </p>
-                </div>
-
-                <ul className="space-y-3">
-                  {pkg.features.map((feature) => (
-                    <li
-                      key={feature}
-                      className="flex items-center gap-2 text-sm text-muted-foreground"
-                    >
-                      <div
-                        className={`w-1.5 h-1.5 rounded-full ${
-                          pkg.popular ? "bg-secondary" : "bg-primary"
-                        }`}
-                      />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-
-                <Button
-                  variant={pkg.popular ? "secondary" : "outline"}
-                  className="w-full"
-                >
-                  Inquire Now
-                </Button>
               </div>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
 
         {/* Photo Gallery Preview */}
-        <div className="mt-20">
+        <ScrollFadeIn delay={0.2} className="mt-20">
           <div className="flex items-center justify-center gap-3 mb-8">
             <Camera className="w-5 h-5 text-muted-foreground" />
             <h3 className="text-lg font-semibold text-foreground">
@@ -129,17 +131,16 @@ export function EventsSection() {
             </h3>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-4" staggerDelay={0.1}>
             {[1, 2, 3, 4].map((i) => (
-              <div
-                key={i}
-                className="aspect-square bg-muted rounded-2xl flex items-center justify-center"
-              >
-                <span className="text-4xl opacity-50">🎉</span>
-              </div>
+              <StaggerItem key={i}>
+                <div className="aspect-square bg-muted rounded-2xl flex items-center justify-center hover:scale-105 transition-transform duration-300">
+                  <span className="text-4xl opacity-50">🎉</span>
+                </div>
+              </StaggerItem>
             ))}
-          </div>
-        </div>
+          </StaggerContainer>
+        </ScrollFadeIn>
       </div>
     </section>
   );
