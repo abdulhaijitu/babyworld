@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { format, addDays, isBefore, startOfDay } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
-import { Shield, Clock, Users, CalendarDays, Info } from "lucide-react";
+import { Shield, Clock, Users, CalendarDays, Info, Loader2, AlertCircle, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { ScrollFadeIn, StaggerContainer, StaggerItem } from "./ScrollAnimations";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAvailableSlots, Slot } from "@/hooks/useAvailableSlots";
+import { useCreateBooking } from "@/hooks/useCreateBooking";
+import { toast } from "sonner";
 
 const WHATSAPP_NUMBER = "8809606990128";
 
@@ -16,45 +21,90 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-// Mock time slots - some marked as unavailable for demo
-const generateTimeSlots = () => {
-  const slots = [];
-  for (let hour = 10; hour < 21; hour++) {
-    const startTime = `${hour.toString().padStart(2, "0")}:00`;
-    const endTime = `${(hour + 1).toString().padStart(2, "0")}:00`;
-    // Mock some slots as unavailable
-    const isUnavailable = [12, 15, 18].includes(hour);
-    slots.push({
-      id: `slot-${hour}`,
-      startTime,
-      endTime,
-      label: `${startTime} – ${endTime}`,
-      available: !isUnavailable,
-    });
-  }
-  return slots;
-};
-
-const timeSlots = generateTimeSlots();
-
 export function BookingSection() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
+  const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
   const [childCount, setChildCount] = useState(1);
-  const { t } = useLanguage();
+  const [showBookingForm, setShowBookingForm] = useState(false);
+  const [parentName, setParentName] = useState("");
+  const [parentPhone, setParentPhone] = useState("");
+  const { t, language } = useLanguage();
+
+  const { slots, loading: slotsLoading, error: slotsError, refetch } = useAvailableSlots(selectedDate);
+  const { createBooking, loading: bookingLoading, error: bookingError, success: bookingSuccess, reset: resetBooking } = useCreateBooking();
 
   const today = startOfDay(new Date());
   const maxDate = addDays(today, 30); // Allow booking up to 30 days ahead
 
-  const handleSlotSelect = (slotId: string) => {
-    setSelectedSlot(slotId === selectedSlot ? null : slotId);
+  const handleSlotSelect = (slot: Slot) => {
+    if (slot.status === 'available') {
+      setSelectedSlot(selectedSlot?.id === slot.id ? null : slot);
+    }
   };
 
   const handleChildCountChange = (count: number) => {
     setChildCount(count);
   };
 
-  const selectedSlotData = timeSlots.find((slot) => slot.id === selectedSlot);
+  const handleBookingSubmit = async () => {
+    if (!selectedDate || !selectedSlot || !parentName || !parentPhone) {
+      toast.error(language === "bn" ? "সব তথ্য পূরণ করুন" : "Please fill all fields");
+      return;
+    }
+
+    const result = await createBooking({
+      date: selectedDate,
+      time_slot: selectedSlot.time_slot,
+      parent_name: parentName,
+      parent_phone: parentPhone,
+      child_count: childCount
+    });
+
+    if (result) {
+      toast.success(
+        language === "bn" 
+          ? "বুকিং সফল হয়েছে!" 
+          : "Booking confirmed successfully!"
+      );
+      // Reset form
+      setShowBookingForm(false);
+      setSelectedSlot(null);
+      setParentName("");
+      setParentPhone("");
+      refetch(); // Refresh slots
+    } else if (bookingError) {
+      toast.error(bookingError);
+    }
+  };
+
+  const handleWhatsAppBooking = () => {
+    if (selectedDate && selectedSlot) {
+      const greeting = language === "bn" 
+        ? "আসসালামু আলাইকুম, Baby World!" 
+        : "Hello, Baby World!";
+      
+      const bookingLabel = language === "bn" ? "প্লে সেশন বুকিং অনুরোধ" : "Play Session Booking Request";
+      const dateLabel = language === "bn" ? "তারিখ" : "Date";
+      const timeLabel = language === "bn" ? "সময়" : "Time";
+      const childrenLabel = language === "bn" ? "শিশু সংখ্যা" : "Number of Children";
+      const guardiansLabel = language === "bn" ? "অভিভাবক সংখ্যা" : "Number of Guardians";
+      
+      let message = `${greeting}\n\n`;
+      message += `📋 ${bookingLabel}\n\n`;
+      message += `📅 ${dateLabel}: ${format(selectedDate, "dd MMMM, yyyy")}\n`;
+      message += `⏰ ${timeLabel}: ${selectedSlot.time_slot}\n`;
+      message += `👶 ${childrenLabel}: ${childCount}\n`;
+      message += `👨‍👩‍👧 ${guardiansLabel}: ${childCount}\n\n`;
+      message += language === "bn" 
+        ? "অনুগ্রহ করে এই স্লট নিশ্চিত করুন।" 
+        : "Please confirm this slot for me.";
+      
+      const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, "_blank");
+    }
+  };
+
+  const isComplete = selectedDate && selectedSlot;
 
   return (
     <section id="booking" className="py-16 sm:py-20 lg:py-24 bg-background overflow-hidden">
@@ -99,7 +149,11 @@ export function BookingSection() {
               <Calendar
                 mode="single"
                 selected={selectedDate}
-                onSelect={setSelectedDate}
+                onSelect={(date) => {
+                  setSelectedDate(date);
+                  setSelectedSlot(null);
+                  resetBooking();
+                }}
                 disabled={(date) =>
                   isBefore(date, today) || isBefore(maxDate, date)
                 }
@@ -193,17 +247,32 @@ export function BookingSection() {
                     {t("booking.selectDateFirst")}
                   </p>
                 </div>
+              ) : slotsLoading ? (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <Loader2 className="w-8 h-8 text-primary animate-spin mb-4" />
+                  <p className="text-muted-foreground">
+                    {language === "bn" ? "স্লট লোড হচ্ছে..." : "Loading slots..."}
+                  </p>
+                </div>
+              ) : slotsError ? (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <AlertCircle className="w-8 h-8 text-destructive mb-4" />
+                  <p className="text-destructive mb-4">{slotsError}</p>
+                  <Button variant="outline" onClick={refetch}>
+                    {language === "bn" ? "আবার চেষ্টা করুন" : "Try Again"}
+                  </Button>
+                </div>
               ) : (
                 <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                  {timeSlots.map((slot) => (
+                  {slots.map((slot) => (
                     <button
                       key={slot.id}
-                      onClick={() => slot.available && handleSlotSelect(slot.id)}
-                      disabled={!slot.available}
+                      onClick={() => handleSlotSelect(slot)}
+                      disabled={slot.status !== 'available'}
                       className={cn(
                         "w-full p-4 rounded-xl border-2 text-left transition-all duration-200",
-                        slot.available
-                          ? selectedSlot === slot.id
+                        slot.status === 'available'
+                          ? selectedSlot?.id === slot.id
                             ? "border-primary bg-primary/10 shadow-md"
                             : "border-border bg-background hover:border-primary/30 hover:shadow-sm"
                           : "border-border bg-muted/50 cursor-not-allowed opacity-60"
@@ -213,21 +282,21 @@ export function BookingSection() {
                         <span
                           className={cn(
                             "font-medium",
-                            slot.available ? "text-foreground" : "text-muted-foreground"
+                            slot.status === 'available' ? "text-foreground" : "text-muted-foreground"
                           )}
                         >
-                          {slot.label}
+                          {slot.time_slot}
                         </span>
-                        {slot.available ? (
+                        {slot.status === 'available' ? (
                           <span
                             className={cn(
                               "text-xs px-2 py-1 rounded-full",
-                              selectedSlot === slot.id
+                              selectedSlot?.id === slot.id
                                 ? "bg-primary text-primary-foreground"
                                 : "bg-accent text-accent-foreground"
                             )}
                           >
-                            {selectedSlot === slot.id ? t("booking.selected") : t("booking.available")}
+                            {selectedSlot?.id === slot.id ? t("booking.selected") : t("booking.available")}
                           </span>
                         ) : (
                           <span className="text-xs px-2 py-1 rounded-full bg-muted text-muted-foreground">
@@ -244,22 +313,243 @@ export function BookingSection() {
 
           {/* Summary Panel - Desktop */}
           <ScrollFadeIn delay={0.2} className="lg:col-span-1 hidden lg:block">
-            <BookingSummary
-              selectedDate={selectedDate}
-              selectedSlotData={selectedSlotData}
-              childCount={childCount}
-            />
+            <div className="bg-card rounded-3xl p-6 shadow-card sticky top-24">
+              <h3 className="font-semibold text-foreground mb-6">{t("booking.summary")}</h3>
+
+              <div className="space-y-4">
+                {/* Date */}
+                <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-xl">
+                  <CalendarDays className="w-5 h-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-xs text-muted-foreground">{t("booking.date")}</p>
+                    {selectedDate ? (
+                      <p className="font-medium text-foreground">
+                        {format(selectedDate, "dd MMMM, yyyy")}
+                      </p>
+                    ) : (
+                      <div className="h-5 w-32 bg-muted rounded animate-pulse" />
+                    )}
+                  </div>
+                </div>
+
+                {/* Time */}
+                <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-xl">
+                  <Clock className="w-5 h-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-xs text-muted-foreground">{t("booking.time")}</p>
+                    {selectedSlot ? (
+                      <p className="font-medium text-foreground">{selectedSlot.time_slot}</p>
+                    ) : (
+                      <div className="h-5 w-24 bg-muted rounded animate-pulse" />
+                    )}
+                  </div>
+                </div>
+
+                {/* Children Count */}
+                <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-xl">
+                  <Users className="w-5 h-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-xs text-muted-foreground">{t("booking.ticket")}</p>
+                    <p className="font-medium text-foreground">
+                      {childCount} {language === "bn" ? "শিশু" : childCount === 1 ? "Child" : "Children"} + {childCount} {language === "bn" ? "অভিভাবক" : childCount === 1 ? "Guardian" : "Guardians"}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Booking Form */}
+                {showBookingForm && isComplete && (
+                  <div className="space-y-4 pt-4 border-t border-border">
+                    <div className="space-y-2">
+                      <Label htmlFor="parentName">
+                        {language === "bn" ? "অভিভাবকের নাম" : "Parent Name"}
+                      </Label>
+                      <Input
+                        id="parentName"
+                        value={parentName}
+                        onChange={(e) => setParentName(e.target.value)}
+                        placeholder={language === "bn" ? "আপনার নাম লিখুন" : "Enter your name"}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="parentPhone">
+                        {language === "bn" ? "মোবাইল নম্বর" : "Phone Number"}
+                      </Label>
+                      <Input
+                        id="parentPhone"
+                        value={parentPhone}
+                        onChange={(e) => setParentPhone(e.target.value)}
+                        placeholder="01XXXXXXXXX"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Price Placeholder */}
+                <div className="pt-4 border-t border-border">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-muted-foreground">{t("booking.total")}</span>
+                    <div className="h-6 w-20 bg-muted rounded animate-pulse" />
+                  </div>
+                </div>
+
+                {/* Booking Actions */}
+                {!showBookingForm ? (
+                  <div className="space-y-3">
+                    <Button
+                      size="lg"
+                      className="w-full"
+                      disabled={!isComplete}
+                      onClick={() => setShowBookingForm(true)}
+                    >
+                      {isComplete 
+                        ? (language === "bn" ? "বুকিং ফর্ম পূরণ করুন" : "Fill Booking Form")
+                        : t("booking.selectDateTime")
+                      }
+                    </Button>
+                    
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white border-0"
+                      disabled={!isComplete}
+                      onClick={handleWhatsAppBooking}
+                    >
+                      <WhatsAppIcon className="w-5 h-5 mr-2" />
+                      {t("booking.bookViaWhatsApp")}
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <Button
+                      size="lg"
+                      className="w-full"
+                      disabled={bookingLoading || !parentName || !parentPhone}
+                      onClick={handleBookingSubmit}
+                    >
+                      {bookingLoading ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          {language === "bn" ? "বুকিং হচ্ছে..." : "Booking..."}
+                        </>
+                      ) : (
+                        language === "bn" ? "বুকিং নিশ্চিত করুন" : "Confirm Booking"
+                      )}
+                    </Button>
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => setShowBookingForm(false)}
+                    >
+                      {language === "bn" ? "বাতিল" : "Cancel"}
+                    </Button>
+                  </div>
+                )}
+
+                {/* Booking Error */}
+                {bookingError && (
+                  <div className="flex items-start gap-2 p-3 bg-destructive/10 rounded-xl">
+                    <AlertCircle className="w-4 h-4 text-destructive mt-0.5 flex-shrink-0" />
+                    <p className="text-xs text-destructive">{bookingError}</p>
+                  </div>
+                )}
+
+                {/* Booking Success */}
+                {bookingSuccess && (
+                  <div className="flex items-start gap-2 p-3 bg-green-500/10 rounded-xl">
+                    <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                    <p className="text-xs text-green-600">
+                      {language === "bn" ? "বুকিং সফল হয়েছে!" : "Booking confirmed!"}
+                    </p>
+                  </div>
+                )}
+
+                {/* Info Note */}
+                <div className="flex items-start gap-2 p-3 bg-accent rounded-xl">
+                  <Info className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                  <p className="text-xs text-muted-foreground">
+                    {t("booking.whatsappNote")}
+                  </p>
+                </div>
+              </div>
+            </div>
           </ScrollFadeIn>
         </div>
 
-        {/* Summary Panel - Mobile (Sticky Bottom) - positioned above bottom nav */}
+        {/* Summary Panel - Mobile (Sticky Bottom) */}
         <div className="lg:hidden fixed bottom-20 left-0 right-0 z-30 p-4 bg-card/98 backdrop-blur-lg border-t border-border shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.1)]">
           <BookingSummaryMobile
             selectedDate={selectedDate}
-            selectedSlotData={selectedSlotData}
+            selectedSlot={selectedSlot}
             childCount={childCount}
+            onBookingClick={() => setShowBookingForm(true)}
+            onWhatsAppClick={handleWhatsAppBooking}
           />
         </div>
+
+        {/* Mobile Booking Modal */}
+        {showBookingForm && (
+          <div className="lg:hidden fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-end">
+            <div className="w-full bg-card rounded-t-3xl p-6 animate-slide-in-right">
+              <h3 className="font-semibold text-foreground mb-4">
+                {language === "bn" ? "বুকিং তথ্য" : "Booking Details"}
+              </h3>
+              
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="mobileParentName">
+                    {language === "bn" ? "অভিভাবকের নাম" : "Parent Name"}
+                  </Label>
+                  <Input
+                    id="mobileParentName"
+                    value={parentName}
+                    onChange={(e) => setParentName(e.target.value)}
+                    placeholder={language === "bn" ? "আপনার নাম লিখুন" : "Enter your name"}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="mobileParentPhone">
+                    {language === "bn" ? "মোবাইল নম্বর" : "Phone Number"}
+                  </Label>
+                  <Input
+                    id="mobileParentPhone"
+                    value={parentPhone}
+                    onChange={(e) => setParentPhone(e.target.value)}
+                    placeholder="01XXXXXXXXX"
+                  />
+                </div>
+
+                {bookingError && (
+                  <div className="flex items-start gap-2 p-3 bg-destructive/10 rounded-xl">
+                    <AlertCircle className="w-4 h-4 text-destructive mt-0.5 flex-shrink-0" />
+                    <p className="text-xs text-destructive">{bookingError}</p>
+                  </div>
+                )}
+
+                <div className="flex gap-3 pt-4">
+                  <Button
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => setShowBookingForm(false)}
+                  >
+                    {language === "bn" ? "বাতিল" : "Cancel"}
+                  </Button>
+                  <Button
+                    className="flex-1"
+                    disabled={bookingLoading || !parentName || !parentPhone}
+                    onClick={handleBookingSubmit}
+                  >
+                    {bookingLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      language === "bn" ? "নিশ্চিত করুন" : "Confirm"
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Spacer for mobile sticky panel + bottom nav */}
         <div className="lg:hidden h-48" />
@@ -268,144 +558,17 @@ export function BookingSection() {
   );
 }
 
-interface SummaryProps {
+interface MobileSummaryProps {
   selectedDate: Date | undefined;
-  selectedSlotData: { label: string } | undefined;
+  selectedSlot: Slot | null;
   childCount: number;
+  onBookingClick: () => void;
+  onWhatsAppClick: () => void;
 }
 
-function generateWhatsAppBookingMessage(
-  selectedDate: Date,
-  selectedSlotData: { label: string },
-  childCount: number,
-  language: string
-) {
-  const greeting = language === "bn" 
-    ? "আসসালামু আলাইকুম, Baby World!" 
-    : "Hello, Baby World!";
-  
-  const bookingLabel = language === "bn" ? "প্লে সেশন বুকিং অনুরোধ" : "Play Session Booking Request";
-  const dateLabel = language === "bn" ? "তারিখ" : "Date";
-  const timeLabel = language === "bn" ? "সময়" : "Time";
-  const childrenLabel = language === "bn" ? "শিশু সংখ্যা" : "Number of Children";
-  const guardiansLabel = language === "bn" ? "অভিভাবক সংখ্যা" : "Number of Guardians";
-  
-  let message = `${greeting}\n\n`;
-  message += `📋 ${bookingLabel}\n\n`;
-  message += `📅 ${dateLabel}: ${format(selectedDate, "dd MMMM, yyyy")}\n`;
-  message += `⏰ ${timeLabel}: ${selectedSlotData.label}\n`;
-  message += `👶 ${childrenLabel}: ${childCount}\n`;
-  message += `👨‍👩‍👧 ${guardiansLabel}: ${childCount}\n\n`;
-  message += language === "bn" 
-    ? "অনুগ্রহ করে এই স্লট নিশ্চিত করুন।" 
-    : "Please confirm this slot for me.";
-  
-  return encodeURIComponent(message);
-}
-
-function BookingSummary({ selectedDate, selectedSlotData, childCount }: SummaryProps) {
-  const isComplete = selectedDate && selectedSlotData;
+function BookingSummaryMobile({ selectedDate, selectedSlot, childCount, onBookingClick, onWhatsAppClick }: MobileSummaryProps) {
+  const isComplete = selectedDate && selectedSlot;
   const { t, language } = useLanguage();
-
-  const handleWhatsAppBooking = () => {
-    if (selectedDate && selectedSlotData) {
-      const message = generateWhatsAppBookingMessage(selectedDate, selectedSlotData, childCount, language);
-      const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
-      window.open(whatsappUrl, "_blank");
-    }
-  };
-
-  return (
-    <div className="bg-card rounded-3xl p-6 shadow-card sticky top-24">
-      <h3 className="font-semibold text-foreground mb-6">{t("booking.summary")}</h3>
-
-      <div className="space-y-4">
-        {/* Date */}
-        <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-xl">
-          <CalendarDays className="w-5 h-5 text-muted-foreground" />
-          <div>
-            <p className="text-xs text-muted-foreground">{t("booking.date")}</p>
-            {selectedDate ? (
-              <p className="font-medium text-foreground">
-                {format(selectedDate, "dd MMMM, yyyy")}
-              </p>
-            ) : (
-              <div className="h-5 w-32 bg-muted rounded animate-pulse" />
-            )}
-          </div>
-        </div>
-
-        {/* Time */}
-        <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-xl">
-          <Clock className="w-5 h-5 text-muted-foreground" />
-          <div>
-            <p className="text-xs text-muted-foreground">{t("booking.time")}</p>
-            {selectedSlotData ? (
-              <p className="font-medium text-foreground">{selectedSlotData.label}</p>
-            ) : (
-              <div className="h-5 w-24 bg-muted rounded animate-pulse" />
-            )}
-          </div>
-        </div>
-
-        {/* Children Count */}
-        <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-xl">
-          <Users className="w-5 h-5 text-muted-foreground" />
-          <div>
-            <p className="text-xs text-muted-foreground">{t("booking.ticket")}</p>
-            <p className="font-medium text-foreground">
-              {childCount} {language === "bn" ? "শিশু" : childCount === 1 ? "Child" : "Children"} + {childCount} {language === "bn" ? "অভিভাবক" : childCount === 1 ? "Guardian" : "Guardians"}
-            </p>
-          </div>
-        </div>
-
-        {/* Price Placeholder */}
-        <div className="pt-4 border-t border-border">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-muted-foreground">{t("booking.total")}</span>
-            <div className="h-6 w-20 bg-muted rounded animate-pulse" />
-          </div>
-        </div>
-
-        <Button
-          size="lg"
-          className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white"
-          disabled={!isComplete}
-          onClick={handleWhatsAppBooking}
-        >
-          {isComplete ? (
-            <>
-              <WhatsAppIcon className="w-5 h-5 mr-2" />
-              {t("booking.bookViaWhatsApp")}
-            </>
-          ) : (
-            t("booking.selectDateTime")
-          )}
-        </Button>
-
-        {/* Info Note */}
-        <div className="flex items-start gap-2 p-3 bg-accent rounded-xl">
-          <Info className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-          <p className="text-xs text-muted-foreground">
-            {t("booking.whatsappNote")}
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function BookingSummaryMobile({ selectedDate, selectedSlotData, childCount }: SummaryProps) {
-  const isComplete = selectedDate && selectedSlotData;
-  const { t, language } = useLanguage();
-
-  const handleWhatsAppBooking = () => {
-    if (selectedDate && selectedSlotData) {
-      const message = generateWhatsAppBookingMessage(selectedDate, selectedSlotData, childCount, language);
-      const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
-      window.open(whatsappUrl, "_blank");
-    }
-  };
 
   return (
     <div className="flex items-center gap-4">
@@ -413,7 +576,7 @@ function BookingSummaryMobile({ selectedDate, selectedSlotData, childCount }: Su
         {isComplete ? (
           <div>
             <p className="text-sm font-medium text-foreground truncate">
-              {format(selectedDate!, "dd MMM")} • {selectedSlotData?.label}
+              {format(selectedDate!, "dd MMM")} • {selectedSlot?.time_slot}
             </p>
             <p className="text-xs text-muted-foreground">
               {childCount} {language === "bn" ? "শিশু" : childCount === 1 ? "Child" : "Children"} + {childCount} {language === "bn" ? "অভিভাবক" : childCount === 1 ? "Guardian" : "Guardians"}
@@ -423,21 +586,24 @@ function BookingSummaryMobile({ selectedDate, selectedSlotData, childCount }: Su
           <p className="text-sm text-muted-foreground">{t("booking.selectDateTime")}</p>
         )}
       </div>
-      <Button 
-        size="lg" 
-        disabled={!isComplete}
-        className="bg-[#25D366] hover:bg-[#128C7E] text-white"
-        onClick={handleWhatsAppBooking}
-      >
-        {isComplete ? (
-          <>
-            <WhatsAppIcon className="w-4 h-4 mr-1" />
-            {t("booking.bookViaWhatsApp")}
-          </>
-        ) : (
-          t("booking.select")
-        )}
-      </Button>
+      <div className="flex gap-2">
+        <Button 
+          size="sm"
+          variant="outline" 
+          disabled={!isComplete}
+          className="bg-[#25D366] hover:bg-[#128C7E] text-white border-0"
+          onClick={onWhatsAppClick}
+        >
+          <WhatsAppIcon className="w-4 h-4" />
+        </Button>
+        <Button 
+          size="sm" 
+          disabled={!isComplete}
+          onClick={onBookingClick}
+        >
+          {language === "bn" ? "বুকিং" : "Book"}
+        </Button>
+      </div>
     </div>
   );
 }
