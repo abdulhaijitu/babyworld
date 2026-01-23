@@ -1,0 +1,548 @@
+import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { Switch } from '@/components/ui/switch';
+import { 
+  Plus, 
+  Edit, 
+  Trash2, 
+  Loader2,
+  FerrisWheel,
+  Baby,
+  Users,
+  Zap
+} from 'lucide-react';
+import { toast } from 'sonner';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { cn } from '@/lib/utils';
+
+type RideCategory = 'kids' | 'family' | 'thrill';
+
+interface Ride {
+  id: string;
+  name: string;
+  name_bn: string | null;
+  price: number;
+  category: RideCategory;
+  is_active: boolean;
+  created_at: string;
+}
+
+const CATEGORY_INFO: Record<RideCategory, { label: string; label_bn: string; icon: typeof Baby; color: string }> = {
+  kids: { label: 'Kids', label_bn: 'কিডস', icon: Baby, color: 'bg-green-500/10 text-green-600 border-green-200' },
+  family: { label: 'Family', label_bn: 'ফ্যামিলি', icon: Users, color: 'bg-blue-500/10 text-blue-600 border-blue-200' },
+  thrill: { label: 'Thrill', label_bn: 'থ্রিল', icon: Zap, color: 'bg-orange-500/10 text-orange-600 border-orange-200' }
+};
+
+const defaultFormData = {
+  name: '',
+  name_bn: '',
+  price: 0,
+  category: 'kids' as RideCategory,
+  is_active: true
+};
+
+export default function AdminRides() {
+  const { language } = useLanguage();
+  const queryClient = useQueryClient();
+  
+  const [createOpen, setCreateOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [selectedRide, setSelectedRide] = useState<Ride | null>(null);
+  const [formData, setFormData] = useState(defaultFormData);
+
+  // Fetch rides
+  const { data: rides = [], isLoading } = useQuery({
+    queryKey: ['admin-rides'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('rides')
+        .select('*')
+        .order('category', { ascending: true })
+        .order('name', { ascending: true });
+      if (error) throw error;
+      return data as Ride[];
+    }
+  });
+
+  // Create mutation
+  const createMutation = useMutation({
+    mutationFn: async (data: typeof formData) => {
+      const { error } = await supabase.from('rides').insert({
+        name: data.name,
+        name_bn: data.name_bn || null,
+        price: data.price,
+        category: data.category,
+        is_active: data.is_active
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-rides'] });
+      queryClient.invalidateQueries({ queryKey: ['rides'] });
+      toast.success(language === 'bn' ? 'রাইড যোগ হয়েছে!' : 'Ride added successfully!');
+      setCreateOpen(false);
+      resetForm();
+    },
+    onError: (error: any) => {
+      toast.error(error.message || (language === 'bn' ? 'রাইড যোগ ব্যর্থ' : 'Failed to add ride'));
+    }
+  });
+
+  // Update mutation
+  const updateMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: typeof formData }) => {
+      const { error } = await supabase.from('rides').update({
+        name: data.name,
+        name_bn: data.name_bn || null,
+        price: data.price,
+        category: data.category,
+        is_active: data.is_active
+      }).eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-rides'] });
+      queryClient.invalidateQueries({ queryKey: ['rides'] });
+      toast.success(language === 'bn' ? 'রাইড আপডেট হয়েছে!' : 'Ride updated successfully!');
+      setEditOpen(false);
+      resetForm();
+    },
+    onError: (error: any) => {
+      toast.error(error.message || (language === 'bn' ? 'আপডেট ব্যর্থ' : 'Update failed'));
+    }
+  });
+
+  // Delete mutation
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from('rides').delete().eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-rides'] });
+      queryClient.invalidateQueries({ queryKey: ['rides'] });
+      toast.success(language === 'bn' ? 'রাইড মুছে ফেলা হয়েছে!' : 'Ride deleted successfully!');
+      setDeleteOpen(false);
+      setSelectedRide(null);
+    },
+    onError: (error: any) => {
+      toast.error(error.message || (language === 'bn' ? 'মুছে ফেলা ব্যর্থ' : 'Delete failed'));
+    }
+  });
+
+  // Toggle active status
+  const toggleActiveMutation = useMutation({
+    mutationFn: async ({ id, is_active }: { id: string; is_active: boolean }) => {
+      const { error } = await supabase.from('rides').update({ is_active }).eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-rides'] });
+      queryClient.invalidateQueries({ queryKey: ['rides'] });
+    }
+  });
+
+  const resetForm = () => {
+    setFormData(defaultFormData);
+    setSelectedRide(null);
+  };
+
+  const handleEdit = (ride: Ride) => {
+    setSelectedRide(ride);
+    setFormData({
+      name: ride.name,
+      name_bn: ride.name_bn || '',
+      price: ride.price,
+      category: ride.category,
+      is_active: ride.is_active
+    });
+    setEditOpen(true);
+  };
+
+  const handleDelete = (ride: Ride) => {
+    setSelectedRide(ride);
+    setDeleteOpen(true);
+  };
+
+  const getCategoryIcon = (category: RideCategory) => {
+    const Icon = CATEGORY_INFO[category].icon;
+    return <Icon className="w-4 h-4" />;
+  };
+
+  // Stats
+  const totalRides = rides.length;
+  const activeRides = rides.filter(r => r.is_active).length;
+  const categoryStats = {
+    kids: rides.filter(r => r.category === 'kids').length,
+    family: rides.filter(r => r.category === 'family').length,
+    thrill: rides.filter(r => r.category === 'thrill').length
+  };
+
+  return (
+    <div className="p-4 md:p-6 lg:p-8 space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold flex items-center gap-2">
+            <FerrisWheel className="w-6 h-6" />
+            {language === 'bn' ? 'রাইড ম্যানেজমেন্ট' : 'Ride Management'}
+          </h1>
+          <p className="text-muted-foreground">
+            {language === 'bn' ? 'সব রাইড পরিচালনা করুন' : 'Manage all rides'}
+          </p>
+        </div>
+
+        <Button onClick={() => { resetForm(); setCreateOpen(true); }}>
+          <Plus className="w-4 h-4 mr-2" />
+          {language === 'bn' ? 'নতুন রাইড' : 'Add Ride'}
+        </Button>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardDescription>{language === 'bn' ? 'মোট রাইড' : 'Total Rides'}</CardDescription>
+            <CardTitle className="text-2xl">{totalRides}</CardTitle>
+          </CardHeader>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardDescription>{language === 'bn' ? 'সক্রিয়' : 'Active'}</CardDescription>
+            <CardTitle className="text-2xl text-green-600">{activeRides}</CardTitle>
+          </CardHeader>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardDescription>{language === 'bn' ? 'কিডস' : 'Kids'}</CardDescription>
+            <CardTitle className="text-2xl">{categoryStats.kids}</CardTitle>
+          </CardHeader>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardDescription>{language === 'bn' ? 'ফ্যামিলি/থ্রিল' : 'Family/Thrill'}</CardDescription>
+            <CardTitle className="text-2xl">{categoryStats.family + categoryStats.thrill}</CardTitle>
+          </CardHeader>
+        </Card>
+      </div>
+
+      {/* Rides Table */}
+      <Card>
+        <CardHeader>
+          <CardTitle>{language === 'bn' ? 'রাইড তালিকা' : 'Ride List'}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+            </div>
+          ) : rides.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">
+              <FerrisWheel className="w-12 h-12 mx-auto mb-2 opacity-50" />
+              <p>{language === 'bn' ? 'কোনো রাইড নেই' : 'No rides found'}</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{language === 'bn' ? 'নাম' : 'Name'}</TableHead>
+                    <TableHead>{language === 'bn' ? 'ক্যাটাগরি' : 'Category'}</TableHead>
+                    <TableHead>{language === 'bn' ? 'মূল্য' : 'Price'}</TableHead>
+                    <TableHead>{language === 'bn' ? 'স্ট্যাটাস' : 'Status'}</TableHead>
+                    <TableHead className="text-right">{language === 'bn' ? 'অ্যাকশন' : 'Actions'}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {rides.map((ride) => {
+                    const catInfo = CATEGORY_INFO[ride.category];
+                    return (
+                      <TableRow key={ride.id}>
+                        <TableCell>
+                          <div>
+                            <p className="font-medium">{ride.name}</p>
+                            {ride.name_bn && (
+                              <p className="text-sm text-muted-foreground">{ride.name_bn}</p>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline" className={cn("text-xs", catInfo.color)}>
+                            {getCategoryIcon(ride.category)}
+                            <span className="ml-1">
+                              {language === 'bn' ? catInfo.label_bn : catInfo.label}
+                            </span>
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <span className="font-medium">৳{ride.price}</span>
+                        </TableCell>
+                        <TableCell>
+                          <Switch
+                            checked={ride.is_active}
+                            onCheckedChange={(checked) => 
+                              toggleActiveMutation.mutate({ id: ride.id, is_active: checked })
+                            }
+                          />
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleEdit(ride)}
+                            >
+                              <Edit className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="text-destructive hover:text-destructive"
+                              onClick={() => handleDelete(ride)}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Create Dialog */}
+      <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {language === 'bn' ? 'নতুন রাইড যোগ করুন' : 'Add New Ride'}
+            </DialogTitle>
+            <DialogDescription>
+              {language === 'bn' ? 'রাইডের তথ্য দিন' : 'Enter ride details'}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>{language === 'bn' ? 'নাম (ইংরেজি)' : 'Name (English)'}</Label>
+                <Input
+                  value={formData.name}
+                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                  placeholder="Ferris Wheel"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>{language === 'bn' ? 'নাম (বাংলা)' : 'Name (Bengali)'}</Label>
+                <Input
+                  value={formData.name_bn}
+                  onChange={(e) => setFormData(prev => ({ ...prev, name_bn: e.target.value }))}
+                  placeholder="ফেরিস হুইল"
+                />
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>{language === 'bn' ? 'মূল্য (৳)' : 'Price (৳)'}</Label>
+                <Input
+                  type="number"
+                  value={formData.price}
+                  onChange={(e) => setFormData(prev => ({ ...prev, price: Number(e.target.value) }))}
+                  min={0}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>{language === 'bn' ? 'ক্যাটাগরি' : 'Category'}</Label>
+                <Select
+                  value={formData.category}
+                  onValueChange={(value: RideCategory) => setFormData(prev => ({ ...prev, category: value }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="kids">{language === 'bn' ? 'কিডস' : 'Kids'}</SelectItem>
+                    <SelectItem value="family">{language === 'bn' ? 'ফ্যামিলি' : 'Family'}</SelectItem>
+                    <SelectItem value="thrill">{language === 'bn' ? 'থ্রিল' : 'Thrill'}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Switch
+                checked={formData.is_active}
+                onCheckedChange={(checked) => setFormData(prev => ({ ...prev, is_active: checked }))}
+              />
+              <Label>{language === 'bn' ? 'সক্রিয়' : 'Active'}</Label>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCreateOpen(false)}>
+              {language === 'bn' ? 'বাতিল' : 'Cancel'}
+            </Button>
+            <Button 
+              onClick={() => createMutation.mutate(formData)}
+              disabled={!formData.name || formData.price <= 0 || createMutation.isPending}
+            >
+              {createMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              {language === 'bn' ? 'যোগ করুন' : 'Add Ride'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Dialog */}
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {language === 'bn' ? 'রাইড সম্পাদনা' : 'Edit Ride'}
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>{language === 'bn' ? 'নাম (ইংরেজি)' : 'Name (English)'}</Label>
+                <Input
+                  value={formData.name}
+                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>{language === 'bn' ? 'নাম (বাংলা)' : 'Name (Bengali)'}</Label>
+                <Input
+                  value={formData.name_bn}
+                  onChange={(e) => setFormData(prev => ({ ...prev, name_bn: e.target.value }))}
+                />
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>{language === 'bn' ? 'মূল্য (৳)' : 'Price (৳)'}</Label>
+                <Input
+                  type="number"
+                  value={formData.price}
+                  onChange={(e) => setFormData(prev => ({ ...prev, price: Number(e.target.value) }))}
+                  min={0}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>{language === 'bn' ? 'ক্যাটাগরি' : 'Category'}</Label>
+                <Select
+                  value={formData.category}
+                  onValueChange={(value: RideCategory) => setFormData(prev => ({ ...prev, category: value }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="kids">{language === 'bn' ? 'কিডস' : 'Kids'}</SelectItem>
+                    <SelectItem value="family">{language === 'bn' ? 'ফ্যামিলি' : 'Family'}</SelectItem>
+                    <SelectItem value="thrill">{language === 'bn' ? 'থ্রিল' : 'Thrill'}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Switch
+                checked={formData.is_active}
+                onCheckedChange={(checked) => setFormData(prev => ({ ...prev, is_active: checked }))}
+              />
+              <Label>{language === 'bn' ? 'সক্রিয়' : 'Active'}</Label>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditOpen(false)}>
+              {language === 'bn' ? 'বাতিল' : 'Cancel'}
+            </Button>
+            <Button 
+              onClick={() => selectedRide && updateMutation.mutate({ id: selectedRide.id, data: formData })}
+              disabled={!formData.name || formData.price <= 0 || updateMutation.isPending}
+            >
+              {updateMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              {language === 'bn' ? 'সংরক্ষণ করুন' : 'Save Changes'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation */}
+      <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {language === 'bn' ? 'রাইড মুছে ফেলবেন?' : 'Delete Ride?'}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {language === 'bn' 
+                ? `"${selectedRide?.name}" রাইডটি মুছে ফেলা হবে। এই কাজটি পূর্বাবস্থায় ফেরানো যাবে না।`
+                : `"${selectedRide?.name}" will be permanently deleted. This action cannot be undone.`
+              }
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{language === 'bn' ? 'বাতিল' : 'Cancel'}</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={() => selectedRide && deleteMutation.mutate(selectedRide.id)}
+            >
+              {deleteMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              {language === 'bn' ? 'মুছে ফেলুন' : 'Delete'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+}

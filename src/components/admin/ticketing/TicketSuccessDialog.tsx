@@ -52,7 +52,7 @@ export function TicketSuccessDialog({ open, onClose, ticket, rideNames = {} }: T
     const printContent = printRef.current;
     if (!printContent) return;
 
-    const printWindow = window.open('', '', 'width=400,height=600');
+    const printWindow = window.open('', '', 'width=450,height=700');
     if (!printWindow) return;
 
     printWindow.document.write(`
@@ -60,30 +60,177 @@ export function TicketSuccessDialog({ open, onClose, ticket, rideNames = {} }: T
         <head>
           <title>Ticket - ${ticket.ticket_number}</title>
           <style>
-            body { font-family: 'Segoe UI', sans-serif; padding: 20px; max-width: 300px; margin: 0 auto; }
-            .header { text-align: center; margin-bottom: 20px; }
-            .logo { font-size: 24px; font-weight: bold; color: #e91e63; }
-            .ticket-number { font-size: 18px; font-weight: bold; margin: 10px 0; }
-            .qr-container { text-align: center; margin: 20px 0; }
-            .info-row { display: flex; justify-content: space-between; margin: 8px 0; font-size: 14px; }
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { 
+              font-family: 'Segoe UI', 'Hind Siliguri', sans-serif; 
+              padding: 24px; 
+              max-width: 350px; 
+              margin: 0 auto;
+              background: #fff;
+            }
+            .ticket-container {
+              border: 2px dashed #e91e63;
+              border-radius: 16px;
+              padding: 20px;
+              position: relative;
+            }
+            .header { 
+              text-align: center; 
+              margin-bottom: 16px;
+              padding-bottom: 16px;
+              border-bottom: 1px dashed #ddd;
+            }
+            .logo { 
+              font-size: 28px; 
+              font-weight: bold; 
+              color: #e91e63;
+              margin-bottom: 4px;
+            }
+            .tagline {
+              font-size: 12px;
+              color: #666;
+            }
+            .ticket-number { 
+              font-size: 16px; 
+              font-weight: bold; 
+              background: #f5f5f5;
+              padding: 8px 16px;
+              border-radius: 20px;
+              display: inline-block;
+              margin-top: 12px;
+            }
+            .qr-container { 
+              text-align: center; 
+              margin: 20px 0;
+              padding: 16px;
+              background: #fafafa;
+              border-radius: 12px;
+            }
+            .qr-container svg {
+              width: 180px !important;
+              height: 180px !important;
+            }
+            .scan-text {
+              font-size: 11px;
+              color: #888;
+              margin-top: 8px;
+            }
+            .info-section {
+              margin: 16px 0;
+            }
+            .info-row { 
+              display: flex; 
+              justify-content: space-between; 
+              margin: 6px 0; 
+              font-size: 13px; 
+            }
             .label { color: #666; }
-            .value { font-weight: 500; }
-            .separator { border-top: 1px dashed #ccc; margin: 15px 0; }
-            .total { font-size: 20px; font-weight: bold; text-align: center; margin: 15px 0; }
-            .time-box { background: #f5f5f5; padding: 10px; border-radius: 8px; margin: 15px 0; }
-            .footer { text-align: center; font-size: 12px; color: #666; margin-top: 20px; }
+            .value { font-weight: 600; }
+            .separator { 
+              border-top: 1px dashed #ddd; 
+              margin: 16px 0; 
+            }
+            .time-box { 
+              background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%);
+              padding: 16px; 
+              border-radius: 12px; 
+              margin: 16px 0;
+              display: flex;
+              align-items: center;
+              justify-content: space-around;
+            }
+            .time-item {
+              text-align: center;
+            }
+            .time-label {
+              font-size: 11px;
+              color: #666;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+            }
+            .time-value {
+              font-size: 20px;
+              font-weight: bold;
+              color: #c2185b;
+            }
+            .time-arrow {
+              font-size: 24px;
+              color: #e91e63;
+            }
+            .rides-section {
+              background: #f5f5f5;
+              padding: 12px;
+              border-radius: 8px;
+              margin: 12px 0;
+            }
+            .rides-title {
+              font-size: 12px;
+              font-weight: 600;
+              color: #666;
+              margin-bottom: 8px;
+            }
+            .ride-item {
+              display: flex;
+              justify-content: space-between;
+              font-size: 12px;
+              margin: 4px 0;
+            }
+            .total { 
+              text-align: center; 
+              margin: 20px 0;
+              padding: 16px;
+              background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+              border-radius: 12px;
+              color: white;
+            }
+            .total-label {
+              font-size: 12px;
+              opacity: 0.9;
+            }
+            .total-amount {
+              font-size: 32px;
+              font-weight: bold;
+            }
+            .payment-badge {
+              display: inline-block;
+              background: rgba(255,255,255,0.2);
+              padding: 4px 12px;
+              border-radius: 12px;
+              font-size: 11px;
+              margin-top: 8px;
+            }
+            .footer { 
+              text-align: center; 
+              font-size: 11px; 
+              color: #888; 
+              margin-top: 16px;
+              padding-top: 16px;
+              border-top: 1px dashed #ddd;
+            }
+            .footer-emoji {
+              font-size: 20px;
+              margin-bottom: 4px;
+            }
+            @media print {
+              body { padding: 0; }
+              .ticket-container { border: 2px dashed #e91e63 !important; }
+            }
           </style>
         </head>
         <body>
-          ${printContent.innerHTML}
+          <div class="ticket-container">
+            ${printContent.innerHTML}
+          </div>
         </body>
       </html>
     `);
 
     printWindow.document.close();
     printWindow.focus();
-    printWindow.print();
-    printWindow.close();
+    setTimeout(() => {
+      printWindow.print();
+      printWindow.close();
+    }, 250);
   };
 
   const inTime = new Date(ticket.in_time);
@@ -115,15 +262,20 @@ export function TicketSuccessDialog({ open, onClose, ticket, rideNames = {} }: T
           </div>
 
           {/* QR Code */}
-          <div className="qr-container flex justify-center">
-            <div className="p-4 bg-white rounded-lg border">
+          <div className="qr-container flex flex-col items-center justify-center">
+            <div className="p-5 bg-white rounded-xl border-2 border-dashed border-primary/30 shadow-sm">
               <QRCodeSVG 
                 value={ticket.ticket_number} 
-                size={150}
+                size={180}
                 level="H"
-                includeMargin
+                includeMargin={false}
+                bgColor="#ffffff"
+                fgColor="#000000"
               />
             </div>
+            <p className="scan-text text-xs text-muted-foreground mt-2">
+              {language === 'bn' ? 'গেটে স্ক্যান করুন' : 'Scan at gate'}
+            </p>
           </div>
 
           {/* Customer Info */}
