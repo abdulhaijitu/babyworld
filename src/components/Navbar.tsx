@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LanguageToggle } from "./LanguageToggle";
+import { ThemeToggle } from "./ThemeToggle";
 import { WhatsAppButton } from "./WhatsAppButton";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
@@ -72,8 +73,8 @@ export function Navbar() {
             ))}
           </div>
 
-          {/* CTA Button & Language Toggle */}
           <div className="hidden lg:flex items-center gap-3">
+            <ThemeToggle />
             <LanguageToggle />
             <WhatsAppButton variant="navbar" />
             <a
@@ -88,8 +89,8 @@ export function Navbar() {
             </Button>
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="lg:hidden flex items-center gap-3">
+          <div className="lg:hidden flex items-center gap-2">
+            <ThemeToggle />
             <LanguageToggle />
             <button
               className="p-2 text-foreground"
