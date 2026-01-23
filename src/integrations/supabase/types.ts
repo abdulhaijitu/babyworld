@@ -14,7 +14,92 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bookings: {
+        Row: {
+          booking_type: Database["public"]["Enums"]["booking_type"]
+          created_at: string
+          id: string
+          notes: string | null
+          parent_name: string
+          parent_phone: string
+          slot_date: string
+          slot_id: string | null
+          status: Database["public"]["Enums"]["booking_status"]
+          ticket_type: Database["public"]["Enums"]["ticket_type"]
+          time_slot: string
+          updated_at: string
+        }
+        Insert: {
+          booking_type?: Database["public"]["Enums"]["booking_type"]
+          created_at?: string
+          id?: string
+          notes?: string | null
+          parent_name: string
+          parent_phone: string
+          slot_date: string
+          slot_id?: string | null
+          status?: Database["public"]["Enums"]["booking_status"]
+          ticket_type?: Database["public"]["Enums"]["ticket_type"]
+          time_slot: string
+          updated_at?: string
+        }
+        Update: {
+          booking_type?: Database["public"]["Enums"]["booking_type"]
+          created_at?: string
+          id?: string
+          notes?: string | null
+          parent_name?: string
+          parent_phone?: string
+          slot_date?: string
+          slot_id?: string | null
+          status?: Database["public"]["Enums"]["booking_status"]
+          ticket_type?: Database["public"]["Enums"]["ticket_type"]
+          time_slot?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_slot_id_fkey"
+            columns: ["slot_id"]
+            isOneToOne: false
+            referencedRelation: "slots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      slots: {
+        Row: {
+          created_at: string
+          end_time: string
+          id: string
+          slot_date: string
+          start_time: string
+          status: Database["public"]["Enums"]["slot_status"]
+          time_slot: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          end_time: string
+          id?: string
+          slot_date: string
+          start_time: string
+          status?: Database["public"]["Enums"]["slot_status"]
+          time_slot: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          end_time?: string
+          id?: string
+          slot_date?: string
+          start_time?: string
+          status?: Database["public"]["Enums"]["slot_status"]
+          time_slot?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +108,10 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      booking_status: "confirmed" | "pending" | "cancelled"
+      booking_type: "hourly_play" | "birthday_event" | "private_event"
+      slot_status: "available" | "booked"
+      ticket_type: "child_guardian" | "child_only" | "group"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +238,11 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      booking_status: ["confirmed", "pending", "cancelled"],
+      booking_type: ["hourly_play", "birthday_event", "private_event"],
+      slot_status: ["available", "booked"],
+      ticket_type: ["child_guardian", "child_only", "group"],
+    },
   },
 } as const
