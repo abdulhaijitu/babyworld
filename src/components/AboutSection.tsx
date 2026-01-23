@@ -1,7 +1,10 @@
 import { Heart, Sparkles, Users } from "lucide-react";
 import { ScrollFadeIn, StaggerContainer, StaggerItem } from "./ScrollAnimations";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function AboutSection() {
+  const { t } = useLanguage();
+
   return (
     <section id="about" className="py-24 bg-card">
       <div className="container mx-auto">
@@ -15,7 +18,7 @@ export function AboutSection() {
                     <div className="bg-card rounded-2xl p-6 shadow-card">
                       <span className="text-4xl">🏰</span>
                       <p className="mt-2 text-sm font-medium text-foreground">
-                        Adventure Zone
+                        {t("about.adventureZone")}
                       </p>
                     </div>
                   </StaggerItem>
@@ -23,7 +26,7 @@ export function AboutSection() {
                     <div className="bg-card rounded-2xl p-6 shadow-card">
                       <span className="text-4xl">📚</span>
                       <p className="mt-2 text-sm font-medium text-foreground">
-                        Learning Corner
+                        {t("about.learningCorner")}
                       </p>
                     </div>
                   </StaggerItem>
@@ -33,7 +36,7 @@ export function AboutSection() {
                     <div className="bg-card rounded-2xl p-6 shadow-card">
                       <span className="text-4xl">🎨</span>
                       <p className="mt-2 text-sm font-medium text-foreground">
-                        Creative Space
+                        {t("about.creativeSpace")}
                       </p>
                     </div>
                   </StaggerItem>
@@ -41,7 +44,7 @@ export function AboutSection() {
                     <div className="bg-card rounded-2xl p-6 shadow-card">
                       <span className="text-4xl">🎭</span>
                       <p className="mt-2 text-sm font-medium text-foreground">
-                        Pretend Play
+                        {t("about.pretendPlay")}
                       </p>
                     </div>
                   </StaggerItem>
@@ -55,21 +58,18 @@ export function AboutSection() {
             <ScrollFadeIn>
               <div className="space-y-4">
                 <span className="text-sm font-semibold text-primary uppercase tracking-wider">
-                  About Us
+                  {t("about.label")}
                 </span>
                 <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">
-                  A Space Where{" "}
-                  <span className="text-primary">Learning Meets Play</span>
+                  {t("about.title")}{" "}
+                  <span className="text-primary">{t("about.titleHighlight")}</span>
                 </h2>
               </div>
             </ScrollFadeIn>
 
             <ScrollFadeIn delay={0.1}>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                At Baby World, we believe that every child deserves a safe,
-                nurturing environment where they can explore, discover, and grow.
-                Our indoor playground is thoughtfully designed to encourage
-                learning through play.
+                {t("about.description")}
               </p>
             </ScrollFadeIn>
 
@@ -81,11 +81,10 @@ export function AboutSection() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-foreground mb-1">
-                      Safe & Hygienic
+                      {t("about.safeHygienic")}
                     </h3>
                     <p className="text-muted-foreground">
-                      Regular sanitization and child-safe equipment for peace of
-                      mind.
+                      {t("about.safeHygienicDesc")}
                     </p>
                   </div>
                 </div>
@@ -98,11 +97,10 @@ export function AboutSection() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-foreground mb-1">
-                      Trained Staff
+                      {t("about.trainedStaff")}
                     </h3>
                     <p className="text-muted-foreground">
-                      Our friendly team ensures supervision and assistance at all
-                      times.
+                      {t("about.trainedStaffDesc")}
                     </p>
                   </div>
                 </div>
@@ -115,10 +113,10 @@ export function AboutSection() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-foreground mb-1">
-                      Age-Appropriate Activities
+                      {t("about.ageAppropriate")}
                     </h3>
                     <p className="text-muted-foreground">
-                      Curated play zones for children aged 1–10 years old.
+                      {t("about.ageAppropriateDesc")}
                     </p>
                   </div>
                 </div>

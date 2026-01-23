@@ -1,8 +1,11 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Shield, Star, Clock } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function HeroSection() {
+  const { t } = useLanguage();
+
   return (
     <section
       id="home"
@@ -40,7 +43,7 @@ export function HeroSection() {
             >
               <Star className="w-4 h-4 text-secondary" />
               <span className="text-sm font-medium text-foreground">
-                Ages 1–10 Years
+                {t("hero.badge")}
               </span>
             </motion.div>
 
@@ -50,9 +53,9 @@ export function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.6 }}
             >
-              Where Kids{" "}
-              <span className="text-primary">Learn</span> &{" "}
-              <span className="text-secondary">Play</span>
+              {t("hero.title1")}{" "}
+              <span className="text-primary">{t("hero.learn")}</span> {t("hero.and")}{" "}
+              <span className="text-secondary">{t("hero.play")}</span>
             </motion.h1>
 
             <motion.p 
@@ -61,9 +64,7 @@ export function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.6 }}
             >
-              A safe, hygienic, and joyful indoor playground designed for
-              children aged 1–10 years. Let your little ones explore, learn,
-              and make memories in our supervised play environment.
+              {t("hero.description")}
             </motion.p>
 
             {/* Trust badges */}
@@ -78,7 +79,7 @@ export function HeroSection() {
                   <Shield className="w-5 h-5 text-primary" />
                 </div>
                 <span className="text-sm font-medium text-foreground">
-                  Safe Environment
+                  {t("hero.safeEnvironment")}
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -86,7 +87,7 @@ export function HeroSection() {
                   <Clock className="w-5 h-5 text-primary" />
                 </div>
                 <span className="text-sm font-medium text-foreground">
-                  Hourly Play
+                  {t("hero.hourlyPlay")}
                 </span>
               </div>
             </motion.div>
@@ -99,10 +100,10 @@ export function HeroSection() {
               transition={{ delay: 0.6, duration: 0.6 }}
             >
               <Button size="lg" variant="hero">
-                View Play Options
+                {t("hero.viewOptions")}
               </Button>
               <Button size="lg" variant="heroOutline">
-                Birthday & Events
+                {t("hero.birthdayEvents")}
               </Button>
             </motion.div>
           </motion.div>
@@ -130,10 +131,10 @@ export function HeroSection() {
                     <h3 className="text-2xl font-bold text-foreground">
                       Baby World
                     </h3>
-                    <p className="text-lg text-primary font-medium">
+                    <p className="text-lg text-primary font-medium font-bangla">
                       বেবি ওয়ার্ল্ড
                     </p>
-                    <p className="text-muted-foreground">Learn & Play</p>
+                    <p className="text-muted-foreground">{t("hero.learnPlay")}</p>
                   </div>
                 </div>
               </div>

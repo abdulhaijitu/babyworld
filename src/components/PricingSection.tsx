@@ -1,30 +1,39 @@
 import { Clock, Users, Ticket, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollFadeIn, ScaleIn } from "./ScrollAnimations";
-
-const inclusions = [
-  "Access to all play zones",
-  "Supervised environment",
-  "Clean & sanitized equipment",
-  "Comfortable seating for guardians",
-  "Air-conditioned facility",
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function PricingSection() {
+  const { t } = useLanguage();
+
+  const inclusions = [
+    t("pricing.inclusion1"),
+    t("pricing.inclusion2"),
+    t("pricing.inclusion3"),
+    t("pricing.inclusion4"),
+    t("pricing.inclusion5"),
+  ];
+
+  const rules = [
+    { icon: "👧", text: t("pricing.rule1") },
+    { icon: "🧴", text: t("pricing.rule2") },
+    { icon: "🍱", text: t("pricing.rule3") },
+    { icon: "👨‍👩‍👧", text: t("pricing.rule4") },
+  ];
+
   return (
     <section id="pricing" className="py-24 bg-background">
       <div className="container mx-auto">
         {/* Header */}
         <ScrollFadeIn className="text-center max-w-2xl mx-auto mb-16 space-y-4">
           <span className="text-sm font-semibold text-primary uppercase tracking-wider">
-            Play & Pricing
+            {t("pricing.label")}
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-            Simple, Transparent Pricing
+            {t("pricing.title")}
           </h2>
           <p className="text-lg text-muted-foreground">
-            Choose the play option that works best for your family. Each session
-            includes one child and one guardian.
+            {t("pricing.description")}
           </p>
         </ScrollFadeIn>
 
@@ -39,34 +48,33 @@ export function PricingSection() {
                   <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
                     <Clock className="w-4 h-4 text-primary" />
                     <span className="text-sm font-medium text-primary">
-                      Hourly Play
+                      {t("pricing.hourlyPlay")}
                     </span>
                   </div>
 
                   <div>
                     <h3 className="text-2xl font-bold text-foreground mb-2">
-                      1-Hour Play Session
+                      {t("pricing.sessionTitle")}
                     </h3>
                     <p className="text-muted-foreground">
-                      Perfect for a quick visit. Enjoy all play zones with your
-                      little one.
+                      {t("pricing.sessionDesc")}
                     </p>
                   </div>
 
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Users className="w-5 h-5" />
-                    <span>1 Child + 1 Guardian</span>
+                    <span>{t("pricing.childGuardian")}</span>
                   </div>
 
                   <Button size="lg" className="w-full sm:w-auto">
-                    Book Session
+                    {t("pricing.bookSession")}
                   </Button>
                 </div>
 
                 {/* Right side - inclusions */}
                 <div className="flex-1 bg-accent rounded-2xl p-6">
                   <h4 className="font-semibold text-foreground mb-4">
-                    What's Included
+                    {t("pricing.whatsIncluded")}
                   </h4>
                   <ul className="space-y-3">
                     {inclusions.map((item) => (
@@ -88,24 +96,22 @@ export function PricingSection() {
                 <div className="inline-flex items-center gap-2 px-3 py-1 bg-foreground/5 rounded-full">
                   <Ticket className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm font-medium text-muted-foreground">
-                    Walk-in Available
+                    {t("pricing.walkIn")}
                   </span>
                 </div>
 
                 <div>
                   <h3 className="text-xl font-bold text-foreground mb-2">
-                    Physical Tickets
+                    {t("pricing.physicalTickets")}
                   </h3>
                   <p className="text-muted-foreground text-sm">
-                    Prefer to pay in person? Physical tickets are available at our
-                    reception.
+                    {t("pricing.physicalDesc")}
                   </p>
                 </div>
 
                 <div className="pt-4 border-t border-border">
                   <p className="text-sm text-muted-foreground">
-                    No advance booking required. Simply walk in during operating
-                    hours.
+                    {t("pricing.noBooking")}
                   </p>
                 </div>
               </div>
@@ -117,15 +123,10 @@ export function PricingSection() {
         <ScrollFadeIn delay={0.2}>
           <div className="mt-16 bg-accent rounded-3xl p-8 lg:p-12 max-w-4xl mx-auto">
             <h3 className="text-xl font-bold text-foreground mb-6 text-center">
-              Play Zone Guidelines
+              {t("pricing.guidelines")}
             </h3>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[
-                { icon: "👧", text: "Socks required for all" },
-                { icon: "🧴", text: "Hand sanitization on entry" },
-                { icon: "🍱", text: "No outside food allowed" },
-                { icon: "👨‍👩‍👧", text: "Guardian must stay on-site" },
-              ].map((rule) => (
+              {rules.map((rule) => (
                 <div key={rule.text} className="text-center">
                   <span className="text-3xl">{rule.icon}</span>
                   <p className="mt-2 text-sm text-muted-foreground">{rule.text}</p>

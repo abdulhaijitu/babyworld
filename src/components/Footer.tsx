@@ -1,6 +1,17 @@
 import { Phone, Mail, MapPin } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function Footer() {
+  const { t } = useLanguage();
+
+  const quickLinks = [
+    { label: t("nav.home"), href: "#home" },
+    { label: t("nav.about"), href: "#about" },
+    { label: t("nav.pricing"), href: "#pricing" },
+    { label: t("nav.events"), href: "#events" },
+    { label: t("nav.contact"), href: "#contact" },
+  ];
+
   return (
     <footer className="bg-foreground text-background py-16">
       <div className="container mx-auto">
@@ -9,27 +20,19 @@ export function Footer() {
           <div className="lg:col-span-2 space-y-4">
             <div>
               <h3 className="text-2xl font-bold">Baby World</h3>
-              <p className="text-lg opacity-80">বেবি ওয়ার্ল্ড</p>
+              <p className="text-lg opacity-80 font-bangla">বেবি ওয়ার্ল্ড</p>
             </div>
             <p className="text-sm opacity-70 max-w-md">
-              A safe, hygienic, and joyful indoor playground for children aged
-              1–10 years. Where kids learn & play in a supervised, nurturing
-              environment.
+              {t("footer.description")}
             </p>
-            <p className="text-sm font-medium opacity-90">Learn & Play</p>
+            <p className="text-sm font-medium opacity-90">{t("hero.learnPlay")}</p>
           </div>
 
           {/* Quick Links */}
           <div className="space-y-4">
-            <h4 className="font-semibold text-lg">Quick Links</h4>
+            <h4 className="font-semibold text-lg">{t("footer.quickLinks")}</h4>
             <ul className="space-y-2">
-              {[
-                { label: "Home", href: "#home" },
-                { label: "About Us", href: "#about" },
-                { label: "Play & Pricing", href: "#pricing" },
-                { label: "Birthday & Events", href: "#events" },
-                { label: "Contact", href: "#contact" },
-              ].map((link) => (
+              {quickLinks.map((link) => (
                 <li key={link.href}>
                   <a
                     href={link.href}
@@ -44,7 +47,7 @@ export function Footer() {
 
           {/* Contact */}
           <div className="space-y-4">
-            <h4 className="font-semibold text-lg">Contact</h4>
+            <h4 className="font-semibold text-lg">{t("footer.contact")}</h4>
             <ul className="space-y-3">
               <li>
                 <a
@@ -67,9 +70,9 @@ export function Footer() {
               <li className="flex items-start gap-2 text-sm opacity-70">
                 <MapPin className="w-4 h-4 flex-shrink-0 mt-0.5" />
                 <span>
-                  27/B, Jannat Tower (Lift #3),
+                  {t("contact.addressLine1")}
                   <br />
-                  Lalbagh, Dhaka 1211
+                  {t("contact.addressLine2")}
                 </span>
               </li>
             </ul>
@@ -80,10 +83,9 @@ export function Footer() {
         <div className="mt-12 pt-8 border-t border-background/10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-sm opacity-60">
-              © {new Date().getFullYear()} Baby World (বেবি ওয়ার্ল্ড). All rights
-              reserved.
+              © {new Date().getFullYear()} Baby World (<span className="font-bangla">বেবি ওয়ার্ল্ড</span>). {t("footer.rights")}
             </p>
-            <p className="text-sm opacity-60">Ages 1–10 Years • Learn & Play</p>
+            <p className="text-sm opacity-60">{t("footer.ageRange")} • {t("hero.learnPlay")}</p>
           </div>
         </div>
       </div>
