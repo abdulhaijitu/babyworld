@@ -1,21 +1,22 @@
 import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LanguageToggle } from "./LanguageToggle";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { cn } from "@/lib/utils";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { t } = useLanguage();
+  const location = useLocation();
 
   const navLinks = [
-    { label: t("nav.home"), href: "#home" },
-    { label: t("nav.about"), href: "#about" },
-    { label: t("nav.pricing"), href: "#pricing" },
-    { label: t("nav.booking"), href: "#booking" },
-    { label: t("nav.events"), href: "#events" },
-    { label: t("nav.contact"), href: "#contact" },
+    { label: t("nav.home"), href: "/" },
+    { label: t("nav.pricing"), href: "/play-booking" },
+    { label: t("nav.events"), href: "/birthday-events" },
+    { label: t("nav.contact"), href: "/contact" },
   ];
 
   useEffect(() => {
@@ -26,34 +27,45 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
+
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         isScrolled
           ? "bg-card/95 backdrop-blur-md shadow-card"
           : "bg-transparent"
-      }`}
+      )}
     >
       <div className="container mx-auto">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <a href="#home" className="flex flex-col">
+          <Link to="/" className="flex flex-col">
             <span className="text-xl font-bold text-foreground">
               Baby World
             </span>
             <span className="text-xs text-muted-foreground font-bangla">বেবি ওয়ার্ল্ড</span>
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.href}
-                href={link.href}
-                className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-200"
+                to={link.href}
+                className={cn(
+                  "text-sm font-medium transition-colors duration-200",
+                  location.pathname === link.href
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-primary"
+                )}
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
           </div>
 
@@ -67,7 +79,9 @@ export function Navbar() {
               <Phone className="w-4 h-4" />
               09606990128
             </a>
-            <Button size="sm">{t("nav.bookVisit")}</Button>
+            <Button size="sm" asChild>
+              <Link to="/play-booking">{t("nav.bookVisit")}</Link>
+            </Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -88,18 +102,22 @@ export function Navbar() {
           <div className="lg:hidden bg-card border-t border-border animate-fade-in">
             <div className="py-4 space-y-2">
               {navLinks.map((link) => (
-                <a
+                <Link
                   key={link.href}
-                  href={link.href}
-                  className="block px-4 py-3 text-sm font-medium text-foreground hover:bg-accent rounded-lg transition-colors"
-                  onClick={() => setIsOpen(false)}
+                  to={link.href}
+                  className={cn(
+                    "block px-4 py-3 text-sm font-medium rounded-lg transition-colors",
+                    location.pathname === link.href
+                      ? "text-primary bg-primary/5"
+                      : "text-foreground hover:bg-accent"
+                  )}
                 >
                   {link.label}
-                </a>
+                </Link>
               ))}
               <div className="px-4 pt-4 border-t border-border">
-                <Button className="w-full" size="lg">
-                  {t("nav.bookVisit")}
+                <Button className="w-full" size="lg" asChild>
+                  <Link to="/play-booking">{t("nav.bookVisit")}</Link>
                 </Button>
               </div>
             </div>

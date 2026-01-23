@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Shield, Star, Clock } from "lucide-react";
@@ -99,11 +100,11 @@ export function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.6 }}
             >
-              <Button size="lg" variant="hero">
-                {t("hero.viewOptions")}
+              <Button size="lg" variant="hero" asChild>
+                <Link to="/play-booking">{t("hero.viewOptions")}</Link>
               </Button>
-              <Button size="lg" variant="heroOutline">
-                {t("hero.birthdayEvents")}
+              <Button size="lg" variant="heroOutline" asChild>
+                <Link to="/birthday-events">{t("hero.birthdayEvents")}</Link>
               </Button>
             </motion.div>
           </motion.div>
