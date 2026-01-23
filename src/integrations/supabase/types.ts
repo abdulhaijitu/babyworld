@@ -554,6 +554,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      has_any_role: {
+        Args: {
+          _roles: Database["public"]["Enums"]["app_role"][]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -563,7 +570,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "user"
+      app_role: "admin" | "user" | "manager"
       booking_status: "confirmed" | "pending" | "cancelled"
       booking_type: "hourly_play" | "birthday_event" | "private_event"
       employee_role: "staff" | "supervisor" | "manager"
@@ -702,7 +709,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "user"],
+      app_role: ["admin", "user", "manager"],
       booking_status: ["confirmed", "pending", "cancelled"],
       booking_type: ["hourly_play", "birthday_event", "private_event"],
       employee_role: ["staff", "supervisor", "manager"],
