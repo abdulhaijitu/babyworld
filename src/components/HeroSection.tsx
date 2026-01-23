@@ -14,7 +14,7 @@ export function HeroSection() {
   return (
     <section
       id="home"
-      className="relative min-h-[100svh] flex items-center pt-20 pb-8 overflow-hidden"
+      className="relative min-h-[85svh] flex items-center py-12 sm:py-16 overflow-hidden"
     >
       {/* Beautiful gradient background inspired by logo */}
       <div className="absolute inset-0">

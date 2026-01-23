@@ -1,7 +1,9 @@
 import { Navbar } from "@/components/Navbar";
 import { HeroSection } from "@/components/HeroSection";
 import { AboutSection } from "@/components/AboutSection";
+import { VideoSection } from "@/components/VideoSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
+import { ReviewForm } from "@/components/ReviewForm";
 import { TrustSection } from "@/components/TrustSection";
 import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
@@ -20,7 +22,9 @@ const Index = () => {
         <main>
           <HeroSection />
           <AboutSection />
+          <VideoSection />
           <TestimonialsSection />
+          <ReviewForm />
           <TrustSection />
         </main>
         <Footer />
