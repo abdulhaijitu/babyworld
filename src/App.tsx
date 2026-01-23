@@ -24,6 +24,7 @@ import AdminFoodSales from "./pages/admin/AdminFoodSales";
 import AdminEmployees from "./pages/admin/AdminEmployees";
 import AdminRoster from "./pages/admin/AdminRoster";
 import AdminBookings from "./pages/admin/AdminBookings";
+import AdminEvents from "./pages/admin/AdminEvents";
 
 const queryClient = new QueryClient();
 
@@ -52,7 +53,7 @@ const App = () => (
                   <Route path="employees" element={<AdminEmployees />} />
                   <Route path="roster" element={<AdminRoster />} />
                   <Route path="bookings" element={<AdminBookings />} />
-                  <Route path="events" element={<div className="p-8"><h1 className="text-2xl font-bold">Events</h1><p className="text-muted-foreground mt-2">Coming soon...</p></div>} />
+                  <Route path="events" element={<AdminEvents />} />
                   <Route path="settings" element={<div className="p-8"><h1 className="text-2xl font-bold">Settings</h1><p className="text-muted-foreground mt-2">Coming soon...</p></div>} />
                 </Route>
                 
