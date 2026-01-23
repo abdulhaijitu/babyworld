@@ -347,6 +347,54 @@ export type Database = {
           },
         ]
       }
+      memberships: {
+        Row: {
+          child_count: number
+          created_at: string
+          created_by: string | null
+          discount_percent: number
+          id: string
+          member_name: string
+          membership_type: Database["public"]["Enums"]["membership_type"]
+          notes: string | null
+          phone: string
+          status: Database["public"]["Enums"]["membership_status"]
+          updated_at: string
+          valid_from: string
+          valid_till: string
+        }
+        Insert: {
+          child_count?: number
+          created_at?: string
+          created_by?: string | null
+          discount_percent?: number
+          id?: string
+          member_name: string
+          membership_type: Database["public"]["Enums"]["membership_type"]
+          notes?: string | null
+          phone: string
+          status?: Database["public"]["Enums"]["membership_status"]
+          updated_at?: string
+          valid_from?: string
+          valid_till: string
+        }
+        Update: {
+          child_count?: number
+          created_at?: string
+          created_by?: string | null
+          discount_percent?: number
+          id?: string
+          member_name?: string
+          membership_type?: Database["public"]["Enums"]["membership_type"]
+          notes?: string | null
+          phone?: string
+          status?: Database["public"]["Enums"]["membership_status"]
+          updated_at?: string
+          valid_from?: string
+          valid_till?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string
@@ -438,6 +486,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      rides: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string
+          name_bn: string | null
+          price: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          name_bn?: string | null
+          price?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          name_bn?: string | null
+          price?: number
+          updated_at?: string
+        }
+        Relationships: []
       }
       roster_shifts: {
         Row: {
@@ -540,58 +618,145 @@ export type Database = {
         }
         Relationships: []
       }
+      ticket_rides: {
+        Row: {
+          created_at: string
+          id: string
+          quantity: number
+          ride_id: string
+          ticket_id: string
+          total_price: number
+          unit_price: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          quantity?: number
+          ride_id: string
+          ticket_id: string
+          total_price: number
+          unit_price: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          quantity?: number
+          ride_id?: string
+          ticket_id?: string
+          total_price?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ticket_rides_ride_id_fkey"
+            columns: ["ride_id"]
+            isOneToOne: false
+            referencedRelation: "rides"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ticket_rides_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tickets: {
         Row: {
+          addons_price: number | null
           booking_id: string | null
+          child_count: number | null
           child_name: string | null
           created_at: string
+          created_by: string | null
+          discount_applied: number | null
+          entry_price: number | null
+          guardian_count: number | null
           guardian_name: string
           guardian_phone: string
           id: string
+          in_time: string | null
           inside_venue: boolean
+          membership_id: string | null
           notes: string | null
+          out_time: string | null
+          payment_status: string | null
+          payment_type: string | null
           slot_date: string
+          socks_count: number | null
+          socks_price: number | null
           source: Database["public"]["Enums"]["ticket_source"]
           status: Database["public"]["Enums"]["ticket_status"]
           ticket_number: string
           ticket_type: string
           time_slot: string | null
+          total_price: number | null
           updated_at: string
           used_at: string | null
         }
         Insert: {
+          addons_price?: number | null
           booking_id?: string | null
+          child_count?: number | null
           child_name?: string | null
           created_at?: string
+          created_by?: string | null
+          discount_applied?: number | null
+          entry_price?: number | null
+          guardian_count?: number | null
           guardian_name: string
           guardian_phone: string
           id?: string
+          in_time?: string | null
           inside_venue?: boolean
+          membership_id?: string | null
           notes?: string | null
+          out_time?: string | null
+          payment_status?: string | null
+          payment_type?: string | null
           slot_date: string
+          socks_count?: number | null
+          socks_price?: number | null
           source?: Database["public"]["Enums"]["ticket_source"]
           status?: Database["public"]["Enums"]["ticket_status"]
           ticket_number: string
           ticket_type?: string
           time_slot?: string | null
+          total_price?: number | null
           updated_at?: string
           used_at?: string | null
         }
         Update: {
+          addons_price?: number | null
           booking_id?: string | null
+          child_count?: number | null
           child_name?: string | null
           created_at?: string
+          created_by?: string | null
+          discount_applied?: number | null
+          entry_price?: number | null
+          guardian_count?: number | null
           guardian_name?: string
           guardian_phone?: string
           id?: string
+          in_time?: string | null
           inside_venue?: boolean
+          membership_id?: string | null
           notes?: string | null
+          out_time?: string | null
+          payment_status?: string | null
+          payment_type?: string | null
           slot_date?: string
+          socks_count?: number | null
+          socks_price?: number | null
           source?: Database["public"]["Enums"]["ticket_source"]
           status?: Database["public"]["Enums"]["ticket_status"]
           ticket_number?: string
           ticket_type?: string
           time_slot?: string | null
+          total_price?: number | null
           updated_at?: string
           used_at?: string | null
         }
@@ -601,6 +766,13 @@ export type Database = {
             columns: ["booking_id"]
             isOneToOne: false
             referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tickets_membership_id_fkey"
+            columns: ["membership_id"]
+            isOneToOne: false
+            referencedRelation: "memberships"
             referencedColumns: ["id"]
           },
         ]
@@ -656,6 +828,8 @@ export type Database = {
       food_order_status: "pending" | "served" | "cancelled"
       food_payment_type: "cash" | "online" | "pending"
       gate_entry_type: "entry" | "exit"
+      membership_status: "active" | "expired" | "cancelled"
+      membership_type: "monthly" | "quarterly" | "yearly"
       slot_status: "available" | "booked"
       ticket_source: "online" | "physical"
       ticket_status: "active" | "used" | "cancelled"
@@ -796,6 +970,8 @@ export const Constants = {
       food_order_status: ["pending", "served", "cancelled"],
       food_payment_type: ["cash", "online", "pending"],
       gate_entry_type: ["entry", "exit"],
+      membership_status: ["active", "expired", "cancelled"],
+      membership_type: ["monthly", "quarterly", "yearly"],
       slot_status: ["available", "booked"],
       ticket_source: ["online", "physical"],
       ticket_status: ["active", "used", "cancelled"],
