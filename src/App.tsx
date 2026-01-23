@@ -34,6 +34,7 @@ import AdminExpenses from "./pages/admin/AdminExpenses";
 import AdminProfitReports from "./pages/admin/AdminProfitReports";
 import AdminRides from "./pages/admin/AdminRides";
 import AdminRideReviews from "./pages/admin/AdminRideReviews";
+import AdminNotificationLogs from "./pages/admin/AdminNotificationLogs";
 
 const queryClient = new QueryClient();
 
@@ -70,6 +71,7 @@ const App = () => (
                   <Route path="expenses" element={<AdminExpenses />} />
                   <Route path="rides" element={<AdminRides />} />
                   <Route path="ride-reviews" element={<AdminRideReviews />} />
+                  <Route path="notifications" element={<AdminNotificationLogs />} />
                   <Route path="users" element={<AdminUsers />} />
                   <Route path="settings" element={<AdminSettings />} />
                 </Route>

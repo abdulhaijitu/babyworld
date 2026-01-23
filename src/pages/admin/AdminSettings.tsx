@@ -494,13 +494,39 @@ export default function AdminSettings() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Bell className="w-5 h-5" />
-                {language === 'bn' ? 'নোটিফিকেশন' : 'Notifications'}
+                {language === 'bn' ? 'নোটিফিকেশন চ্যানেল' : 'Notification Channels'}
               </CardTitle>
               <CardDescription>
-                {language === 'bn' ? 'ইমেইল ও SMS নোটিফিকেশন সেটিংস' : 'Email & SMS notification settings'}
+                {language === 'bn' ? 'পেমেন্ট কনফার্মেশন SMS ও WhatsApp সেটিংস' : 'Payment confirmation SMS & WhatsApp settings'}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <p className="font-medium">{language === 'bn' ? 'SMS নোটিফিকেশন' : 'SMS Notifications'}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {language === 'bn' ? 'পেমেন্ট সফল হলে SMS পাঠান' : 'Send SMS on successful payment'}
+                  </p>
+                </div>
+                <Switch
+                  checked={notifications.smsEnabled}
+                  onCheckedChange={(checked) => setNotifications({...notifications, smsEnabled: checked})}
+                />
+              </div>
+              <Separator />
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <p className="font-medium">{language === 'bn' ? 'WhatsApp নোটিফিকেশন' : 'WhatsApp Notifications'}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {language === 'bn' ? 'পেমেন্ট সফল হলে WhatsApp পাঠান' : 'Send WhatsApp on successful payment'}
+                  </p>
+                </div>
+                <Switch
+                  checked={notifications.whatsappEnabled}
+                  onCheckedChange={(checked) => setNotifications({...notifications, whatsappEnabled: checked})}
+                />
+              </div>
+              <Separator />
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <p className="font-medium">{language === 'bn' ? 'বুকিং ইমেইল' : 'Booking Email'}</p>
@@ -537,19 +563,6 @@ export default function AdminSettings() {
                 <Switch
                   checked={notifications.emailPayment}
                   onCheckedChange={(checked) => setNotifications({...notifications, emailPayment: checked})}
-                />
-              </div>
-              <Separator />
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <p className="font-medium">{language === 'bn' ? 'পেমেন্ট SMS' : 'Payment SMS'}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {language === 'bn' ? 'পেমেন্ট হলে SMS পাঠান' : 'Send SMS on payment'}
-                  </p>
-                </div>
-                <Switch
-                  checked={notifications.smsPayment}
-                  onCheckedChange={(checked) => setNotifications({...notifications, smsPayment: checked})}
                 />
               </div>
             </CardContent>

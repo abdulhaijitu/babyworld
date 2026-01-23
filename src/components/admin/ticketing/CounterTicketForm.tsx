@@ -247,6 +247,22 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
 
       toast.success(language === 'bn' ? 'টিকেট তৈরি হয়েছে!' : 'Ticket created successfully!');
       
+      // Send payment notification for paid tickets (non-blocking)
+      if (values.payment_type === 'cash' && data.ticket) {
+        supabase.functions.invoke('ticket-payment-notify', {
+          body: {
+            ticket_id: data.ticket.id,
+            ticket_number: data.ticket.ticket_number,
+            guardian_name: values.guardian_name || 'Guest',
+            guardian_phone: values.phone,
+            slot_date: format(values.date, 'yyyy-MM-dd'),
+            time_slot: null,
+            total_price: prices.total,
+            payment_type: 'cash'
+          }
+        }).catch(err => console.log('Notification sent in background'));
+      }
+      
       // Reset form
       form.reset();
       setGuardianCount(1);
