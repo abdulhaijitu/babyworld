@@ -72,7 +72,7 @@ import { AdminErrorState } from '@/components/admin/AdminErrorState';
 const PRICE_PER_TICKET = 300;
 
 export default function AdminDashboard() {
-  const { user, isAdmin, loading: authLoading, error: authError, signOut } = useAuth();
+  const { user, isAdmin, loading: authLoading, initialized, signOut } = useAuth();
   const { bookings, loading: bookingsLoading, error: bookingsError, refetch, updateBookingStatus, cancelBooking } = useAdminBookings();
   const navigate = useNavigate();
   const { language } = useLanguage();
@@ -266,11 +266,6 @@ export default function AdminDashboard() {
   // Show skeleton while auth is loading
   if (authLoading) {
     return <AdminDashboardSkeleton />;
-  }
-
-  // Show error state for auth errors
-  if (authError) {
-    return <AdminErrorState type="auth" message={authError} />;
   }
 
   // Show permission error if user exists but is not admin
