@@ -39,6 +39,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   RefreshCw,
   Loader2,
@@ -59,7 +60,11 @@ import {
   TrendingUp,
   Banknote,
   Filter,
-  Plus
+  Plus,
+  Printer,
+  MessageSquare,
+  Calendar as CalendarIcon,
+  List
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -67,6 +72,9 @@ import { format, parseISO, startOfMonth, endOfMonth, isWithinInterval, startOfWe
 import { bn } from 'date-fns/locale';
 import { TableRowSkeleton } from '@/components/admin/AdminSkeleton';
 import { ManualBookingForm } from '@/components/admin/bookings/ManualBookingForm';
+import { BookingPrintTicket } from '@/components/admin/bookings/BookingPrintTicket';
+import { BookingCalendarView } from '@/components/admin/bookings/BookingCalendarView';
+import { useSendSMS } from '@/hooks/useSendSMS';
 
 interface Booking {
   id: string;
@@ -109,6 +117,16 @@ export default function AdminBookings() {
 
   // Manual booking dialog
   const [manualBookingOpen, setManualBookingOpen] = useState(false);
+
+  // Print ticket dialog
+  const [printOpen, setPrintOpen] = useState(false);
+  const [printBooking, setPrintBooking] = useState<Booking | null>(null);
+
+  // SMS functionality
+  const { sending: sendingSMS, sendBookingConfirmation } = useSendSMS();
+
+  // View mode
+  const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list');
 
   const fetchBookings = useCallback(async () => {
     setLoading(true);
@@ -191,6 +209,24 @@ export default function AdminBookings() {
   const openDetailDialog = (booking: Booking) => {
     setSelectedBooking(booking);
     setDetailOpen(true);
+  };
+
+  const openPrintDialog = (booking: Booking) => {
+    setPrintBooking(booking);
+    setPrintOpen(true);
+  };
+
+  const handleSendSMS = async (booking: Booking) => {
+    const bookingRef = `BK${booking.id.slice(0, 8).toUpperCase()}`;
+    const formattedDate = format(parseISO(booking.slot_date), 'dd MMM yyyy');
+    
+    await sendBookingConfirmation(
+      booking.parent_phone,
+      booking.parent_name,
+      formattedDate,
+      booking.time_slot,
+      bookingRef
+    );
   };
 
   // Filter bookings
@@ -299,6 +335,20 @@ export default function AdminBookings() {
         </div>
 
         <div className="flex gap-2">
+          {/* View Toggle */}
+          <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as 'list' | 'calendar')} className="w-auto">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="list" className="gap-1">
+                <List className="w-4 h-4" />
+                {language === 'bn' ? 'তালিকা' : 'List'}
+              </TabsTrigger>
+              <TabsTrigger value="calendar" className="gap-1">
+                <CalendarIcon className="w-4 h-4" />
+                {language === 'bn' ? 'ক্যালেন্ডার' : 'Calendar'}
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+          
           <Button onClick={() => setManualBookingOpen(true)}>
             <Plus className="w-4 h-4 mr-2" />
             {language === 'bn' ? 'নতুন বুকিং' : 'New Booking'}
@@ -353,191 +403,212 @@ export default function AdminBookings() {
         </Card>
       </div>
 
-      {/* Bookings Table */}
-      <Card>
-        <CardHeader>
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <CardTitle>{language === 'bn' ? 'বুকিং তালিকা' : 'Booking List'}</CardTitle>
-            <p className="text-sm text-muted-foreground">
-              {filteredBookings.length} {language === 'bn' ? 'টি বুকিং' : 'bookings'}
-            </p>
-          </div>
-          
-          {/* Filters */}
-          <div className="flex flex-col md:flex-row gap-3 mt-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input
-                placeholder={language === 'bn' ? 'নাম বা ফোন...' : 'Name or phone...'}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
-              />
+      {/* Calendar View */}
+      {viewMode === 'calendar' && (
+        <BookingCalendarView 
+          bookings={bookings} 
+          onBookingSelect={(booking) => openDetailDialog(booking)}
+        />
+      )}
+
+      {/* Bookings Table - List View */}
+      {viewMode === 'list' && (
+        <Card>
+          <CardHeader>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <CardTitle>{language === 'bn' ? 'বুকিং তালিকা' : 'Booking List'}</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                {filteredBookings.length} {language === 'bn' ? 'টি বুকিং' : 'bookings'}
+              </p>
             </div>
             
-            <Select value={dateRangeFilter} onValueChange={setDateRangeFilter}>
-              <SelectTrigger className="w-full md:w-[130px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{language === 'bn' ? 'সব সময়' : 'All Time'}</SelectItem>
-                <SelectItem value="today">{language === 'bn' ? 'আজ' : 'Today'}</SelectItem>
-                <SelectItem value="week">{language === 'bn' ? 'এই সপ্তাহ' : 'This Week'}</SelectItem>
-                <SelectItem value="month">{language === 'bn' ? 'এই মাস' : 'This Month'}</SelectItem>
-              </SelectContent>
-            </Select>
-            
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full md:w-[120px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{language === 'bn' ? 'সব' : 'All'}</SelectItem>
-                <SelectItem value="confirmed">{language === 'bn' ? 'নিশ্চিত' : 'Confirmed'}</SelectItem>
-                <SelectItem value="pending">{language === 'bn' ? 'অপেক্ষমাণ' : 'Pending'}</SelectItem>
-                <SelectItem value="cancelled">{language === 'bn' ? 'বাতিল' : 'Cancelled'}</SelectItem>
-              </SelectContent>
-            </Select>
+            {/* Filters */}
+            <div className="flex flex-col md:flex-row gap-3 mt-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  placeholder={language === 'bn' ? 'নাম বা ফোন...' : 'Name or phone...'}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
+              
+              <Select value={dateRangeFilter} onValueChange={setDateRangeFilter}>
+                <SelectTrigger className="w-full md:w-[130px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{language === 'bn' ? 'সব সময়' : 'All Time'}</SelectItem>
+                  <SelectItem value="today">{language === 'bn' ? 'আজ' : 'Today'}</SelectItem>
+                  <SelectItem value="week">{language === 'bn' ? 'এই সপ্তাহ' : 'This Week'}</SelectItem>
+                  <SelectItem value="month">{language === 'bn' ? 'এই মাস' : 'This Month'}</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-full md:w-[120px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{language === 'bn' ? 'সব' : 'All'}</SelectItem>
+                  <SelectItem value="confirmed">{language === 'bn' ? 'নিশ্চিত' : 'Confirmed'}</SelectItem>
+                  <SelectItem value="pending">{language === 'bn' ? 'অপেক্ষমাণ' : 'Pending'}</SelectItem>
+                  <SelectItem value="cancelled">{language === 'bn' ? 'বাতিল' : 'Cancelled'}</SelectItem>
+                </SelectContent>
+              </Select>
 
-            <Select value={paymentFilter} onValueChange={setPaymentFilter}>
-              <SelectTrigger className="w-full md:w-[120px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{language === 'bn' ? 'পেমেন্ট' : 'Payment'}</SelectItem>
-                <SelectItem value="paid">{language === 'bn' ? 'পেইড' : 'Paid'}</SelectItem>
-                <SelectItem value="unpaid">{language === 'bn' ? 'আনপেইড' : 'Unpaid'}</SelectItem>
-                <SelectItem value="refunded">{language === 'bn' ? 'রিফান্ড' : 'Refunded'}</SelectItem>
-              </SelectContent>
-            </Select>
+              <Select value={paymentFilter} onValueChange={setPaymentFilter}>
+                <SelectTrigger className="w-full md:w-[120px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{language === 'bn' ? 'পেমেন্ট' : 'Payment'}</SelectItem>
+                  <SelectItem value="paid">{language === 'bn' ? 'পেইড' : 'Paid'}</SelectItem>
+                  <SelectItem value="unpaid">{language === 'bn' ? 'আনপেইড' : 'Unpaid'}</SelectItem>
+                  <SelectItem value="refunded">{language === 'bn' ? 'রিফান্ড' : 'Refunded'}</SelectItem>
+                </SelectContent>
+              </Select>
 
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline" className="w-full md:w-auto">
-                  <CalendarDays className="w-4 h-4 mr-2" />
-                  {dateFilter ? format(dateFilter, 'dd MMM') : (language === 'bn' ? 'তারিখ' : 'Date')}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar mode="single" selected={dateFilter} onSelect={setDateFilter} />
-              </PopoverContent>
-            </Popover>
-            
-            {hasActiveFilters && (
-              <Button variant="ghost" size="icon" onClick={clearFilters}>
-                <X className="w-4 h-4" />
-              </Button>
-            )}
-          </div>
-        </CardHeader>
-        <CardContent>
-          {error ? (
-            <div className="text-center py-8">
-              <AlertCircle className="w-12 h-12 mx-auto mb-4 text-destructive" />
-              <p className="text-destructive">{error}</p>
-              <Button onClick={fetchBookings} className="mt-4" size="sm">
-                {language === 'bn' ? 'আবার চেষ্টা করুন' : 'Try Again'}
-              </Button>
-            </div>
-          ) : loading ? (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{language === 'bn' ? 'তারিখ' : 'Date'}</TableHead>
-                  <TableHead>{language === 'bn' ? 'অভিভাবক' : 'Parent'}</TableHead>
-                  <TableHead>{language === 'bn' ? 'স্ট্যাটাস' : 'Status'}</TableHead>
-                  <TableHead>{language === 'bn' ? 'পেমেন্ট' : 'Payment'}</TableHead>
-                  <TableHead></TableHead>
-                </TableRow>
-              </TableHeader>
-              <tbody>
-                {[1,2,3,4,5].map(i => <TableRowSkeleton key={i} />)}
-              </tbody>
-            </Table>
-          ) : filteredBookings.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground">
-              <Ticket className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>{language === 'bn' ? 'কোনো বুকিং নেই' : 'No bookings found'}</p>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="w-full md:w-auto">
+                    <CalendarDays className="w-4 h-4 mr-2" />
+                    {dateFilter ? format(dateFilter, 'dd MMM') : (language === 'bn' ? 'তারিখ' : 'Date')}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar mode="single" selected={dateFilter} onSelect={setDateFilter} />
+                </PopoverContent>
+              </Popover>
+              
               {hasActiveFilters && (
-                <Button variant="link" onClick={clearFilters} className="mt-2">
-                  {language === 'bn' ? 'ফিল্টার মুছুন' : 'Clear filters'}
+                <Button variant="ghost" size="icon" onClick={clearFilters}>
+                  <X className="w-4 h-4" />
                 </Button>
               )}
             </div>
-          ) : (
-            <div className="overflow-x-auto">
+          </CardHeader>
+          <CardContent>
+            {error ? (
+              <div className="text-center py-8">
+                <AlertCircle className="w-12 h-12 mx-auto mb-4 text-destructive" />
+                <p className="text-destructive">{error}</p>
+                <Button onClick={fetchBookings} className="mt-4" size="sm">
+                  {language === 'bn' ? 'আবার চেষ্টা করুন' : 'Try Again'}
+                </Button>
+              </div>
+            ) : loading ? (
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{language === 'bn' ? 'তারিখ ও সময়' : 'Date & Time'}</TableHead>
+                    <TableHead>{language === 'bn' ? 'তারিখ' : 'Date'}</TableHead>
                     <TableHead>{language === 'bn' ? 'অভিভাবক' : 'Parent'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'টিকেট' : 'Ticket'}</TableHead>
                     <TableHead>{language === 'bn' ? 'স্ট্যাটাস' : 'Status'}</TableHead>
                     <TableHead>{language === 'bn' ? 'পেমেন্ট' : 'Payment'}</TableHead>
-                    <TableHead className="text-right"></TableHead>
+                    <TableHead></TableHead>
                   </TableRow>
                 </TableHeader>
-                <TableBody>
-                  {filteredBookings.map((booking) => (
-                    <TableRow key={booking.id}>
-                      <TableCell>
-                        <div className="font-medium">
-                          {format(parseISO(booking.slot_date), 'dd MMM yyyy', { 
-                            locale: language === 'bn' ? bn : undefined 
-                          })}
-                        </div>
-                        <div className="text-sm text-muted-foreground">{booking.time_slot}</div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="font-medium">{booking.parent_name}</div>
-                        <a href={`tel:${booking.parent_phone}`} className="text-sm text-muted-foreground hover:text-primary flex items-center gap-1">
-                          <Phone className="w-3 h-3" />
-                          {booking.parent_phone}
-                        </a>
-                      </TableCell>
-                      <TableCell>{getTicketTypeBadge(booking.ticket_type)}</TableCell>
-                      <TableCell>{getStatusBadge(booking.status)}</TableCell>
-                      <TableCell>{getPaymentBadge(booking.payment_status)}</TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                              <MoreVertical className="w-4 h-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => openDetailDialog(booking)}>
-                              <Eye className="w-4 h-4 mr-2" />
-                              {language === 'bn' ? 'বিস্তারিত' : 'View Details'}
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem 
-                              onClick={() => handleStatusChange(booking.id, 'confirmed')}
-                              disabled={booking.status === 'confirmed' || booking.status === 'cancelled'}
-                            >
-                              <CheckCircle className="w-4 h-4 mr-2 text-green-600" />
-                              {language === 'bn' ? 'নিশ্চিত করুন' : 'Confirm'}
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem 
-                              onClick={() => openCancelDialog(booking)}
-                              disabled={booking.status === 'cancelled'}
-                              className="text-destructive"
-                            >
-                              <Ban className="w-4 h-4 mr-2" />
-                              {language === 'bn' ? 'বাতিল করুন' : 'Cancel'}
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
+                <tbody>
+                  {[1,2,3,4,5].map(i => <TableRowSkeleton key={i} />)}
+                </tbody>
               </Table>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+            ) : filteredBookings.length === 0 ? (
+              <div className="text-center py-12 text-muted-foreground">
+                <Ticket className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <p>{language === 'bn' ? 'কোনো বুকিং নেই' : 'No bookings found'}</p>
+                {hasActiveFilters && (
+                  <Button variant="link" onClick={clearFilters} className="mt-2">
+                    {language === 'bn' ? 'ফিল্টার মুছুন' : 'Clear filters'}
+                  </Button>
+                )}
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{language === 'bn' ? 'তারিখ ও সময়' : 'Date & Time'}</TableHead>
+                      <TableHead>{language === 'bn' ? 'অভিভাবক' : 'Parent'}</TableHead>
+                      <TableHead>{language === 'bn' ? 'টিকেট' : 'Ticket'}</TableHead>
+                      <TableHead>{language === 'bn' ? 'স্ট্যাটাস' : 'Status'}</TableHead>
+                      <TableHead>{language === 'bn' ? 'পেমেন্ট' : 'Payment'}</TableHead>
+                      <TableHead className="text-right"></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredBookings.map((booking) => (
+                      <TableRow key={booking.id}>
+                        <TableCell>
+                          <div className="font-medium">
+                            {format(parseISO(booking.slot_date), 'dd MMM yyyy', { 
+                              locale: language === 'bn' ? bn : undefined 
+                            })}
+                          </div>
+                          <div className="text-sm text-muted-foreground">{booking.time_slot}</div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="font-medium">{booking.parent_name}</div>
+                          <a href={`tel:${booking.parent_phone}`} className="text-sm text-muted-foreground hover:text-primary flex items-center gap-1">
+                            <Phone className="w-3 h-3" />
+                            {booking.parent_phone}
+                          </a>
+                        </TableCell>
+                        <TableCell>{getTicketTypeBadge(booking.ticket_type)}</TableCell>
+                        <TableCell>{getStatusBadge(booking.status)}</TableCell>
+                        <TableCell>{getPaymentBadge(booking.payment_status)}</TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon">
+                                <MoreVertical className="w-4 h-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => openDetailDialog(booking)}>
+                                <Eye className="w-4 h-4 mr-2" />
+                                {language === 'bn' ? 'বিস্তারিত' : 'View Details'}
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => openPrintDialog(booking)}>
+                                <Printer className="w-4 h-4 mr-2" />
+                                {language === 'bn' ? 'প্রিন্ট' : 'Print Ticket'}
+                              </DropdownMenuItem>
+                              <DropdownMenuItem 
+                                onClick={() => handleSendSMS(booking)}
+                                disabled={sendingSMS || booking.status === 'cancelled'}
+                              >
+                                <MessageSquare className="w-4 h-4 mr-2" />
+                                {language === 'bn' ? 'SMS পাঠান' : 'Send SMS'}
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem 
+                                onClick={() => handleStatusChange(booking.id, 'confirmed')}
+                                disabled={booking.status === 'confirmed' || booking.status === 'cancelled'}
+                              >
+                                <CheckCircle className="w-4 h-4 mr-2 text-green-600" />
+                                {language === 'bn' ? 'নিশ্চিত করুন' : 'Confirm'}
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem 
+                                onClick={() => openCancelDialog(booking)}
+                                disabled={booking.status === 'cancelled'}
+                                className="text-destructive"
+                              >
+                                <Ban className="w-4 h-4 mr-2" />
+                                {language === 'bn' ? 'বাতিল করুন' : 'Cancel'}
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Detail Dialog */}
       <Dialog open={detailOpen} onOpenChange={setDetailOpen}>
@@ -671,6 +742,24 @@ export default function AdminBookings() {
             }}
             onCancel={() => setManualBookingOpen(false)}
           />
+        </DialogContent>
+      </Dialog>
+
+      {/* Print Ticket Dialog */}
+      <Dialog open={printOpen} onOpenChange={setPrintOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Printer className="w-5 h-5" />
+              {language === 'bn' ? 'টিকেট প্রিন্ট করুন' : 'Print Ticket'}
+            </DialogTitle>
+          </DialogHeader>
+          {printBooking && (
+            <BookingPrintTicket 
+              booking={printBooking}
+              onClose={() => setPrintOpen(false)}
+            />
+          )}
         </DialogContent>
       </Dialog>
     </div>
