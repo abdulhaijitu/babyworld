@@ -102,6 +102,9 @@ const translations: Record<Language, Record<string, string>> = {
     "booking.select": "Select",
     "booking.bookViaWhatsApp": "Book via WhatsApp",
     "booking.whatsappNote": "Clicking the button will send your booking request via WhatsApp",
+    "booking.groupBooking": "Group Booking",
+    "booking.selectChildren": "Select number of children (1-5)",
+    "booking.childrenSelectedLabel": "child(ren) + guardian(s) selected",
     
     // WhatsApp
     "whatsapp.chat": "WhatsApp",
@@ -376,6 +379,9 @@ const translations: Record<Language, Record<string, string>> = {
     "booking.select": "বাছাই করুন",
     "booking.bookViaWhatsApp": "WhatsApp এ বুক করুন",
     "booking.whatsappNote": "বাটনে ক্লিক করলে আপনার বুকিং অনুরোধ WhatsApp এ পাঠানো হবে",
+    "booking.groupBooking": "গ্রুপ বুকিং",
+    "booking.selectChildren": "শিশু সংখ্যা নির্বাচন করুন (১-৫)",
+    "booking.childrenSelectedLabel": "জন শিশু + অভিভাবক নির্বাচিত",
     
     // WhatsApp
     "whatsapp.chat": "WhatsApp",

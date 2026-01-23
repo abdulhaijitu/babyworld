@@ -8,6 +8,7 @@ import { EventBookingForm } from "@/components/events/EventBookingForm";
 import { EventsGallery } from "@/components/events/EventsGallery";
 import { EventsFAQ } from "@/components/events/EventsFAQ";
 import { EventsTrust } from "@/components/events/EventsTrust";
+import { SEOHead } from "@/components/SEOHead";
 
 const BirthdayEvents = () => {
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
@@ -28,6 +29,7 @@ const BirthdayEvents = () => {
 
   return (
     <PageTransition>
+      <SEOHead page="birthday-events" />
       <div className="min-h-screen bg-background">
         <Navbar />
         <main>
