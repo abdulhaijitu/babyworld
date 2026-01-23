@@ -2,9 +2,10 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { corsHeaders } from '../_shared/cors.ts';
 import { createAdminClient } from '../_shared/supabase-admin.ts';
 
-interface CreateAdminRequest {
+interface CreateUserRequest {
   email: string;
   password: string;
+  role: 'admin' | 'manager' | 'staff';
 }
 
 serve(async (req) => {
@@ -15,12 +16,21 @@ serve(async (req) => {
 
   try {
     const supabase = createAdminClient();
-    const body: CreateAdminRequest = await req.json();
-    const { email, password } = body;
+    const body: CreateUserRequest = await req.json();
+    const { email, password, role = 'admin' } = body;
 
     if (!email || !password) {
       return new Response(
         JSON.stringify({ error: 'Email and password are required' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Validate role
+    const validRoles = ['admin', 'manager', 'staff'];
+    if (!validRoles.includes(role)) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid role. Must be admin, manager, or staff' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -47,19 +57,19 @@ serve(async (req) => {
       );
     }
 
-    // Add admin role
+    // Add role
     const { error: roleError } = await supabase
       .from('user_roles')
       .insert({
         user_id: authData.user.id,
-        role: 'admin'
+        role: role
       });
 
     if (roleError) {
       console.error('Role error:', roleError);
       return new Response(
         JSON.stringify({ 
-          error: 'User created but failed to assign admin role',
+          error: `User created but failed to assign ${role} role`,
           user_id: authData.user.id 
         }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -69,10 +79,11 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: true,
-        message: 'Admin user created successfully',
+        message: `${role.charAt(0).toUpperCase() + role.slice(1)} user created successfully`,
         user: {
           id: authData.user.id,
-          email: authData.user.email
+          email: authData.user.email,
+          role: role
         }
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

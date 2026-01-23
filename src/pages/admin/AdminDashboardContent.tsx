@@ -67,6 +67,7 @@ import { TableRowSkeleton } from '@/components/admin/AdminSkeleton';
 import { QuickActions } from '@/components/admin/QuickActions';
 import { ActivityLogCard } from '@/components/admin/ActivityLogCard';
 import { VisitorCounter } from '@/components/admin/VisitorCounter';
+import { QuickReportsWidget } from '@/components/admin/QuickReportsWidget';
 
 const PRICE_PER_TICKET = 300;
 
@@ -289,9 +290,10 @@ export default function AdminDashboardContent() {
         </Card>
       </div>
 
-      {/* Quick Actions, Visitor Counter and Activity Log */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      {/* Quick Actions, Reports Widget, Visitor Counter and Activity Log */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
         <QuickActions />
+        <QuickReportsWidget />
         <VisitorCounter />
         <div className="lg:col-span-2">
           <ActivityLogCard />

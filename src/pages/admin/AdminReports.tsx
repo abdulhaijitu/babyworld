@@ -13,7 +13,8 @@ import {
   RefreshCw,
   Ticket,
   UtensilsCrossed,
-  TrendingUp
+  TrendingUp,
+  Printer
 } from 'lucide-react';
 import { format, startOfMonth, endOfMonth } from 'date-fns';
 import { bn } from 'date-fns/locale';
@@ -23,6 +24,7 @@ import { ReportsSummaryCards } from '@/components/admin/reports/ReportsSummaryCa
 import { TicketSalesReport } from '@/components/admin/reports/TicketSalesReport';
 import { FoodSalesReport } from '@/components/admin/reports/FoodSalesReport';
 import { RevenueReport } from '@/components/admin/reports/RevenueReport';
+import { PrintableReport } from '@/components/admin/reports/PrintableReport';
 import { cn } from '@/lib/utils';
 
 type DateRangeType = 'today' | 'week' | 'month' | 'custom';
@@ -33,6 +35,7 @@ export default function AdminReports() {
   const [customStart, setCustomStart] = useState<Date>();
   const [customEnd, setCustomEnd] = useState<Date>();
   const [activeTab, setActiveTab] = useState('overview');
+  const [showPrintPreview, setShowPrintPreview] = useState(false);
 
   const { data, isLoading, refetch, isFetching } = useReportsSummary(
     dateRange,
@@ -184,6 +187,15 @@ export default function AdminReports() {
             <Button 
               variant="outline" 
               size="sm" 
+              onClick={() => setShowPrintPreview(true)}
+              disabled={!data}
+            >
+              <Printer className="w-4 h-4 mr-2" />
+              {language === 'bn' ? 'প্রিন্ট' : 'Print'}
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
               onClick={() => exportToCSV('summary')}
               disabled={!data}
             >
@@ -262,6 +274,11 @@ export default function AdminReports() {
             </p>
           </CardContent>
         </Card>
+      )}
+
+      {/* Print Preview */}
+      {showPrintPreview && data && (
+        <PrintableReport data={data} onClose={() => setShowPrintPreview(false)} />
       )}
     </div>
   );

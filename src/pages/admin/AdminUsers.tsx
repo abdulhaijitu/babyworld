@@ -27,6 +27,13 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
   Table,
   TableBody,
   TableCell,
@@ -44,18 +51,28 @@ import {
   Trash2,
   UserCheck,
   UserX,
-  Search
+  Search,
+  Briefcase,
+  HardHat
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { format, parseISO } from 'date-fns';
 
-interface UserRole {
+type UserRole = 'admin' | 'manager' | 'staff';
+
+interface UserRoleRecord {
   id: string;
   user_id: string;
-  role: 'admin' | 'user';
+  role: UserRole;
   created_at: string;
 }
+
+const roleConfig: Record<UserRole, { label: string; labelBn: string; icon: React.ElementType; color: string }> = {
+  admin: { label: 'Admin', labelBn: 'অ্যাডমিন', icon: Shield, color: 'bg-primary/10 text-primary border-primary/20' },
+  manager: { label: 'Manager', labelBn: 'ম্যানেজার', icon: Briefcase, color: 'bg-blue-500/10 text-blue-600 border-blue-500/20' },
+  staff: { label: 'Staff', labelBn: 'স্টাফ', icon: HardHat, color: 'bg-amber-500/10 text-amber-600 border-amber-500/20' },
+};
 
 export default function AdminUsers() {
   const { language } = useLanguage();
@@ -63,51 +80,57 @@ export default function AdminUsers() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [roleFilter, setRoleFilter] = useState<string>('all');
   
   // Form state
-  const [newAdminEmail, setNewAdminEmail] = useState('');
-  const [newAdminPassword, setNewAdminPassword] = useState('');
+  const [newUserEmail, setNewUserEmail] = useState('');
+  const [newUserPassword, setNewUserPassword] = useState('');
+  const [newUserRole, setNewUserRole] = useState<UserRole>('manager');
 
-  // Fetch admin users
-  const { data: adminUsers, isLoading } = useQuery({
-    queryKey: ['admin-users'],
+  // Fetch all users with roles
+  const { data: userRoles, isLoading } = useQuery({
+    queryKey: ['all-user-roles'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('user_roles')
         .select('*')
-        .eq('role', 'admin')
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return data as UserRole[];
+      return data as UserRoleRecord[];
     }
   });
 
-  // Create admin mutation - calls edge function
-  const createAdminMutation = useMutation({
-    mutationFn: async ({ email, password }: { email: string; password: string }) => {
+  // Create user mutation - calls edge function
+  const createUserMutation = useMutation({
+    mutationFn: async ({ email, password, role }: { email: string; password: string; role: UserRole }) => {
       const { data, error } = await supabase.functions.invoke('create-admin', {
-        body: { email, password }
+        body: { email, password, role }
       });
       
       if (error) throw error;
       if (data.error) throw new Error(data.error);
       return data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
-      toast.success(language === 'bn' ? 'অ্যাডমিন তৈরি হয়েছে' : 'Admin created successfully');
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['all-user-roles'] });
+      toast.success(
+        language === 'bn' 
+          ? `${roleConfig[newUserRole].labelBn} তৈরি হয়েছে` 
+          : `${roleConfig[newUserRole].label} created successfully`
+      );
       setIsAddDialogOpen(false);
-      setNewAdminEmail('');
-      setNewAdminPassword('');
+      setNewUserEmail('');
+      setNewUserPassword('');
+      setNewUserRole('manager');
     },
     onError: (error: Error) => {
-      toast.error(error.message || (language === 'bn' ? 'অ্যাডমিন তৈরি করতে সমস্যা হয়েছে' : 'Failed to create admin'));
+      toast.error(error.message || (language === 'bn' ? 'ইউজার তৈরি করতে সমস্যা হয়েছে' : 'Failed to create user'));
     }
   });
 
-  // Remove admin role mutation
-  const removeAdminMutation = useMutation({
+  // Remove role mutation
+  const removeRoleMutation = useMutation({
     mutationFn: async (roleId: string) => {
       const { error } = await supabase
         .from('user_roles')
@@ -117,8 +140,8 @@ export default function AdminUsers() {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
-      toast.success(language === 'bn' ? 'অ্যাডমিন রোল সরানো হয়েছে' : 'Admin role removed');
+      queryClient.invalidateQueries({ queryKey: ['all-user-roles'] });
+      toast.success(language === 'bn' ? 'রোল সরানো হয়েছে' : 'Role removed');
       setDeleteConfirmId(null);
     },
     onError: () => {
@@ -126,22 +149,40 @@ export default function AdminUsers() {
     }
   });
 
-  const handleCreateAdmin = () => {
-    if (!newAdminEmail || !newAdminPassword) {
+  const handleCreateUser = () => {
+    if (!newUserEmail || !newUserPassword) {
       toast.error(language === 'bn' ? 'সব ফিল্ড পূরণ করুন' : 'Please fill all fields');
       return;
     }
-    if (newAdminPassword.length < 6) {
+    if (newUserPassword.length < 6) {
       toast.error(language === 'bn' ? 'পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে' : 'Password must be at least 6 characters');
       return;
     }
-    createAdminMutation.mutate({ email: newAdminEmail, password: newAdminPassword });
+    createUserMutation.mutate({ email: newUserEmail, password: newUserPassword, role: newUserRole });
   };
 
-  // Filter users based on search
-  const filteredUsers = adminUsers?.filter(user => 
-    user.user_id.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Filter users based on search and role
+  const filteredUsers = userRoles?.filter(user => {
+    const matchesSearch = user.user_id.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesRole = roleFilter === 'all' || user.role === roleFilter;
+    return matchesSearch && matchesRole;
+  });
+
+  // Count by role
+  const adminCount = userRoles?.filter(u => u.role === 'admin').length || 0;
+  const managerCount = userRoles?.filter(u => u.role === 'manager').length || 0;
+  const staffCount = userRoles?.filter(u => u.role === 'staff').length || 0;
+
+  const getRoleBadge = (role: UserRole) => {
+    const config = roleConfig[role];
+    const Icon = config.icon;
+    return (
+      <Badge className={config.color}>
+        <Icon className="w-3 h-3 mr-1" />
+        {language === 'bn' ? config.labelBn : config.label}
+      </Badge>
+    );
+  };
 
   return (
     <div className="p-4 md:p-6 lg:p-8 space-y-6">
@@ -153,27 +194,57 @@ export default function AdminUsers() {
             {language === 'bn' ? 'ইউজার ম্যানেজমেন্ট' : 'User Management'}
           </h1>
           <p className="text-muted-foreground">
-            {language === 'bn' ? 'অ্যাডমিন ইউজার পরিচালনা' : 'Manage admin users'}
+            {language === 'bn' ? 'অ্যাডমিন, ম্যানেজার ও স্টাফ পরিচালনা' : 'Manage admins, managers and staff'}
           </p>
         </div>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="w-4 h-4 mr-2" />
-              {language === 'bn' ? 'নতুন অ্যাডমিন' : 'New Admin'}
+              {language === 'bn' ? 'নতুন ইউজার' : 'New User'}
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
-                <Shield className="w-5 h-5" />
-                {language === 'bn' ? 'নতুন অ্যাডমিন যোগ করুন' : 'Add New Admin'}
+                <UserCheck className="w-5 h-5" />
+                {language === 'bn' ? 'নতুন ইউজার যোগ করুন' : 'Add New User'}
               </DialogTitle>
               <DialogDescription>
-                {language === 'bn' ? 'নতুন অ্যাডমিন অ্যাকাউন্ট তৈরি করুন' : 'Create a new admin account'}
+                {language === 'bn' ? 'নতুন অ্যাডমিন, ম্যানেজার বা স্টাফ তৈরি করুন' : 'Create a new admin, manager, or staff account'}
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="role">
+                  {language === 'bn' ? 'রোল' : 'Role'}
+                </Label>
+                <Select value={newUserRole} onValueChange={(v) => setNewUserRole(v as UserRole)}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="admin">
+                      <div className="flex items-center gap-2">
+                        <Shield className="w-4 h-4" />
+                        {language === 'bn' ? 'অ্যাডমিন (সম্পূর্ণ এক্সেস)' : 'Admin (Full Access)'}
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="manager">
+                      <div className="flex items-center gap-2">
+                        <Briefcase className="w-4 h-4" />
+                        {language === 'bn' ? 'ম্যানেজার (রিপোর্ট দেখতে পারবে)' : 'Manager (Can view reports)'}
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="staff">
+                      <div className="flex items-center gap-2">
+                        <HardHat className="w-4 h-4" />
+                        {language === 'bn' ? 'স্টাফ (টিকেট ও বিক্রয়)' : 'Staff (Tickets & Sales)'}
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="space-y-2">
                 <Label htmlFor="email" className="flex items-center gap-2">
                   <Mail className="w-4 h-4" />
@@ -182,9 +253,9 @@ export default function AdminUsers() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="admin@example.com"
-                  value={newAdminEmail}
-                  onChange={(e) => setNewAdminEmail(e.target.value)}
+                  placeholder="user@example.com"
+                  value={newUserEmail}
+                  onChange={(e) => setNewUserEmail(e.target.value)}
                 />
               </div>
               <div className="space-y-2">
@@ -195,8 +266,8 @@ export default function AdminUsers() {
                   id="password"
                   type="password"
                   placeholder="••••••••"
-                  value={newAdminPassword}
-                  onChange={(e) => setNewAdminPassword(e.target.value)}
+                  value={newUserPassword}
+                  onChange={(e) => setNewUserPassword(e.target.value)}
                 />
                 <p className="text-xs text-muted-foreground">
                   {language === 'bn' ? 'কমপক্ষে ৬ অক্ষর' : 'At least 6 characters'}
@@ -207,8 +278,8 @@ export default function AdminUsers() {
               <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
                 {language === 'bn' ? 'বাতিল' : 'Cancel'}
               </Button>
-              <Button onClick={handleCreateAdmin} disabled={createAdminMutation.isPending}>
-                {createAdminMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              <Button onClick={handleCreateUser} disabled={createUserMutation.isPending}>
+                {createUserMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                 {language === 'bn' ? 'তৈরি করুন' : 'Create'}
               </Button>
             </DialogFooter>
@@ -226,12 +297,12 @@ export default function AdminUsers() {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">
-                  {language === 'bn' ? 'মোট অ্যাডমিন' : 'Total Admins'}
+                  {language === 'bn' ? 'অ্যাডমিন' : 'Admins'}
                 </p>
                 {isLoading ? (
                   <Skeleton className="h-6 w-12" />
                 ) : (
-                  <p className="text-xl font-bold">{adminUsers?.length || 0}</p>
+                  <p className="text-xl font-bold">{adminCount}</p>
                 )}
               </div>
             </div>
@@ -241,14 +312,18 @@ export default function AdminUsers() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-chart-2/10">
-                <UserCheck className="w-5 h-5 text-chart-2" />
+              <div className="p-2 rounded-lg bg-blue-500/10">
+                <Briefcase className="w-5 h-5 text-blue-600" />
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">
-                  {language === 'bn' ? 'সক্রিয় সেশন' : 'Active Sessions'}
+                  {language === 'bn' ? 'ম্যানেজার' : 'Managers'}
                 </p>
-                <p className="text-xl font-bold">-</p>
+                {isLoading ? (
+                  <Skeleton className="h-6 w-12" />
+                ) : (
+                  <p className="text-xl font-bold">{managerCount}</p>
+                )}
               </div>
             </div>
           </CardContent>
@@ -257,14 +332,18 @@ export default function AdminUsers() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-chart-3/10">
-                <User className="w-5 h-5 text-chart-3" />
+              <div className="p-2 rounded-lg bg-amber-500/10">
+                <HardHat className="w-5 h-5 text-amber-600" />
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">
-                  {language === 'bn' ? 'সাধারণ ইউজার' : 'Regular Users'}
+                  {language === 'bn' ? 'স্টাফ' : 'Staff'}
                 </p>
-                <p className="text-xl font-bold">-</p>
+                {isLoading ? (
+                  <Skeleton className="h-6 w-12" />
+                ) : (
+                  <p className="text-xl font-bold">{staffCount}</p>
+                )}
               </div>
             </div>
           </CardContent>
@@ -276,19 +355,32 @@ export default function AdminUsers() {
         <CardHeader>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <CardTitle>{language === 'bn' ? 'অ্যাডমিন তালিকা' : 'Admin List'}</CardTitle>
+              <CardTitle>{language === 'bn' ? 'ইউজার তালিকা' : 'User List'}</CardTitle>
               <CardDescription>
-                {language === 'bn' ? 'সকল অ্যাডমিন ইউজার' : 'All admin users'}
+                {language === 'bn' ? 'সকল ইউজার ও তাদের রোল' : 'All users and their roles'}
               </CardDescription>
             </div>
-            <div className="relative max-w-xs">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input
-                placeholder={language === 'bn' ? 'খুঁজুন...' : 'Search...'}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
-              />
+            <div className="flex gap-2">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  placeholder={language === 'bn' ? 'খুঁজুন...' : 'Search...'}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9 w-[180px]"
+                />
+              </div>
+              <Select value={roleFilter} onValueChange={setRoleFilter}>
+                <SelectTrigger className="w-[120px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{language === 'bn' ? 'সব' : 'All'}</SelectItem>
+                  <SelectItem value="admin">{language === 'bn' ? 'অ্যাডমিন' : 'Admin'}</SelectItem>
+                  <SelectItem value="manager">{language === 'bn' ? 'ম্যানেজার' : 'Manager'}</SelectItem>
+                  <SelectItem value="staff">{language === 'bn' ? 'স্টাফ' : 'Staff'}</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </CardHeader>
@@ -314,17 +406,14 @@ export default function AdminUsers() {
                   <TableRow key={user.id}>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                          <User className="w-4 h-4 text-primary" />
+                        <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+                          <User className="w-4 h-4 text-muted-foreground" />
                         </div>
                         <span className="font-mono text-sm">{user.user_id.slice(0, 8)}...</span>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge className="bg-primary/10 text-primary border-primary/20">
-                        <Shield className="w-3 h-3 mr-1" />
-                        Admin
-                      </Badge>
+                      {getRoleBadge(user.role as UserRole)}
                     </TableCell>
                     <TableCell>
                       {format(parseISO(user.created_at), 'MMM d, yyyy')}
@@ -346,7 +435,7 @@ export default function AdminUsers() {
           ) : (
             <div className="text-center py-12 text-muted-foreground">
               <UserX className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>{language === 'bn' ? 'কোনো অ্যাডমিন পাওয়া যায়নি' : 'No admins found'}</p>
+              <p>{language === 'bn' ? 'কোনো ইউজার পাওয়া যায়নি' : 'No users found'}</p>
             </div>
           )}
         </CardContent>
@@ -357,21 +446,21 @@ export default function AdminUsers() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {language === 'bn' ? 'অ্যাডমিন রোল সরাতে চান?' : 'Remove Admin Role?'}
+              {language === 'bn' ? 'রোল সরাতে চান?' : 'Remove Role?'}
             </AlertDialogTitle>
             <AlertDialogDescription>
               {language === 'bn' 
-                ? 'এই ইউজারের অ্যাডমিন রোল সরিয়ে দেওয়া হবে। এই কাজ পূর্বাবস্থায় ফেরানো যাবে না।'
-                : 'This will remove admin privileges from this user. This action cannot be undone.'}
+                ? 'এই ইউজারের রোল সরিয়ে দেওয়া হবে। এই কাজ পূর্বাবস্থায় ফেরানো যাবে না।'
+                : 'This will remove the role from this user. This action cannot be undone.'}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{language === 'bn' ? 'বাতিল' : 'Cancel'}</AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-              onClick={() => deleteConfirmId && removeAdminMutation.mutate(deleteConfirmId)}
+              onClick={() => deleteConfirmId && removeRoleMutation.mutate(deleteConfirmId)}
             >
-              {removeAdminMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              {removeRoleMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               {language === 'bn' ? 'সরিয়ে দিন' : 'Remove'}
             </AlertDialogAction>
           </AlertDialogFooter>
