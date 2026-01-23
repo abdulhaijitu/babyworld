@@ -31,6 +31,16 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { 
   LogOut, 
   RefreshCw, 
@@ -45,13 +55,20 @@ import {
   CreditCard,
   Phone,
   Ban,
-  Undo2
+  Undo2,
+  Search,
+  TrendingUp,
+  Banknote,
+  Filter,
+  X
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, startOfMonth, endOfMonth, isWithinInterval, startOfWeek, endOfWeek } from 'date-fns';
 import { bn } from 'date-fns/locale';
 import babyWorldLogo from '@/assets/baby-world-logo.png';
+
+const PRICE_PER_TICKET = 300;
 
 export default function AdminDashboard() {
   const { user, isAdmin, loading: authLoading, signOut } = useAuth();
@@ -65,6 +82,13 @@ export default function AdminDashboard() {
   const [cancelReason, setCancelReason] = useState('');
   const [withRefund, setWithRefund] = useState(false);
   const [cancelling, setCancelling] = useState(false);
+  
+  // Filter and search state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [paymentFilter, setPaymentFilter] = useState<string>('all');
+  const [dateFilter, setDateFilter] = useState<Date | undefined>(undefined);
+  const [dateRangeFilter, setDateRangeFilter] = useState<string>('all');
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -144,11 +168,86 @@ export default function AdminDashboard() {
     }
   };
 
+  // Filter bookings
+  const filteredBookings = bookings.filter(booking => {
+    // Search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      const matchesSearch = 
+        booking.parent_name.toLowerCase().includes(query) ||
+        booking.parent_phone.includes(query) ||
+        booking.time_slot.includes(query);
+      if (!matchesSearch) return false;
+    }
+    
+    // Status filter
+    if (statusFilter !== 'all' && booking.status !== statusFilter) return false;
+    
+    // Payment filter
+    if (paymentFilter !== 'all' && booking.payment_status !== paymentFilter) return false;
+    
+    // Date filter
+    if (dateFilter) {
+      const bookingDate = parseISO(booking.slot_date);
+      if (format(bookingDate, 'yyyy-MM-dd') !== format(dateFilter, 'yyyy-MM-dd')) return false;
+    }
+    
+    // Date range filter
+    if (dateRangeFilter !== 'all') {
+      const bookingDate = parseISO(booking.slot_date);
+      const today = new Date();
+      
+      if (dateRangeFilter === 'today') {
+        if (format(bookingDate, 'yyyy-MM-dd') !== format(today, 'yyyy-MM-dd')) return false;
+      } else if (dateRangeFilter === 'week') {
+        const weekStart = startOfWeek(today, { weekStartsOn: 0 });
+        const weekEnd = endOfWeek(today, { weekStartsOn: 0 });
+        if (!isWithinInterval(bookingDate, { start: weekStart, end: weekEnd })) return false;
+      } else if (dateRangeFilter === 'month') {
+        const monthStart = startOfMonth(today);
+        const monthEnd = endOfMonth(today);
+        if (!isWithinInterval(bookingDate, { start: monthStart, end: monthEnd })) return false;
+      }
+    }
+    
+    return true;
+  });
+
   // Stats calculations
   const todayStr = format(new Date(), 'yyyy-MM-dd');
   const todayBookings = bookings.filter(b => b.slot_date === todayStr);
   const confirmedBookings = bookings.filter(b => b.status === 'confirmed');
   const paidBookings = bookings.filter(b => b.payment_status === 'paid');
+  
+  // Revenue calculations
+  const todayRevenue = todayBookings.filter(b => b.payment_status === 'paid').length * PRICE_PER_TICKET;
+  const weekStart = startOfWeek(new Date(), { weekStartsOn: 0 });
+  const weekEnd = endOfWeek(new Date(), { weekStartsOn: 0 });
+  const weeklyBookings = bookings.filter(b => {
+    const bookingDate = parseISO(b.slot_date);
+    return isWithinInterval(bookingDate, { start: weekStart, end: weekEnd }) && b.payment_status === 'paid';
+  });
+  const weeklyRevenue = weeklyBookings.length * PRICE_PER_TICKET;
+  
+  const monthStart = startOfMonth(new Date());
+  const monthEnd = endOfMonth(new Date());
+  const monthlyBookings = bookings.filter(b => {
+    const bookingDate = parseISO(b.slot_date);
+    return isWithinInterval(bookingDate, { start: monthStart, end: monthEnd }) && b.payment_status === 'paid';
+  });
+  const monthlyRevenue = monthlyBookings.length * PRICE_PER_TICKET;
+  
+  const totalRevenue = paidBookings.length * PRICE_PER_TICKET;
+  
+  const clearFilters = () => {
+    setSearchQuery('');
+    setStatusFilter('all');
+    setPaymentFilter('all');
+    setDateFilter(undefined);
+    setDateRangeFilter('all');
+  };
+  
+  const hasActiveFilters = searchQuery || statusFilter !== 'all' || paymentFilter !== 'all' || dateFilter || dateRangeFilter !== 'all';
 
   if (authLoading) {
     return (
@@ -179,9 +278,64 @@ export default function AdminDashboard() {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <main className="container mx-auto px-4 py-8 space-y-8">
+        {/* Revenue Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
+            <CardHeader className="pb-2">
+              <CardDescription>{language === 'bn' ? 'আজকের আয়' : "Today's Revenue"}</CardDescription>
+              <CardTitle className="text-3xl">৳{todayRevenue.toLocaleString()}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center text-muted-foreground text-sm">
+                <Banknote className="w-4 h-4 mr-1" />
+                {todayBookings.filter(b => b.payment_status === 'paid').length} {language === 'bn' ? 'টি পেমেন্ট' : 'payments'}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardDescription>{language === 'bn' ? 'এই সপ্তাহে' : 'This Week'}</CardDescription>
+              <CardTitle className="text-3xl">৳{weeklyRevenue.toLocaleString()}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center text-muted-foreground text-sm">
+                <TrendingUp className="w-4 h-4 mr-1" />
+                {weeklyBookings.length} {language === 'bn' ? 'টি বুকিং' : 'bookings'}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardDescription>{language === 'bn' ? 'এই মাসে' : 'This Month'}</CardDescription>
+              <CardTitle className="text-3xl">৳{monthlyRevenue.toLocaleString()}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center text-muted-foreground text-sm">
+                <CalendarDays className="w-4 h-4 mr-1" />
+                {monthlyBookings.length} {language === 'bn' ? 'টি বুকিং' : 'bookings'}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-green-500/10 to-green-500/5 border-green-500/20">
+            <CardHeader className="pb-2">
+              <CardDescription>{language === 'bn' ? 'মোট আয়' : 'Total Revenue'}</CardDescription>
+              <CardTitle className="text-3xl">৳{totalRevenue.toLocaleString()}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center text-muted-foreground text-sm">
+                <CreditCard className="w-4 h-4 mr-1" />
+                {paidBookings.length} {language === 'bn' ? 'টি পেমেন্ট' : 'total paid'}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Booking Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
             <CardHeader className="pb-2">
               <CardDescription>{language === 'bn' ? 'মোট বুকিং' : 'Total Bookings'}</CardDescription>
@@ -237,19 +391,101 @@ export default function AdminDashboard() {
 
         {/* Bookings Table */}
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle>{language === 'bn' ? 'সকল বুকিং' : 'All Bookings'}</CardTitle>
-              <CardDescription>
-                {language === 'bn' 
-                  ? 'সব বুকিং দেখুন এবং ম্যানেজ করুন'
-                  : 'View and manage all bookings'}
-              </CardDescription>
+          <CardHeader>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <CardTitle>{language === 'bn' ? 'সকল বুকিং' : 'All Bookings'}</CardTitle>
+                <CardDescription>
+                  {language === 'bn' 
+                    ? `${filteredBookings.length}টি বুকিং দেখাচ্ছে`
+                    : `Showing ${filteredBookings.length} bookings`}
+                </CardDescription>
+              </div>
+              <Button variant="outline" size="sm" onClick={refetch} disabled={bookingsLoading}>
+                <RefreshCw className={`w-4 h-4 mr-2 ${bookingsLoading ? 'animate-spin' : ''}`} />
+                {language === 'bn' ? 'রিফ্রেশ' : 'Refresh'}
+              </Button>
             </div>
-            <Button variant="outline" size="sm" onClick={refetch} disabled={bookingsLoading}>
-              <RefreshCw className={`w-4 h-4 mr-2 ${bookingsLoading ? 'animate-spin' : ''}`} />
-              {language === 'bn' ? 'রিফ্রেশ' : 'Refresh'}
-            </Button>
+            
+            {/* Search and Filters */}
+            <div className="flex flex-col md:flex-row gap-3 mt-4">
+              {/* Search */}
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  placeholder={language === 'bn' ? 'নাম বা ফোন দিয়ে সার্চ করুন...' : 'Search by name or phone...'}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
+              
+              {/* Date Range Filter */}
+              <Select value={dateRangeFilter} onValueChange={setDateRangeFilter}>
+                <SelectTrigger className="w-full md:w-[150px]">
+                  <SelectValue placeholder={language === 'bn' ? 'সময়কাল' : 'Time Period'} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{language === 'bn' ? 'সব সময়' : 'All Time'}</SelectItem>
+                  <SelectItem value="today">{language === 'bn' ? 'আজ' : 'Today'}</SelectItem>
+                  <SelectItem value="week">{language === 'bn' ? 'এই সপ্তাহ' : 'This Week'}</SelectItem>
+                  <SelectItem value="month">{language === 'bn' ? 'এই মাস' : 'This Month'}</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              {/* Status Filter */}
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-full md:w-[140px]">
+                  <SelectValue placeholder={language === 'bn' ? 'স্ট্যাটাস' : 'Status'} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{language === 'bn' ? 'সব স্ট্যাটাস' : 'All Status'}</SelectItem>
+                  <SelectItem value="confirmed">{language === 'bn' ? 'নিশ্চিত' : 'Confirmed'}</SelectItem>
+                  <SelectItem value="pending">{language === 'bn' ? 'অপেক্ষমাণ' : 'Pending'}</SelectItem>
+                  <SelectItem value="cancelled">{language === 'bn' ? 'বাতিল' : 'Cancelled'}</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              {/* Payment Filter */}
+              <Select value={paymentFilter} onValueChange={setPaymentFilter}>
+                <SelectTrigger className="w-full md:w-[140px]">
+                  <SelectValue placeholder={language === 'bn' ? 'পেমেন্ট' : 'Payment'} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{language === 'bn' ? 'সব পেমেন্ট' : 'All Payments'}</SelectItem>
+                  <SelectItem value="paid">{language === 'bn' ? 'পরিশোধিত' : 'Paid'}</SelectItem>
+                  <SelectItem value="unpaid">{language === 'bn' ? 'অপরিশোধিত' : 'Unpaid'}</SelectItem>
+                  <SelectItem value="pending">{language === 'bn' ? 'অপেক্ষমাণ' : 'Pending'}</SelectItem>
+                  <SelectItem value="refunded">{language === 'bn' ? 'রিফান্ড' : 'Refunded'}</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              {/* Date Picker */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="w-full md:w-auto">
+                    <CalendarDays className="w-4 h-4 mr-2" />
+                    {dateFilter 
+                      ? format(dateFilter, 'dd MMM yyyy', { locale: language === 'bn' ? bn : undefined })
+                      : (language === 'bn' ? 'তারিখ' : 'Date')}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="end">
+                  <Calendar
+                    mode="single"
+                    selected={dateFilter}
+                    onSelect={setDateFilter}
+                  />
+                </PopoverContent>
+              </Popover>
+              
+              {/* Clear Filters */}
+              {hasActiveFilters && (
+                <Button variant="ghost" size="icon" onClick={clearFilters}>
+                  <X className="w-4 h-4" />
+                </Button>
+              )}
+            </div>
           </CardHeader>
           <CardContent>
             {error ? (
@@ -261,10 +497,15 @@ export default function AdminDashboard() {
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="w-8 h-8 animate-spin text-primary" />
               </div>
-            ) : bookings.length === 0 ? (
+            ) : filteredBookings.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
                 <CalendarDays className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>{language === 'bn' ? 'কোনো বুকিং নেই' : 'No bookings yet'}</p>
+                <p>{language === 'bn' ? 'কোনো বুকিং নেই' : 'No bookings found'}</p>
+                {hasActiveFilters && (
+                  <Button variant="link" onClick={clearFilters} className="mt-2">
+                    {language === 'bn' ? 'ফিল্টার মুছুন' : 'Clear filters'}
+                  </Button>
+                )}
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -280,7 +521,7 @@ export default function AdminDashboard() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {bookings.map((booking) => (
+                    {filteredBookings.map((booking) => (
                       <TableRow key={booking.id}>
                         <TableCell>
                           <div className="font-medium">
