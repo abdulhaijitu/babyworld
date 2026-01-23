@@ -58,13 +58,15 @@ import {
   Ticket,
   TrendingUp,
   Banknote,
-  Filter
+  Filter,
+  Plus
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { format, parseISO, startOfMonth, endOfMonth, isWithinInterval, startOfWeek, endOfWeek } from 'date-fns';
 import { bn } from 'date-fns/locale';
 import { TableRowSkeleton } from '@/components/admin/AdminSkeleton';
+import { ManualBookingForm } from '@/components/admin/bookings/ManualBookingForm';
 
 interface Booking {
   id: string;
@@ -104,6 +106,9 @@ export default function AdminBookings() {
   const [cancelReason, setCancelReason] = useState('');
   const [withRefund, setWithRefund] = useState(false);
   const [cancelling, setCancelling] = useState(false);
+
+  // Manual booking dialog
+  const [manualBookingOpen, setManualBookingOpen] = useState(false);
 
   const fetchBookings = useCallback(async () => {
     setLoading(true);
@@ -293,10 +298,16 @@ export default function AdminBookings() {
           </p>
         </div>
 
-        <Button variant="outline" size="sm" onClick={fetchBookings} disabled={loading}>
-          <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-          {language === 'bn' ? 'রিফ্রেশ' : 'Refresh'}
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={() => setManualBookingOpen(true)}>
+            <Plus className="w-4 h-4 mr-2" />
+            {language === 'bn' ? 'নতুন বুকিং' : 'New Booking'}
+          </Button>
+          <Button variant="outline" size="sm" onClick={fetchBookings} disabled={loading}>
+            <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+            {language === 'bn' ? 'রিফ্রেশ' : 'Refresh'}
+          </Button>
+        </div>
       </div>
 
       {/* Stats */}
@@ -638,6 +649,28 @@ export default function AdminBookings() {
               {language === 'bn' ? 'বাতিল করুন' : 'Confirm Cancel'}
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Manual Booking Dialog */}
+      <Dialog open={manualBookingOpen} onOpenChange={setManualBookingOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Plus className="w-5 h-5" />
+              {language === 'bn' ? 'ম্যানুয়াল বুকিং' : 'Manual Booking'}
+            </DialogTitle>
+            <DialogDescription>
+              {language === 'bn' ? 'কাউন্টার থেকে নতুন বুকিং তৈরি করুন' : 'Create a new booking from the counter'}
+            </DialogDescription>
+          </DialogHeader>
+          <ManualBookingForm 
+            onSuccess={() => {
+              setManualBookingOpen(false);
+              fetchBookings();
+            }}
+            onCancel={() => setManualBookingOpen(false)}
+          />
         </DialogContent>
       </Dialog>
     </div>
