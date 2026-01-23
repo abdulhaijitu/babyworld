@@ -11,8 +11,8 @@ export function VideoSection() {
   const { language } = useLanguage();
   const [isPlaying, setIsPlaying] = useState(false);
 
-  // Placeholder YouTube video ID - replace with actual video
-  const videoId = "dQw4w9WgXcQ"; // Replace with actual Baby World video ID
+  // Baby World playground video
+  const videoId = "v9fVa72l-Jg";
 
   return (
     <section className="py-16 sm:py-20 lg:py-24 bg-background overflow-hidden">
