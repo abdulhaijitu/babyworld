@@ -100,6 +100,27 @@ const translations: Record<Language, Record<string, string>> = {
     "booking.paymentNote": "Payment system will be added soon.",
     "booking.book": "Book",
     "booking.select": "Select",
+    "booking.bookViaWhatsApp": "Book via WhatsApp",
+    "booking.whatsappNote": "Clicking the button will send your booking request via WhatsApp",
+    
+    // WhatsApp
+    "whatsapp.chat": "WhatsApp",
+    "whatsapp.chatWithUs": "Chat on WhatsApp",
+    
+    // Testimonials
+    "testimonials.label": "Parent Reviews",
+    "testimonials.title": "What Parents Say About Us",
+    "testimonials.description": "See why families trust Baby World for their children's playtime and celebrations.",
+    "testimonials.parent1.name": "Fatima Rahman",
+    "testimonials.parent1.role": "Mother of 2",
+    "testimonials.parent1.quote": "Baby World has become our go-to place for weekend fun. The staff is incredibly attentive, and I love how clean everything is. My kids always have a blast!",
+    "testimonials.parent2.name": "Kamal Hossain",
+    "testimonials.parent2.role": "Father of 1",
+    "testimonials.parent2.quote": "We celebrated my daughter's 4th birthday here and it was magical. The team handled everything professionally. The decorations were beautiful and the kids had so much fun!",
+    "testimonials.parent3.name": "Nusrat Jahan",
+    "testimonials.parent3.role": "Mother of 3",
+    "testimonials.parent3.quote": "As a mother of three, I appreciate the age-appropriate play zones. Each of my children finds something they love. The trained staff gives me peace of mind.",
+    "testimonials.trustStatement": "Join hundreds of happy families who trust Baby World",
     
     // Events Section (Home page preview)
     "events.label": "Birthday & Events",
@@ -353,6 +374,27 @@ const translations: Record<Language, Record<string, string>> = {
     "booking.paymentNote": "পেমেন্ট সিস্টেম শীঘ্রই যোগ করা হবে।",
     "booking.book": "বুক করুন",
     "booking.select": "বাছাই করুন",
+    "booking.bookViaWhatsApp": "WhatsApp এ বুক করুন",
+    "booking.whatsappNote": "বাটনে ক্লিক করলে আপনার বুকিং অনুরোধ WhatsApp এ পাঠানো হবে",
+    
+    // WhatsApp
+    "whatsapp.chat": "WhatsApp",
+    "whatsapp.chatWithUs": "WhatsApp এ চ্যাট করুন",
+    
+    // Testimonials
+    "testimonials.label": "অভিভাবকদের মতামত",
+    "testimonials.title": "অভিভাবকরা আমাদের সম্পর্কে কী বলেন",
+    "testimonials.description": "দেখুন কেন পরিবারগুলো তাদের সন্তানদের খেলা ও উদযাপনের জন্য বেবি ওয়ার্ল্ডকে বিশ্বাস করে।",
+    "testimonials.parent1.name": "ফাতিমা রহমান",
+    "testimonials.parent1.role": "২ সন্তানের মা",
+    "testimonials.parent1.quote": "বেবি ওয়ার্ল্ড আমাদের সাপ্তাহিক ছুটির মজার জায়গা হয়ে গেছে। স্টাফরা অবিশ্বাস্যভাবে যত্নশীল, এবং সবকিছু কতটা পরিষ্কার তা আমার খুব পছন্দ। আমার বাচ্চারা সবসময় দারুণ সময় কাটায়!",
+    "testimonials.parent2.name": "কামাল হোসেন",
+    "testimonials.parent2.role": "১ সন্তানের বাবা",
+    "testimonials.parent2.quote": "আমরা আমার মেয়ের ৪র্থ জন্মদিন এখানে উদযাপন করেছি এবং এটি ছিল জাদুকরী। টিম সবকিছু পেশাদারভাবে সামলেছে। সাজসজ্জা সুন্দর ছিল এবং বাচ্চারা অনেক মজা করেছে!",
+    "testimonials.parent3.name": "নুসরাত জাহান",
+    "testimonials.parent3.role": "৩ সন্তানের মা",
+    "testimonials.parent3.quote": "তিন সন্তানের মা হিসেবে, আমি বয়স-উপযোগী প্লে জোনগুলো সত্যিই পছন্দ করি। আমার প্রতিটি সন্তান তাদের পছন্দের কিছু খুঁজে পায়। প্রশিক্ষিত স্টাফ আমাকে মানসিক শান্তি দেয়।",
+    "testimonials.trustStatement": "শত শত সুখী পরিবারের সাথে যোগ দিন যারা বেবি ওয়ার্ল্ডকে বিশ্বাস করে",
     
     // Events Section (Home page preview)
     "events.label": "জন্মদিন ও ইভেন্ট",

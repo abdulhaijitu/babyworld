@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LanguageToggle } from "./LanguageToggle";
+import { WhatsAppButton } from "./WhatsAppButton";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 
@@ -70,8 +71,9 @@ export function Navbar() {
           </div>
 
           {/* CTA Button & Language Toggle */}
-          <div className="hidden lg:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-3">
             <LanguageToggle />
+            <WhatsAppButton variant="navbar" />
             <a
               href="tel:09606990128"
               className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
