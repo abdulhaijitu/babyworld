@@ -45,24 +45,12 @@ export function VideoSection() {
                   className="relative aspect-video rounded-2xl sm:rounded-3xl overflow-hidden shadow-card-hover cursor-pointer group"
                   onClick={() => setIsPlaying(true)}
                 >
-                  {/* Thumbnail collage */}
-                  <div className="absolute inset-0 grid grid-cols-3 gap-1">
-                    <img 
-                      src={playgroundKids} 
-                      alt="Kids playing" 
-                      className="w-full h-full object-cover"
-                    />
-                    <img 
-                      src={mascotKids} 
-                      alt="Kids with mascot" 
-                      className="w-full h-full object-cover"
-                    />
-                    <img 
-                      src={carouselRides} 
-                      alt="Carousel rides" 
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+                {/* Main thumbnail image */}
+                  <img 
+                    src={playgroundKids} 
+                    alt={language === "bn" ? "বেবি ওয়ার্ল্ড প্লেগ্রাউন্ডে বাচ্চারা খেলছে" : "Kids playing at Baby World playground"}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
                   
                   {/* Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/40 to-foreground/20 group-hover:from-foreground/70 group-hover:via-foreground/30 transition-all duration-300" />
