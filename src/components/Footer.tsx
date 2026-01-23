@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -5,11 +6,10 @@ export function Footer() {
   const { t } = useLanguage();
 
   const quickLinks = [
-    { label: t("nav.home"), href: "#home" },
-    { label: t("nav.about"), href: "#about" },
-    { label: t("nav.pricing"), href: "#pricing" },
-    { label: t("nav.events"), href: "#events" },
-    { label: t("nav.contact"), href: "#contact" },
+    { label: t("nav.home"), href: "/" },
+    { label: t("nav.pricing"), href: "/play-booking" },
+    { label: t("nav.events"), href: "/birthday-events" },
+    { label: t("nav.contact"), href: "/contact" },
   ];
 
   return (
@@ -34,12 +34,12 @@ export function Footer() {
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.href}>
-                  <a
-                    href={link.href}
+                  <Link
+                    to={link.href}
                     className="text-sm opacity-70 hover:opacity-100 transition-opacity"
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

@@ -1,18 +1,18 @@
 import { Navbar } from "@/components/Navbar";
-import { HeroSection } from "@/components/HeroSection";
-import { AboutSection } from "@/components/AboutSection";
+import { PricingSection } from "@/components/PricingSection";
+import { BookingSection } from "@/components/BookingSection";
 import { TrustSection } from "@/components/TrustSection";
 import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
 
-const Index = () => {
+const PlayBooking = () => {
   return (
     <PageTransition>
       <div className="min-h-screen bg-background">
         <Navbar />
-        <main>
-          <HeroSection />
-          <AboutSection />
+        <main className="pt-20">
+          <PricingSection />
+          <BookingSection />
           <TrustSection />
         </main>
         <Footer />
@@ -21,4 +21,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default PlayBooking;
