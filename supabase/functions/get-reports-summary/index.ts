@@ -103,8 +103,8 @@ serve(async (req) => {
       todayUsed: todayTickets?.filter(t => t.status === 'used').length || 0,
     };
 
-    // Calculate food statistics
-    const completedFoodOrders = foodOrders?.filter(o => o.status === 'completed') || [];
+    // Calculate food statistics - check both 'completed' and 'served' statuses
+    const completedFoodOrders = foodOrders?.filter(o => o.status === 'completed' || o.status === 'served') || [];
     const foodStats = {
       totalOrders: foodOrders?.length || 0,
       completedOrders: completedFoodOrders.length,
@@ -112,7 +112,7 @@ serve(async (req) => {
       cashRevenue: completedFoodOrders.filter(o => o.payment_type === 'cash').reduce((sum, o) => sum + Number(o.total), 0),
       onlineRevenue: completedFoodOrders.filter(o => o.payment_type !== 'cash').reduce((sum, o) => sum + Number(o.total), 0),
       todayOrders: todayFoodOrders?.length || 0,
-      todayRevenue: todayFoodOrders?.filter(o => o.status === 'completed').reduce((sum, o) => sum + Number(o.total), 0) || 0,
+      todayRevenue: todayFoodOrders?.filter(o => o.status === 'completed' || o.status === 'served').reduce((sum, o) => sum + Number(o.total), 0) || 0,
     };
 
     // Calculate top food items
