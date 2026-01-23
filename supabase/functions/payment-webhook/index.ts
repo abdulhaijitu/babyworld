@@ -89,12 +89,40 @@ serve(async (req) => {
       console.error('Payment update error:', updateError);
     }
 
-    // Update booking payment status
+    // Update booking payment status and send SMS
     if (payment.booking_id) {
-      await supabase
+      const { data: booking } = await supabase
         .from('bookings')
         .update({ payment_status: bookingPaymentStatus })
-        .eq('id', payment.booking_id);
+        .eq('id', payment.booking_id)
+        .select()
+        .single();
+
+      // Send SMS on successful payment
+      if (status === 'COMPLETED' && booking) {
+        try {
+          const smsMessage = `Baby World পেমেন্ট সফল! ৳${amount}
+তারিখ: ${booking.slot_date}
+সময়: ${booking.time_slot}
+ট্রান্সাকশন: ${transaction_id || 'N/A'}
+ধন্যবাদ ${booking.parent_name}!`;
+          
+          await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/send-sms`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${Deno.env.get('SUPABASE_ANON_KEY')}`
+            },
+            body: JSON.stringify({
+              phone: booking.parent_phone,
+              message: smsMessage
+            })
+          });
+          console.log('Payment SMS sent to:', booking.parent_phone);
+        } catch (smsError) {
+          console.error('Payment SMS failed:', smsError);
+        }
+      }
     }
 
     console.log(`Payment ${actualInvoiceId} updated to ${paymentStatus}`);
