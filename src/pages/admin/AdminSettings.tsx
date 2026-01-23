@@ -22,12 +22,14 @@ import {
   Bell,
   Shield,
   Loader2,
-  RefreshCw
+  RefreshCw,
+  MessageSquare
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from 'next-themes';
 import { useSettings } from '@/hooks/useSettings';
+import NotificationTemplateEditor from '@/components/admin/NotificationTemplateEditor';
 
 export default function AdminSettings() {
   const { language } = useLanguage();
@@ -126,7 +128,7 @@ export default function AdminSettings() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-5">
           <TabsTrigger value="pricing" className="gap-2">
             <Banknote className="w-4 h-4 hidden sm:inline" />
             {language === 'bn' ? 'প্রাইসিং' : 'Pricing'}
@@ -138,6 +140,10 @@ export default function AdminSettings() {
           <TabsTrigger value="business" className="gap-2">
             <Building className="w-4 h-4 hidden sm:inline" />
             {language === 'bn' ? 'ব্যবসায়িক তথ্য' : 'Business'}
+          </TabsTrigger>
+          <TabsTrigger value="notifications" className="gap-2">
+            <MessageSquare className="w-4 h-4 hidden sm:inline" />
+            {language === 'bn' ? 'নোটিফিকেশন' : 'Notifications'}
           </TabsTrigger>
           <TabsTrigger value="general" className="gap-2">
             <Settings className="w-4 h-4 hidden sm:inline" />
@@ -460,36 +466,9 @@ export default function AdminSettings() {
           </div>
         </TabsContent>
 
-        {/* General Settings Tab */}
-        <TabsContent value="general" className="mt-6 space-y-6">
-          {/* Theme */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                {theme === 'dark' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
-                {language === 'bn' ? 'থিম' : 'Theme'}
-              </CardTitle>
-              <CardDescription>
-                {language === 'bn' ? 'অ্যাপের রঙ সেটিং' : 'App color settings'}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <p className="font-medium">{language === 'bn' ? 'ডার্ক মোড' : 'Dark Mode'}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {language === 'bn' ? 'অন্ধকার থিম ব্যবহার করুন' : 'Use dark theme'}
-                  </p>
-                </div>
-                <Switch
-                  checked={theme === 'dark'}
-                  onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Notifications */}
+        {/* Notifications Tab */}
+        <TabsContent value="notifications" className="mt-6 space-y-6">
+          {/* Notification Channels */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -497,7 +476,7 @@ export default function AdminSettings() {
                 {language === 'bn' ? 'নোটিফিকেশন চ্যানেল' : 'Notification Channels'}
               </CardTitle>
               <CardDescription>
-                {language === 'bn' ? 'পেমেন্ট কনফার্মেশন SMS ও WhatsApp সেটিংস' : 'Payment confirmation SMS & WhatsApp settings'}
+                {language === 'bn' ? 'কোন চ্যানেলে নোটিফিকেশন পাঠাবেন সিলেক্ট করুন' : 'Select which channels to use for notifications'}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -526,45 +505,6 @@ export default function AdminSettings() {
                   onCheckedChange={(checked) => setNotifications({...notifications, whatsappEnabled: checked})}
                 />
               </div>
-              <Separator />
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <p className="font-medium">{language === 'bn' ? 'বুকিং ইমেইল' : 'Booking Email'}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {language === 'bn' ? 'নতুন বুকিংয়ে ইমেইল পাঠান' : 'Send email on new booking'}
-                  </p>
-                </div>
-                <Switch
-                  checked={notifications.emailBooking}
-                  onCheckedChange={(checked) => setNotifications({...notifications, emailBooking: checked})}
-                />
-              </div>
-              <Separator />
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <p className="font-medium">{language === 'bn' ? 'বুকিং SMS' : 'Booking SMS'}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {language === 'bn' ? 'নতুন বুকিংয়ে SMS পাঠান' : 'Send SMS on new booking'}
-                  </p>
-                </div>
-                <Switch
-                  checked={notifications.smsBooking}
-                  onCheckedChange={(checked) => setNotifications({...notifications, smsBooking: checked})}
-                />
-              </div>
-              <Separator />
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <p className="font-medium">{language === 'bn' ? 'পেমেন্ট ইমেইল' : 'Payment Email'}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {language === 'bn' ? 'পেমেন্ট হলে ইমেইল পাঠান' : 'Send email on payment'}
-                  </p>
-                </div>
-                <Switch
-                  checked={notifications.emailPayment}
-                  onCheckedChange={(checked) => setNotifications({...notifications, emailPayment: checked})}
-                />
-              </div>
             </CardContent>
           </Card>
 
@@ -572,9 +512,42 @@ export default function AdminSettings() {
             <Button onClick={handleSaveNotifications} disabled={saving}>
               {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               <Save className="w-4 h-4 mr-2" />
-              {language === 'bn' ? 'নোটিফিকেশন সেটিংস সেভ করুন' : 'Save Notification Settings'}
+              {language === 'bn' ? 'চ্যানেল সেটিংস সেভ করুন' : 'Save Channel Settings'}
             </Button>
           </div>
+
+          {/* Template Editor */}
+          <NotificationTemplateEditor />
+        </TabsContent>
+
+        {/* General Settings Tab */}
+        <TabsContent value="general" className="mt-6 space-y-6">
+          {/* Theme */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                {theme === 'dark' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+                {language === 'bn' ? 'থিম' : 'Theme'}
+              </CardTitle>
+              <CardDescription>
+                {language === 'bn' ? 'অ্যাপের রঙ সেটিং' : 'App color settings'}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <p className="font-medium">{language === 'bn' ? 'ডার্ক মোড' : 'Dark Mode'}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {language === 'bn' ? 'অন্ধকার থিম ব্যবহার করুন' : 'Use dark theme'}
+                  </p>
+                </div>
+                <Switch
+                  checked={theme === 'dark'}
+                  onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
+                />
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Security */}
           <Card>

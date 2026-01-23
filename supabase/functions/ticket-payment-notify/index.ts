@@ -68,6 +68,34 @@ async function getNotificationSettings(supabase: ReturnType<typeof createAdminCl
   return { sms: true, whatsapp: false };
 }
 
+// Get message template
+async function getMessageTemplate(supabase: ReturnType<typeof createAdminClient>, type: string) {
+  try {
+    const { data } = await supabase
+      .from('settings')
+      .select('value')
+      .eq('key', 'notification_templates')
+      .maybeSingle();
+    
+    if (data?.value) {
+      const templates = data.value as Record<string, { bn: string; en: string }>;
+      return templates[type] || null;
+    }
+  } catch (error) {
+    console.error('Failed to get template:', error);
+  }
+  return null;
+}
+
+// Replace template variables
+function replaceVariables(template: string, variables: Record<string, string | number>): string {
+  let result = template;
+  for (const [key, value] of Object.entries(variables)) {
+    result = result.replace(new RegExp(`{{${key}}}`, 'g'), String(value));
+  }
+  return result;
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -102,13 +130,34 @@ serve(async (req) => {
       channel = 'both';
     } else if (notifSettings.whatsapp) {
       channel = 'whatsapp';
+    } else if (!notifSettings.sms) {
+      // Both disabled
+      return new Response(
+        JSON.stringify({ success: true, message: 'Notifications disabled' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
-    // Bilingual message for ticket
-    const timeSlotText = time_slot ? `\nসময়: ${time_slot}` : '';
-    const timeSlotTextEn = time_slot ? `\nTime: ${time_slot}` : '';
+    // Get custom template or use default
+    const template = await getMessageTemplate(supabase, 'ticket_payment');
     
-    const message = `🎟️ Baby World টিকিট কনফার্ম!
+    let message: string;
+    if (template) {
+      const variables = {
+        ticket_number,
+        date: slot_date,
+        time_slot: time_slot || '',
+        total: total_price,
+        name: guardian_name
+      };
+      // Use both languages
+      message = replaceVariables(template.bn, variables) + '\n\n' + replaceVariables(template.en, variables);
+    } else {
+      // Default message
+      const timeSlotText = time_slot ? `\nসময়: ${time_slot}` : '';
+      const timeSlotTextEn = time_slot ? `\nTime: ${time_slot}` : '';
+      
+      message = `🎟️ Baby World টিকিট কনফার্ম!
 টিকিট: ${ticket_number}
 তারিখ: ${slot_date}${timeSlotText}
 মোট: ৳${total_price}
@@ -118,6 +167,7 @@ Ticket Confirmed!
 ID: ${ticket_number}
 Date: ${slot_date}${timeSlotTextEn}
 Total: ৳${total_price}`;
+    }
 
     const result = await sendNotification(guardian_phone, message, channel, ticket_id);
 

@@ -66,6 +66,34 @@ async function getNotificationSettings(supabase: ReturnType<typeof createAdminCl
   return { sms: true, whatsapp: false };
 }
 
+// Get message template
+async function getMessageTemplate(supabase: ReturnType<typeof createAdminClient>, type: string) {
+  try {
+    const { data } = await supabase
+      .from('settings')
+      .select('value')
+      .eq('key', 'notification_templates')
+      .maybeSingle();
+    
+    if (data?.value) {
+      const templates = data.value as Record<string, { bn: string; en: string }>;
+      return templates[type] || null;
+    }
+  } catch (error) {
+    console.error('Failed to get template:', error);
+  }
+  return null;
+}
+
+// Replace template variables
+function replaceVariables(template: string, variables: Record<string, string | number>): string {
+  let result = template;
+  for (const [key, value] of Object.entries(variables)) {
+    result = result.replace(new RegExp(`{{${key}}}`, 'g'), String(value));
+  }
+  return result;
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -91,10 +119,27 @@ serve(async (req) => {
       channel = 'both';
     } else if (notifSettings.whatsapp) {
       channel = 'whatsapp';
+    } else if (!notifSettings.sms) {
+      return new Response(
+        JSON.stringify({ success: true, message: 'Notifications disabled' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
-    // Bilingual message for food order
-    const message = `🍔 Baby World ফুড অর্ডার কনফার্ম!
+    // Get custom template or use default
+    const template = await getMessageTemplate(supabase, 'food_order');
+    
+    let message: string;
+    if (template) {
+      const variables = {
+        order_number,
+        total,
+        name: customer_name
+      };
+      message = replaceVariables(template.bn, variables) + '\n\n' + replaceVariables(template.en, variables);
+    } else {
+      // Default message
+      message = `🍔 Baby World ফুড অর্ডার কনফার্ম!
 অর্ডার: ${order_number}
 মোট: ৳${total}
 পেমেন্ট: ${payment_type === 'cash' ? 'ক্যাশ' : 'অনলাইন'}
@@ -104,6 +149,7 @@ Food Order Confirmed!
 Order: ${order_number}
 Total: ৳${total}
 Thank you!`;
+    }
 
     const result = await sendNotification(customer_phone, message, channel, order_id);
 
