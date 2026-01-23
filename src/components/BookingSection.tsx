@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { format, addDays, isBefore, startOfDay } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
-import { Shield, Clock, Users, CalendarDays, Info, Loader2, AlertCircle, CheckCircle } from "lucide-react";
+import { Shield, Clock, Users, CalendarDays, Info, Loader2, AlertCircle, CheckCircle, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,9 +10,11 @@ import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAvailableSlots, Slot } from "@/hooks/useAvailableSlots";
 import { useCreateBooking } from "@/hooks/useCreateBooking";
+import { usePayment } from "@/hooks/usePayment";
 import { toast } from "sonner";
 
 const WHATSAPP_NUMBER = "8809606990128";
+const PRICE_PER_TICKET = 300; // BDT per child + guardian
 
 // WhatsApp icon component
 const WhatsAppIcon = ({ className }: { className?: string }) => (
@@ -32,6 +34,9 @@ export function BookingSection() {
 
   const { slots, loading: slotsLoading, error: slotsError, refetch } = useAvailableSlots(selectedDate);
   const { createBooking, loading: bookingLoading, error: bookingError, success: bookingSuccess, reset: resetBooking } = useCreateBooking();
+  const { initiatePayment, loading: paymentLoading } = usePayment();
+
+  const totalAmount = childCount * PRICE_PER_TICKET;
 
   const today = startOfDay(new Date());
   const maxDate = addDays(today, 30); // Allow booking up to 30 days ahead
@@ -52,6 +57,7 @@ export function BookingSection() {
       return;
     }
 
+    // First create the booking
     const result = await createBooking({
       date: selectedDate,
       time_slot: selectedSlot.time_slot,
@@ -61,17 +67,30 @@ export function BookingSection() {
     });
 
     if (result) {
-      toast.success(
-        language === "bn" 
-          ? "বুকিং সফল হয়েছে!" 
-          : "Booking confirmed successfully!"
-      );
-      // Reset form
-      setShowBookingForm(false);
-      setSelectedSlot(null);
-      setParentName("");
-      setParentPhone("");
-      refetch(); // Refresh slots
+      // Initiate payment
+      const paymentResult = await initiatePayment({
+        booking_id: result.id,
+        amount: totalAmount,
+        customer_name: parentName,
+        customer_phone: parentPhone
+      });
+
+      if (paymentResult.success && paymentResult.payment_url) {
+        // Redirect to payment page
+        window.location.href = paymentResult.payment_url;
+      } else {
+        toast.success(
+          language === "bn" 
+            ? "বুকিং সফল! পেমেন্ট পরে করতে পারবেন।" 
+            : "Booking confirmed! You can pay later."
+        );
+        // Reset form
+        setShowBookingForm(false);
+        setSelectedSlot(null);
+        setParentName("");
+        setParentPhone("");
+        refetch();
+      }
     } else if (bookingError) {
       toast.error(bookingError);
     }
@@ -384,12 +403,15 @@ export function BookingSection() {
                   </div>
                 )}
 
-                {/* Price Placeholder */}
+                {/* Price */}
                 <div className="pt-4 border-t border-border">
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-muted-foreground">{t("booking.total")}</span>
-                    <div className="h-6 w-20 bg-muted rounded animate-pulse" />
+                    <span className="text-2xl font-bold text-primary">৳{totalAmount}</span>
                   </div>
+                  <p className="text-xs text-muted-foreground mb-4">
+                    {childCount} x ৳{PRICE_PER_TICKET} = ৳{totalAmount}
+                  </p>
                 </div>
 
                 {/* Booking Actions */}
@@ -423,16 +445,19 @@ export function BookingSection() {
                     <Button
                       size="lg"
                       className="w-full"
-                      disabled={bookingLoading || !parentName || !parentPhone}
+                      disabled={bookingLoading || paymentLoading || !parentName || !parentPhone}
                       onClick={handleBookingSubmit}
                     >
-                      {bookingLoading ? (
+                      {bookingLoading || paymentLoading ? (
                         <>
                           <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          {language === "bn" ? "বুকিং হচ্ছে..." : "Booking..."}
+                          {language === "bn" ? "প্রসেসিং..." : "Processing..."}
                         </>
                       ) : (
-                        language === "bn" ? "বুকিং নিশ্চিত করুন" : "Confirm Booking"
+                        <>
+                          <CreditCard className="w-4 h-4 mr-2" />
+                          {language === "bn" ? `৳${totalAmount} পেমেন্ট করুন` : `Pay ৳${totalAmount}`}
+                        </>
                       )}
                     </Button>
                     <Button
@@ -536,13 +561,16 @@ export function BookingSection() {
                   </Button>
                   <Button
                     className="flex-1"
-                    disabled={bookingLoading || !parentName || !parentPhone}
+                    disabled={bookingLoading || paymentLoading || !parentName || !parentPhone}
                     onClick={handleBookingSubmit}
                   >
-                    {bookingLoading ? (
+                    {bookingLoading || paymentLoading ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
                     ) : (
-                      language === "bn" ? "নিশ্চিত করুন" : "Confirm"
+                      <>
+                        <CreditCard className="w-3 h-3 mr-1" />
+                        ৳{totalAmount}
+                      </>
                     )}
                   </Button>
                 </div>
