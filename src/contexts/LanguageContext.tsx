@@ -1,0 +1,341 @@
+import { createContext, useContext, useState, ReactNode } from "react";
+
+export type Language = "en" | "bn";
+
+interface LanguageContextType {
+  language: Language;
+  setLanguage: (lang: Language) => void;
+  t: (key: string) => string;
+}
+
+const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+
+// Translations object
+const translations: Record<Language, Record<string, string>> = {
+  en: {
+    // Navigation
+    "nav.home": "Home",
+    "nav.about": "About",
+    "nav.pricing": "Play & Pricing",
+    "nav.booking": "Book Now",
+    "nav.events": "Birthday & Events",
+    "nav.contact": "Contact",
+    "nav.bookVisit": "Book Visit",
+    
+    // Hero Section
+    "hero.badge": "Ages 1–10 Years",
+    "hero.title1": "Where Kids",
+    "hero.learn": "Learn",
+    "hero.and": "&",
+    "hero.play": "Play",
+    "hero.description": "A safe, hygienic, and joyful indoor playground designed for children aged 1–10 years. Let your little ones explore, learn, and make memories in our supervised play environment.",
+    "hero.safeEnvironment": "Safe Environment",
+    "hero.hourlyPlay": "Hourly Play",
+    "hero.viewOptions": "View Play Options",
+    "hero.birthdayEvents": "Birthday & Events",
+    "hero.learnPlay": "Learn & Play",
+    
+    // About Section
+    "about.label": "About Us",
+    "about.title": "A Space Where",
+    "about.titleHighlight": "Learning Meets Play",
+    "about.description": "At Baby World, we believe that every child deserves a safe, nurturing environment where they can explore, discover, and grow. Our indoor playground is thoughtfully designed to encourage learning through play.",
+    "about.adventureZone": "Adventure Zone",
+    "about.learningCorner": "Learning Corner",
+    "about.creativeSpace": "Creative Space",
+    "about.pretendPlay": "Pretend Play",
+    "about.safeHygienic": "Safe & Hygienic",
+    "about.safeHygienicDesc": "Regular sanitization and child-safe equipment for peace of mind.",
+    "about.trainedStaff": "Trained Staff",
+    "about.trainedStaffDesc": "Our friendly team ensures supervision and assistance at all times.",
+    "about.ageAppropriate": "Age-Appropriate Activities",
+    "about.ageAppropriateDesc": "Curated play zones for children aged 1–10 years old.",
+    
+    // Pricing Section
+    "pricing.label": "Play & Pricing",
+    "pricing.title": "Simple, Transparent Pricing",
+    "pricing.description": "Choose the play option that works best for your family. Each session includes one child and one guardian.",
+    "pricing.hourlyPlay": "Hourly Play",
+    "pricing.sessionTitle": "1-Hour Play Session",
+    "pricing.sessionDesc": "Perfect for a quick visit. Enjoy all play zones with your little one.",
+    "pricing.childGuardian": "1 Child + 1 Guardian",
+    "pricing.bookSession": "Book Session",
+    "pricing.whatsIncluded": "What's Included",
+    "pricing.inclusion1": "Access to all play zones",
+    "pricing.inclusion2": "Supervised environment",
+    "pricing.inclusion3": "Clean & sanitized equipment",
+    "pricing.inclusion4": "Comfortable seating for guardians",
+    "pricing.inclusion5": "Air-conditioned facility",
+    "pricing.walkIn": "Walk-in Available",
+    "pricing.physicalTickets": "Physical Tickets",
+    "pricing.physicalDesc": "Prefer to pay in person? Physical tickets are available at our reception.",
+    "pricing.noBooking": "No advance booking required. Simply walk in during operating hours.",
+    "pricing.guidelines": "Play Zone Guidelines",
+    "pricing.rule1": "Socks required for all",
+    "pricing.rule2": "Hand sanitization on entry",
+    "pricing.rule3": "No outside food allowed",
+    "pricing.rule4": "Guardian must stay on-site",
+    
+    // Booking Section
+    "booking.label": "Booking",
+    "booking.title": "Book Play Time",
+    "booking.description": "Select your preferred date and time. Each session is 1 hour.",
+    "booking.trustBadge": "Safe play environment for children aged 1–10 years",
+    "booking.selectDate": "Select Date",
+    "booking.futureDate": "Any future date",
+    "booking.selectTime": "Select Time",
+    "booking.eachSlot": "Each slot is 1 hour",
+    "booking.selectDateFirst": "Please select a date first",
+    "booking.selected": "Selected",
+    "booking.available": "Available",
+    "booking.booked": "Booked",
+    "booking.summary": "Booking Summary",
+    "booking.date": "Date",
+    "booking.time": "Time",
+    "booking.ticket": "Ticket",
+    "booking.ticketType": "1 Child + 1 Guardian",
+    "booking.total": "Total",
+    "booking.confirmBooking": "Confirm Booking",
+    "booking.selectDateTime": "Select date & time",
+    "booking.paymentNote": "Payment system will be added soon.",
+    "booking.book": "Book",
+    "booking.select": "Select",
+    
+    // Events Section
+    "events.label": "Birthday & Events",
+    "events.title": "Celebrate Special Moments",
+    "events.description": "Create magical memories with a birthday celebration at Baby World. Safe, joyful, and unforgettable experiences await!",
+    "events.basicName": "Basic Celebration",
+    "events.basicDesc": "Perfect for intimate gatherings with close friends",
+    "events.premiumName": "Premium Party",
+    "events.premiumDesc": "A memorable celebration with all the extras",
+    "events.grandName": "Grand Event",
+    "events.grandDesc": "The ultimate birthday experience",
+    "events.mostPopular": "Most Popular",
+    "events.inquireNow": "Inquire Now",
+    "events.feature.2hours": "2 hours private area",
+    "events.feature.3hours": "3 hours private area",
+    "events.feature.4hours": "4 hours exclusive area",
+    "events.feature.basicDecor": "Basic decorations",
+    "events.feature.themeDecor": "Theme decorations",
+    "events.feature.customTheme": "Custom theme setup",
+    "events.feature.playzone": "Play zone access",
+    "events.feature.photo": "Photography session",
+    "events.feature.proPhoto": "Professional photography",
+    "events.feature.host": "Party host assistance",
+    "events.feature.entertainment": "Entertainment activities",
+    "events.feature.coordinator": "Dedicated party coordinator",
+    "events.gallery": "Celebration Moments",
+    
+    // Trust Section
+    "trust.label": "Trust & Safety",
+    "trust.title": "Your Child's Safety is Our Priority",
+    "trust.description": "We understand that as parents, nothing matters more than your child's well-being. That's why we've built Baby World with safety at its core.",
+    "trust.safePlay": "Safe Play Environment",
+    "trust.safePlayDesc": "Soft, child-friendly equipment with rounded edges and padded surfaces throughout.",
+    "trust.trainedStaff": "Trained Staff",
+    "trust.trainedStaffDesc": "Our team is trained in child safety and first aid, ensuring supervision at all times.",
+    "trust.childFriendly": "Child-Friendly Equipment",
+    "trust.childFriendlyDesc": "Age-appropriate play structures designed for children aged 1–10 years.",
+    "trust.cleanHygienic": "Clean & Hygienic",
+    "trust.cleanHygienicDesc": "Regular sanitization of all equipment and air-conditioned, well-ventilated space.",
+    "trust.statement": "\"I can trust this place with my child.\"",
+    
+    // Contact Section
+    "contact.label": "Contact Us",
+    "contact.title": "Visit Baby World Today",
+    "contact.description": "Have questions? We'd love to hear from you. Reach out via phone, email, or visit us in person.",
+    "contact.phone": "Phone",
+    "contact.email": "Email",
+    "contact.address": "Address",
+    "contact.addressLine1": "27/B, Jannat Tower (Lift #3)",
+    "contact.addressLine2": "Lalbagh, Dhaka 1211",
+    "contact.hours": "Operating Hours",
+    "contact.hoursLine1": "Saturday - Thursday: 10:00 AM – 9:00 PM",
+    "contact.hoursLine2": "Friday: 3:00 PM – 9:00 PM",
+    "contact.getDirections": "Get Directions",
+    "contact.mapComingSoon": "Interactive map coming soon",
+    
+    // Footer
+    "footer.description": "A safe, hygienic, and joyful indoor playground for children aged 1–10 years. Where kids learn & play in a supervised, nurturing environment.",
+    "footer.quickLinks": "Quick Links",
+    "footer.contact": "Contact",
+    "footer.rights": "All rights reserved.",
+    "footer.ageRange": "Ages 1–10 Years",
+  },
+  bn: {
+    // Navigation
+    "nav.home": "হোম",
+    "nav.about": "আমাদের সম্পর্কে",
+    "nav.pricing": "প্লে ও মূল্য",
+    "nav.booking": "বুকিং",
+    "nav.events": "জন্মদিন ও ইভেন্ট",
+    "nav.contact": "যোগাযোগ",
+    "nav.bookVisit": "ভিজিট বুক করুন",
+    
+    // Hero Section
+    "hero.badge": "১–১০ বছর বয়সী শিশুদের জন্য",
+    "hero.title1": "যেখানে শিশুরা",
+    "hero.learn": "শেখে",
+    "hero.and": "ও",
+    "hero.play": "খেলে",
+    "hero.description": "১–১০ বছর বয়সী শিশুদের জন্য একটি নিরাপদ, পরিচ্ছন্ন এবং আনন্দদায়ক ইনডোর প্লেগ্রাউন্ড। আপনার ছোট্ট সোনামণিদের আমাদের তত্ত্বাবধানে থাকা পরিবেশে অন্বেষণ, শিক্ষা ও স্মৃতি তৈরি করতে দিন।",
+    "hero.safeEnvironment": "নিরাপদ পরিবেশ",
+    "hero.hourlyPlay": "ঘণ্টা ভিত্তিক খেলা",
+    "hero.viewOptions": "প্লে অপশন দেখুন",
+    "hero.birthdayEvents": "জন্মদিন ও ইভেন্ট",
+    "hero.learnPlay": "শেখা ও খেলা",
+    
+    // About Section
+    "about.label": "আমাদের সম্পর্কে",
+    "about.title": "একটি জায়গা যেখানে",
+    "about.titleHighlight": "শেখা আর খেলা একসাথে",
+    "about.description": "বেবি ওয়ার্ল্ডে আমরা বিশ্বাস করি প্রতিটি শিশু একটি নিরাপদ, যত্নশীল পরিবেশ পাওয়ার যোগ্য যেখানে তারা অন্বেষণ, আবিষ্কার এবং বেড়ে উঠতে পারে। আমাদের ইনডোর প্লেগ্রাউন্ড খেলার মাধ্যমে শেখাকে উৎসাহিত করতে সুচিন্তিতভাবে ডিজাইন করা হয়েছে।",
+    "about.adventureZone": "অ্যাডভেঞ্চার জোন",
+    "about.learningCorner": "লার্নিং কর্নার",
+    "about.creativeSpace": "ক্রিয়েটিভ স্পেস",
+    "about.pretendPlay": "ভান খেলা",
+    "about.safeHygienic": "নিরাপদ ও পরিচ্ছন্ন",
+    "about.safeHygienicDesc": "নিয়মিত স্যানিটাইজেশন এবং শিশু-নিরাপদ সরঞ্জাম আপনার মনে শান্তি দেয়।",
+    "about.trainedStaff": "প্রশিক্ষিত স্টাফ",
+    "about.trainedStaffDesc": "আমাদের বন্ধুত্বপূর্ণ টিম সবসময় তত্ত্বাবধান এবং সহায়তা নিশ্চিত করে।",
+    "about.ageAppropriate": "বয়স-উপযোগী কার্যক্রম",
+    "about.ageAppropriateDesc": "১–১০ বছর বয়সী শিশুদের জন্য বাছাইকৃত প্লে জোন।",
+    
+    // Pricing Section
+    "pricing.label": "প্লে ও মূল্য",
+    "pricing.title": "সহজ, স্বচ্ছ মূল্য",
+    "pricing.description": "আপনার পরিবারের জন্য সেরা প্লে অপশনটি বেছে নিন। প্রতিটি সেশনে একজন শিশু এবং একজন অভিভাবক অন্তর্ভুক্ত।",
+    "pricing.hourlyPlay": "ঘণ্টা ভিত্তিক খেলা",
+    "pricing.sessionTitle": "১ ঘণ্টার প্লে সেশন",
+    "pricing.sessionDesc": "দ্রুত ভিজিটের জন্য উপযুক্ত। আপনার ছোট্টটির সাথে সব প্লে জোন উপভোগ করুন।",
+    "pricing.childGuardian": "১ শিশু + ১ অভিভাবক",
+    "pricing.bookSession": "সেশন বুক করুন",
+    "pricing.whatsIncluded": "কী অন্তর্ভুক্ত",
+    "pricing.inclusion1": "সব প্লে জোনে প্রবেশ",
+    "pricing.inclusion2": "তত্ত্বাবধানকৃত পরিবেশ",
+    "pricing.inclusion3": "পরিষ্কার ও স্যানিটাইজড সরঞ্জাম",
+    "pricing.inclusion4": "অভিভাবকদের জন্য আরামদায়ক আসন",
+    "pricing.inclusion5": "এয়ার-কন্ডিশনড সুবিধা",
+    "pricing.walkIn": "ওয়াক-ইন সুবিধা আছে",
+    "pricing.physicalTickets": "ফিজিক্যাল টিকেট",
+    "pricing.physicalDesc": "সরাসরি পেমেন্ট করতে চান? আমাদের রিসেপশনে ফিজিক্যাল টিকেট পাওয়া যায়।",
+    "pricing.noBooking": "আগাম বুকিং প্রয়োজন নেই। অপারেটিং আওয়ারে সরাসরি চলে আসুন।",
+    "pricing.guidelines": "প্লে জোন নির্দেশিকা",
+    "pricing.rule1": "সবার জন্য মোজা আবশ্যক",
+    "pricing.rule2": "প্রবেশে হ্যান্ড স্যানিটাইজেশন",
+    "pricing.rule3": "বাইরের খাবার অনুমোদিত নয়",
+    "pricing.rule4": "অভিভাবককে অবশ্যই থাকতে হবে",
+    
+    // Booking Section
+    "booking.label": "বুকিং",
+    "booking.title": "প্লে টাইম বুক করুন",
+    "booking.description": "আপনার সুবিধামত তারিখ ও সময় বাছাই করুন। প্রতিটি সেশন ১ ঘণ্টার।",
+    "booking.trustBadge": "১–১০ বছর বয়সী শিশুদের জন্য নিরাপদ খেলার পরিবেশ",
+    "booking.selectDate": "তারিখ বাছাই করুন",
+    "booking.futureDate": "ভবিষ্যতের যেকোনো তারিখ",
+    "booking.selectTime": "সময় বাছাই করুন",
+    "booking.eachSlot": "প্রতিটি স্লট ১ ঘণ্টা",
+    "booking.selectDateFirst": "প্রথমে একটি তারিখ বাছাই করুন",
+    "booking.selected": "নির্বাচিত",
+    "booking.available": "উপলব্ধ",
+    "booking.booked": "বুকড",
+    "booking.summary": "বুকিং সামারি",
+    "booking.date": "তারিখ",
+    "booking.time": "সময়",
+    "booking.ticket": "টিকেট",
+    "booking.ticketType": "১ শিশু + ১ অভিভাবক",
+    "booking.total": "মোট",
+    "booking.confirmBooking": "বুকিং নিশ্চিত করুন",
+    "booking.selectDateTime": "তারিখ ও সময় বাছাই করুন",
+    "booking.paymentNote": "পেমেন্ট সিস্টেম শীঘ্রই যোগ করা হবে।",
+    "booking.book": "বুক করুন",
+    "booking.select": "বাছাই করুন",
+    
+    // Events Section
+    "events.label": "জন্মদিন ও ইভেন্ট",
+    "events.title": "বিশেষ মুহূর্ত উদযাপন করুন",
+    "events.description": "বেবি ওয়ার্ল্ডে জন্মদিন উদযাপনের মাধ্যমে স্মৃতিময় মুহূর্ত তৈরি করুন। নিরাপদ, আনন্দময় এবং অবিস্মরণীয় অভিজ্ঞতা আপনার জন্য অপেক্ষা করছে!",
+    "events.basicName": "বেসিক সেলিব্রেশন",
+    "events.basicDesc": "ঘনিষ্ঠ বন্ধুদের সাথে ছোট আয়োজনের জন্য উপযুক্ত",
+    "events.premiumName": "প্রিমিয়াম পার্টি",
+    "events.premiumDesc": "সব এক্সট্রা সহ একটি স্মরণীয় উদযাপন",
+    "events.grandName": "গ্র্যান্ড ইভেন্ট",
+    "events.grandDesc": "সর্বোত্তম জন্মদিনের অভিজ্ঞতা",
+    "events.mostPopular": "সবচেয়ে জনপ্রিয়",
+    "events.inquireNow": "জানতে চান",
+    "events.feature.2hours": "২ ঘণ্টা প্রাইভেট এরিয়া",
+    "events.feature.3hours": "৩ ঘণ্টা প্রাইভেট এরিয়া",
+    "events.feature.4hours": "৪ ঘণ্টা এক্সক্লুসিভ এরিয়া",
+    "events.feature.basicDecor": "বেসিক সাজসজ্জা",
+    "events.feature.themeDecor": "থিম সাজসজ্জা",
+    "events.feature.customTheme": "কাস্টম থিম সেটআপ",
+    "events.feature.playzone": "প্লে জোন অ্যাক্সেস",
+    "events.feature.photo": "ফটোগ্রাফি সেশন",
+    "events.feature.proPhoto": "প্রফেশনাল ফটোগ্রাফি",
+    "events.feature.host": "পার্টি হোস্ট সহায়তা",
+    "events.feature.entertainment": "বিনোদন কার্যক্রম",
+    "events.feature.coordinator": "ডেডিকেটেড পার্টি কো-অর্ডিনেটর",
+    "events.gallery": "সেলিব্রেশন মোমেন্টস",
+    
+    // Trust Section
+    "trust.label": "বিশ্বাস ও নিরাপত্তা",
+    "trust.title": "আপনার সন্তানের নিরাপত্তা আমাদের অগ্রাধিকার",
+    "trust.description": "আমরা বুঝি যে অভিভাবক হিসেবে আপনার সন্তানের কল্যাণের চেয়ে বেশি কিছু গুরুত্বপূর্ণ নয়। তাই আমরা বেবি ওয়ার্ল্ডকে নিরাপত্তাকে মূল ভিত্তি করে তৈরি করেছি।",
+    "trust.safePlay": "নিরাপদ খেলার পরিবেশ",
+    "trust.safePlayDesc": "নরম, শিশু-বান্ধব সরঞ্জাম যেখানে গোলাকার প্রান্ত এবং সর্বত্র প্যাডেড সারফেস রয়েছে।",
+    "trust.trainedStaff": "প্রশিক্ষিত স্টাফ",
+    "trust.trainedStaffDesc": "আমাদের টিম শিশু নিরাপত্তা এবং ফার্স্ট এইডে প্রশিক্ষিত, সবসময় তত্ত্বাবধান নিশ্চিত করে।",
+    "trust.childFriendly": "শিশু-বান্ধব সরঞ্জাম",
+    "trust.childFriendlyDesc": "১–১০ বছর বয়সী শিশুদের জন্য ডিজাইন করা বয়স-উপযোগী খেলার কাঠামো।",
+    "trust.cleanHygienic": "পরিষ্কার ও পরিচ্ছন্ন",
+    "trust.cleanHygienicDesc": "সব সরঞ্জামের নিয়মিত স্যানিটাইজেশন এবং এয়ার-কন্ডিশনড, ভালো বায়ু চলাচলের জায়গা।",
+    "trust.statement": "\"আমি আমার সন্তানকে এই জায়গায় বিশ্বাস করে রাখতে পারি।\"",
+    
+    // Contact Section
+    "contact.label": "যোগাযোগ করুন",
+    "contact.title": "আজই বেবি ওয়ার্ল্ডে আসুন",
+    "contact.description": "কোনো প্রশ্ন আছে? আমরা আপনার কথা শুনতে চাই। ফোন, ইমেইল বা সরাসরি আসুন।",
+    "contact.phone": "ফোন",
+    "contact.email": "ইমেইল",
+    "contact.address": "ঠিকানা",
+    "contact.addressLine1": "২৭/বি, জান্নাত টাওয়ার (লিফট #৩)",
+    "contact.addressLine2": "লালবাগ, ঢাকা ১২১১",
+    "contact.hours": "খোলার সময়",
+    "contact.hoursLine1": "শনিবার - বৃহস্পতিবার: সকাল ১০:০০ – রাত ৯:০০",
+    "contact.hoursLine2": "শুক্রবার: বিকাল ৩:০০ – রাত ৯:০০",
+    "contact.getDirections": "দিকনির্দেশনা নিন",
+    "contact.mapComingSoon": "ইন্টারেক্টিভ ম্যাপ শীঘ্রই আসছে",
+    
+    // Footer
+    "footer.description": "১–১০ বছর বয়সী শিশুদের জন্য একটি নিরাপদ, পরিচ্ছন্ন এবং আনন্দদায়ক ইনডোর প্লেগ্রাউন্ড। যেখানে শিশুরা তত্ত্বাবধানে থাকা পরিবেশে শেখে ও খেলে।",
+    "footer.quickLinks": "দ্রুত লিংক",
+    "footer.contact": "যোগাযোগ",
+    "footer.rights": "সর্বস্বত্ব সংরক্ষিত।",
+    "footer.ageRange": "১–১০ বছর বয়সী",
+  },
+};
+
+export function LanguageProvider({ children }: { children: ReactNode }) {
+  const [language, setLanguage] = useState<Language>("en");
+
+  const t = (key: string): string => {
+    return translations[language][key] || key;
+  };
+
+  return (
+    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+      <div className={language === "bn" ? "font-bangla" : ""}>
+        {children}
+      </div>
+    </LanguageContext.Provider>
+  );
+}
+
+export function useLanguage() {
+  const context = useContext(LanguageContext);
+  if (context === undefined) {
+    throw new Error("useLanguage must be used within a LanguageProvider");
+  }
+  return context;
+}

@@ -1,49 +1,46 @@
 import { Shield, Users, Sparkles, Wind } from "lucide-react";
 import { ScrollFadeIn, StaggerContainer, StaggerItem } from "./ScrollAnimations";
-
-const trustItems = [
-  {
-    icon: Shield,
-    title: "Safe Play Environment",
-    description:
-      "Soft, child-friendly equipment with rounded edges and padded surfaces throughout.",
-  },
-  {
-    icon: Users,
-    title: "Trained Staff",
-    description:
-      "Our team is trained in child safety and first aid, ensuring supervision at all times.",
-  },
-  {
-    icon: Sparkles,
-    title: "Child-Friendly Equipment",
-    description:
-      "Age-appropriate play structures designed for children aged 1–10 years.",
-  },
-  {
-    icon: Wind,
-    title: "Clean & Hygienic",
-    description:
-      "Regular sanitization of all equipment and air-conditioned, well-ventilated space.",
-  },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function TrustSection() {
+  const { t } = useLanguage();
+
+  const trustItems = [
+    {
+      icon: Shield,
+      title: t("trust.safePlay"),
+      description: t("trust.safePlayDesc"),
+    },
+    {
+      icon: Users,
+      title: t("trust.trainedStaff"),
+      description: t("trust.trainedStaffDesc"),
+    },
+    {
+      icon: Sparkles,
+      title: t("trust.childFriendly"),
+      description: t("trust.childFriendlyDesc"),
+    },
+    {
+      icon: Wind,
+      title: t("trust.cleanHygienic"),
+      description: t("trust.cleanHygienicDesc"),
+    },
+  ];
+
   return (
     <section className="py-24 bg-background">
       <div className="container mx-auto">
         {/* Header */}
         <ScrollFadeIn className="text-center max-w-2xl mx-auto mb-16 space-y-4">
           <span className="text-sm font-semibold text-primary uppercase tracking-wider">
-            Trust & Safety
+            {t("trust.label")}
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-            Your Child's Safety is Our Priority
+            {t("trust.title")}
           </h2>
           <p className="text-lg text-muted-foreground">
-            We understand that as parents, nothing matters more than your
-            child's well-being. That's why we've built Baby World with safety at
-            its core.
+            {t("trust.description")}
           </p>
         </ScrollFadeIn>
 
@@ -71,7 +68,7 @@ export function TrustSection() {
           <div className="inline-flex items-center gap-4 px-8 py-4 bg-accent rounded-2xl">
             <span className="text-3xl">💚</span>
             <p className="text-foreground font-medium">
-              "I can trust this place with my child."
+              {t("trust.statement")}
             </p>
           </div>
         </ScrollFadeIn>

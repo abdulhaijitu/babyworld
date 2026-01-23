@@ -5,6 +5,7 @@ import { Shield, Clock, Users, CalendarDays, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollFadeIn, StaggerContainer, StaggerItem } from "./ScrollAnimations";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 // Mock time slots - some marked as unavailable for demo
 const generateTimeSlots = () => {
@@ -30,6 +31,7 @@ const timeSlots = generateTimeSlots();
 export function BookingSection() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
+  const { t } = useLanguage();
 
   const today = startOfDay(new Date());
   const maxDate = addDays(today, 30); // Allow booking up to 30 days ahead
@@ -46,13 +48,13 @@ export function BookingSection() {
         {/* Header */}
         <ScrollFadeIn className="text-center max-w-2xl mx-auto mb-12 space-y-4">
           <span className="text-sm font-semibold text-primary uppercase tracking-wider">
-            বুকিং
+            {t("booking.label")}
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-            প্লে টাইম বুক করুন
+            {t("booking.title")}
           </h2>
           <p className="text-lg text-muted-foreground">
-            আপনার সুবিধামত তারিখ ও সময় বাছাই করুন। প্রতিটি সেশন ১ ঘণ্টার।
+            {t("booking.description")}
           </p>
         </ScrollFadeIn>
 
@@ -61,7 +63,7 @@ export function BookingSection() {
           <div className="inline-flex items-center gap-3 px-5 py-3 bg-accent rounded-xl">
             <Shield className="w-5 h-5 text-primary" />
             <span className="text-sm font-medium text-foreground">
-              ১–১০ বছর বয়সী শিশুদের জন্য নিরাপদ খেলার পরিবেশ
+              {t("booking.trustBadge")}
             </span>
           </div>
         </ScrollFadeIn>
@@ -75,8 +77,8 @@ export function BookingSection() {
                   <CalendarDays className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-foreground">তারিখ বাছাই করুন</h3>
-                  <p className="text-sm text-muted-foreground">ভবিষ্যতের যেকোনো তারিখ</p>
+                  <h3 className="font-semibold text-foreground">{t("booking.selectDate")}</h3>
+                  <p className="text-sm text-muted-foreground">{t("booking.futureDate")}</p>
                 </div>
               </div>
 
@@ -114,7 +116,7 @@ export function BookingSection() {
               {selectedDate && (
                 <div className="mt-4 p-3 bg-primary/5 rounded-xl">
                   <p className="text-sm text-foreground">
-                    <span className="font-medium">নির্বাচিত:</span>{" "}
+                    <span className="font-medium">{t("booking.selected")}:</span>{" "}
                     {format(selectedDate, "dd MMMM, yyyy")}
                   </p>
                 </div>
@@ -130,8 +132,8 @@ export function BookingSection() {
                   <Clock className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-foreground">সময় বাছাই করুন</h3>
-                  <p className="text-sm text-muted-foreground">প্রতিটি স্লট ১ ঘণ্টা</p>
+                  <h3 className="font-semibold text-foreground">{t("booking.selectTime")}</h3>
+                  <p className="text-sm text-muted-foreground">{t("booking.eachSlot")}</p>
                 </div>
               </div>
 
@@ -141,7 +143,7 @@ export function BookingSection() {
                     <CalendarDays className="w-8 h-8 text-muted-foreground" />
                   </div>
                   <p className="text-muted-foreground">
-                    প্রথমে একটি তারিখ বাছাই করুন
+                    {t("booking.selectDateFirst")}
                   </p>
                 </div>
               ) : (
@@ -178,11 +180,11 @@ export function BookingSection() {
                                 : "bg-accent text-accent-foreground"
                             )}
                           >
-                            {selectedSlot === slot.id ? "নির্বাচিত" : "উপলব্ধ"}
+                            {selectedSlot === slot.id ? t("booking.selected") : t("booking.available")}
                           </span>
                         ) : (
                           <span className="text-xs px-2 py-1 rounded-full bg-muted text-muted-foreground">
-                            বুকড
+                            {t("booking.booked")}
                           </span>
                         )}
                       </div>
@@ -224,17 +226,18 @@ interface SummaryProps {
 
 function BookingSummary({ selectedDate, selectedSlotData }: SummaryProps) {
   const isComplete = selectedDate && selectedSlotData;
+  const { t } = useLanguage();
 
   return (
     <div className="bg-card rounded-3xl p-6 shadow-card sticky top-24">
-      <h3 className="font-semibold text-foreground mb-6">বুকিং সামারি</h3>
+      <h3 className="font-semibold text-foreground mb-6">{t("booking.summary")}</h3>
 
       <div className="space-y-4">
         {/* Date */}
         <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-xl">
           <CalendarDays className="w-5 h-5 text-muted-foreground" />
           <div>
-            <p className="text-xs text-muted-foreground">তারিখ</p>
+            <p className="text-xs text-muted-foreground">{t("booking.date")}</p>
             {selectedDate ? (
               <p className="font-medium text-foreground">
                 {format(selectedDate, "dd MMMM, yyyy")}
@@ -249,7 +252,7 @@ function BookingSummary({ selectedDate, selectedSlotData }: SummaryProps) {
         <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-xl">
           <Clock className="w-5 h-5 text-muted-foreground" />
           <div>
-            <p className="text-xs text-muted-foreground">সময়</p>
+            <p className="text-xs text-muted-foreground">{t("booking.time")}</p>
             {selectedSlotData ? (
               <p className="font-medium text-foreground">{selectedSlotData.label}</p>
             ) : (
@@ -262,15 +265,15 @@ function BookingSummary({ selectedDate, selectedSlotData }: SummaryProps) {
         <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-xl">
           <Users className="w-5 h-5 text-muted-foreground" />
           <div>
-            <p className="text-xs text-muted-foreground">টিকেট</p>
-            <p className="font-medium text-foreground">১ শিশু + ১ অভিভাবক</p>
+            <p className="text-xs text-muted-foreground">{t("booking.ticket")}</p>
+            <p className="font-medium text-foreground">{t("booking.ticketType")}</p>
           </div>
         </div>
 
         {/* Price Placeholder */}
         <div className="pt-4 border-t border-border">
           <div className="flex items-center justify-between mb-4">
-            <span className="text-muted-foreground">মোট</span>
+            <span className="text-muted-foreground">{t("booking.total")}</span>
             <div className="h-6 w-20 bg-muted rounded animate-pulse" />
           </div>
         </div>
@@ -280,14 +283,14 @@ function BookingSummary({ selectedDate, selectedSlotData }: SummaryProps) {
           className="w-full"
           disabled={!isComplete}
         >
-          {isComplete ? "বুকিং নিশ্চিত করুন" : "তারিখ ও সময় বাছাই করুন"}
+          {isComplete ? t("booking.confirmBooking") : t("booking.selectDateTime")}
         </Button>
 
         {/* Info Note */}
         <div className="flex items-start gap-2 p-3 bg-accent rounded-xl">
           <Info className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
           <p className="text-xs text-muted-foreground">
-            পেমেন্ট সিস্টেম শীঘ্রই যোগ করা হবে।
+            {t("booking.paymentNote")}
           </p>
         </div>
       </div>
@@ -297,6 +300,7 @@ function BookingSummary({ selectedDate, selectedSlotData }: SummaryProps) {
 
 function BookingSummaryMobile({ selectedDate, selectedSlotData }: SummaryProps) {
   const isComplete = selectedDate && selectedSlotData;
+  const { t } = useLanguage();
 
   return (
     <div className="flex items-center gap-4">
@@ -306,14 +310,14 @@ function BookingSummaryMobile({ selectedDate, selectedSlotData }: SummaryProps) 
             <p className="text-sm font-medium text-foreground truncate">
               {format(selectedDate!, "dd MMM")} • {selectedSlotData?.label}
             </p>
-            <p className="text-xs text-muted-foreground">১ শিশু + ১ অভিভাবক</p>
+            <p className="text-xs text-muted-foreground">{t("booking.ticketType")}</p>
           </div>
         ) : (
-          <p className="text-sm text-muted-foreground">তারিখ ও সময় বাছাই করুন</p>
+          <p className="text-sm text-muted-foreground">{t("booking.selectDateTime")}</p>
         )}
       </div>
       <Button size="lg" disabled={!isComplete}>
-        {isComplete ? "বুক করুন" : "বাছাই করুন"}
+        {isComplete ? t("booking.book") : t("booking.select")}
       </Button>
     </div>
   );

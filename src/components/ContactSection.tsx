@@ -1,8 +1,11 @@
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollFadeIn, ScaleIn } from "./ScrollAnimations";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function ContactSection() {
+  const { t } = useLanguage();
+
   return (
     <section id="contact" className="py-24 bg-card">
       <div className="container mx-auto">
@@ -12,14 +15,13 @@ export function ContactSection() {
             <ScrollFadeIn>
               <div className="space-y-4">
                 <span className="text-sm font-semibold text-primary uppercase tracking-wider">
-                  Contact Us
+                  {t("contact.label")}
                 </span>
                 <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-                  Visit Baby World Today
+                  {t("contact.title")}
                 </h2>
                 <p className="text-lg text-muted-foreground">
-                  Have questions? We'd love to hear from you. Reach out via phone,
-                  email, or visit us in person.
+                  {t("contact.description")}
                 </p>
               </div>
             </ScrollFadeIn>
@@ -34,7 +36,7 @@ export function ContactSection() {
                     <Phone className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="font-semibold text-foreground">Phone</p>
+                    <p className="font-semibold text-foreground">{t("contact.phone")}</p>
                     <p className="text-muted-foreground group-hover:text-primary transition-colors">
                       09606990128
                     </p>
@@ -51,7 +53,7 @@ export function ContactSection() {
                     <Mail className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="font-semibold text-foreground">Email</p>
+                    <p className="font-semibold text-foreground">{t("contact.email")}</p>
                     <p className="text-muted-foreground group-hover:text-primary transition-colors">
                       babyworld.dm@gmail.com
                     </p>
@@ -65,11 +67,11 @@ export function ContactSection() {
                     <MapPin className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="font-semibold text-foreground">Address</p>
+                    <p className="font-semibold text-foreground">{t("contact.address")}</p>
                     <p className="text-muted-foreground">
-                      27/B, Jannat Tower (Lift #3),
+                      {t("contact.addressLine1")}
                       <br />
-                      Lalbagh, Dhaka 1211
+                      {t("contact.addressLine2")}
                     </p>
                   </div>
                 </div>
@@ -81,11 +83,11 @@ export function ContactSection() {
                     <Clock className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="font-semibold text-foreground">Operating Hours</p>
+                    <p className="font-semibold text-foreground">{t("contact.hours")}</p>
                     <p className="text-muted-foreground">
-                      Saturday - Thursday: 10:00 AM – 9:00 PM
+                      {t("contact.hoursLine1")}
                       <br />
-                      Friday: 3:00 PM – 9:00 PM
+                      {t("contact.hoursLine2")}
                     </p>
                   </div>
                 </div>
@@ -94,7 +96,7 @@ export function ContactSection() {
 
             <ScrollFadeIn delay={0.3}>
               <Button size="lg" className="mt-4">
-                Get Directions
+                {t("contact.getDirections")}
               </Button>
             </ScrollFadeIn>
           </div>
@@ -113,7 +115,7 @@ export function ContactSection() {
                   <p className="text-sm text-muted-foreground">Dhaka 1211</p>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Interactive map coming soon
+                  {t("contact.mapComingSoon")}
                 </p>
               </div>
             </div>

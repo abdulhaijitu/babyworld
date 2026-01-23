@@ -1,19 +1,22 @@
 import { useState, useEffect } from "react";
 import { Menu, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-const navLinks = [
-  { label: "Home", href: "#home" },
-  { label: "About", href: "#about" },
-  { label: "Play & Pricing", href: "#pricing" },
-  { label: "Book Now", href: "#booking" },
-  { label: "Birthday & Events", href: "#events" },
-  { label: "Contact", href: "#contact" },
-];
+import { LanguageToggle } from "./LanguageToggle";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { t } = useLanguage();
+
+  const navLinks = [
+    { label: t("nav.home"), href: "#home" },
+    { label: t("nav.about"), href: "#about" },
+    { label: t("nav.pricing"), href: "#pricing" },
+    { label: t("nav.booking"), href: "#booking" },
+    { label: t("nav.events"), href: "#events" },
+    { label: t("nav.contact"), href: "#contact" },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,7 +41,7 @@ export function Navbar() {
             <span className="text-xl font-bold text-foreground">
               Baby World
             </span>
-            <span className="text-xs text-muted-foreground">বেবি ওয়ার্ল্ড</span>
+            <span className="text-xs text-muted-foreground font-bangla">বেবি ওয়ার্ল্ড</span>
           </a>
 
           {/* Desktop Navigation */}
@@ -54,8 +57,9 @@ export function Navbar() {
             ))}
           </div>
 
-          {/* CTA Button */}
+          {/* CTA Button & Language Toggle */}
           <div className="hidden lg:flex items-center gap-4">
+            <LanguageToggle />
             <a
               href="tel:09606990128"
               className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
@@ -63,17 +67,20 @@ export function Navbar() {
               <Phone className="w-4 h-4" />
               09606990128
             </a>
-            <Button size="sm">Book Visit</Button>
+            <Button size="sm">{t("nav.bookVisit")}</Button>
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            className="lg:hidden p-2 text-foreground"
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label="Toggle menu"
-          >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          <div className="lg:hidden flex items-center gap-3">
+            <LanguageToggle />
+            <button
+              className="p-2 text-foreground"
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label="Toggle menu"
+            >
+              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}
@@ -92,7 +99,7 @@ export function Navbar() {
               ))}
               <div className="px-4 pt-4 border-t border-border">
                 <Button className="w-full" size="lg">
-                  Book Visit
+                  {t("nav.bookVisit")}
                 </Button>
               </div>
             </div>
