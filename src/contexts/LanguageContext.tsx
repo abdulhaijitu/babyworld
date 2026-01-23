@@ -282,6 +282,12 @@ const translations: Record<Language, Record<string, string>> = {
     "eventsFAQ.moreQuestions": "Have more questions?",
     "eventsFAQ.contactUs": "Contact us",
     
+    // Promo Banner
+    "promo.badge": "🎉 Winter Special!",
+    "promo.message": "Get 20% off on birthday party bookings this January",
+    "promo.validUntil": "Valid until Jan 31",
+    "promo.cta": "Book Now",
+    
     // Footer
     "footer.description": "A safe, hygienic, and joyful indoor playground for children aged 1–10 years. Where kids learn & play in a supervised, nurturing environment.",
     "footer.quickLinks": "Quick Links",
@@ -558,6 +564,12 @@ const translations: Record<Language, Record<string, string>> = {
     "eventsFAQ.a6": "বেসিক প্যাকেজে সাধারণ বেলুন ও ব্যানার থাকে। প্রিমিয়ামে থিম অনুযায়ী সাজসজ্জা ও ফটো ব্যাকড্রপ থাকে। গ্র্যান্ড প্যাকেজে প্রিমিয়াম সাজসজ্জা সহ সম্পূর্ণ কাস্টম থিম সেটআপ থাকে।",
     "eventsFAQ.moreQuestions": "আরও প্রশ্ন আছে?",
     "eventsFAQ.contactUs": "যোগাযোগ করুন",
+    
+    // Promo Banner
+    "promo.badge": "🎉 শীতকালীন অফার!",
+    "promo.message": "জানুয়ারিতে জন্মদিনের পার্টি বুকিংয়ে ২০% ছাড়",
+    "promo.validUntil": "৩১ জানুয়ারি পর্যন্ত",
+    "promo.cta": "এখনই বুক করুন",
     
     // Footer
     "footer.description": "১–১০ বছর বয়সী শিশুদের জন্য একটি নিরাপদ, পরিচ্ছন্ন এবং আনন্দদায়ক ইনডোর প্লেগ্রাউন্ড। যেখানে শিশুরা তত্ত্বাবধানে থাকা পরিবেশে শেখে ও খেলে।",
