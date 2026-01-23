@@ -2,6 +2,18 @@ import { Gift, Camera, Cake, Music } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollFadeIn, StaggerContainer, StaggerItem } from "./ScrollAnimations";
 
+import celebration1 from "@/assets/celebration-1.jpg";
+import celebration2 from "@/assets/celebration-2.jpg";
+import celebration3 from "@/assets/celebration-3.jpg";
+import celebration4 from "@/assets/celebration-4.jpg";
+
+const celebrationImages = [
+  { src: celebration1, alt: "বাচ্চাদের জন্মদিনের পার্টি উদযাপন" },
+  { src: celebration2, alt: "জন্মদিনের কেক ও মোমবাতি" },
+  { src: celebration3, alt: "উপহার ও পার্টি হ্যাট পরা বাচ্চারা" },
+  { src: celebration4, alt: "জন্মদিনের পার্টি টেবিল সাজানো" },
+];
+
 const packages = [
   {
     name: "Basic Celebration",
@@ -132,10 +144,14 @@ export function EventsSection() {
           </div>
 
           <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-4" staggerDelay={0.1}>
-            {[1, 2, 3, 4].map((i) => (
+            {celebrationImages.map((img, i) => (
               <StaggerItem key={i}>
-                <div className="aspect-square bg-muted rounded-2xl flex items-center justify-center hover:scale-105 transition-transform duration-300">
-                  <span className="text-4xl opacity-50">🎉</span>
+                <div className="aspect-square rounded-2xl overflow-hidden hover:scale-105 transition-transform duration-300 shadow-card">
+                  <img 
+                    src={img.src} 
+                    alt={img.alt}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               </StaggerItem>
             ))}
