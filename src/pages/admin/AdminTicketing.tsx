@@ -691,7 +691,16 @@ export default function AdminTicketing() {
                 timeSlot: selectedTicket.time_slot || '-',
                 ticketType: selectedTicket.ticket_type,
                 source: selectedTicket.source,
-                createdAt: selectedTicket.created_at
+                createdAt: selectedTicket.created_at,
+                // Price fields
+                entryPrice: selectedTicket.entry_price || undefined,
+                socksPrice: selectedTicket.socks_price || undefined,
+                addonsPrice: selectedTicket.addons_price || undefined,
+                discountApplied: selectedTicket.discount_applied || undefined,
+                totalPrice: selectedTicket.total_price || undefined,
+                guardianCount: selectedTicket.guardian_count || undefined,
+                childCount: selectedTicket.child_count || undefined,
+                socksCount: selectedTicket.socks_count || undefined,
               }}
               onClose={() => setPrintOpen(false)}
             />

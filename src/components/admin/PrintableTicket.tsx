@@ -29,6 +29,15 @@ interface TicketData {
   ticketType: string;
   source: string;
   createdAt: string;
+  // Price fields
+  entryPrice?: number;
+  socksPrice?: number;
+  addonsPrice?: number;
+  discountApplied?: number;
+  totalPrice?: number;
+  guardianCount?: number;
+  childCount?: number;
+  socksCount?: number;
 }
 
 interface PrintableTicketProps {
@@ -230,6 +239,60 @@ export function PrintableTicket({ ticket, onClose }: PrintableTicketProps) {
               <span className="font-medium">{getTicketTypeLabel(ticket.ticketType)}</span>
             </div>
           </div>
+
+          {/* Price Breakdown - only show if we have price info */}
+          {ticket.totalPrice !== undefined && ticket.totalPrice > 0 && (
+            <>
+              <Separator className="my-4" style={{ borderStyle: 'dashed' }} />
+              <div className="space-y-2 text-sm">
+                <p className="font-semibold text-center mb-2">
+                  {language === 'bn' ? 'মূল্য বিবরণ' : 'Price Details'}
+                </p>
+                
+                {ticket.guardianCount && ticket.childCount && (
+                  <div className="flex items-center justify-between text-muted-foreground">
+                    <span>{language === 'bn' ? 'অভিভাবক + শিশু' : 'Guardian + Child'}</span>
+                    <span>{ticket.guardianCount} + {ticket.childCount}</span>
+                  </div>
+                )}
+                
+                {ticket.entryPrice !== undefined && ticket.entryPrice > 0 && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">{language === 'bn' ? 'এন্ট্রি' : 'Entry'}</span>
+                    <span>৳{ticket.entryPrice}</span>
+                  </div>
+                )}
+                
+                {ticket.socksCount !== undefined && ticket.socksCount > 0 && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">{language === 'bn' ? 'মোজা' : 'Socks'} ({ticket.socksCount})</span>
+                    <span>৳{ticket.socksPrice || 0}</span>
+                  </div>
+                )}
+                
+                {ticket.addonsPrice !== undefined && ticket.addonsPrice > 0 && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">{language === 'bn' ? 'রাইড' : 'Rides'}</span>
+                    <span>৳{ticket.addonsPrice}</span>
+                  </div>
+                )}
+                
+                {ticket.discountApplied !== undefined && ticket.discountApplied > 0 && (
+                  <div className="flex items-center justify-between text-green-600">
+                    <span>{language === 'bn' ? 'মেম্বারশিপ ছাড়' : 'Member Discount'}</span>
+                    <span>-৳{ticket.discountApplied}</span>
+                  </div>
+                )}
+                
+                <Separator className="my-2" />
+                
+                <div className="flex items-center justify-between font-bold text-lg">
+                  <span>{language === 'bn' ? 'মোট' : 'Total'}</span>
+                  <span className="text-primary">৳{ticket.totalPrice}</span>
+                </div>
+              </div>
+            </>
+          )}
 
           <Separator className="my-4" style={{ borderStyle: 'dashed' }} />
 
