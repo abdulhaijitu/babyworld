@@ -2,6 +2,7 @@ import { Navbar } from "@/components/Navbar";
 import { PricingSection } from "@/components/PricingSection";
 import { BookingSection } from "@/components/BookingSection";
 import { TrustSection } from "@/components/TrustSection";
+import { PlayFAQ } from "@/components/PlayFAQ";
 import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
 import { SEOHead } from "@/components/SEOHead";
@@ -16,6 +17,7 @@ const PlayBooking = () => {
         <main>
           <PricingSection />
           <BookingSection />
+          <PlayFAQ />
           <TrustSection />
         </main>
         <Footer />
