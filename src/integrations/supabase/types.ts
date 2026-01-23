@@ -142,6 +142,48 @@ export type Database = {
         }
         Relationships: []
       }
+      expenses: {
+        Row: {
+          added_by: string | null
+          added_by_name: string | null
+          amount: number
+          category: Database["public"]["Enums"]["expense_category"]
+          created_at: string
+          description: string
+          expense_date: string
+          id: string
+          notes: string | null
+          payment_method: Database["public"]["Enums"]["expense_payment_method"]
+          updated_at: string
+        }
+        Insert: {
+          added_by?: string | null
+          added_by_name?: string | null
+          amount: number
+          category: Database["public"]["Enums"]["expense_category"]
+          created_at?: string
+          description: string
+          expense_date?: string
+          id?: string
+          notes?: string | null
+          payment_method?: Database["public"]["Enums"]["expense_payment_method"]
+          updated_at?: string
+        }
+        Update: {
+          added_by?: string | null
+          added_by_name?: string | null
+          amount?: number
+          category?: Database["public"]["Enums"]["expense_category"]
+          created_at?: string
+          description?: string
+          expense_date?: string
+          id?: string
+          notes?: string | null
+          payment_method?: Database["public"]["Enums"]["expense_payment_method"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       food_items: {
         Row: {
           category: Database["public"]["Enums"]["food_category"]
@@ -824,6 +866,16 @@ export type Database = {
       booking_type: "hourly_play" | "birthday_event" | "private_event"
       employee_role: "staff" | "supervisor" | "manager"
       employee_status: "active" | "inactive"
+      expense_category:
+        | "rent"
+        | "staff_salary"
+        | "utilities"
+        | "food_purchase"
+        | "toys_equipment"
+        | "maintenance"
+        | "marketing"
+        | "other"
+      expense_payment_method: "cash" | "bank" | "online"
       food_category: "snacks" | "drinks" | "meals"
       food_order_status: "pending" | "served" | "cancelled"
       food_payment_type: "cash" | "online" | "pending"
@@ -966,6 +1018,17 @@ export const Constants = {
       booking_type: ["hourly_play", "birthday_event", "private_event"],
       employee_role: ["staff", "supervisor", "manager"],
       employee_status: ["active", "inactive"],
+      expense_category: [
+        "rent",
+        "staff_salary",
+        "utilities",
+        "food_purchase",
+        "toys_equipment",
+        "maintenance",
+        "marketing",
+        "other",
+      ],
+      expense_payment_method: ["cash", "bank", "online"],
       food_category: ["snacks", "drinks", "meals"],
       food_order_status: ["pending", "served", "cancelled"],
       food_payment_type: ["cash", "online", "pending"],

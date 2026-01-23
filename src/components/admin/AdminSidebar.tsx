@@ -16,7 +16,9 @@ import {
   FileBarChart,
   Shield,
   Video,
-  Crown
+  Crown,
+  Receipt,
+  TrendingUp
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -40,11 +42,13 @@ const allMenuItems: MenuItem[] = [
   { id: 'memberships', label: 'Memberships', labelBn: 'মেম্বারশিপ', icon: Crown, path: '/admin/memberships', requiredRoles: ['admin', 'manager'] },
   { id: 'gate-logs', label: 'Gate Logs', labelBn: 'গেট লগ', icon: Video, path: '/admin/gate-logs', requiredRoles: ['admin', 'manager'] },
   { id: 'food', label: 'Food Sales', labelBn: 'খাবার বিক্রয়', icon: UtensilsCrossed, path: '/admin/food', requiredRoles: ['admin', 'manager', 'staff'] },
+  { id: 'expenses', label: 'Expenses', labelBn: 'খরচ', icon: Receipt, path: '/admin/expenses', requiredRoles: ['admin', 'manager'] },
   { id: 'employees', label: 'Employees', labelBn: 'কর্মী', icon: Users, path: '/admin/employees', requiredRoles: ['admin'] },
   { id: 'roster', label: 'Roster', labelBn: 'রোস্টার', icon: Clock, path: '/admin/roster', requiredRoles: ['admin', 'manager'] },
   { id: 'bookings', label: 'Bookings', labelBn: 'বুকিং', icon: CalendarDays, path: '/admin/bookings', requiredRoles: ['admin', 'manager', 'staff'] },
   { id: 'events', label: 'Events', labelBn: 'ইভেন্ট', icon: PartyPopper, path: '/admin/events', requiredRoles: ['admin', 'manager'] },
   { id: 'reports', label: 'Reports', labelBn: 'রিপোর্ট', icon: FileBarChart, path: '/admin/reports', requiredRoles: ['admin', 'manager'] },
+  { id: 'profit', label: 'Profit & Loss', labelBn: 'লাভ-ক্ষতি', icon: TrendingUp, path: '/admin/profit', requiredRoles: ['admin', 'manager'] },
   { id: 'users', label: 'Users', labelBn: 'ইউজার', icon: Shield, path: '/admin/users', requiredRoles: ['admin'] },
   { id: 'settings', label: 'Settings', labelBn: 'সেটিংস', icon: Settings, path: '/admin/settings', requiredRoles: ['admin'] },
 ];
