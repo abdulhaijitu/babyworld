@@ -3,38 +3,13 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Shield, Clock } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import celebration1 from "@/assets/celebration-1.jpg";
-import celebration2 from "@/assets/celebration-2.jpg";
-import celebration3 from "@/assets/celebration-3.jpg";
-import celebration4 from "@/assets/celebration-4.jpg";
+import playgroundKids from "@/assets/playground-kids.jpg";
+import mascotKids from "@/assets/mascot-kids.jpg";
+import carouselRides from "@/assets/carousel-rides.jpg";
+import arcadeGames from "@/assets/arcade-games.jpg";
 
 export function HeroSection() {
   const { t } = useLanguage();
-
-  // Floating animation variants
-  const floatAnimation = {
-    initial: { y: 0 },
-    animate: {
-      y: [-8, 8, -8],
-      transition: { duration: 4, repeat: Infinity, ease: "easeInOut" as const }
-    }
-  };
-
-  const floatDelayed = {
-    initial: { y: 0 },
-    animate: {
-      y: [6, -6, 6],
-      transition: { duration: 5, repeat: Infinity, ease: "easeInOut" as const, delay: 0.5 }
-    }
-  };
-
-  const bounceAnimation = {
-    initial: { scale: 1 },
-    animate: {
-      scale: [1, 1.1, 1],
-      transition: { duration: 2, repeat: Infinity, ease: "easeInOut" as const }
-    }
-  };
 
   return (
     <section
@@ -93,7 +68,8 @@ export function HeroSection() {
             >
               <motion.span 
                 className="text-lg"
-                {...bounceAnimation}
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
               >
                 ⭐
               </motion.span>
@@ -171,42 +147,43 @@ export function HeroSection() {
             transition={{ delay: 0.4, duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }}
           >
             <div className="relative w-full aspect-square max-w-lg mx-auto">
-              {/* Main large image */}
+              {/* Main large image - Kids at playground */}
               <motion.div 
                 className="absolute top-8 left-8 w-[70%] aspect-[4/5] rounded-3xl overflow-hidden shadow-card-hover border-4 border-card z-10"
-                {...floatAnimation}
+                animate={{ y: [-8, 8, -8] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               >
                 <img 
-                  src={celebration1} 
+                  src={playgroundKids} 
                   alt="Children playing at Baby World" 
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent" />
               </motion.div>
 
-              {/* Top right image */}
+              {/* Top right image - Kids with mascot */}
               <motion.div 
                 className="absolute -top-4 right-0 w-[45%] aspect-square rounded-2xl overflow-hidden shadow-card border-4 border-card z-20"
-                {...floatDelayed}
+                animate={{ y: [6, -6, 6] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
               >
                 <img 
-                  src={celebration2} 
-                  alt="Birthday celebration" 
+                  src={mascotKids} 
+                  alt="Kids with Mario mascot" 
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-transparent" />
               </motion.div>
 
-              {/* Bottom right image */}
+              {/* Bottom right image - Carousel */}
               <motion.div 
                 className="absolute bottom-4 right-4 w-[40%] aspect-[3/4] rounded-2xl overflow-hidden shadow-card border-4 border-card z-20"
-                initial={{ y: 0 }}
                 animate={{ y: [-5, 10, -5] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
               >
                 <img 
-                  src={celebration3} 
-                  alt="Kids enjoying activities" 
+                  src={carouselRides} 
+                  alt="Carousel and rides" 
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-tl from-info/10 to-transparent" />
@@ -232,7 +209,7 @@ export function HeroSection() {
                 }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
               >
-                <span className="text-2xl">🧸</span>
+                <span className="text-2xl">🎮</span>
               </motion.div>
 
               <motion.div 
@@ -243,7 +220,7 @@ export function HeroSection() {
                 }}
                 transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
               >
-                <span className="text-xl">🎨</span>
+                <span className="text-xl">🎠</span>
               </motion.div>
 
               <motion.div 
@@ -257,7 +234,7 @@ export function HeroSection() {
                 <span className="text-2xl">🎪</span>
               </motion.div>
 
-              {/* Small decorative image */}
+              {/* Small decorative image - Arcade */}
               <motion.div 
                 className="absolute bottom-0 left-0 w-20 h-20 rounded-xl overflow-hidden shadow-card border-2 border-card z-20"
                 animate={{ 
@@ -267,8 +244,8 @@ export function HeroSection() {
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
               >
                 <img 
-                  src={celebration4} 
-                  alt="Happy kids" 
+                  src={arcadeGames} 
+                  alt="Arcade games" 
                   className="w-full h-full object-cover"
                 />
               </motion.div>

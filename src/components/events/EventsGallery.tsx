@@ -4,10 +4,15 @@ import { ScrollFadeIn, StaggerContainer, StaggerItem } from "@/components/Scroll
 import { ImageLightbox, GalleryItem } from "@/components/ImageLightbox";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-import celebration1 from "@/assets/celebration-1.jpg";
-import celebration2 from "@/assets/celebration-2.jpg";
-import celebration3 from "@/assets/celebration-3.jpg";
-import celebration4 from "@/assets/celebration-4.jpg";
+import playgroundKids from "@/assets/playground-kids.jpg";
+import mascotKids from "@/assets/mascot-kids.jpg";
+import carouselRides from "@/assets/carousel-rides.jpg";
+import arcadeGames from "@/assets/arcade-games.jpg";
+import clawMachine from "@/assets/claw-machine.jpg";
+import mascotClaw from "@/assets/mascot-claw.jpg";
+import newYearEvent from "@/assets/new-year-event.jpg";
+import tomMascot from "@/assets/tom-mascot.jpg";
+import birthdayParty from "@/assets/birthday-party.jpg";
 
 export function EventsGallery() {
   const { t, language } = useLanguage();
@@ -16,20 +21,40 @@ export function EventsGallery() {
 
   const galleryImages = [
     { 
-      src: celebration1, 
-      alt: language === "bn" ? "বাচ্চাদের জন্মদিনের পার্টি উদযাপন" : "Birthday party celebration" 
+      src: playgroundKids, 
+      alt: language === "bn" ? "বাচ্চারা ক্রাফট কার্যক্রমে ব্যস্ত" : "Kids enjoying craft activities" 
     },
     { 
-      src: celebration2, 
-      alt: language === "bn" ? "জন্মদিনের কেক ও মোমবাতি" : "Birthday cake with candles" 
+      src: mascotKids, 
+      alt: language === "bn" ? "মারিও মাসকটের সাথে বাচ্চারা" : "Kids with Mario mascot" 
     },
     { 
-      src: celebration3, 
-      alt: language === "bn" ? "উপহার ও পার্টি হ্যাট পরা বাচ্চারা" : "Children with gifts and party hats" 
+      src: carouselRides, 
+      alt: language === "bn" ? "ক্যারোসেল ও রাইডস জোন" : "Carousel and rides zone" 
     },
     { 
-      src: celebration4, 
-      alt: language === "bn" ? "জন্মদিনের পার্টি টেবিল সাজানো" : "Birthday party table setup" 
+      src: arcadeGames, 
+      alt: language === "bn" ? "আর্কেড গেমস জোন" : "Arcade games zone" 
+    },
+    { 
+      src: clawMachine, 
+      alt: language === "bn" ? "ক্ল মেশিন গেম" : "Claw machine game" 
+    },
+    { 
+      src: mascotClaw, 
+      alt: language === "bn" ? "মাসকট লাকি গিফট দেখাচ্ছে" : "Mascot showing lucky gift" 
+    },
+    { 
+      src: newYearEvent, 
+      alt: language === "bn" ? "নববর্ষ ২০২৬ উদযাপন" : "New Year 2026 celebration" 
+    },
+    { 
+      src: tomMascot, 
+      alt: language === "bn" ? "টম মাসকটের সাথে ছোট্ট অতিথি" : "Little guest with Tom mascot" 
+    },
+    { 
+      src: birthdayParty, 
+      alt: language === "bn" ? "জন্মদিনের পার্টি উদযাপন" : "Birthday party celebration" 
     },
   ];
 
@@ -57,8 +82,8 @@ export function EventsGallery() {
           </p>
         </ScrollFadeIn>
 
-        {/* Gallery Grid */}
-        <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-4" staggerDelay={0.1}>
+        {/* Gallery Grid - 3 columns on desktop */}
+        <StaggerContainer className="grid grid-cols-2 md:grid-cols-3 gap-4" staggerDelay={0.08}>
           {galleryImages.map((img, i) => (
             <StaggerItem key={i}>
               <GalleryItem
