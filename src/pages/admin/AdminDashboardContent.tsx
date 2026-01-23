@@ -66,6 +66,7 @@ import { useState, useCallback } from 'react';
 import { TableRowSkeleton } from '@/components/admin/AdminSkeleton';
 import { QuickActions } from '@/components/admin/QuickActions';
 import { ActivityLogCard } from '@/components/admin/ActivityLogCard';
+import { VisitorCounter } from '@/components/admin/VisitorCounter';
 
 const PRICE_PER_TICKET = 300;
 
@@ -288,9 +289,10 @@ export default function AdminDashboardContent() {
         </Card>
       </div>
 
-      {/* Quick Actions and Activity Log */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Quick Actions, Visitor Counter and Activity Log */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <QuickActions />
+        <VisitorCounter />
         <div className="lg:col-span-2">
           <ActivityLogCard />
         </div>
