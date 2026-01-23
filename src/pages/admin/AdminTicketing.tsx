@@ -76,6 +76,16 @@ interface TicketType {
   used_at: string | null;
   inside_venue: boolean;
   created_at: string;
+  // Price fields
+  entry_price?: number | null;
+  socks_price?: number | null;
+  addons_price?: number | null;
+  discount_applied?: number | null;
+  total_price?: number | null;
+  guardian_count?: number | null;
+  child_count?: number | null;
+  socks_count?: number | null;
+  membership_id?: string | null;
 }
 
 export default function AdminTicketing() {
@@ -520,7 +530,8 @@ export default function AdminTicketing() {
                     <TableHead>{language === 'bn' ? 'টিকেট নং' : 'Ticket #'}</TableHead>
                     <TableHead>{language === 'bn' ? 'অভিভাবক' : 'Guardian'}</TableHead>
                     <TableHead>{language === 'bn' ? 'তারিখ' : 'Date'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'সময়' : 'Time'}</TableHead>
+                    <TableHead>{language === 'bn' ? 'মূল্য' : 'Price'}</TableHead>
+                    <TableHead>{language === 'bn' ? 'ডিসকাউন্ট' : 'Discount'}</TableHead>
                     <TableHead>{language === 'bn' ? 'উৎস' : 'Source'}</TableHead>
                     <TableHead>{language === 'bn' ? 'অবস্থান' : 'Location'}</TableHead>
                     <TableHead>{language === 'bn' ? 'স্ট্যাটাস' : 'Status'}</TableHead>
@@ -540,7 +551,23 @@ export default function AdminTicketing() {
                           locale: language === 'bn' ? bn : undefined 
                         })}
                       </TableCell>
-                      <TableCell className="text-sm">{ticket.time_slot || '-'}</TableCell>
+                      <TableCell>
+                        <div className="font-medium">৳{ticket.total_price || 0}</div>
+                        {ticket.entry_price && ticket.entry_price > 0 && (
+                          <div className="text-xs text-muted-foreground">
+                            এন্ট্রি: ৳{ticket.entry_price}
+                          </div>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {ticket.discount_applied && ticket.discount_applied > 0 ? (
+                          <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                            -৳{ticket.discount_applied}
+                          </Badge>
+                        ) : (
+                          <span className="text-muted-foreground text-sm">-</span>
+                        )}
+                      </TableCell>
                       <TableCell>
                         <Badge variant="outline" className="capitalize">{ticket.source}</Badge>
                       </TableCell>
