@@ -1,30 +1,25 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { User, Session } from '@supabase/supabase-js';
 
 interface AuthState {
   user: User | null;
   session: Session | null;
-  loading: boolean;
   isAdmin: boolean;
-  error: string | null;
+  initialized: boolean;
 }
 
 const INITIAL_STATE: AuthState = {
   user: null,
   session: null,
-  loading: true,
   isAdmin: false,
-  error: null
+  initialized: false
 };
-
-// Timeout for auth operations (10 seconds)
-const AUTH_TIMEOUT = 10000;
 
 export function useAuth() {
   const [state, setState] = useState<AuthState>(INITIAL_STATE);
   const mountedRef = useRef(true);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const initializingRef = useRef(false);
 
   // Safe state update that checks if component is still mounted
   const safeSetState = useCallback((updates: Partial<AuthState>) => {
@@ -33,7 +28,7 @@ export function useAuth() {
     }
   }, []);
 
-  // Check admin role with error handling
+  // Check admin role with error handling - memoized to prevent recreation
   const checkAdminRole = useCallback(async (userId: string): Promise<boolean> => {
     try {
       const { data: roles, error } = await supabase
@@ -54,53 +49,50 @@ export function useAuth() {
   }, []);
 
   useEffect(() => {
+    // Prevent double initialization
+    if (initializingRef.current) return;
+    initializingRef.current = true;
     mountedRef.current = true;
 
-    // Set a timeout to prevent infinite loading
-    timeoutRef.current = setTimeout(() => {
-      if (mountedRef.current && state.loading) {
-        console.warn('[Auth] Auth check timed out');
-        safeSetState({ 
-          loading: false, 
-          error: 'Authentication timed out. Please refresh the page.' 
-        });
-      }
-    }, AUTH_TIMEOUT);
-
-    // Set up auth state change listener
+    // Set up auth state change listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('[Auth] State change:', event);
         
+        if (!mountedRef.current) return;
+
         if (session?.user) {
-          const isAdmin = await checkAdminRole(session.user.id);
-          safeSetState({
-            session,
-            user: session.user,
-            isAdmin,
-            loading: false,
-            error: null
-          });
+          // Use setTimeout to avoid blocking the auth state update
+          // This prevents race conditions with Supabase's internal state
+          setTimeout(async () => {
+            if (!mountedRef.current) return;
+            const isAdmin = await checkAdminRole(session.user.id);
+            safeSetState({
+              session,
+              user: session.user,
+              isAdmin,
+              initialized: true
+            });
+          }, 0);
         } else {
           safeSetState({
             session: null,
             user: null,
             isAdmin: false,
-            loading: false,
-            error: null
+            initialized: true
           });
         }
       }
     );
 
-    // Get initial session
+    // Then get initial session (non-blocking)
     const initializeAuth = async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
           console.error('[Auth] Error getting session:', error.message);
-          safeSetState({ loading: false, error: error.message });
+          safeSetState({ initialized: true });
           return;
         }
 
@@ -110,18 +102,14 @@ export function useAuth() {
             session,
             user: session.user,
             isAdmin,
-            loading: false,
-            error: null
+            initialized: true
           });
         } else {
-          safeSetState({ loading: false });
+          safeSetState({ initialized: true });
         }
       } catch (err) {
         console.error('[Auth] Failed to initialize:', err);
-        safeSetState({ 
-          loading: false, 
-          error: 'Failed to initialize authentication' 
-        });
+        safeSetState({ initialized: true });
       }
     };
 
@@ -129,25 +117,34 @@ export function useAuth() {
 
     return () => {
       mountedRef.current = false;
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
       subscription.unsubscribe();
     };
   }, [checkAdminRole, safeSetState]);
 
   const signIn = useCallback(async (email: string, password: string) => {
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
       });
+      
+      if (!error && data.session) {
+        // Immediately update local state for faster UX
+        const isAdmin = await checkAdminRole(data.session.user.id);
+        safeSetState({
+          session: data.session,
+          user: data.session.user,
+          isAdmin,
+          initialized: true
+        });
+      }
+      
       return { error };
     } catch (err) {
       console.error('[Auth] Sign in error:', err);
-      return { error: { message: 'Sign in failed' } as any };
+      return { error: { message: 'Sign in failed. Please try again.' } as any };
     }
-  }, []);
+  }, [checkAdminRole, safeSetState]);
 
   const signUp = useCallback(async (email: string, password: string) => {
     try {
@@ -161,24 +158,39 @@ export function useAuth() {
       return { error };
     } catch (err) {
       console.error('[Auth] Sign up error:', err);
-      return { error: { message: 'Sign up failed' } as any };
+      return { error: { message: 'Sign up failed. Please try again.' } as any };
     }
   }, []);
 
   const signOut = useCallback(async () => {
     try {
       const { error } = await supabase.auth.signOut();
+      if (!error) {
+        // Immediately clear local state
+        safeSetState({
+          session: null,
+          user: null,
+          isAdmin: false
+        });
+      }
       return { error };
     } catch (err) {
       console.error('[Auth] Sign out error:', err);
       return { error: { message: 'Sign out failed' } as any };
     }
-  }, []);
+  }, [safeSetState]);
 
-  return {
-    ...state,
+  // Compute loading state - only true during initial load
+  const loading = !state.initialized;
+
+  return useMemo(() => ({
+    user: state.user,
+    session: state.session,
+    loading,
+    isAdmin: state.isAdmin,
+    initialized: state.initialized,
     signIn,
     signUp,
     signOut
-  };
+  }), [state.user, state.session, loading, state.isAdmin, state.initialized, signIn, signUp, signOut]);
 }
