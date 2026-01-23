@@ -39,10 +39,10 @@ export function EventsFAQ() {
   ];
 
   return (
-    <section className="py-24 bg-background">
-      <div className="container mx-auto">
+    <section className="py-16 sm:py-20 lg:py-24 bg-background overflow-hidden">
+      <div className="container mx-auto px-4 sm:px-6">
         {/* Header */}
-        <ScrollFadeIn className="text-center max-w-2xl mx-auto mb-12 space-y-4">
+        <ScrollFadeIn className="text-center max-w-2xl mx-auto mb-8 sm:mb-10 lg:mb-12 space-y-3 sm:space-y-4">
           <div className="flex items-center justify-center gap-3 mb-4">
             <HelpCircle className="w-5 h-5 text-primary" />
             <span className="text-sm font-semibold text-primary uppercase tracking-wider">
@@ -59,17 +59,17 @@ export function EventsFAQ() {
 
         {/* FAQ Accordion */}
         <ScrollFadeIn delay={0.2} className="max-w-3xl mx-auto">
-          <Accordion type="single" collapsible className="space-y-4">
+          <Accordion type="single" collapsible className="space-y-3 sm:space-y-4">
             {faqItems.map((item, index) => (
               <AccordionItem
                 key={index}
                 value={`item-${index}`}
-                className="bg-card rounded-2xl px-6 shadow-card border-none"
+                className="bg-card rounded-xl sm:rounded-2xl px-4 sm:px-6 shadow-card border-none"
               >
-                <AccordionTrigger className="text-left text-foreground font-medium hover:no-underline py-5">
+                <AccordionTrigger className="text-left text-sm sm:text-base text-foreground font-medium hover:no-underline py-4 sm:py-5">
                   {item.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground pb-5 leading-relaxed">
+                <AccordionContent className="text-sm text-muted-foreground pb-4 sm:pb-5 leading-relaxed">
                   {item.answer}
                 </AccordionContent>
               </AccordionItem>
@@ -78,8 +78,8 @@ export function EventsFAQ() {
         </ScrollFadeIn>
 
         {/* Contact Note */}
-        <ScrollFadeIn delay={0.3} className="text-center mt-10">
-          <p className="text-sm text-muted-foreground">
+        <ScrollFadeIn delay={0.3} className="text-center mt-8 sm:mt-10">
+          <p className="text-xs sm:text-sm text-muted-foreground">
             {t("eventsFAQ.moreQuestions")}{" "}
             <a href="/contact" className="text-primary hover:underline font-medium">
               {t("eventsFAQ.contactUs")}

@@ -8,9 +8,9 @@ export function ContactSection() {
   const { t } = useLanguage();
 
   return (
-    <section id="contact" className="py-24 bg-card">
-      <div className="container mx-auto">
-        <div className="grid lg:grid-cols-2 gap-16">
+    <section id="contact" className="py-16 sm:py-20 lg:py-24 bg-card overflow-hidden">
+      <div className="container mx-auto px-4 sm:px-6">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16">
           {/* Contact Info */}
           <div className="space-y-8">
             <ScrollFadeIn>

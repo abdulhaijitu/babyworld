@@ -9,6 +9,7 @@ import { EventsGallery } from "@/components/events/EventsGallery";
 import { EventsFAQ } from "@/components/events/EventsFAQ";
 import { EventsTrust } from "@/components/events/EventsTrust";
 import { SEOHead } from "@/components/SEOHead";
+import { MobileBottomNav } from "@/components/MobileBottomNav";
 
 const BirthdayEvents = () => {
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
@@ -30,7 +31,7 @@ const BirthdayEvents = () => {
   return (
     <PageTransition>
       <SEOHead page="birthday-events" />
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background overflow-x-hidden">
         <Navbar />
         <main>
           <EventsHero 
@@ -54,6 +55,9 @@ const BirthdayEvents = () => {
           <EventsTrust />
         </main>
         <Footer />
+        {/* Extra spacing for bottom nav - events has its own sticky panel */}
+        <div className="lg:hidden h-4" />
+        <MobileBottomNav />
       </div>
     </PageTransition>
   );

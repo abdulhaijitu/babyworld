@@ -15,9 +15,9 @@ export function Footer() {
   ];
 
   return (
-    <footer className="bg-foreground text-background py-16">
-      <div className="container mx-auto">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
+    <footer className="bg-foreground text-background py-12 sm:py-16">
+      <div className="container mx-auto px-4 sm:px-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12">
           {/* Brand */}
           <div className="lg:col-span-2 space-y-4">
             <Link to="/" className="inline-block">
@@ -91,12 +91,12 @@ export function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="mt-12 pt-8 border-t border-background/10">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-sm opacity-60">
+        <div className="mt-10 sm:mt-12 pt-6 sm:pt-8 border-t border-background/10">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-center sm:text-left">
+            <p className="text-xs sm:text-sm opacity-60">
               © {new Date().getFullYear()} Baby World (<span className="font-bangla">বেবি ওয়ার্ল্ড</span>). {t("footer.rights")}
             </p>
-            <p className="text-sm opacity-60">{t("footer.ageRange")} • {t("hero.learnPlay")}</p>
+            <p className="text-xs sm:text-sm opacity-60">{t("footer.ageRange")} • {t("hero.learnPlay")}</p>
           </div>
         </div>
       </div>

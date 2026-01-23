@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Phone } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { LanguageToggle } from "./LanguageToggle";
 import { ThemeToggle } from "./ThemeToggle";
@@ -38,10 +39,10 @@ export function Navbar() {
   return (
     <nav
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out",
         isScrolled
-          ? "bg-card/95 backdrop-blur-md shadow-card"
-          : "bg-transparent"
+          ? "bg-card/98 backdrop-blur-md shadow-card border-b border-border/50"
+          : "bg-background/80 backdrop-blur-sm"
       )}
     >
       <div className="container mx-auto">
@@ -103,31 +104,39 @@ export function Navbar() {
         </div>
 
         {/* Mobile Navigation */}
-        {isOpen && (
-          <div className="lg:hidden bg-card border-t border-border animate-fade-in">
-            <div className="py-4 space-y-2">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  className={cn(
-                    "block px-4 py-3 text-sm font-medium rounded-lg transition-colors",
-                    location.pathname === link.href
-                      ? "text-primary bg-primary/5"
-                      : "text-foreground hover:bg-accent"
-                  )}
-                >
-                  {link.label}
-                </Link>
-              ))}
-              <div className="px-4 pt-4 border-t border-border">
-                <Button className="w-full" size="lg" asChild>
-                  <Link to="/play-booking">{t("nav.bookVisit")}</Link>
-                </Button>
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="lg:hidden bg-card border-t border-border overflow-hidden"
+            >
+              <div className="py-4 space-y-2">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    className={cn(
+                      "block px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200",
+                      location.pathname === link.href
+                        ? "text-primary bg-primary/5"
+                        : "text-foreground hover:bg-accent active:bg-accent/80"
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+                <div className="px-4 pt-4 border-t border-border">
+                  <Button className="w-full touch-target" size="lg" asChild>
+                    <Link to="/play-booking">{t("nav.bookVisit")}</Link>
+                  </Button>
+                </div>
               </div>
-            </div>
-          </div>
-        )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </nav>
   );

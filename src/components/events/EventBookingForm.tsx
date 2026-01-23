@@ -411,11 +411,11 @@ export function EventBookingForm({ selectedPackage, onSelectPackage }: EventBook
           </div>
         </div>
 
-        {/* Mobile Sticky CTA */}
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 p-4 bg-background/95 backdrop-blur-md border-t border-border">
-          <div className="flex items-center gap-4">
+        {/* Mobile Sticky CTA - positioned above bottom nav */}
+        <div className="lg:hidden fixed bottom-20 left-0 right-0 z-30 p-4 bg-card/98 backdrop-blur-lg border-t border-border shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.1)]">
+          <div className="flex items-center gap-3">
             {currentStep > 1 && (
-              <Button variant="outline" onClick={handleBack} className="px-4">
+              <Button variant="outline" onClick={handleBack} className="px-4 touch-target">
                 <ArrowLeft className="w-4 h-4" />
               </Button>
             )}
@@ -423,7 +423,7 @@ export function EventBookingForm({ selectedPackage, onSelectPackage }: EventBook
               <Button
                 onClick={handleNext}
                 disabled={!canProceed()}
-                className="flex-1"
+                className="flex-1 touch-target"
               >
                 {t("eventsPage.booking.next")}
               </Button>
@@ -431,14 +431,14 @@ export function EventBookingForm({ selectedPackage, onSelectPackage }: EventBook
               <Button
                 onClick={handleSubmit}
                 disabled={!canProceed()}
-                className="flex-1"
+                className="flex-1 touch-target"
               >
                 {t("eventsPage.booking.submit")}
               </Button>
             )}
           </div>
         </div>
-        <div className="lg:hidden h-20" />
+        <div className="lg:hidden h-36" />
       </div>
     </section>
   );

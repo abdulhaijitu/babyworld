@@ -8,12 +8,13 @@ import { PageTransition } from "@/components/PageTransition";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { SEOHead } from "@/components/SEOHead";
 import { PromoBanner } from "@/components/PromoBanner";
+import { MobileBottomNav } from "@/components/MobileBottomNav";
 
 const Index = () => {
   return (
     <PageTransition>
       <SEOHead page="home" />
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background overflow-x-hidden">
         <PromoBanner />
         <Navbar />
         <main>
@@ -23,7 +24,10 @@ const Index = () => {
           <TrustSection />
         </main>
         <Footer />
+        {/* Add safe spacing for mobile bottom nav */}
+        <div className="lg:hidden h-20" />
         <WhatsAppButton variant="floating" />
+        <MobileBottomNav />
       </div>
     </PageTransition>
   );

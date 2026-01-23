@@ -27,26 +27,26 @@ export function PromoBanner() {
           <Sparkles className="absolute bottom-2 right-[15%] w-3 h-3 text-white/20 animate-pulse" />
         </div>
 
-        <div className="container mx-auto py-3 px-4">
-          <div className="flex items-center justify-between gap-4">
+        <div className="container mx-auto py-2.5 sm:py-3 px-4">
+          <div className="flex items-center justify-between gap-3 sm:gap-4">
             {/* Main content */}
-            <div className="flex items-center gap-3 flex-wrap justify-center flex-1">
-              <div className="flex items-center gap-2">
-                <Gift className="w-5 h-5 text-white/90 flex-shrink-0" />
-                <span className="font-bold text-sm md:text-base">
+            <div className="flex items-center gap-2 sm:gap-3 flex-wrap justify-center flex-1 min-w-0">
+              <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+                <Gift className="w-4 h-4 sm:w-5 sm:h-5 text-white/90 flex-shrink-0" />
+                <span className="font-bold text-xs sm:text-sm md:text-base whitespace-nowrap">
                   {t("promo.badge")}
                 </span>
               </div>
               
               <span className="hidden sm:inline text-white/60">|</span>
               
-              <p className="text-sm md:text-base text-white/90">
+              <p className="text-xs sm:text-sm md:text-base text-white/90 truncate">
                 {t("promo.message")}
               </p>
 
-              <div className="flex items-center gap-2 text-xs md:text-sm bg-white/20 px-3 py-1 rounded-full">
-                <Calendar className="w-3.5 h-3.5" />
-                <span>{t("promo.validUntil")}</span>
+              <div className="hidden sm:flex items-center gap-1.5 sm:gap-2 text-xs md:text-sm bg-white/20 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full flex-shrink-0">
+                <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                <span className="whitespace-nowrap">{t("promo.validUntil")}</span>
               </div>
             </div>
 
