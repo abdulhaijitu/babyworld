@@ -6,6 +6,7 @@ import { LanguageToggle } from "./LanguageToggle";
 import { WhatsAppButton } from "./WhatsAppButton";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
+import babyWorldLogo from "@/assets/baby-world-logo.png";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -45,11 +46,12 @@ export function Navbar() {
       <div className="container mx-auto">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link to="/" className="flex flex-col">
-            <span className="text-xl font-bold text-foreground">
-              Baby World
-            </span>
-            <span className="text-xs text-muted-foreground font-bangla">বেবি ওয়ার্ল্ড</span>
+          <Link to="/" className="flex items-center">
+            <img 
+              src={babyWorldLogo} 
+              alt="Baby World Indoor Playground logo"
+              className="h-12 md:h-14 w-auto object-contain"
+            />
           </Link>
 
           {/* Desktop Navigation */}

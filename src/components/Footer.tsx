@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { WhatsAppButton } from "./WhatsAppButton";
+import babyWorldLogo from "@/assets/baby-world-logo.png";
 
 export function Footer() {
   const { t } = useLanguage();
@@ -19,9 +20,17 @@ export function Footer() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
           <div className="lg:col-span-2 space-y-4">
-            <div>
-              <h3 className="text-2xl font-bold">Baby World</h3>
-              <p className="text-lg opacity-80 font-bangla">বেবি ওয়ার্ল্ড</p>
+            <Link to="/" className="inline-block">
+              <img 
+                src={babyWorldLogo} 
+                alt="Baby World Indoor Playground logo"
+                className="h-16 w-auto object-contain brightness-0 invert opacity-90 hover:opacity-100 transition-opacity"
+              />
+            </Link>
+            <div className="flex items-center gap-2 text-sm opacity-80">
+              <span className="font-semibold">Baby World</span>
+              <span>•</span>
+              <span className="font-bangla">বেবি ওয়ার্ল্ড</span>
             </div>
             <p className="text-sm opacity-70 max-w-md">
               {t("footer.description")}
