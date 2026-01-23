@@ -531,6 +531,7 @@ export type Database = {
       }
       rides: {
         Row: {
+          category: Database["public"]["Enums"]["ride_category"]
           created_at: string
           id: string
           is_active: boolean
@@ -540,6 +541,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          category?: Database["public"]["Enums"]["ride_category"]
           created_at?: string
           id?: string
           is_active?: boolean
@@ -549,6 +551,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          category?: Database["public"]["Enums"]["ride_category"]
           created_at?: string
           id?: string
           is_active?: boolean
@@ -882,6 +885,7 @@ export type Database = {
       gate_entry_type: "entry" | "exit"
       membership_status: "active" | "expired" | "cancelled"
       membership_type: "monthly" | "quarterly" | "yearly"
+      ride_category: "kids" | "family" | "thrill"
       slot_status: "available" | "booked"
       ticket_source: "online" | "physical"
       ticket_status: "active" | "used" | "cancelled"
@@ -1035,6 +1039,7 @@ export const Constants = {
       gate_entry_type: ["entry", "exit"],
       membership_status: ["active", "expired", "cancelled"],
       membership_type: ["monthly", "quarterly", "yearly"],
+      ride_category: ["kids", "family", "thrill"],
       slot_status: ["available", "booked"],
       ticket_source: ["online", "physical"],
       ticket_status: ["active", "used", "cancelled"],

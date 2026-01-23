@@ -33,13 +33,22 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
+type RideCategory = 'kids' | 'family' | 'thrill';
+
 interface Ride {
   id: string;
   name: string;
   name_bn: string | null;
   price: number;
   is_active: boolean;
+  category: RideCategory;
 }
+
+const CATEGORY_INFO: Record<RideCategory, { label: string; label_bn: string; color: string }> = {
+  kids: { label: 'Kids', label_bn: 'কিডস', color: 'bg-green-500/10 text-green-600 border-green-200' },
+  family: { label: 'Family', label_bn: 'ফ্যামিলি', color: 'bg-blue-500/10 text-blue-600 border-blue-200' },
+  thrill: { label: 'Thrill', label_bn: 'থ্রিল', color: 'bg-orange-500/10 text-orange-600 border-orange-200' }
+};
 
 interface MembershipInfo {
   id: string;
@@ -503,44 +512,62 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {rides.map((ride) => {
-                      const isSelected = selectedRides[ride.id] > 0;
-                        return (
-                          <div
-                            key={ride.id}
-                            className={cn(
-                              'p-3 rounded-lg border cursor-pointer transition-all',
-                              isSelected ? 'border-primary bg-primary/5' : 'hover:border-primary/50'
-                            )}
-                            onClick={() => toggleRide(ride.id)}
-                          >
-                            <div className="flex items-center justify-between mb-2">
-                              <Checkbox 
-                                checked={isSelected} 
-                                onCheckedChange={() => toggleRide(ride.id)}
-                                onClick={(e) => e.stopPropagation()}
-                              />
-                              <Badge variant="secondary">৳{ride.price}</Badge>
-                            </div>
-                            <p className="font-medium text-sm">
-                              {language === 'bn' ? ride.name_bn || ride.name : ride.name}
-                            </p>
-                            {isSelected && (
-                              <div className="mt-2" onClick={(e) => e.stopPropagation()}>
-                                <CounterButton
-                                  value={selectedRides[ride.id] || 1}
-                                  onIncrement={() => updateRideQuantity(ride.id, 1)}
-                                  onDecrement={() => updateRideQuantity(ride.id, -1)}
-                                  min={1}
-                                />
+                <CardContent className="space-y-4">
+                  {(['kids', 'family', 'thrill'] as RideCategory[]).map((category) => {
+                    const categoryRides = rides.filter(r => r.category === category);
+                    if (categoryRides.length === 0) return null;
+                    const catInfo = CATEGORY_INFO[category];
+                    
+                    return (
+                      <div key={category}>
+                        <div className="flex items-center gap-2 mb-2">
+                          <Badge variant="outline" className={cn("text-xs", catInfo.color)}>
+                            {language === 'bn' ? catInfo.label_bn : catInfo.label}
+                          </Badge>
+                          <span className="text-xs text-muted-foreground">
+                            ({categoryRides.length} {language === 'bn' ? 'টি রাইড' : 'rides'})
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                          {categoryRides.map((ride) => {
+                            const isSelected = selectedRides[ride.id] > 0;
+                            return (
+                              <div
+                                key={ride.id}
+                                className={cn(
+                                  'p-3 rounded-lg border cursor-pointer transition-all',
+                                  isSelected ? 'border-primary bg-primary/5' : 'hover:border-primary/50'
+                                )}
+                                onClick={() => toggleRide(ride.id)}
+                              >
+                                <div className="flex items-center justify-between mb-2">
+                                  <Checkbox 
+                                    checked={isSelected} 
+                                    onCheckedChange={() => toggleRide(ride.id)}
+                                    onClick={(e) => e.stopPropagation()}
+                                  />
+                                  <Badge variant="secondary">৳{ride.price}</Badge>
+                                </div>
+                                <p className="font-medium text-sm">
+                                  {language === 'bn' ? ride.name_bn || ride.name : ride.name}
+                                </p>
+                                {isSelected && (
+                                  <div className="mt-2" onClick={(e) => e.stopPropagation()}>
+                                    <CounterButton
+                                      value={selectedRides[ride.id] || 1}
+                                      onIncrement={() => updateRideQuantity(ride.id, 1)}
+                                      onDecrement={() => updateRideQuantity(ride.id, -1)}
+                                      min={1}
+                                    />
+                                  </div>
+                                )}
                               </div>
-                            )}
-                          </div>
-                        );
-                    })}
-                  </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </CardContent>
               </Card>
             )}

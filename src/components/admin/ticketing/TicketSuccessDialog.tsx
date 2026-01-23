@@ -35,15 +35,18 @@ interface TicketSuccessDialogProps {
       membership_applied: boolean;
       total: number;
     };
-    rides?: Array<{ ride_id: string; quantity: number; total_price: number }>;
+    rides?: Array<{ ride_id: string; quantity: number; total_price: number; unit_price: number }>;
   } | null;
+  rideNames?: Record<string, string>;
 }
 
-export function TicketSuccessDialog({ open, onClose, ticket }: TicketSuccessDialogProps) {
+export function TicketSuccessDialog({ open, onClose, ticket, rideNames = {} }: TicketSuccessDialogProps) {
   const { language } = useLanguage();
   const printRef = useRef<HTMLDivElement>(null);
 
   if (!ticket) return null;
+  
+  const hasRides = ticket.rides && ticket.rides.length > 0;
 
   const handlePrint = () => {
     const printContent = printRef.current;
@@ -182,6 +185,26 @@ export function TicketSuccessDialog({ open, onClose, ticket }: TicketSuccessDial
               </div>
             )}
           </div>
+
+          {/* Rides Section */}
+          {hasRides && (
+            <>
+              <Separator className="separator" />
+              <div className="space-y-1 text-sm">
+                <p className="font-medium text-muted-foreground mb-2">
+                  {language === 'bn' ? 'রাইড সমূহ' : 'Rides'}
+                </p>
+                {ticket.rides!.map((ride, index) => (
+                  <div key={index} className="flex justify-between">
+                    <span className="text-muted-foreground">
+                      {rideNames[ride.ride_id] || `Ride ${index + 1}`} × {ride.quantity}
+                    </span>
+                    <span>৳{ride.total_price}</span>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
 
           <Separator className="separator" />
 
