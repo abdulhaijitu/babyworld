@@ -273,6 +273,80 @@ export type Database = {
           },
         ]
       }
+      gate_cameras: {
+        Row: {
+          camera_ref: string | null
+          created_at: string
+          gate_id: string
+          gate_name: string
+          id: string
+          is_active: boolean
+          updated_at: string
+        }
+        Insert: {
+          camera_ref?: string | null
+          created_at?: string
+          gate_id: string
+          gate_name: string
+          id?: string
+          is_active?: boolean
+          updated_at?: string
+        }
+        Update: {
+          camera_ref?: string | null
+          created_at?: string
+          gate_id?: string
+          gate_name?: string
+          id?: string
+          is_active?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      gate_logs: {
+        Row: {
+          camera_ref: string | null
+          created_at: string
+          entry_type: Database["public"]["Enums"]["gate_entry_type"]
+          gate_id: string
+          id: string
+          notes: string | null
+          scanned_by: string | null
+          scanned_by_name: string | null
+          ticket_id: string
+        }
+        Insert: {
+          camera_ref?: string | null
+          created_at?: string
+          entry_type: Database["public"]["Enums"]["gate_entry_type"]
+          gate_id?: string
+          id?: string
+          notes?: string | null
+          scanned_by?: string | null
+          scanned_by_name?: string | null
+          ticket_id: string
+        }
+        Update: {
+          camera_ref?: string | null
+          created_at?: string
+          entry_type?: Database["public"]["Enums"]["gate_entry_type"]
+          gate_id?: string
+          id?: string
+          notes?: string | null
+          scanned_by?: string | null
+          scanned_by_name?: string | null
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gate_logs_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           created_at: string
@@ -474,6 +548,7 @@ export type Database = {
           guardian_name: string
           guardian_phone: string
           id: string
+          inside_venue: boolean
           notes: string | null
           slot_date: string
           source: Database["public"]["Enums"]["ticket_source"]
@@ -491,6 +566,7 @@ export type Database = {
           guardian_name: string
           guardian_phone: string
           id?: string
+          inside_venue?: boolean
           notes?: string | null
           slot_date: string
           source?: Database["public"]["Enums"]["ticket_source"]
@@ -508,6 +584,7 @@ export type Database = {
           guardian_name?: string
           guardian_phone?: string
           id?: string
+          inside_venue?: boolean
           notes?: string | null
           slot_date?: string
           source?: Database["public"]["Enums"]["ticket_source"]
@@ -578,6 +655,7 @@ export type Database = {
       food_category: "snacks" | "drinks" | "meals"
       food_order_status: "pending" | "served" | "cancelled"
       food_payment_type: "cash" | "online" | "pending"
+      gate_entry_type: "entry" | "exit"
       slot_status: "available" | "booked"
       ticket_source: "online" | "physical"
       ticket_status: "active" | "used" | "cancelled"
@@ -717,6 +795,7 @@ export const Constants = {
       food_category: ["snacks", "drinks", "meals"],
       food_order_status: ["pending", "served", "cancelled"],
       food_payment_type: ["cash", "online", "pending"],
+      gate_entry_type: ["entry", "exit"],
       slot_status: ["available", "booked"],
       ticket_source: ["online", "physical"],
       ticket_status: ["active", "used", "cancelled"],
