@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Camera } from "lucide-react";
 import { ScrollFadeIn, StaggerContainer, StaggerItem } from "@/components/ScrollAnimations";
+import { ImageLightbox, GalleryItem } from "@/components/ImageLightbox";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 import celebration1 from "@/assets/celebration-1.jpg";
@@ -9,6 +11,8 @@ import celebration4 from "@/assets/celebration-4.jpg";
 
 export function EventsGallery() {
   const { t, language } = useLanguage();
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const galleryImages = [
     { 
@@ -28,6 +32,11 @@ export function EventsGallery() {
       alt: language === "bn" ? "জন্মদিনের পার্টি টেবিল সাজানো" : "Birthday party table setup" 
     },
   ];
+
+  const openLightbox = (index: number) => {
+    setSelectedIndex(index);
+    setLightboxOpen(true);
+  };
 
   return (
     <section className="py-24 bg-background">
@@ -52,17 +61,11 @@ export function EventsGallery() {
         <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-4" staggerDelay={0.1}>
           {galleryImages.map((img, i) => (
             <StaggerItem key={i}>
-              <div className="group relative aspect-square rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300">
-                <img 
-                  src={img.src} 
-                  alt={img.alt}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <p className="text-white text-sm font-medium line-clamp-2">{img.alt}</p>
-                </div>
-              </div>
+              <GalleryItem
+                src={img.src}
+                alt={img.alt}
+                onClick={() => openLightbox(i)}
+              />
             </StaggerItem>
           ))}
         </StaggerContainer>
@@ -70,10 +73,18 @@ export function EventsGallery() {
         {/* Gallery Note */}
         <ScrollFadeIn delay={0.3} className="text-center mt-8">
           <p className="text-sm text-muted-foreground">
-            {t("eventsPage.gallery.note")}
+            {t("eventsPage.gallery.note")} • {t("eventsPage.gallery.clickToView")}
           </p>
         </ScrollFadeIn>
       </div>
+
+      {/* Lightbox */}
+      <ImageLightbox
+        images={galleryImages}
+        initialIndex={selectedIndex}
+        isOpen={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+      />
     </section>
   );
 }

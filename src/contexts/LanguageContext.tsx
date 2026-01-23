@@ -157,6 +157,7 @@ const translations: Record<Language, Record<string, string>> = {
     "eventsPage.gallery.title": "Memories from Our Celebrations",
     "eventsPage.gallery.description": "See the joy and excitement from previous birthday parties hosted at Baby World.",
     "eventsPage.gallery.note": "More photos available upon request",
+    "eventsPage.gallery.clickToView": "Click to view fullscreen",
     
     // Events Page (Dedicated)
     "eventsPage.hero.badge": "Birthday & Special Events",
@@ -244,6 +245,13 @@ const translations: Record<Language, Record<string, string>> = {
     "contact.hoursLine2": "Friday: 3:00 PM – 9:00 PM",
     "contact.getDirections": "Get Directions",
     "contact.mapComingSoon": "Interactive map coming soon",
+    "contact.findUs": "Find Us",
+    "contact.parking": "Parking",
+    "contact.parkingInfo": "Street parking available nearby",
+    "contact.publicTransport": "Public Transport",
+    "contact.transportInfo": "Near Lalbagh bus stand",
+    "contact.landmark": "Landmark",
+    "contact.landmarkInfo": "Jannat Tower, near Lalbagh Fort",
     
     // Contact Form
     "contactForm.title": "Send Us a Message",
@@ -440,6 +448,7 @@ const translations: Record<Language, Record<string, string>> = {
     "eventsPage.gallery.title": "আমাদের উদযাপনের স্মৃতি",
     "eventsPage.gallery.description": "বেবি ওয়ার্ল্ডে আয়োজিত আগের জন্মদিনের পার্টিগুলোর আনন্দ ও উত্তেজনা দেখুন।",
     "eventsPage.gallery.note": "অনুরোধে আরও ছবি পাওয়া যাবে",
+    "eventsPage.gallery.clickToView": "ফুলস্ক্রিনে দেখতে ক্লিক করুন",
     
     // Events Page (Dedicated)
     "eventsPage.hero.badge": "জন্মদিন ও বিশেষ ইভেন্ট",
@@ -527,6 +536,13 @@ const translations: Record<Language, Record<string, string>> = {
     "contact.hoursLine2": "শুক্রবার: বিকাল ৩:০০ – রাত ৯:০০",
     "contact.getDirections": "দিকনির্দেশনা নিন",
     "contact.mapComingSoon": "ইন্টারেক্টিভ ম্যাপ শীঘ্রই আসছে",
+    "contact.findUs": "আমাদের খুঁজুন",
+    "contact.parking": "পার্কিং",
+    "contact.parkingInfo": "কাছাকাছি রাস্তায় পার্কিং আছে",
+    "contact.publicTransport": "গণপরিবহন",
+    "contact.transportInfo": "লালবাগ বাস স্ট্যান্ডের কাছে",
+    "contact.landmark": "ল্যান্ডমার্ক",
+    "contact.landmarkInfo": "জান্নাত টাওয়ার, লালবাগ কেল্লার কাছে",
     
     // Contact Form
     "contactForm.title": "আমাদের মেসেজ পাঠান",
