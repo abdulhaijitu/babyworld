@@ -7,95 +7,128 @@
 
 @layer base {
   :root {
-    /* Premium calm palette for parental trust */
-    --background: 40 33% 98%;
-    --foreground: 220 25% 15%;
+    /* Baby World Logo-Inspired Premium Palette */
+    /* Maintaining parental trust with soft, warm tones */
+    
+    /* Foundation - Clean, warm neutral */
+    --background: 30 30% 98%;
+    --foreground: 250 20% 18%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 25% 15%;
+    --card-foreground: 250 20% 18%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 25% 15%;
+    --popover-foreground: 250 20% 18%;
 
-    /* Soft teal - trust & calm */
-    --primary: 175 45% 45%;
+    /* Primary - Soft Pink/Magenta (from "Baby" text in logo) */
+    /* Warm, caring, child-friendly without being childish */
+    --primary: 340 65% 55%;
     --primary-foreground: 0 0% 100%;
 
-    /* Warm coral - friendly & inviting */
-    --secondary: 15 85% 65%;
+    /* Secondary - Soft Purple (from "World" text in logo) */
+    /* Premium, creativity, learning-focused */
+    --secondary: 290 45% 60%;
     --secondary-foreground: 0 0% 100%;
 
-    /* Soft cream muted tones */
-    --muted: 40 20% 94%;
-    --muted-foreground: 220 15% 45%;
+    /* Accent - Soft Green (from leaves/grass in logo) */
+    /* Safety, growth, reassurance for parents */
+    --accent: 145 45% 92%;
+    --accent-foreground: 145 50% 30%;
 
-    /* Light teal accent */
-    --accent: 175 35% 92%;
-    --accent-foreground: 175 45% 35%;
+    /* Muted - Calm neutral with warm undertone */
+    --muted: 30 15% 94%;
+    --muted-foreground: 250 12% 45%;
 
-    --destructive: 0 84.2% 60.2%;
+    /* Info - Calm Blue (from birds/"Learn & Play" in logo) */
+    /* Used for informational UI, subtle backgrounds */
+    --info: 200 60% 55%;
+    --info-foreground: 0 0% 100%;
+
+    /* Success - Accent green for positive states */
+    --success: 145 55% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 15% 90%;
-    --input: 220 15% 90%;
-    --ring: 175 45% 45%;
+    --border: 250 12% 90%;
+    --input: 250 12% 90%;
+    --ring: 340 65% 55%;
 
     --radius: 1rem;
 
-    /* Custom tokens */
-    --hero-gradient: linear-gradient(135deg, hsl(175 45% 45%) 0%, hsl(175 55% 55%) 100%);
-    --card-shadow: 0 4px 20px -4px hsl(220 25% 15% / 0.08);
-    --card-shadow-hover: 0 8px 30px -6px hsl(220 25% 15% / 0.12);
-    --button-shadow: 0 4px 14px -2px hsl(175 45% 45% / 0.35);
-    --button-shadow-secondary: 0 4px 14px -2px hsl(15 85% 65% / 0.35);
+    /* Custom design tokens */
+    --hero-gradient: linear-gradient(135deg, hsl(340 65% 55%) 0%, hsl(290 45% 60%) 50%, hsl(200 60% 55%) 100%);
+    --card-shadow: 0 4px 24px -4px hsl(250 20% 18% / 0.06);
+    --card-shadow-hover: 0 12px 32px -8px hsl(250 20% 18% / 0.10);
+    --button-shadow: 0 4px 16px -2px hsl(340 65% 55% / 0.30);
+    --button-shadow-secondary: 0 4px 16px -2px hsl(290 45% 60% / 0.30);
+    --button-shadow-accent: 0 4px 16px -2px hsl(145 55% 45% / 0.30);
+
+    /* Gradient variations for sections */
+    --gradient-primary: linear-gradient(135deg, hsl(340 65% 55%) 0%, hsl(340 55% 60%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(290 45% 60%) 0%, hsl(290 35% 65%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(145 50% 50%) 0%, hsl(145 45% 55%) 100%);
+    --gradient-info: linear-gradient(135deg, hsl(200 60% 55%) 0%, hsl(200 50% 60%) 100%);
+    --gradient-warm: linear-gradient(135deg, hsl(340 65% 55%) 0%, hsl(290 45% 60%) 100%);
 
     --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-foreground: 250 15% 30%;
+    --sidebar-primary: 340 65% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 30 20% 96%;
+    --sidebar-accent-foreground: 250 20% 18%;
+    --sidebar-border: 250 12% 90%;
+    --sidebar-ring: 340 65% 55%;
   }
 
   .dark {
-    --background: 220 25% 10%;
-    --foreground: 40 20% 95%;
+    /* Dark mode - maintains logo color harmony */
+    --background: 250 20% 8%;
+    --foreground: 30 20% 95%;
 
-    --card: 220 25% 13%;
-    --card-foreground: 40 20% 95%;
+    --card: 250 18% 12%;
+    --card-foreground: 30 20% 95%;
 
-    --popover: 220 25% 13%;
-    --popover-foreground: 40 20% 95%;
+    --popover: 250 18% 12%;
+    --popover-foreground: 30 20% 95%;
 
-    --primary: 175 50% 50%;
-    --primary-foreground: 220 25% 10%;
+    /* Primary - Lighter pink for dark backgrounds */
+    --primary: 340 60% 60%;
+    --primary-foreground: 250 20% 8%;
 
-    --secondary: 15 75% 60%;
-    --secondary-foreground: 220 25% 10%;
+    /* Secondary - Lighter purple */
+    --secondary: 290 40% 65%;
+    --secondary-foreground: 250 20% 8%;
 
-    --muted: 220 20% 18%;
-    --muted-foreground: 220 15% 60%;
+    /* Accent - Soft green adapted for dark */
+    --accent: 145 35% 18%;
+    --accent-foreground: 145 50% 70%;
 
-    --accent: 175 30% 20%;
-    --accent-foreground: 175 50% 70%;
+    --muted: 250 15% 16%;
+    --muted-foreground: 30 12% 60%;
 
-    --destructive: 0 62.8% 30.6%;
+    --info: 200 55% 50%;
+    --info-foreground: 250 20% 8%;
+
+    --success: 145 50% 40%;
+    --success-foreground: 0 0% 100%;
+
+    --destructive: 0 60% 45%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 20% 20%;
-    --input: 220 20% 20%;
-    --ring: 175 50% 50%;
+    --border: 250 15% 20%;
+    --input: 250 15% 20%;
+    --ring: 340 60% 60%;
 
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-background: 250 18% 10%;
+    --sidebar-foreground: 30 15% 90%;
+    --sidebar-primary: 340 60% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 250 15% 15%;
+    --sidebar-accent-foreground: 30 15% 90%;
+    --sidebar-border: 250 15% 18%;
+    --sidebar-ring: 340 60% 60%;
   }
 }
 
