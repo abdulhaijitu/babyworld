@@ -477,34 +477,38 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                     {rides.map((ride) => {
                       const isSelected = selectedRides[ride.id] > 0;
-                      return (
-                        <div
-                          key={ride.id}
-                          className={cn(
-                            'p-3 rounded-lg border cursor-pointer transition-all',
-                            isSelected ? 'border-primary bg-primary/5' : 'hover:border-primary/50'
-                          )}
-                          onClick={() => toggleRide(ride.id)}
-                        >
-                          <div className="flex items-center justify-between mb-2">
-                            <Checkbox checked={isSelected} />
-                            <Badge variant="secondary">৳{ride.price}</Badge>
-                          </div>
-                          <p className="font-medium text-sm">
-                            {language === 'bn' ? ride.name_bn || ride.name : ride.name}
-                          </p>
-                          {isSelected && (
-                            <div className="mt-2" onClick={(e) => e.stopPropagation()}>
-                              <CounterButton
-                                value={selectedRides[ride.id] || 1}
-                                onIncrement={() => updateRideQuantity(ride.id, 1)}
-                                onDecrement={() => updateRideQuantity(ride.id, -1)}
-                                min={1}
+                        return (
+                          <div
+                            key={ride.id}
+                            className={cn(
+                              'p-3 rounded-lg border cursor-pointer transition-all',
+                              isSelected ? 'border-primary bg-primary/5' : 'hover:border-primary/50'
+                            )}
+                            onClick={() => toggleRide(ride.id)}
+                          >
+                            <div className="flex items-center justify-between mb-2">
+                              <Checkbox 
+                                checked={isSelected} 
+                                onCheckedChange={() => toggleRide(ride.id)}
+                                onClick={(e) => e.stopPropagation()}
                               />
+                              <Badge variant="secondary">৳{ride.price}</Badge>
                             </div>
-                          )}
-                        </div>
-                      );
+                            <p className="font-medium text-sm">
+                              {language === 'bn' ? ride.name_bn || ride.name : ride.name}
+                            </p>
+                            {isSelected && (
+                              <div className="mt-2" onClick={(e) => e.stopPropagation()}>
+                                <CounterButton
+                                  value={selectedRides[ride.id] || 1}
+                                  onIncrement={() => updateRideQuantity(ride.id, 1)}
+                                  onDecrement={() => updateRideQuantity(ride.id, -1)}
+                                  min={1}
+                                />
+                              </div>
+                            )}
+                          </div>
+                        );
                     })}
                   </div>
                 </CardContent>
