@@ -6,6 +6,7 @@ import { EventsHero } from "@/components/events/EventsHero";
 import { EventPackages } from "@/components/events/EventPackages";
 import { EventBookingForm } from "@/components/events/EventBookingForm";
 import { EventsGallery } from "@/components/events/EventsGallery";
+import { EventsFAQ } from "@/components/events/EventsFAQ";
 import { EventsTrust } from "@/components/events/EventsTrust";
 
 const BirthdayEvents = () => {
@@ -47,6 +48,7 @@ const BirthdayEvents = () => {
             />
           </div>
           <EventsGallery />
+          <EventsFAQ />
           <EventsTrust />
         </main>
         <Footer />
