@@ -99,11 +99,55 @@ ${reason ? `📝 কারণ: ${reason}` : ''}
     return result.success;
   };
 
+  // Generate WhatsApp link for booking confirmation
+  const getWhatsAppLink = (
+    phone: string,
+    parentName: string,
+    slotDate: string,
+    timeSlot: string,
+    bookingRef: string
+  ): string => {
+    // Format phone for WhatsApp (remove leading 0 and add country code)
+    let formattedPhone = phone.replace(/\D/g, '');
+    if (formattedPhone.startsWith('0')) {
+      formattedPhone = '88' + formattedPhone;
+    } else if (!formattedPhone.startsWith('88')) {
+      formattedPhone = '88' + formattedPhone;
+    }
+
+    const message = encodeURIComponent(`প্রিয় ${parentName},
+আপনার Baby World বুকিং নিশ্চিত হয়েছে!
+
+📅 তারিখ: ${slotDate}
+⏰ সময়: ${timeSlot}
+🎫 রেফারেন্স: ${bookingRef}
+
+প্রবেশের সময় এই মেসেজ দেখান।
+📍 Baby World Indoor Playground
+📞 +880 1234-567890`);
+
+    return `https://wa.me/${formattedPhone}?text=${message}`;
+  };
+
+  const openWhatsApp = (
+    phone: string,
+    parentName: string,
+    slotDate: string,
+    timeSlot: string,
+    bookingRef: string
+  ): void => {
+    const link = getWhatsAppLink(phone, parentName, slotDate, timeSlot, bookingRef);
+    window.open(link, '_blank');
+    toast.success('WhatsApp খোলা হয়েছে');
+  };
+
   return {
     sending,
     sendSMS,
     sendBookingConfirmation,
     sendBookingReminder,
-    sendCancellationNotice
+    sendCancellationNotice,
+    getWhatsAppLink,
+    openWhatsApp
   };
 }

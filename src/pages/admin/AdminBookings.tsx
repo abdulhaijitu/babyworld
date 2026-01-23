@@ -78,6 +78,7 @@ import { BookingCalendarView } from '@/components/admin/bookings/BookingCalendar
 import { useSendSMS } from '@/hooks/useSendSMS';
 import { BookingExport } from '@/components/admin/bookings/BookingExport';
 import { PaymentCollectionDialog } from '@/components/admin/bookings/PaymentCollectionDialog';
+import { TodayBookingSummary } from '@/components/admin/bookings/TodayBookingSummary';
 
 interface Booking {
   id: string;
@@ -125,8 +126,8 @@ export default function AdminBookings() {
   const [printOpen, setPrintOpen] = useState(false);
   const [printBooking, setPrintBooking] = useState<Booking | null>(null);
 
-  // SMS functionality
-  const { sending: sendingSMS, sendBookingConfirmation } = useSendSMS();
+  // SMS & WhatsApp functionality
+  const { sending: sendingSMS, sendBookingConfirmation, openWhatsApp } = useSendSMS();
 
   // View mode
   const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list');
@@ -228,6 +229,19 @@ export default function AdminBookings() {
     const formattedDate = format(parseISO(booking.slot_date), 'dd MMM yyyy');
     
     await sendBookingConfirmation(
+      booking.parent_phone,
+      booking.parent_name,
+      formattedDate,
+      booking.time_slot,
+      bookingRef
+    );
+  };
+
+  const handleWhatsApp = (booking: Booking) => {
+    const bookingRef = `BK${booking.id.slice(0, 8).toUpperCase()}`;
+    const formattedDate = format(parseISO(booking.slot_date), 'dd MMM yyyy');
+    
+    openWhatsApp(
       booking.parent_phone,
       booking.parent_name,
       formattedDate,
@@ -411,6 +425,9 @@ export default function AdminBookings() {
         </Card>
       </div>
 
+      {/* Today's Booking Summary */}
+      <TodayBookingSummary bookings={bookings} />
+
       {/* Calendar View */}
       {viewMode === 'calendar' && (
         <BookingCalendarView 
@@ -587,6 +604,13 @@ export default function AdminBookings() {
                               >
                                 <MessageSquare className="w-4 h-4 mr-2" />
                                 {language === 'bn' ? 'SMS পাঠান' : 'Send SMS'}
+                              </DropdownMenuItem>
+                              <DropdownMenuItem 
+                                onClick={() => handleWhatsApp(booking)}
+                                disabled={booking.status === 'cancelled'}
+                              >
+                                <Phone className="w-4 h-4 mr-2" />
+                                {language === 'bn' ? 'WhatsApp' : 'WhatsApp'}
                               </DropdownMenuItem>
                               <DropdownMenuItem 
                                 onClick={() => {
