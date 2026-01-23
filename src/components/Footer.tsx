@@ -6,12 +6,13 @@ import { SocialLinks } from "./SocialLinks";
 import babyWorldLogo from "@/assets/baby-world-logo.png";
 
 export function Footer() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const quickLinks = [
     { label: t("nav.home"), href: "/" },
     { label: t("nav.pricing"), href: "/play-booking" },
     { label: t("nav.events"), href: "/birthday-events" },
+    { label: language === "bn" ? "গ্যালারি" : "Gallery", href: "/gallery" },
     { label: t("nav.contact"), href: "/contact" },
   ];
 
