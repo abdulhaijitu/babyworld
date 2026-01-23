@@ -93,6 +93,7 @@ export default function AdminTicketing() {
   const [tickets, setTickets] = useState<TicketType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [rideNames, setRideNames] = useState<Record<string, string>>({});
   
   // Filters
   const [searchQuery, setSearchQuery] = useState('');
@@ -133,20 +134,29 @@ export default function AdminTicketing() {
     setLoading(true);
     setError(null);
     try {
-      const { data, error: fetchError } = await supabase
-        .from('tickets')
-        .select('*')
-        .order('created_at', { ascending: false });
+      const [ticketsResult, ridesResult] = await Promise.all([
+        supabase.from('tickets').select('*').order('created_at', { ascending: false }),
+        supabase.from('rides').select('id, name, name_bn').eq('is_active', true)
+      ]);
 
-      if (fetchError) throw fetchError;
-      setTickets((data || []) as TicketType[]);
+      if (ticketsResult.error) throw ticketsResult.error;
+      setTickets((ticketsResult.data || []) as TicketType[]);
+      
+      // Build ride names map
+      if (ridesResult.data) {
+        const names: Record<string, string> = {};
+        ridesResult.data.forEach((ride: any) => {
+          names[ride.id] = language === 'bn' ? (ride.name_bn || ride.name) : ride.name;
+        });
+        setRideNames(names);
+      }
     } catch (err: any) {
       console.error('[Ticketing] Error:', err);
       setError(err.message);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [language]);
 
   useEffect(() => {
     fetchTickets();
@@ -713,6 +723,7 @@ export default function AdminTicketing() {
         open={showSuccessDialog}
         onClose={() => setShowSuccessDialog(false)}
         ticket={createdTicket}
+        rideNames={rideNames}
       />
     </div>
   );
