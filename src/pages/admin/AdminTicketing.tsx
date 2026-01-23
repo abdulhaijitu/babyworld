@@ -46,7 +46,9 @@ import {
   Filter,
   X,
   Printer,
-  MessageSquare
+  MessageSquare,
+  DoorOpen,
+  DoorClosed
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -68,6 +70,7 @@ interface TicketType {
   guardian_phone: string;
   notes: string | null;
   used_at: string | null;
+  inside_venue: boolean;
   created_at: string;
 }
 
@@ -90,6 +93,7 @@ export default function AdminTicketing() {
   const [printOpen, setPrintOpen] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState<TicketType | null>(null);
   const [sendingSMS, setSendingSMS] = useState<string | null>(null);
+  const [gateActionLoading, setGateActionLoading] = useState<string | null>(null);
   
   const [newTicket, setNewTicket] = useState({
     ticket_type: 'hourly_play',
@@ -247,6 +251,61 @@ export default function AdminTicketing() {
     }
   };
 
+  // Gate Entry/Exit handlers
+  const handleGateEntry = async (ticket: TicketType) => {
+    setGateActionLoading(ticket.id);
+    try {
+      const { data, error } = await supabase.functions.invoke('gate-scan', {
+        body: {
+          action: 'entry',
+          ticket_id: ticket.id,
+          gate_id: 'main_gate',
+          staff_name: 'Admin'
+        }
+      });
+
+      if (error) throw error;
+      if (!data.success) throw new Error(data.error);
+
+      toast.success(language === 'bn' ? 'এন্ট্রি রেকর্ড হয়েছে' : 'Entry logged successfully');
+      setTickets(prev => prev.map(t => 
+        t.id === ticket.id ? { ...t, inside_venue: true, status: 'used' as const, used_at: new Date().toISOString() } : t
+      ));
+    } catch (err: unknown) {
+      const error = err as { message?: string };
+      toast.error(error.message || (language === 'bn' ? 'এন্ট্রি ব্যর্থ' : 'Entry failed'));
+    } finally {
+      setGateActionLoading(null);
+    }
+  };
+
+  const handleGateExit = async (ticket: TicketType) => {
+    setGateActionLoading(ticket.id);
+    try {
+      const { data, error } = await supabase.functions.invoke('gate-scan', {
+        body: {
+          action: 'exit',
+          ticket_id: ticket.id,
+          gate_id: 'main_gate',
+          staff_name: 'Admin'
+        }
+      });
+
+      if (error) throw error;
+      if (!data.success) throw new Error(data.error);
+
+      toast.success(language === 'bn' ? 'এক্সিট রেকর্ড হয়েছে' : 'Exit logged successfully');
+      setTickets(prev => prev.map(t => 
+        t.id === ticket.id ? { ...t, inside_venue: false } : t
+      ));
+    } catch (err: unknown) {
+      const error = err as { message?: string };
+      toast.error(error.message || (language === 'bn' ? 'এক্সিট ব্যর্থ' : 'Exit failed'));
+    } finally {
+      setGateActionLoading(null);
+    }
+  };
+
   // Filter tickets
   const filteredTickets = tickets.filter(ticket => {
     if (searchQuery) {
@@ -280,6 +339,7 @@ export default function AdminTicketing() {
   const activeCount = tickets.filter(t => t.status === 'active').length;
   const usedCount = tickets.filter(t => t.status === 'used').length;
   const todayCount = tickets.filter(t => t.slot_date === format(new Date(), 'yyyy-MM-dd')).length;
+  const insideCount = tickets.filter(t => t.inside_venue).length;
 
   const clearFilters = () => {
     setSearchQuery('');
@@ -527,6 +587,7 @@ export default function AdminTicketing() {
                     <TableHead>{language === 'bn' ? 'তারিখ' : 'Date'}</TableHead>
                     <TableHead>{language === 'bn' ? 'সময়' : 'Time'}</TableHead>
                     <TableHead>{language === 'bn' ? 'উৎস' : 'Source'}</TableHead>
+                    <TableHead>{language === 'bn' ? 'অবস্থান' : 'Location'}</TableHead>
                     <TableHead>{language === 'bn' ? 'স্ট্যাটাস' : 'Status'}</TableHead>
                     <TableHead className="text-right">{language === 'bn' ? 'অ্যাকশন' : 'Actions'}</TableHead>
                   </TableRow>
@@ -548,9 +609,68 @@ export default function AdminTicketing() {
                       <TableCell>
                         <Badge variant="outline" className="capitalize">{ticket.source}</Badge>
                       </TableCell>
+                      <TableCell>
+                        {ticket.inside_venue ? (
+                          <Badge className="bg-primary/10 text-primary">
+                            <DoorOpen className="w-3 h-3 mr-1" />
+                            {language === 'bn' ? 'ভিতরে' : 'Inside'}
+                          </Badge>
+                        ) : ticket.status === 'used' ? (
+                          <Badge variant="secondary">
+                            <DoorClosed className="w-3 h-3 mr-1" />
+                            {language === 'bn' ? 'বাইরে' : 'Exited'}
+                          </Badge>
+                        ) : (
+                          <span className="text-muted-foreground text-sm">-</span>
+                        )}
+                      </TableCell>
                       <TableCell>{getStatusBadge(ticket.status)}</TableCell>
                       <TableCell className="text-right">
-                        <div className="flex justify-end gap-1">
+                        <div className="flex justify-end gap-1 flex-wrap">
+                          {/* Gate Entry/Exit buttons */}
+                          {ticket.status !== 'cancelled' && (
+                            <>
+                              {!ticket.inside_venue && ticket.status === 'active' && (
+                                <Button 
+                                  size="sm" 
+                                  variant="default"
+                                  onClick={() => handleGateEntry(ticket)}
+                                  disabled={gateActionLoading === ticket.id}
+                                  title={language === 'bn' ? 'এন্ট্রি' : 'Gate Entry'}
+                                  className="bg-green-600 hover:bg-green-700"
+                                >
+                                  {gateActionLoading === ticket.id ? (
+                                    <Loader2 className="w-3 h-3 animate-spin" />
+                                  ) : (
+                                    <>
+                                      <DoorOpen className="w-3 h-3 mr-1" />
+                                      {language === 'bn' ? 'এন্ট্রি' : 'Entry'}
+                                    </>
+                                  )}
+                                </Button>
+                              )}
+                              {ticket.inside_venue && (
+                                <Button 
+                                  size="sm" 
+                                  variant="default"
+                                  onClick={() => handleGateExit(ticket)}
+                                  disabled={gateActionLoading === ticket.id}
+                                  title={language === 'bn' ? 'এক্সিট' : 'Gate Exit'}
+                                  className="bg-orange-600 hover:bg-orange-700"
+                                >
+                                  {gateActionLoading === ticket.id ? (
+                                    <Loader2 className="w-3 h-3 animate-spin" />
+                                  ) : (
+                                    <>
+                                      <DoorClosed className="w-3 h-3 mr-1" />
+                                      {language === 'bn' ? 'এক্সিট' : 'Exit'}
+                                    </>
+                                  )}
+                                </Button>
+                              )}
+                            </>
+                          )}
+
                           {/* Print button */}
                           <Button size="sm" variant="ghost" onClick={() => handlePrintTicket(ticket)} title={language === 'bn' ? 'প্রিন্ট' : 'Print'}>
                             <Printer className="w-3 h-3" />
@@ -571,16 +691,10 @@ export default function AdminTicketing() {
                             )}
                           </Button>
                           
-                          {ticket.status === 'active' && (
-                            <>
-                              <Button size="sm" variant="outline" onClick={() => handleMarkUsed(ticket.id)}>
-                                <CheckCircle className="w-3 h-3 mr-1" />
-                                {language === 'bn' ? 'ব্যবহৃত' : 'Used'}
-                              </Button>
-                              <Button size="sm" variant="ghost" className="text-destructive" onClick={() => handleCancelTicket(ticket.id)}>
-                                <XCircle className="w-3 h-3" />
-                              </Button>
-                            </>
+                          {ticket.status === 'active' && !ticket.inside_venue && (
+                            <Button size="sm" variant="ghost" className="text-destructive" onClick={() => handleCancelTicket(ticket.id)}>
+                              <XCircle className="w-3 h-3" />
+                            </Button>
                           )}
                         </div>
                       </TableCell>

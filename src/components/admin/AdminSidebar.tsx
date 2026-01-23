@@ -14,7 +14,8 @@ import {
   LogOut,
   Clock,
   FileBarChart,
-  Shield
+  Shield,
+  Video
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -35,6 +36,7 @@ interface MenuItem {
 const allMenuItems: MenuItem[] = [
   { id: 'dashboard', label: 'Dashboard', labelBn: 'ড্যাশবোর্ড', icon: LayoutDashboard, path: '/admin' },
   { id: 'ticketing', label: 'Ticketing', labelBn: 'টিকেটিং', icon: Ticket, path: '/admin/ticketing', requiredRoles: ['admin', 'manager', 'staff'] },
+  { id: 'gate-logs', label: 'Gate Logs', labelBn: 'গেট লগ', icon: Video, path: '/admin/gate-logs', requiredRoles: ['admin', 'manager'] },
   { id: 'food', label: 'Food Sales', labelBn: 'খাবার বিক্রয়', icon: UtensilsCrossed, path: '/admin/food', requiredRoles: ['admin', 'manager', 'staff'] },
   { id: 'employees', label: 'Employees', labelBn: 'কর্মী', icon: Users, path: '/admin/employees', requiredRoles: ['admin'] },
   { id: 'roster', label: 'Roster', labelBn: 'রোস্টার', icon: Clock, path: '/admin/roster', requiredRoles: ['admin', 'manager'] },
