@@ -44,13 +44,16 @@ import {
   Loader2,
   AlertCircle,
   Filter,
-  X
+  X,
+  Printer,
+  MessageSquare
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { format, parseISO } from 'date-fns';
 import { bn } from 'date-fns/locale';
 import { StatsCardSkeleton, TableRowSkeleton } from '@/components/admin/AdminSkeleton';
+import { PrintableTicket } from '@/components/admin/PrintableTicket';
 
 interface TicketType {
   id: string;
@@ -82,6 +85,12 @@ export default function AdminTicketing() {
   // Create dialog
   const [createOpen, setCreateOpen] = useState(false);
   const [creating, setCreating] = useState(false);
+  
+  // Print dialog
+  const [printOpen, setPrintOpen] = useState(false);
+  const [selectedTicket, setSelectedTicket] = useState<TicketType | null>(null);
+  const [sendingSMS, setSendingSMS] = useState<string | null>(null);
+  
   const [newTicket, setNewTicket] = useState({
     ticket_type: 'hourly_play',
     slot_date: new Date(),
@@ -202,6 +211,39 @@ export default function AdminTicketing() {
       ));
     } catch (err) {
       toast.error(language === 'bn' ? 'বাতিল ব্যর্থ' : 'Cancel failed');
+    }
+  };
+
+  // Print ticket
+  const handlePrintTicket = (ticket: TicketType) => {
+    setSelectedTicket(ticket);
+    setPrintOpen(true);
+  };
+
+  // Send SMS confirmation
+  const handleSendSMS = async (ticket: TicketType) => {
+    setSendingSMS(ticket.id);
+    try {
+      const message = language === 'bn'
+        ? `Baby World টিকেট: ${ticket.ticket_number}\nতারিখ: ${ticket.slot_date}\nসময়: ${ticket.time_slot || 'যেকোনো'}\nধন্যবাদ!`
+        : `Baby World Ticket: ${ticket.ticket_number}\nDate: ${ticket.slot_date}\nTime: ${ticket.time_slot || 'Any'}\nThank you!`;
+
+      const { data, error } = await supabase.functions.invoke('send-sms', {
+        body: { phone: ticket.guardian_phone, message }
+      });
+
+      if (error) throw error;
+
+      if (data.success) {
+        toast.success(language === 'bn' ? 'SMS পাঠানো হয়েছে' : 'SMS sent successfully');
+      } else {
+        toast.warning(language === 'bn' ? 'SMS পাঠানো যায়নি (credentials সেট করা নেই)' : 'SMS could not be sent (credentials not configured)');
+      }
+    } catch (err) {
+      console.error('SMS error:', err);
+      toast.error(language === 'bn' ? 'SMS পাঠাতে সমস্যা হয়েছে' : 'Failed to send SMS');
+    } finally {
+      setSendingSMS(null);
     }
   };
 
@@ -508,17 +550,39 @@ export default function AdminTicketing() {
                       </TableCell>
                       <TableCell>{getStatusBadge(ticket.status)}</TableCell>
                       <TableCell className="text-right">
-                        {ticket.status === 'active' && (
-                          <div className="flex justify-end gap-2">
-                            <Button size="sm" variant="outline" onClick={() => handleMarkUsed(ticket.id)}>
-                              <CheckCircle className="w-3 h-3 mr-1" />
-                              {language === 'bn' ? 'ব্যবহৃত' : 'Used'}
-                            </Button>
-                            <Button size="sm" variant="ghost" className="text-destructive" onClick={() => handleCancelTicket(ticket.id)}>
-                              <XCircle className="w-3 h-3" />
-                            </Button>
-                          </div>
-                        )}
+                        <div className="flex justify-end gap-1">
+                          {/* Print button */}
+                          <Button size="sm" variant="ghost" onClick={() => handlePrintTicket(ticket)} title={language === 'bn' ? 'প্রিন্ট' : 'Print'}>
+                            <Printer className="w-3 h-3" />
+                          </Button>
+                          
+                          {/* SMS button */}
+                          <Button 
+                            size="sm" 
+                            variant="ghost" 
+                            onClick={() => handleSendSMS(ticket)}
+                            disabled={sendingSMS === ticket.id}
+                            title={language === 'bn' ? 'SMS পাঠান' : 'Send SMS'}
+                          >
+                            {sendingSMS === ticket.id ? (
+                              <Loader2 className="w-3 h-3 animate-spin" />
+                            ) : (
+                              <MessageSquare className="w-3 h-3" />
+                            )}
+                          </Button>
+                          
+                          {ticket.status === 'active' && (
+                            <>
+                              <Button size="sm" variant="outline" onClick={() => handleMarkUsed(ticket.id)}>
+                                <CheckCircle className="w-3 h-3 mr-1" />
+                                {language === 'bn' ? 'ব্যবহৃত' : 'Used'}
+                              </Button>
+                              <Button size="sm" variant="ghost" className="text-destructive" onClick={() => handleCancelTicket(ticket.id)}>
+                                <XCircle className="w-3 h-3" />
+                              </Button>
+                            </>
+                          )}
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -528,6 +592,34 @@ export default function AdminTicketing() {
           )}
         </CardContent>
       </Card>
+
+      {/* Print Dialog */}
+      <Dialog open={printOpen} onOpenChange={setPrintOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Printer className="w-5 h-5" />
+              {language === 'bn' ? 'টিকেট প্রিন্ট' : 'Print Ticket'}
+            </DialogTitle>
+          </DialogHeader>
+          {selectedTicket && (
+            <PrintableTicket
+              ticket={{
+                ticketNumber: selectedTicket.ticket_number,
+                guardianName: selectedTicket.guardian_name,
+                guardianPhone: selectedTicket.guardian_phone,
+                childName: selectedTicket.child_name || undefined,
+                slotDate: selectedTicket.slot_date,
+                timeSlot: selectedTicket.time_slot || '-',
+                ticketType: selectedTicket.ticket_type,
+                source: selectedTicket.source,
+                createdAt: selectedTicket.created_at
+              }}
+              onClose={() => setPrintOpen(false)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
