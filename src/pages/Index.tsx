@@ -7,12 +7,14 @@ import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { SEOHead } from "@/components/SEOHead";
+import { PromoBanner } from "@/components/PromoBanner";
 
 const Index = () => {
   return (
     <PageTransition>
       <SEOHead page="home" />
       <div className="min-h-screen bg-background">
+        <PromoBanner />
         <Navbar />
         <main>
           <HeroSection />
