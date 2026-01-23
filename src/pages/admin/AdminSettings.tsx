@@ -7,14 +7,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { 
   Settings,
   Banknote,
   Clock,
   Building,
   Save,
-  Plus,
-  Trash2,
   Phone,
   MapPin,
   Globe,
@@ -22,117 +21,108 @@ import {
   Sun,
   Bell,
   Shield,
-  Loader2
+  Loader2,
+  RefreshCw
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from 'next-themes';
-
-// Default settings (in production, fetch from database)
-const defaultPricing = {
-  hourlyPlay: {
-    childGuardian: 300,
-    childOnly: 250,
-    groupDiscount: 10
-  },
-  events: {
-    basic: 5000,
-    standard: 8000,
-    premium: 12000,
-    deluxe: 18000
-  }
-};
-
-const defaultTimeSlots = [
-  { id: '1', label: '10:00 AM - 11:00 AM', start: '10:00', end: '11:00', enabled: true },
-  { id: '2', label: '11:00 AM - 12:00 PM', start: '11:00', end: '12:00', enabled: true },
-  { id: '3', label: '12:00 PM - 1:00 PM', start: '12:00', end: '13:00', enabled: true },
-  { id: '4', label: '1:00 PM - 2:00 PM', start: '13:00', end: '14:00', enabled: true },
-  { id: '5', label: '2:00 PM - 3:00 PM', start: '14:00', end: '15:00', enabled: true },
-  { id: '6', label: '3:00 PM - 4:00 PM', start: '15:00', end: '16:00', enabled: true },
-  { id: '7', label: '4:00 PM - 5:00 PM', start: '16:00', end: '17:00', enabled: true },
-  { id: '8', label: '5:00 PM - 6:00 PM', start: '17:00', end: '18:00', enabled: true },
-  { id: '9', label: '6:00 PM - 7:00 PM', start: '18:00', end: '19:00', enabled: true },
-  { id: '10', label: '7:00 PM - 8:00 PM', start: '19:00', end: '20:00', enabled: true },
-  { id: '11', label: '8:00 PM - 9:00 PM', start: '20:00', end: '21:00', enabled: true },
-];
-
-const defaultBusinessInfo = {
-  name: 'Baby World Indoor Playground',
-  nameBn: 'বেবি ওয়ার্ল্ড ইনডোর প্লেগ্রাউন্ড',
-  phone: '+880 1234-567890',
-  email: 'info@babyworld.com',
-  address: 'Dhaka, Bangladesh',
-  addressBn: 'ঢাকা, বাংলাদেশ',
-  openingTime: '10:00',
-  closingTime: '21:00',
-  website: 'https://babyworld.lovable.app'
-};
+import { useSettings } from '@/hooks/useSettings';
 
 export default function AdminSettings() {
   const { language } = useLanguage();
   const { theme, setTheme } = useTheme();
   const [activeTab, setActiveTab] = useState('pricing');
-  const [saving, setSaving] = useState(false);
   
-  // Pricing state
-  const [pricing, setPricing] = useState(defaultPricing);
-  
-  // Time slots state
-  const [timeSlots, setTimeSlots] = useState(defaultTimeSlots);
-  
-  // Business info state
-  const [businessInfo, setBusinessInfo] = useState(defaultBusinessInfo);
-  
-  // Notification settings
-  const [notifications, setNotifications] = useState({
-    emailBooking: true,
-    smsBooking: true,
-    emailPayment: true,
-    smsPayment: false
-  });
+  const {
+    loading,
+    saving,
+    pricing,
+    setPricing,
+    timeSlots,
+    toggleTimeSlot,
+    businessInfo,
+    setBusinessInfo,
+    notifications,
+    setNotifications,
+    savePricing,
+    saveTimeSlots,
+    saveBusinessInfo,
+    saveNotifications,
+    loadSettings
+  } = useSettings();
 
   const handleSavePricing = async () => {
-    setSaving(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 500));
-    toast.success(language === 'bn' ? 'প্রাইসিং সেভ হয়েছে' : 'Pricing saved');
-    setSaving(false);
+    try {
+      await savePricing();
+      toast.success(language === 'bn' ? 'প্রাইসিং সেভ হয়েছে' : 'Pricing saved');
+    } catch (error) {
+      toast.error(language === 'bn' ? 'সেভ করতে সমস্যা হয়েছে' : 'Failed to save');
+    }
   };
 
   const handleSaveTimeSlots = async () => {
-    setSaving(true);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    toast.success(language === 'bn' ? 'টাইম স্লট সেভ হয়েছে' : 'Time slots saved');
-    setSaving(false);
+    try {
+      await saveTimeSlots();
+      toast.success(language === 'bn' ? 'টাইম স্লট সেভ হয়েছে' : 'Time slots saved');
+    } catch (error) {
+      toast.error(language === 'bn' ? 'সেভ করতে সমস্যা হয়েছে' : 'Failed to save');
+    }
   };
 
   const handleSaveBusinessInfo = async () => {
-    setSaving(true);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    toast.success(language === 'bn' ? 'তথ্য সেভ হয়েছে' : 'Business info saved');
-    setSaving(false);
+    try {
+      await saveBusinessInfo();
+      toast.success(language === 'bn' ? 'তথ্য সেভ হয়েছে' : 'Business info saved');
+    } catch (error) {
+      toast.error(language === 'bn' ? 'সেভ করতে সমস্যা হয়েছে' : 'Failed to save');
+    }
   };
 
-  const toggleTimeSlot = (id: string) => {
-    setTimeSlots(prev => prev.map(slot => 
-      slot.id === id ? { ...slot, enabled: !slot.enabled } : slot
-    ));
+  const handleSaveNotifications = async () => {
+    try {
+      await saveNotifications();
+      toast.success(language === 'bn' ? 'নোটিফিকেশন সেটিংস সেভ হয়েছে' : 'Notification settings saved');
+    } catch (error) {
+      toast.error(language === 'bn' ? 'সেভ করতে সমস্যা হয়েছে' : 'Failed to save');
+    }
   };
 
   const enabledSlotsCount = timeSlots.filter(s => s.enabled).length;
 
+  if (loading) {
+    return (
+      <div className="p-4 md:p-6 lg:p-8 space-y-6">
+        <div>
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-4 w-64 mt-2" />
+        </div>
+        <Skeleton className="h-12 w-full" />
+        <div className="space-y-4">
+          <Skeleton className="h-64 w-full" />
+          <Skeleton className="h-64 w-full" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-4 md:p-6 lg:p-8 space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
-          <Settings className="w-6 h-6" />
-          {language === 'bn' ? 'সেটিংস' : 'Settings'}
-        </h1>
-        <p className="text-muted-foreground">
-          {language === 'bn' ? 'অ্যাপ্লিকেশন কনফিগারেশন' : 'Application configuration'}
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold flex items-center gap-2">
+            <Settings className="w-6 h-6" />
+            {language === 'bn' ? 'সেটিংস' : 'Settings'}
+          </h1>
+          <p className="text-muted-foreground">
+            {language === 'bn' ? 'অ্যাপ্লিকেশন কনফিগারেশন (ডাটাবেসে সংরক্ষিত)' : 'Application configuration (saved to database)'}
+          </p>
+        </div>
+        <Button variant="outline" size="sm" onClick={loadSettings}>
+          <RefreshCw className="w-4 h-4 mr-2" />
+          {language === 'bn' ? 'রিফ্রেশ' : 'Refresh'}
+        </Button>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -564,6 +554,14 @@ export default function AdminSettings() {
               </div>
             </CardContent>
           </Card>
+
+          <div className="flex justify-end">
+            <Button onClick={handleSaveNotifications} disabled={saving}>
+              {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              <Save className="w-4 h-4 mr-2" />
+              {language === 'bn' ? 'নোটিফিকেশন সেটিংস সেভ করুন' : 'Save Notification Settings'}
+            </Button>
+          </div>
 
           {/* Security */}
           <Card>
