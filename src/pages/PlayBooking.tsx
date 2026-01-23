@@ -13,7 +13,7 @@ const PlayBooking = () => {
       <SEOHead page="play-booking" />
       <div className="min-h-screen bg-background overflow-x-hidden">
         <Navbar />
-        <main className="pt-20">
+        <main>
           <PricingSection />
           <BookingSection />
           <TrustSection />

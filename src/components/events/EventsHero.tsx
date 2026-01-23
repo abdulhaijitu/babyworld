@@ -12,7 +12,7 @@ export function EventsHero({ onExplorePackages, onRequestBooking }: EventsHeroPr
   const { t } = useLanguage();
 
   return (
-    <section className="relative min-h-[80svh] flex items-center pt-20 pb-8 overflow-hidden">
+    <section className="relative min-h-[75svh] flex items-center py-12 sm:py-16 overflow-hidden">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 via-background to-accent" />
       

@@ -17,7 +17,7 @@ export function PromoBanner() {
         initial={{ height: 0, opacity: 0 }}
         animate={{ height: "auto", opacity: 1 }}
         exit={{ height: 0, opacity: 0 }}
-        className="bg-gradient-to-r from-primary via-secondary to-primary text-primary-foreground relative overflow-hidden"
+        className="bg-gradient-to-r from-primary via-secondary to-primary text-primary-foreground relative overflow-hidden z-[60]"
       >
         {/* Decorative elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">

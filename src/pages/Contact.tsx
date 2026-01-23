@@ -12,7 +12,7 @@ const Contact = () => {
       <SEOHead page="contact" />
       <div className="min-h-screen bg-background overflow-x-hidden">
         <Navbar />
-        <main className="pt-20">
+        <main>
           <ContactSection />
           <GoogleMap />
         </main>

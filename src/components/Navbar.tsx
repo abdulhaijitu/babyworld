@@ -39,20 +39,20 @@ export function Navbar() {
   return (
     <nav
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out",
+        "sticky top-0 left-0 right-0 z-50 transition-all duration-300 ease-out",
         isScrolled
           ? "bg-card/98 backdrop-blur-md shadow-card border-b border-border/50"
-          : "bg-background/80 backdrop-blur-sm"
+          : "bg-background/95 backdrop-blur-sm"
       )}
     >
       <div className="container mx-auto">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <img 
               src={babyWorldLogo} 
               alt="Baby World Indoor Playground logo"
-              className="h-12 md:h-14 w-auto object-contain"
+              className="h-10 sm:h-12 md:h-14 w-auto object-contain"
             />
           </Link>
 
