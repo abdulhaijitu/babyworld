@@ -47,6 +47,19 @@ export default function AdminMemberships() {
     notes: '',
   });
 
+  const { data: packages = [] } = useQuery({
+    queryKey: ['membership-packages-active'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('membership_packages')
+        .select('*')
+        .eq('is_active', true)
+        .order('sort_order');
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
   const { data: memberships, isLoading } = useQuery<Membership[]>({
     queryKey: ['memberships'],
     queryFn: async () => {
