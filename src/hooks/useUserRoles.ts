@@ -2,10 +2,11 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 
-export type AppRole = 'admin' | 'manager' | 'staff' | 'user';
+export type AppRole = 'super_admin' | 'admin' | 'manager' | 'staff' | 'user';
 
 interface UserRoleState {
   roles: AppRole[];
+  isSuperAdmin: boolean;
   isAdmin: boolean;
   isManager: boolean;
   isStaff: boolean;
@@ -16,6 +17,7 @@ export function useUserRoles() {
   const { user, initialized } = useAuth();
   const [state, setState] = useState<UserRoleState>({
     roles: [],
+    isSuperAdmin: false,
     isAdmin: false,
     isManager: false,
     isStaff: false,
@@ -26,6 +28,7 @@ export function useUserRoles() {
     if (!user?.id) {
       setState({
         roles: [],
+        isSuperAdmin: false,
         isAdmin: false,
         isManager: false,
         isStaff: false,
@@ -47,11 +50,13 @@ export function useUserRoles() {
       }
 
       const roles = (data?.map(r => r.role) || []) as AppRole[];
+      const isSuperAdmin = roles.includes('super_admin');
       setState({
         roles,
-        isAdmin: roles.includes('admin'),
-        isManager: roles.includes('manager') || roles.includes('admin'),
-        isStaff: roles.includes('staff') || roles.includes('manager') || roles.includes('admin'),
+        isSuperAdmin,
+        isAdmin: isSuperAdmin || roles.includes('admin'),
+        isManager: isSuperAdmin || roles.includes('admin') || roles.includes('manager'),
+        isStaff: isSuperAdmin || roles.includes('admin') || roles.includes('manager') || roles.includes('staff'),
         loading: false,
       });
     } catch (err) {
@@ -93,8 +98,13 @@ export function useUserRoles() {
   );
 
   const canManageUsers = useMemo(() => 
-    state.isAdmin, 
-    [state.isAdmin]
+    state.isSuperAdmin, 
+    [state.isSuperAdmin]
+  );
+
+  const canManageAdmins = useMemo(() => 
+    state.isSuperAdmin, 
+    [state.isSuperAdmin]
   );
 
   const canAccessTicketing = useMemo(() => 
@@ -120,6 +130,7 @@ export function useUserRoles() {
     canManageEmployees,
     canManageSettings,
     canManageUsers,
+    canManageAdmins,
     canAccessTicketing,
     canAccessFood,
     canAccessBookings,

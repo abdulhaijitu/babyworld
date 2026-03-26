@@ -53,12 +53,13 @@ import {
   UserX,
   Search,
   Briefcase,
-  HardHat
+  HardHat,
+  Crown
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format, parseISO } from 'date-fns';
 
-type UserRole = 'admin' | 'manager' | 'staff';
+type UserRole = 'super_admin' | 'admin' | 'manager' | 'staff';
 
 interface UserRoleRecord {
   id: string;
@@ -68,6 +69,7 @@ interface UserRoleRecord {
 }
 
 const roleConfig: Record<UserRole, { label: string; labelBn: string; icon: React.ElementType; color: string }> = {
+  super_admin: { label: 'Super Admin', labelBn: 'সুপার অ্যাডমিন', icon: Crown, color: 'bg-purple-500/10 text-purple-600 border-purple-500/20' },
   admin: { label: 'Admin', labelBn: 'অ্যাডমিন', icon: Shield, color: 'bg-primary/10 text-primary border-primary/20' },
   manager: { label: 'Manager', labelBn: 'ম্যানেজার', icon: Briefcase, color: 'bg-blue-500/10 text-blue-600 border-blue-500/20' },
   staff: { label: 'Staff', labelBn: 'স্টাফ', icon: HardHat, color: 'bg-amber-500/10 text-amber-600 border-amber-500/20' },
@@ -165,6 +167,7 @@ export default function AdminUsers() {
   });
 
   // Count by role
+  const superAdminCount = userRoles?.filter(u => u.role === 'super_admin').length || 0;
   const adminCount = userRoles?.filter(u => u.role === 'admin').length || 0;
   const managerCount = userRoles?.filter(u => u.role === 'manager').length || 0;
   const staffCount = userRoles?.filter(u => u.role === 'staff').length || 0;
@@ -220,6 +223,12 @@ export default function AdminUsers() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="super_admin">
+                      <div className="flex items-center gap-2">
+                        <Crown className="w-4 h-4" />
+                        {'Super Admin (Manage admins)'}
+                      </div>
+                    </SelectItem>
                     <SelectItem value="admin">
                       <div className="flex items-center gap-2">
                         <Shield className="w-4 h-4" />
@@ -284,7 +293,27 @@ export default function AdminUsers() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-purple-500/10">
+                <Crown className="w-5 h-5 text-purple-600" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">
+                  {'Super Admins'}
+                </p>
+                {isLoading ? (
+                  <Skeleton className="h-6 w-12" />
+                ) : (
+                  <p className="text-xl font-bold">{superAdminCount}</p>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
@@ -372,9 +401,10 @@ export default function AdminUsers() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{'All'}</SelectItem>
-                  <SelectItem value="admin">{'Admin'}</SelectItem>
-                  <SelectItem value="manager">{'Manager'}</SelectItem>
-                  <SelectItem value="staff">{'Staff'}</SelectItem>
+                   <SelectItem value="super_admin">{'Super Admin'}</SelectItem>
+                   <SelectItem value="admin">{'Admin'}</SelectItem>
+                   <SelectItem value="manager">{'Manager'}</SelectItem>
+                   <SelectItem value="staff">{'Staff'}</SelectItem>
                 </SelectContent>
               </Select>
             </div>

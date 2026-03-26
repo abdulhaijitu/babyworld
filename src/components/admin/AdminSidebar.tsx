@@ -41,23 +41,23 @@ interface MenuItem {
 
 const allMenuItems: MenuItem[] = [
   { id: 'dashboard', label: 'Dashboard', labelBn: 'ড্যাশবোর্ড', icon: LayoutDashboard, path: '/admin' },
-  { id: 'ticketing', label: 'Ticketing', labelBn: 'টিকেটিং', icon: Ticket, path: '/admin/ticketing', requiredRoles: ['admin', 'manager', 'staff'] },
-  { id: 'memberships', label: 'Memberships', labelBn: 'মেম্বারশিপ', icon: Crown, path: '/admin/memberships', requiredRoles: ['admin', 'manager'] },
-  { id: 'gate-logs', label: 'Gate Logs', labelBn: 'গেট লগ', icon: Video, path: '/admin/gate-logs', requiredRoles: ['admin', 'manager'] },
-  { id: 'food', label: 'Food Sales', labelBn: 'খাবার বিক্রয়', icon: UtensilsCrossed, path: '/admin/food', requiredRoles: ['admin', 'manager', 'staff'] },
-  { id: 'expenses', label: 'Expenses', labelBn: 'খরচ', icon: Receipt, path: '/admin/expenses', requiredRoles: ['admin', 'manager'] },
-  { id: 'employees', label: 'Employees', labelBn: 'কর্মী', icon: Users, path: '/admin/employees', requiredRoles: ['admin'] },
-  { id: 'roster', label: 'Roster', labelBn: 'রোস্টার', icon: Clock, path: '/admin/roster', requiredRoles: ['admin', 'manager'] },
-  { id: 'bookings', label: 'Bookings', labelBn: 'বুকিং', icon: CalendarDays, path: '/admin/bookings', requiredRoles: ['admin', 'manager', 'staff'] },
-  { id: 'events', label: 'Events', labelBn: 'ইভেন্ট', icon: PartyPopper, path: '/admin/events', requiredRoles: ['admin', 'manager'] },
-  { id: 'rides', label: 'Rides', labelBn: 'রাইড', icon: FerrisWheel, path: '/admin/rides', requiredRoles: ['admin'] },
-  { id: 'ride-reviews', label: 'Ride Reviews', labelBn: 'রাইড রিভিউ', icon: Star, path: '/admin/ride-reviews', requiredRoles: ['admin', 'manager'] },
-  { id: 'reports', label: 'Reports', labelBn: 'রিপোর্ট', icon: FileBarChart, path: '/admin/reports', requiredRoles: ['admin', 'manager'] },
-  { id: 'profit', label: 'Profit & Loss', labelBn: 'লাভ-ক্ষতি', icon: TrendingUp, path: '/admin/profit', requiredRoles: ['admin', 'manager'] },
-  { id: 'notifications', label: 'Notifications', labelBn: 'নোটিফিকেশন', icon: MessageSquare, path: '/admin/notifications', requiredRoles: ['admin', 'manager'] },
-  { id: 'homepage', label: 'Homepage', labelBn: 'হোমপেইজ', icon: Home, path: '/admin/homepage', requiredRoles: ['admin'] },
-  { id: 'users', label: 'Users', labelBn: 'ইউজার', icon: Shield, path: '/admin/users', requiredRoles: ['admin'] },
-  { id: 'settings', label: 'Settings', labelBn: 'সেটিংস', icon: Settings, path: '/admin/settings', requiredRoles: ['admin'] },
+  { id: 'ticketing', label: 'Ticketing', labelBn: 'টিকেটিং', icon: Ticket, path: '/admin/ticketing', requiredRoles: ['super_admin', 'admin', 'manager', 'staff'] },
+  { id: 'memberships', label: 'Memberships', labelBn: 'মেম্বারশিপ', icon: Crown, path: '/admin/memberships', requiredRoles: ['super_admin', 'admin', 'manager'] },
+  { id: 'gate-logs', label: 'Gate Logs', labelBn: 'গেট লগ', icon: Video, path: '/admin/gate-logs', requiredRoles: ['super_admin', 'admin', 'manager'] },
+  { id: 'food', label: 'Food Sales', labelBn: 'খাবার বিক্রয়', icon: UtensilsCrossed, path: '/admin/food', requiredRoles: ['super_admin', 'admin', 'manager', 'staff'] },
+  { id: 'expenses', label: 'Expenses', labelBn: 'খরচ', icon: Receipt, path: '/admin/expenses', requiredRoles: ['super_admin', 'admin', 'manager'] },
+  { id: 'employees', label: 'Employees', labelBn: 'কর্মী', icon: Users, path: '/admin/employees', requiredRoles: ['super_admin', 'admin'] },
+  { id: 'roster', label: 'Roster', labelBn: 'রোস্টার', icon: Clock, path: '/admin/roster', requiredRoles: ['super_admin', 'admin', 'manager'] },
+  { id: 'bookings', label: 'Bookings', labelBn: 'বুকিং', icon: CalendarDays, path: '/admin/bookings', requiredRoles: ['super_admin', 'admin', 'manager', 'staff'] },
+  { id: 'events', label: 'Events', labelBn: 'ইভেন্ট', icon: PartyPopper, path: '/admin/events', requiredRoles: ['super_admin', 'admin', 'manager'] },
+  { id: 'rides', label: 'Rides', labelBn: 'রাইড', icon: FerrisWheel, path: '/admin/rides', requiredRoles: ['super_admin', 'admin'] },
+  { id: 'ride-reviews', label: 'Ride Reviews', labelBn: 'রাইড রিভিউ', icon: Star, path: '/admin/ride-reviews', requiredRoles: ['super_admin', 'admin', 'manager'] },
+  { id: 'reports', label: 'Reports', labelBn: 'রিপোর্ট', icon: FileBarChart, path: '/admin/reports', requiredRoles: ['super_admin', 'admin', 'manager'] },
+  { id: 'profit', label: 'Profit & Loss', labelBn: 'লাভ-ক্ষতি', icon: TrendingUp, path: '/admin/profit', requiredRoles: ['super_admin', 'admin', 'manager'] },
+  { id: 'notifications', label: 'Notifications', labelBn: 'নোটিফিকেশন', icon: MessageSquare, path: '/admin/notifications', requiredRoles: ['super_admin', 'admin', 'manager'] },
+  { id: 'homepage', label: 'Homepage', labelBn: 'হোমপেইজ', icon: Home, path: '/admin/homepage', requiredRoles: ['super_admin', 'admin'] },
+  { id: 'users', label: 'Users', labelBn: 'ইউজার', icon: Shield, path: '/admin/users', requiredRoles: ['super_admin'] },
+  { id: 'settings', label: 'Settings', labelBn: 'সেটিংস', icon: Settings, path: '/admin/settings', requiredRoles: ['super_admin', 'admin'] },
 ];
 
 interface AdminSidebarProps {
@@ -77,7 +77,7 @@ function SidebarContent({
 }: AdminSidebarProps & { isMobile?: boolean; onMobileClose?: () => void }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { roles, isAdmin, loading: rolesLoading } = useUserRoles();
+  const { roles, isAdmin, isSuperAdmin, loading: rolesLoading } = useUserRoles();
 
   // Filter menu items based on user roles
   const menuItems = useMemo(() => {
@@ -86,14 +86,14 @@ function SidebarContent({
       if (!item.requiredRoles || item.requiredRoles.length === 0) {
         return true;
       }
-      // Admin sees everything
-      if (isAdmin) {
+      // Super admin sees everything
+      if (isSuperAdmin) {
         return true;
       }
       // Check if user has any of the required roles
       return item.requiredRoles.some(role => roles.includes(role));
     });
-  }, [roles, isAdmin]);
+  }, [roles, isSuperAdmin]);
 
   const handleNavigate = (path: string) => {
     navigate(path);
