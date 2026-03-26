@@ -17,6 +17,7 @@ export function useUserRoles() {
   const { user, initialized } = useAuth();
   const [state, setState] = useState<UserRoleState>({
     roles: [],
+    isSuperAdmin: false,
     isAdmin: false,
     isManager: false,
     isStaff: false,
