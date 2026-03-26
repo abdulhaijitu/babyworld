@@ -91,7 +91,7 @@ export default function AdminMembershipPackages() {
           price: createForm.price,
           discount_percent: createForm.discount_percent,
           max_children: createForm.max_children,
-          is_active: createForm.is_active,
+          max_guardians: createForm.max_guardians,
           sort_order: packages.length,
         } as any);
       if (error) throw error;
