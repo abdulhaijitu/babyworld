@@ -312,9 +312,7 @@ export default function AdminRideReviews() {
                   {filteredReviews.map(review => (
                     <TableRow key={review.id}>
                       <TableCell className="font-medium">
-                        {language === 'bn' 
-                          ? review.rides?.name_bn || review.rides?.name 
-                          : review.rides?.name}
+                        {review.rides?.name}
                       </TableCell>
                       <TableCell>
                         <div>
