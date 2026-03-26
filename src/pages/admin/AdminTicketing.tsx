@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -91,6 +92,7 @@ interface TicketType {
 const PAGE_SIZE = 50;
 
 export default function AdminTicketing() {
+  const navigate = useNavigate();
   const [tickets, setTickets] = useState<TicketType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -381,6 +383,10 @@ export default function AdminTicketing() {
           <p className="text-muted-foreground">Manage tickets</p>
         </div>
         <div className="flex items-center gap-2">
+          <Button onClick={() => navigate('/admin/ticketing/create')}>
+            <Plus className="w-4 h-4 mr-2" />
+            Create Ticket
+          </Button>
           <QRScannerDialog />
         </div>
       </div>
