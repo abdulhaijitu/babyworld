@@ -66,6 +66,7 @@ export default function AdminRides() {
   const [searchQuery, setSearchQuery] = useState('');
   const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+  const [filterCategory, setFilterCategory] = useState<string>('all');
 
   const { data: rides = [], isLoading } = useQuery({
     queryKey: ['admin-rides'],
@@ -189,9 +190,15 @@ export default function AdminRides() {
 
   // Filtered + paginated
   const filteredRides = useMemo(() => {
-    if (!searchQuery.trim()) return rides;
-    return rides.filter(r => r.name.toLowerCase().includes(searchQuery.toLowerCase()));
-  }, [rides, searchQuery]);
+    let result = rides;
+    if (filterCategory !== 'all') {
+      result = result.filter(r => r.category === filterCategory);
+    }
+    if (searchQuery.trim()) {
+      result = result.filter(r => r.name.toLowerCase().includes(searchQuery.toLowerCase()));
+    }
+    return result;
+  }, [rides, searchQuery, filterCategory]);
 
   const totalPages = Math.max(1, Math.ceil(filteredRides.length / entriesPerPage));
   const safePage = Math.min(currentPage, totalPages);
@@ -331,19 +338,30 @@ export default function AdminRides() {
           <CardTitle>Ride List</CardTitle>
         </CardHeader>
         <CardContent>
-          {/* Controls: Show entries + Search */}
+          {/* Controls: Show entries + Category Filter + Search */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-            <div className="flex items-center gap-2 text-sm">
-              <span className="text-muted-foreground">Show</span>
-              <Select value={String(entriesPerPage)} onValueChange={(v) => { setEntriesPerPage(Number(v)); setCurrentPage(1); }}>
-                <SelectTrigger className="w-[70px] h-8"><SelectValue /></SelectTrigger>
+            <div className="flex items-center gap-3 text-sm">
+              <div className="flex items-center gap-2">
+                <span className="text-muted-foreground">Show</span>
+                <Select value={String(entriesPerPage)} onValueChange={(v) => { setEntriesPerPage(Number(v)); setCurrentPage(1); }}>
+                  <SelectTrigger className="w-[70px] h-8"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="10">10</SelectItem>
+                    <SelectItem value="25">25</SelectItem>
+                    <SelectItem value="50">50</SelectItem>
+                  </SelectContent>
+                </Select>
+                <span className="text-muted-foreground">entries</span>
+              </div>
+              <Select value={filterCategory} onValueChange={(v) => { setFilterCategory(v); setCurrentPage(1); }}>
+                <SelectTrigger className="w-[120px] h-8"><SelectValue placeholder="Category" /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="10">10</SelectItem>
-                  <SelectItem value="25">25</SelectItem>
-                  <SelectItem value="50">50</SelectItem>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  <SelectItem value="kids">Kids</SelectItem>
+                  <SelectItem value="family">Family</SelectItem>
+                  <SelectItem value="thrill">Thrill</SelectItem>
                 </SelectContent>
               </Select>
-              <span className="text-muted-foreground">entries</span>
             </div>
             <div className="relative w-full sm:w-64">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
