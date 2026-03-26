@@ -397,23 +397,10 @@ export default function AdminTicketing() {
         </div>
       </div>
 
-      {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-        <TabsList className="grid w-full max-w-md grid-cols-2">
-          <TabsTrigger value="list">Ticket List</TabsTrigger>
-          <TabsTrigger value="create">
-            <Plus className="w-4 h-4 mr-2" />
-            Create Ticket
-          </TabsTrigger>
-        </TabsList>
-
-        {/* Create Tab */}
-        <TabsContent value="create" className="mt-6">
-          <CounterTicketForm onSuccess={handleTicketCreated} />
-        </TabsContent>
-
-        {/* List Tab */}
-        <TabsContent value="list" className="mt-6 space-y-6">
+      {activeView === 'create' ? (
+        <CounterTicketForm onSuccess={handleTicketCreated} />
+      ) : (
+        <div className="space-y-6">
           {/* Stats Cards - 4 columns */}
           {loading ? (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
