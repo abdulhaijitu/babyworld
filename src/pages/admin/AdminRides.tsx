@@ -518,13 +518,13 @@ export default function AdminRides() {
 
       {/* Create Dialog */}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-xl">
           <DialogHeader>
             <DialogTitle>Add New Ride</DialogTitle>
-            <DialogDescription>Enter ride details</DialogDescription>
+            <DialogDescription>Fill in the details to add a new ride</DialogDescription>
           </DialogHeader>
           {renderRideForm()}
-          <DialogFooter>
+          <DialogFooter className="pt-2 border-t">
             <Button variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
             <Button onClick={() => createMutation.mutate(formData)} disabled={!formData.name || formData.price < 0 || createMutation.isPending}>
               {createMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
@@ -536,13 +536,13 @@ export default function AdminRides() {
 
       {/* Edit Dialog */}
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-xl">
           <DialogHeader>
             <DialogTitle>Edit Ride</DialogTitle>
-            <DialogDescription>Update ride details</DialogDescription>
+            <DialogDescription>Update the ride details below</DialogDescription>
           </DialogHeader>
           {renderRideForm()}
-          <DialogFooter>
+          <DialogFooter className="pt-2 border-t">
             <Button variant="outline" onClick={() => setEditOpen(false)}>Cancel</Button>
             <Button onClick={() => selectedRide && updateMutation.mutate({ id: selectedRide.id, data: formData })} disabled={!formData.name || formData.price < 0 || updateMutation.isPending}>
               {updateMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
