@@ -39,14 +39,12 @@ export default function AdminSettings() {
     saving,
     pricing,
     setPricing,
-    timeSlots,
-    toggleTimeSlot,
     businessInfo,
     setBusinessInfo,
     notifications,
     setNotifications,
     savePricing,
-    saveTimeSlots,
+    
     saveBusinessInfo,
     saveNotifications,
     loadSettings
@@ -61,14 +59,6 @@ export default function AdminSettings() {
     }
   };
 
-  const handleSaveTimeSlots = async () => {
-    try {
-      await saveTimeSlots();
-      toast.success('Time slots saved');
-    } catch (error) {
-      toast.error('Failed to save');
-    }
-  };
 
   const handleSaveBusinessInfo = async () => {
     try {
@@ -88,7 +78,7 @@ export default function AdminSettings() {
     }
   };
 
-  const enabledSlotsCount = timeSlots.filter(s => s.enabled).length;
+  
 
   if (loading) {
     return (
@@ -126,14 +116,10 @@ export default function AdminSettings() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-5">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
           <TabsTrigger value="pricing" className="gap-2">
             <Banknote className="w-4 h-4 hidden sm:inline" />
             {'Pricing'}
-          </TabsTrigger>
-          <TabsTrigger value="timeslots" className="gap-2">
-            <Clock className="w-4 h-4 hidden sm:inline" />
-            {'Time Slots'}
           </TabsTrigger>
           <TabsTrigger value="business" className="gap-2">
             <Building className="w-4 h-4 hidden sm:inline" />
@@ -311,64 +297,6 @@ export default function AdminSettings() {
           </div>
         </TabsContent>
 
-        {/* Time Slots Tab */}
-        <TabsContent value="timeslots" className="mt-6 space-y-6">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="flex items-center gap-2">
-                    <Clock className="w-5 h-5" />
-                    {'Time Slot Configuration'}
-                  </CardTitle>
-                  <CardDescription>
-                    {enabledSlotsCount} {'slots enabled'}
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {timeSlots.map((slot) => (
-                  <div 
-                    key={slot.id} 
-                    className={`flex items-center justify-between p-3 rounded-lg border ${
-                      slot.enabled ? 'bg-background' : 'bg-muted/50'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <Clock className={`w-4 h-4 ${slot.enabled ? 'text-primary' : 'text-muted-foreground'}`} />
-                      <span className={slot.enabled ? '' : 'text-muted-foreground'}>{slot.label}</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      {slot.enabled ? (
-                        <Badge variant="outline" className="text-green-600 border-green-500/20">
-                          {'Active'}
-                        </Badge>
-                      ) : (
-                        <Badge variant="secondary">
-                          {'Disabled'}
-                        </Badge>
-                      )}
-                      <Switch
-                        checked={slot.enabled}
-                        onCheckedChange={() => toggleTimeSlot(slot.id)}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="flex justify-end">
-            <Button onClick={handleSaveTimeSlots} disabled={saving}>
-              {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              <Save className="w-4 h-4 mr-2" />
-              {'Save Changes'}
-            </Button>
-          </div>
-        </TabsContent>
 
         {/* Business Info Tab */}
         <TabsContent value="business" className="mt-6 space-y-6">
