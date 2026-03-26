@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { format } from 'date-fns';
-import { Plus, Minus, Ticket, Loader2, CheckCircle, Crown, Search, Footprints, UserCheck } from 'lucide-react';
+import { Plus, Minus, Ticket, Loader2, CheckCircle, Crown, Search, Footprints, UserCheck, History, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -53,6 +53,17 @@ interface MembershipInfo {
   valid_till: string;
 }
 
+interface VisitRecord {
+  id: string;
+  ticket_number: string;
+  slot_date: string;
+  total_price: number | null;
+  child_count: number | null;
+  guardian_count: number | null;
+  status: string;
+  created_at: string;
+}
+
 interface CounterTicketFormProps {
   onSuccess?: (ticket: any) => void;
 }
@@ -69,7 +80,8 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
   const [discount, setDiscount] = useState(0);
 
   const [previousCustomer, setPreviousCustomer] = useState(false);
-
+  const [visitHistory, setVisitHistory] = useState<VisitRecord[]>([]);
+  const [showHistory, setShowHistory] = useState(false);
   // Generate sequential entry number
   const [entryNo, setEntryNo] = useState('');
   const generateEntryNo = useCallback(async () => {
@@ -146,7 +158,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
         try {
           // Check membership
           const today = new Date().toISOString().split('T')[0];
-          const [membershipRes, ticketRes] = await Promise.all([
+          const [membershipRes, ticketRes, historyRes] = await Promise.all([
             supabase
               .from('memberships')
               .select('*')
@@ -162,6 +174,12 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
               .order('created_at', { ascending: false })
               .limit(1)
               .maybeSingle(),
+            supabase
+              .from('tickets')
+              .select('id, ticket_number, slot_date, total_price, child_count, guardian_count, status, created_at')
+              .eq('guardian_phone', phone)
+              .order('created_at', { ascending: false })
+              .limit(20),
           ]);
 
           if (membershipRes.data) {
@@ -189,15 +207,21 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
           } else {
             setPreviousCustomer(false);
           }
+
+          // Visit history
+          setVisitHistory((historyRes.data as VisitRecord[]) || []);
+          setShowHistory(false);
         } catch {
           setMembershipInfo(null);
           setPreviousCustomer(false);
+          setVisitHistory([]);
         } finally {
           setIsCheckingMembership(false);
         }
       } else {
         setMembershipInfo(null);
         setPreviousCustomer(false);
+        setVisitHistory([]);
       }
     };
     const debounce = setTimeout(checkPhoneData, 500);
@@ -300,6 +324,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
       setSelectedRides({});
       setMembershipInfo(null);
       setPreviousCustomer(false);
+      setVisitHistory([]);
       setDiscount(0);
       generateEntryNo();
       onSuccess?.(data.ticket);
@@ -487,6 +512,51 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                     <span className="font-medium text-primary">{membershipInfo.member_name}</span>
                     {previousCustomer && <Badge variant="outline" className="text-[10px]">Returning</Badge>}
                     <Badge variant="secondary" className="text-[10px] ml-auto">{membershipInfo.discount_percent}% off</Badge>
+                  </div>
+                )}
+
+                {/* Visit History */}
+                {visitHistory.length > 0 && (
+                  <div className="border rounded-md overflow-hidden">
+                    <button
+                      type="button"
+                      className="w-full flex items-center gap-2 p-2 text-xs font-medium hover:bg-muted/50 transition-colors"
+                      onClick={() => setShowHistory(v => !v)}
+                    >
+                      <History className="h-3.5 w-3.5 text-muted-foreground" />
+                      <span>Visit History ({visitHistory.length})</span>
+                      {showHistory ? <ChevronUp className="h-3.5 w-3.5 ml-auto" /> : <ChevronDown className="h-3.5 w-3.5 ml-auto" />}
+                    </button>
+                    {showHistory && (
+                      <div className="border-t max-h-36 overflow-y-auto">
+                        <table className="w-full text-[11px]">
+                          <thead className="bg-muted/50 sticky top-0">
+                            <tr>
+                              <th className="text-left px-2 py-1 font-medium text-muted-foreground">Date</th>
+                              <th className="text-left px-2 py-1 font-medium text-muted-foreground">Ticket</th>
+                              <th className="text-center px-2 py-1 font-medium text-muted-foreground">C/G</th>
+                              <th className="text-right px-2 py-1 font-medium text-muted-foreground">Total</th>
+                              <th className="text-center px-2 py-1 font-medium text-muted-foreground">Status</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {visitHistory.map((v) => (
+                              <tr key={v.id} className="border-t border-muted/30">
+                                <td className="px-2 py-1">{format(new Date(v.slot_date), 'dd MMM yy')}</td>
+                                <td className="px-2 py-1 font-mono">{v.ticket_number}</td>
+                                <td className="px-2 py-1 text-center">{v.child_count || 1}/{v.guardian_count || 1}</td>
+                                <td className="px-2 py-1 text-right">৳{v.total_price || 0}</td>
+                                <td className="px-2 py-1 text-center">
+                                  <Badge variant={v.status === 'used' ? 'secondary' : v.status === 'cancelled' ? 'destructive' : 'default'} className="text-[9px] px-1 py-0">
+                                    {v.status}
+                                  </Badge>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
                   </div>
                 )}
 
