@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -21,38 +21,37 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Switch } from '@/components/ui/switch';
 import { 
-  Plus, Edit, Trash2, Loader2, FerrisWheel, Baby, Users, Zap,
-  Upload, X, Image as ImageIcon, Star
+  Plus, Edit, Trash2, Loader2, FerrisWheel,
+  Upload, X, Image as ImageIcon, Search,
+  ChevronLeft, ChevronRight, Activity, Ban, DollarSign, Gift
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-
-type RideCategory = 'kids' | 'family' | 'thrill';
 
 interface Ride {
   id: string;
   name: string;
   price: number;
-  category: RideCategory;
+  category: string;
   is_active: boolean;
   image_url: string | null;
   avg_rating: number | null;
   review_count: number | null;
+  duration_minutes: number | null;
+  max_riders: number | null;
+  ride_type: string | null;
   created_at: string;
 }
-
-const CATEGORY_INFO: Record<RideCategory, { label: string; icon: typeof Baby; color: string }> = {
-  kids: { label: 'Kids', icon: Baby, color: 'bg-green-500/10 text-green-600 border-green-200' },
-  family: { label: 'Family', icon: Users, color: 'bg-blue-500/10 text-blue-600 border-blue-200' },
-  thrill: { label: 'Thrill', icon: Zap, color: 'bg-orange-500/10 text-orange-600 border-orange-200' }
-};
 
 const defaultFormData = {
   name: '',
   price: 0,
-  category: 'kids' as RideCategory,
+  category: 'kids' as string,
   is_active: true,
-  image_url: '' as string
+  image_url: '' as string,
+  duration_minutes: 0,
+  max_riders: 0,
+  ride_type: 'Paid' as string,
 };
 
 export default function AdminRides() {
@@ -64,7 +63,9 @@ export default function AdminRides() {
   const [selectedRide, setSelectedRide] = useState<Ride | null>(null);
   const [formData, setFormData] = useState(defaultFormData);
   const [uploading, setUploading] = useState(false);
-  const [filterCategory, setFilterCategory] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [entriesPerPage, setEntriesPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { data: rides = [], isLoading } = useQuery({
     queryKey: ['admin-rides'],
@@ -72,7 +73,6 @@ export default function AdminRides() {
       const { data, error } = await supabase
         .from('rides')
         .select('*')
-        .order('category', { ascending: true })
         .order('name', { ascending: true });
       if (error) throw error;
       return data as Ride[];
@@ -86,7 +86,10 @@ export default function AdminRides() {
         price: data.price,
         category: data.category,
         is_active: data.is_active,
-        image_url: data.image_url || null
+        image_url: data.image_url || null,
+        duration_minutes: data.duration_minutes || 0,
+        max_riders: data.max_riders || null,
+        ride_type: data.ride_type || 'Paid',
       });
       if (error) throw error;
     },
@@ -97,9 +100,7 @@ export default function AdminRides() {
       setCreateOpen(false);
       resetForm();
     },
-    onError: (error: any) => {
-      toast.error(error.message || 'Failed to add ride');
-    }
+    onError: (error: any) => toast.error(error.message || 'Failed to add ride'),
   });
 
   const updateMutation = useMutation({
@@ -109,20 +110,21 @@ export default function AdminRides() {
         price: data.price,
         category: data.category,
         is_active: data.is_active,
-        image_url: data.image_url || null
+        image_url: data.image_url || null,
+        duration_minutes: data.duration_minutes || 0,
+        max_riders: data.max_riders || null,
+        ride_type: data.ride_type || 'Paid',
       }).eq('id', id);
       if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-rides'] });
       queryClient.invalidateQueries({ queryKey: ['rides'] });
-      toast.success('Ride updated successfully!');
+      toast.success('Ride updated!');
       setEditOpen(false);
       resetForm();
     },
-    onError: (error: any) => {
-      toast.error(error.message || 'Update failed');
-    }
+    onError: (error: any) => toast.error(error.message || 'Update failed'),
   });
 
   const deleteMutation = useMutation({
@@ -133,37 +135,20 @@ export default function AdminRides() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-rides'] });
       queryClient.invalidateQueries({ queryKey: ['rides'] });
-      toast.success('Ride deleted successfully!');
+      toast.success('Ride deleted!');
       setDeleteOpen(false);
       setSelectedRide(null);
     },
-    onError: (error: any) => {
-      toast.error(error.message || 'Delete failed');
-    }
+    onError: (error: any) => toast.error(error.message || 'Delete failed'),
   });
 
-  const toggleActiveMutation = useMutation({
-    mutationFn: async ({ id, is_active }: { id: string; is_active: boolean }) => {
-      const { error } = await supabase.from('rides').update({ is_active }).eq('id', id);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-rides'] });
-      queryClient.invalidateQueries({ queryKey: ['rides'] });
-    }
-  });
-
-  const resetForm = () => {
-    setFormData(defaultFormData);
-    setSelectedRide(null);
-  };
+  const resetForm = () => { setFormData(defaultFormData); setSelectedRide(null); };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (!file.type.startsWith('image/')) { toast.error('Please upload an image file'); return; }
     if (file.size > 2 * 1024 * 1024) { toast.error('Image must be less than 2MB'); return; }
-
     setUploading(true);
     try {
       const fileExt = file.name.split('.').pop();
@@ -174,14 +159,9 @@ export default function AdminRides() {
       setFormData(prev => ({ ...prev, image_url: publicUrl }));
       toast.success('Image uploaded!');
     } catch (error: any) {
-      console.error('Upload error:', error);
       toast.error(error.message || 'Upload failed');
-    } finally {
-      setUploading(false);
-    }
+    } finally { setUploading(false); }
   };
-
-  const removeImage = () => setFormData(prev => ({ ...prev, image_url: '' }));
 
   const handleEdit = (ride: Ride) => {
     setSelectedRide(ride);
@@ -190,73 +170,86 @@ export default function AdminRides() {
       price: ride.price,
       category: ride.category,
       is_active: ride.is_active,
-      image_url: ride.image_url || ''
+      image_url: ride.image_url || '',
+      duration_minutes: ride.duration_minutes || 0,
+      max_riders: ride.max_riders || 0,
+      ride_type: ride.ride_type || 'Paid',
     });
     setEditOpen(true);
   };
 
-  const handleDelete = (ride: Ride) => {
-    setSelectedRide(ride);
-    setDeleteOpen(true);
-  };
+  const handleDelete = (ride: Ride) => { setSelectedRide(ride); setDeleteOpen(true); };
 
   // Stats
   const totalRides = rides.length;
   const activeRides = rides.filter(r => r.is_active).length;
-  const kidsCount = rides.filter(r => r.category === 'kids').length;
-  const familyCount = rides.filter(r => r.category === 'family').length;
-  const thrillCount = rides.filter(r => r.category === 'thrill').length;
+  const inactiveRides = totalRides - activeRides;
+  const paidRides = rides.filter(r => (r.ride_type || 'Paid') === 'Paid').length;
+  const freeRides = rides.filter(r => r.ride_type === 'Free').length;
 
-  // Filtered rides
-  const filteredRides = filterCategory === 'all' 
-    ? rides 
-    : rides.filter(r => r.category === filterCategory);
+  // Filtered + paginated
+  const filteredRides = useMemo(() => {
+    if (!searchQuery.trim()) return rides;
+    return rides.filter(r => r.name.toLowerCase().includes(searchQuery.toLowerCase()));
+  }, [rides, searchQuery]);
 
-  // Shared form renderer
+  const totalPages = Math.max(1, Math.ceil(filteredRides.length / entriesPerPage));
+  const safePage = Math.min(currentPage, totalPages);
+  const startIdx = (safePage - 1) * entriesPerPage;
+  const paginatedRides = filteredRides.slice(startIdx, startIdx + entriesPerPage);
+  const showingFrom = filteredRides.length === 0 ? 0 : startIdx + 1;
+  const showingTo = Math.min(startIdx + entriesPerPage, filteredRides.length);
+
+  // Form renderer
   const renderRideForm = () => (
     <div className="space-y-4">
       <div className="space-y-2">
         <Label>Name</Label>
-        <Input
-          value={formData.name}
-          onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-          placeholder="Ferris Wheel"
-        />
+        <Input value={formData.name} onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))} placeholder="Ferris Wheel" />
       </div>
       
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label>Price (৳)</Label>
-          <Input
-            type="number"
-            value={formData.price}
-            onChange={(e) => setFormData(prev => ({ ...prev, price: Number(e.target.value) }))}
-            min={0}
-          />
+          <Input type="number" value={formData.price} onChange={(e) => setFormData(prev => ({ ...prev, price: Number(e.target.value) }))} min={0} />
         </div>
         <div className="space-y-2">
-          <Label>Category</Label>
-          <Select
-            value={formData.category}
-            onValueChange={(value: RideCategory) => setFormData(prev => ({ ...prev, category: value }))}
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
+          <Label>Type</Label>
+          <Select value={formData.ride_type} onValueChange={(value) => setFormData(prev => ({ ...prev, ride_type: value }))}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="kids">Kids</SelectItem>
-              <SelectItem value="family">Family</SelectItem>
-              <SelectItem value="thrill">Thrill</SelectItem>
+              <SelectItem value="Paid">Paid</SelectItem>
+              <SelectItem value="Free">Free</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </div>
 
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label>Duration (minutes)</Label>
+          <Input type="number" value={formData.duration_minutes} onChange={(e) => setFormData(prev => ({ ...prev, duration_minutes: Number(e.target.value) }))} min={0} />
+        </div>
+        <div className="space-y-2">
+          <Label>Max Riders</Label>
+          <Input type="number" value={formData.max_riders} onChange={(e) => setFormData(prev => ({ ...prev, max_riders: Number(e.target.value) }))} min={0} />
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label>Category</Label>
+        <Select value={formData.category} onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}>
+          <SelectTrigger><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="kids">Kids</SelectItem>
+            <SelectItem value="family">Family</SelectItem>
+            <SelectItem value="thrill">Thrill</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       <div className="flex items-center gap-2">
-        <Switch
-          checked={formData.is_active}
-          onCheckedChange={(checked) => setFormData(prev => ({ ...prev, is_active: checked }))}
-        />
+        <Switch checked={formData.is_active} onCheckedChange={(checked) => setFormData(prev => ({ ...prev, is_active: checked }))} />
         <Label>Active</Label>
       </div>
 
@@ -265,28 +258,16 @@ export default function AdminRides() {
         {formData.image_url ? (
           <div className="relative w-full h-32 rounded-lg overflow-hidden border">
             <img src={formData.image_url} alt="Preview" className="w-full h-full object-cover" />
-            <Button
-              type="button" variant="destructive" size="icon"
-              className="absolute top-2 right-2 h-6 w-6"
-              onClick={removeImage}
-            >
+            <Button type="button" variant="destructive" size="icon" className="absolute top-2 right-2 h-6 w-6" onClick={() => setFormData(prev => ({ ...prev, image_url: '' }))}>
               <X className="h-3 w-3" />
             </Button>
           </div>
         ) : (
           <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
-            {uploading ? (
-              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-            ) : (
-              <>
-                <Upload className="h-8 w-8 text-muted-foreground mb-2" />
-                <span className="text-sm text-muted-foreground">Upload image</span>
-              </>
+            {uploading ? <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /> : (
+              <><Upload className="h-8 w-8 text-muted-foreground mb-2" /><span className="text-sm text-muted-foreground">Upload image</span></>
             )}
-            <input
-              type="file" accept="image/*" className="hidden"
-              onChange={handleImageUpload} disabled={uploading}
-            />
+            <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={uploading} />
           </label>
         )}
       </div>
@@ -310,62 +291,71 @@ export default function AdminRides() {
         </Button>
       </div>
 
-      {/* Stats Cards - 5 cards */}
+      {/* Stats Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Total Rides</CardDescription>
+            <CardDescription className="flex items-center gap-1"><FerrisWheel className="w-3.5 h-3.5" /> Total Rides</CardDescription>
             <CardTitle className="text-2xl">{totalRides}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Active</CardDescription>
+            <CardDescription className="flex items-center gap-1"><Activity className="w-3.5 h-3.5" /> Active</CardDescription>
             <CardTitle className="text-2xl text-green-600">{activeRides}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Kids</CardDescription>
-            <CardTitle className="text-2xl">{kidsCount}</CardTitle>
+            <CardDescription className="flex items-center gap-1"><Ban className="w-3.5 h-3.5" /> Inactive</CardDescription>
+            <CardTitle className="text-2xl text-destructive">{inactiveRides}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Family</CardDescription>
-            <CardTitle className="text-2xl">{familyCount}</CardTitle>
+            <CardDescription className="flex items-center gap-1"><DollarSign className="w-3.5 h-3.5" /> Paid</CardDescription>
+            <CardTitle className="text-2xl">{paidRides}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Thrill</CardDescription>
-            <CardTitle className="text-2xl">{thrillCount}</CardTitle>
+            <CardDescription className="flex items-center gap-1"><Gift className="w-3.5 h-3.5" /> Free</CardDescription>
+            <CardTitle className="text-2xl">{freeRides}</CardTitle>
           </CardHeader>
         </Card>
       </div>
 
       {/* Rides Table */}
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+        <CardHeader className="pb-4">
           <CardTitle>Ride List</CardTitle>
-          <Select value={filterCategory} onValueChange={setFilterCategory}>
-            <SelectTrigger className="w-[140px]">
-              <SelectValue placeholder="Filter" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="kids">Kids</SelectItem>
-              <SelectItem value="family">Family</SelectItem>
-              <SelectItem value="thrill">Thrill</SelectItem>
-            </SelectContent>
-          </Select>
         </CardHeader>
         <CardContent>
+          {/* Controls: Show entries + Search */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-muted-foreground">Show</span>
+              <Select value={String(entriesPerPage)} onValueChange={(v) => { setEntriesPerPage(Number(v)); setCurrentPage(1); }}>
+                <SelectTrigger className="w-[70px] h-8"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="10">10</SelectItem>
+                  <SelectItem value="25">25</SelectItem>
+                  <SelectItem value="50">50</SelectItem>
+                </SelectContent>
+              </Select>
+              <span className="text-muted-foreground">entries</span>
+            </div>
+            <div className="relative w-full sm:w-64">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input placeholder="Search rides..." value={searchQuery} onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }} className="pl-8 h-8" />
+            </div>
+          </div>
+
           {isLoading ? (
             <div className="flex items-center justify-center py-8">
               <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
             </div>
-          ) : filteredRides.length === 0 ? (
+          ) : paginatedRides.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
               <FerrisWheel className="w-12 h-12 mx-auto mb-2 opacity-50" />
               <p>No rides found</p>
@@ -375,76 +365,108 @@ export default function AdminRides() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[60px]"></TableHead>
+                    <TableHead className="w-[50px]">SL</TableHead>
+                    <TableHead className="w-[60px]">Image</TableHead>
                     <TableHead>Name</TableHead>
-                    <TableHead>Category</TableHead>
+                    <TableHead>Type</TableHead>
                     <TableHead>Price</TableHead>
-                    <TableHead>Rating</TableHead>
+                    <TableHead>Duration</TableHead>
+                    <TableHead>Max Rider</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead className="text-right">Action</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredRides.map((ride) => {
-                    const catInfo = CATEGORY_INFO[ride.category];
-                    const CatIcon = catInfo.icon;
-                    return (
-                      <TableRow key={ride.id} className={cn(!ride.is_active && 'opacity-50')}>
-                        <TableCell>
-                          {ride.image_url ? (
-                            <img src={ride.image_url} alt={ride.name} className="w-10 h-10 rounded-lg object-cover" />
-                          ) : (
-                            <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center">
-                              <ImageIcon className="w-5 h-5 text-muted-foreground" />
-                            </div>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          <p className="font-medium">{ride.name}</p>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline" className={cn("text-xs", catInfo.color)}>
-                            <CatIcon className="w-4 h-4" />
-                            <span className="ml-1">{catInfo.label}</span>
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <span className="font-medium">৳{ride.price}</span>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-1">
-                            <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                            <span className="text-sm font-medium">{ride.avg_rating?.toFixed(1) || '0.0'}</span>
-                            <span className="text-xs text-muted-foreground">({ride.review_count || 0})</span>
+                  {paginatedRides.map((ride, idx) => (
+                    <TableRow key={ride.id} className={cn(!ride.is_active && 'opacity-50')}>
+                      <TableCell className="font-medium text-muted-foreground">{startIdx + idx + 1}</TableCell>
+                      <TableCell>
+                        {ride.image_url ? (
+                          <img src={ride.image_url} alt={ride.name} className="w-10 h-10 rounded-lg object-cover" />
+                        ) : (
+                          <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center">
+                            <ImageIcon className="w-5 h-5 text-muted-foreground" />
                           </div>
-                        </TableCell>
-                        <TableCell>
-                          <Switch
-                            checked={ride.is_active}
-                            onCheckedChange={(checked) => 
-                              toggleActiveMutation.mutate({ id: ride.id, is_active: checked })
-                            }
-                          />
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex items-center justify-end gap-2">
-                            <Button variant="ghost" size="icon" onClick={() => handleEdit(ride)}>
-                              <Edit className="w-4 h-4" />
-                            </Button>
-                            <Button
-                              variant="ghost" size="icon"
-                              className="text-destructive hover:text-destructive"
-                              onClick={() => handleDelete(ride)}
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
+                        )}
+                      </TableCell>
+                      <TableCell><p className="font-medium">{ride.name}</p></TableCell>
+                      <TableCell>
+                        <span className={cn(
+                          "text-sm font-semibold",
+                          (ride.ride_type || 'Paid') === 'Paid' ? 'text-green-600' : 'text-blue-600'
+                        )}>
+                          {ride.ride_type || 'Paid'}
+                        </span>
+                      </TableCell>
+                      <TableCell><span className="font-medium">৳{ride.price}</span></TableCell>
+                      <TableCell><span className="text-sm">{ride.duration_minutes || 0} min</span></TableCell>
+                      <TableCell><span className="text-sm">{ride.max_riders ?? '—'}</span></TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className={cn(
+                          "text-xs font-semibold border-0",
+                          ride.is_active
+                            ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                            : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                        )}>
+                          {ride.is_active ? 'Active' : 'Inactive'}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          <Button
+                            variant="ghost" size="icon"
+                            className="h-8 w-8 text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-900/20"
+                            onClick={() => handleEdit(ride)}
+                          >
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost" size="icon"
+                            className="h-8 w-8 text-destructive hover:text-destructive hover:bg-red-50 dark:hover:bg-red-900/20"
+                            onClick={() => handleDelete(ride)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
+            </div>
+          )}
+
+          {/* Pagination */}
+          {filteredRides.length > 0 && (
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-4 text-sm">
+              <p className="text-muted-foreground">
+                Showing {showingFrom} to {showingTo} of {filteredRides.length} entries
+              </p>
+              <div className="flex items-center gap-1">
+                <Button variant="outline" size="sm" disabled={safePage <= 1} onClick={() => setCurrentPage(p => p - 1)} className="h-8">
+                  <ChevronLeft className="w-4 h-4" />
+                  Previous
+                </Button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1)
+                  .filter(p => p === 1 || p === totalPages || Math.abs(p - safePage) <= 1)
+                  .map((p, i, arr) => (
+                    <span key={p}>
+                      {i > 0 && arr[i - 1] !== p - 1 && <span className="px-1 text-muted-foreground">…</span>}
+                      <Button
+                        variant={p === safePage ? "default" : "outline"}
+                        size="sm" className="h-8 w-8 p-0"
+                        onClick={() => setCurrentPage(p)}
+                      >
+                        {p}
+                      </Button>
+                    </span>
+                  ))
+                }
+                <Button variant="outline" size="sm" disabled={safePage >= totalPages} onClick={() => setCurrentPage(p => p + 1)} className="h-8">
+                  Next
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
           )}
         </CardContent>
@@ -460,10 +482,7 @@ export default function AdminRides() {
           {renderRideForm()}
           <DialogFooter>
             <Button variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
-            <Button 
-              onClick={() => createMutation.mutate(formData)}
-              disabled={!formData.name || formData.price <= 0 || createMutation.isPending}
-            >
+            <Button onClick={() => createMutation.mutate(formData)} disabled={!formData.name || formData.price < 0 || createMutation.isPending}>
               {createMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               Add Ride
             </Button>
@@ -481,10 +500,7 @@ export default function AdminRides() {
           {renderRideForm()}
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditOpen(false)}>Cancel</Button>
-            <Button 
-              onClick={() => selectedRide && updateMutation.mutate({ id: selectedRide.id, data: formData })}
-              disabled={!formData.name || formData.price <= 0 || updateMutation.isPending}
-            >
+            <Button onClick={() => selectedRide && updateMutation.mutate({ id: selectedRide.id, data: formData })} disabled={!formData.name || formData.price < 0 || updateMutation.isPending}>
               {updateMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               Save Changes
             </Button>
@@ -503,10 +519,7 @@ export default function AdminRides() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-              onClick={() => selectedRide && deleteMutation.mutate(selectedRide.id)}
-            >
+            <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={() => selectedRide && deleteMutation.mutate(selectedRide.id)}>
               {deleteMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               Delete
             </AlertDialogAction>
