@@ -6,6 +6,7 @@ export type AppRole = 'super_admin' | 'admin' | 'manager' | 'staff' | 'user';
 
 interface UserRoleState {
   roles: AppRole[];
+  isSuperAdmin: boolean;
   isAdmin: boolean;
   isManager: boolean;
   isStaff: boolean;
