@@ -1,0 +1,1 @@
+ALTER TABLE public.rides ADD COLUMN description text DEFAULT '';

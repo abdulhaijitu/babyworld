@@ -31,6 +31,7 @@ import { cn } from '@/lib/utils';
 interface Ride {
   id: string;
   name: string;
+  description: string | null;
   price: number;
   category: string;
   is_active: boolean;
@@ -38,19 +39,18 @@ interface Ride {
   avg_rating: number | null;
   review_count: number | null;
   duration_minutes: number | null;
-  max_riders: number | null;
   ride_type: string | null;
   created_at: string;
 }
 
 const defaultFormData = {
   name: '',
+  description: '',
   price: 0,
   category: 'kids' as string,
   is_active: true,
   image_url: '' as string,
-  duration_minutes: 0,
-  max_riders: 0,
+  duration_hours: 0,
   ride_type: 'Paid' as string,
 };
 
@@ -82,14 +82,14 @@ export default function AdminRides() {
 
   const createMutation = useMutation({
     mutationFn: async (data: typeof formData) => {
-      const { error } = await supabase.from('rides').insert([{
+    const { error } = await supabase.from('rides').insert([{
         name: data.name,
+        description: data.description || '',
         price: data.price,
         category: data.category as 'kids' | 'family' | 'thrill',
         is_active: data.is_active,
         image_url: data.image_url || null,
-        duration_minutes: data.duration_minutes || 0,
-        max_riders: data.max_riders || null,
+        duration_minutes: Math.round((data.duration_hours || 0) * 60),
         ride_type: data.ride_type || 'Paid',
       }]);
       if (error) throw error;
@@ -108,12 +108,12 @@ export default function AdminRides() {
     mutationFn: async ({ id, data }: { id: string; data: typeof formData }) => {
       const { error } = await supabase.from('rides').update({
         name: data.name,
+        description: data.description || '',
         price: data.price,
         category: data.category as 'kids' | 'family' | 'thrill',
         is_active: data.is_active,
         image_url: data.image_url || null,
-        duration_minutes: data.duration_minutes || 0,
-        max_riders: data.max_riders || null,
+        duration_minutes: Math.round((data.duration_hours || 0) * 60),
         ride_type: data.ride_type || 'Paid',
       }).eq('id', id);
       if (error) throw error;
@@ -168,12 +168,12 @@ export default function AdminRides() {
     setSelectedRide(ride);
     setFormData({
       name: ride.name,
+      description: (ride as any).description || '',
       price: ride.price,
       category: ride.category,
       is_active: ride.is_active,
       image_url: ride.image_url || '',
-      duration_minutes: ride.duration_minutes || 0,
-      max_riders: ride.max_riders || 0,
+      duration_hours: (ride.duration_minutes || 0) / 60,
       ride_type: ride.ride_type || 'Paid',
     });
     setEditOpen(true);
@@ -214,6 +214,17 @@ export default function AdminRides() {
         <Label>Name</Label>
         <Input value={formData.name} onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))} placeholder="Ferris Wheel" />
       </div>
+
+      <div className="space-y-2">
+        <Label>Description</Label>
+        <textarea
+          className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          value={formData.description}
+          onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+          placeholder="Write a short description about this ride..."
+          rows={3}
+        />
+      </div>
       
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
@@ -232,15 +243,9 @@ export default function AdminRides() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label>Duration (minutes)</Label>
-          <Input type="number" value={formData.duration_minutes} onChange={(e) => setFormData(prev => ({ ...prev, duration_minutes: Number(e.target.value) }))} min={0} />
-        </div>
-        <div className="space-y-2">
-          <Label>Max Riders</Label>
-          <Input type="number" value={formData.max_riders} onChange={(e) => setFormData(prev => ({ ...prev, max_riders: Number(e.target.value) }))} min={0} />
-        </div>
+      <div className="space-y-2">
+        <Label>Duration (hour)</Label>
+        <Input type="number" value={formData.duration_hours} onChange={(e) => setFormData(prev => ({ ...prev, duration_hours: Number(e.target.value) }))} min={0} step={0.5} />
       </div>
 
       <div className="space-y-2">
@@ -389,7 +394,6 @@ export default function AdminRides() {
                     <TableHead>Type</TableHead>
                     <TableHead>Price</TableHead>
                     <TableHead>Duration</TableHead>
-                    <TableHead>Max Rider</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="text-right">Action</TableHead>
                   </TableRow>
@@ -417,8 +421,7 @@ export default function AdminRides() {
                         </span>
                       </TableCell>
                       <TableCell><span className="font-medium">৳{ride.price}</span></TableCell>
-                      <TableCell><span className="text-sm">{ride.duration_minutes || 0} min</span></TableCell>
-                      <TableCell><span className="text-sm">{ride.max_riders ?? '—'}</span></TableCell>
+                      <TableCell><span className="text-sm">{((ride.duration_minutes || 0) / 60) % 1 === 0 ? `${(ride.duration_minutes || 0) / 60} hr` : `${((ride.duration_minutes || 0) / 60).toFixed(1)} hr`}</span></TableCell>
                       <TableCell>
                         <Badge variant="outline" className={cn(
                           "text-xs font-semibold border-0",

@@ -707,6 +707,7 @@ export type Database = {
           avg_rating: number | null
           category: Database["public"]["Enums"]["ride_category"]
           created_at: string
+          description: string | null
           duration_minutes: number | null
           id: string
           image_url: string | null
@@ -723,6 +724,7 @@ export type Database = {
           avg_rating?: number | null
           category?: Database["public"]["Enums"]["ride_category"]
           created_at?: string
+          description?: string | null
           duration_minutes?: number | null
           id?: string
           image_url?: string | null
@@ -739,6 +741,7 @@ export type Database = {
           avg_rating?: number | null
           category?: Database["public"]["Enums"]["ride_category"]
           created_at?: string
+          description?: string | null
           duration_minutes?: number | null
           id?: string
           image_url?: string | null
