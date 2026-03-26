@@ -28,6 +28,7 @@ export function useUserRoles() {
     if (!user?.id) {
       setState({
         roles: [],
+        isSuperAdmin: false,
         isAdmin: false,
         isManager: false,
         isStaff: false,
