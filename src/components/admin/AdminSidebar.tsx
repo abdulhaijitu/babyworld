@@ -31,6 +31,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useState, useMemo } from 'react';
 import { useUserRoles, type AppRole } from '@/hooks/useUserRoles';
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
 import babyWorldLogo from '@/assets/baby-world-logo.png';
 
 interface MenuItem {
