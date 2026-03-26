@@ -10,6 +10,8 @@ interface CreateMembershipInput {
   discount_percent?: number;
   notes?: string;
   valid_from?: string;
+  payment_type?: 'cash' | 'online' | 'pending';
+  payment_amount?: number;
 }
 
 serve(async (req) => {
