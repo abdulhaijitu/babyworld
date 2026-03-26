@@ -66,6 +66,7 @@ import { QuickActions } from '@/components/admin/QuickActions';
 import { ActivityLogCard } from '@/components/admin/ActivityLogCard';
 import { VisitorCounter } from '@/components/admin/VisitorCounter';
 import { QuickReportsWidget } from '@/components/admin/QuickReportsWidget';
+import { ExpiringCardsAlert } from '@/components/admin/ExpiringCardsAlert';
 
 const PRICE_PER_TICKET = 300;
 
