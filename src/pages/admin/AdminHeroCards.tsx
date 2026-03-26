@@ -27,6 +27,7 @@ interface HeroCard {
   cta_link: string;
   date_text: string | null;
   image_url: string | null;
+  expires_at: string | null;
   is_active: boolean;
   sort_order: number;
   created_at: string;
