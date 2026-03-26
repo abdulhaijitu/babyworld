@@ -92,6 +92,7 @@ interface TicketType {
 const PAGE_SIZE = 50;
 
 export default function AdminTicketing() {
+  const navigate = useNavigate();
   const [tickets, setTickets] = useState<TicketType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
