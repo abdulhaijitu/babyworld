@@ -1,46 +1,58 @@
 
 
-## Plan: Package Pricing Editable করা
+## Plan: CounterTicketForm কমপ্যাক্ট রিডিজাইন
 
-### পরিবর্তন সারসংক্ষেপ
+রেফারেন্স ইমেজ অনুসরণ করে **2-কলাম লেআউট** — বামে Rides সিলেক্ট, ডানে ফর্ম ফিল্ড ও প্রাইসিং — সব একনজরে দেখা যাবে।
 
-বর্তমানে Package Pricing কার্ড শুধু static text দেখায়। এটিকে editable input fields-এ রূপান্তর করা হবে এবং `useSettings` hook-এ package pricing state ও save logic যোগ হবে।
+### লেআউট পরিবর্তন
+
+```text
+┌─ Entry Ticket Form ──────────────────────────────────────┐
+│                                                          │
+│  ┌─ Left (Rides) ─────────┐  ┌─ Right (Form) ─────────┐ │
+│  │ Search rides...        │  │ Entry No   Customer Name│ │
+│  │ ┌─────────────────┐ ☐ Q│  │ Phone      Address      │ │
+│  │ │ Horse Ride ৳170 │ 1  │  │ Guardians  Children     │ │
+│  │ │ Bike Race  ৳230 │ 1  │  │ Total Amount   Discount │ │
+│  │ │ Water Gun  ৳130 │ 1  │  │ Grand Total             │ │
+│  │ │ Socks      ৳50  │ 1  │  │ Valid Until (auto)      │ │
+│  │ │ ...scrollable   │    │  │ Payment Method          │ │
+│  │ └─────────────────┘    │  │ [Create Ticket]         │ │
+│  └────────────────────────┘  └─────────────────────────┘ │
+└──────────────────────────────────────────────────────────┘
+```
+
+### মূল পরিবর্তন (`CounterTicketForm.tsx`)
+
+1. **লেআউট**: 3-কলাম → 2-কলাম (`lg:grid-cols-2`)
+   - **বাম কলাম**: Rides তালিকা — scrollable list format (card grid নয়), প্রতিটি ride একটি row-তে: নাম, price badge, checkbox, quantity input। উপরে search input। Socks-ও এই list-এ থাকবে।
+   - **ডান কলাম**: সব ফর্ম ফিল্ড + price summary একসাথে (আলাদা cards নয়, একটি compact form)
+
+2. **Rides UI সরলীকরণ**: 
+   - Image, rating, category badge রিমুভ
+   - Compact list rows — প্রতিটিতে: colored bar, name, ৳price badge, checkbox, quantity
+   - Search by name ফিল্টার যোগ
+
+3. **ডান ফর্ম compact করা**:
+   - একাধিক Card রিমুভ → single section
+   - Entry No (auto-generated), Customer Name, Phone, Address ফিল্ড
+   - Guardian ও Children count inline
+   - Total Amount, Coupon Code (optional), Discount, VAT (optional), Grand Total
+   - Valid Until (auto-calculated from now + duration)
+   - Payment Method (select dropdown), Transaction ID
+   - Create Ticket button
+
+4. **নতুন ফিল্ড যোগ**:
+   - `customer_address` (optional text)
+   - `coupon_code` (optional, with Apply button — placeholder only)
+   - `transaction_id` (optional, for online payments)
+   - Entry No auto-generate (YYMMDD format + random)
 
 ### ফাইল পরিবর্তন
 
-#### 1. `src/hooks/useSettings.ts`
-- নতুন `PackagePricing` interface যোগ:
-  ```
-  familyRegular, familyOffer, fullBoard, extraGuardian, rideZoneRegular, rideZoneOffer
-  ```
-- Default values সেট (500, 350, 800, 150, 1350, 500)
-- `packagePricing` state যোগ
-- `loadSettings`-এ `package_pricing` key parse করে state-এ সেট
-- `savePackagePricing` function যোগ — `saveSetting('package_pricing', ...)` কল করবে
-- `savePricing`-এর সাথে `savePackagePricing`-ও কল হবে যাতে একটি Save বাটনেই সব সেভ হয়
-- Return object-এ `packagePricing`, `setPackagePricing` expose
+| ফাইল | পরিবর্তন |
+|------|----------|
+| `src/components/admin/ticketing/CounterTicketForm.tsx` | সম্পূর্ণ UI restructure — 2-column compact layout |
 
-#### 2. `src/pages/admin/AdminSettings.tsx`
-- `useSettings` থেকে `packagePricing`, `setPackagePricing` import
-- Package Pricing কার্ডের static text রিপ্লেস করে editable form:
-  - **Family Package** section: Regular (৳), Eid/Offer (৳)
-  - **Full Board** section: Price (৳)
-  - **Extra Guardian** section: Price (৳)
-  - **Ride Zone Package** section: Regular (৳), Eid/Offer (৳)
-- সব ফিল্ড `৳` prefix সহ number input
-- `handleSavePricing` কলে package pricing-ও সেভ হবে
-
-### UI Layout
-```text
-┌─ Package Pricing ─────────────────────────┐
-│ Family Package                            │
-│ [Regular ৳500]  [Eid/Offer ৳350]         │
-│                                           │
-│ Full Board      Extra Guardian            │
-│ [৳800]          [৳150]                   │
-│                                           │
-│ Ride Zone Package                         │
-│ [Regular ৳1350] [Eid/Offer ৳500]         │
-└───────────────────────────────────────────┘
-```
+কোনো DB migration লাগবে না — শুধু UI restructure।
 
