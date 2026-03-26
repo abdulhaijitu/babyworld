@@ -145,9 +145,9 @@ export function useSettings() {
                 setPricing(prev => ({
                   ...prev,
                   hourlyPlay: {
-                    childGuardian: (value.child_guardian as number) || prev.hourlyPlay.childGuardian,
-                    childOnly: (value.child_only as number) || prev.hourlyPlay.childOnly,
-                    groupDiscount: (value.group_discount as number) || prev.hourlyPlay.groupDiscount
+                    guardianFee: (value.guardian_fee as number) ?? prev.hourlyPlay.guardianFee,
+                    childFee: (value.child_fee as number) ?? prev.hourlyPlay.childFee,
+                    socksFee: (value.socks_fee as number) ?? prev.hourlyPlay.socksFee,
                   }
                 }));
               }
