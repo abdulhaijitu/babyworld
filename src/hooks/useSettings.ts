@@ -57,9 +57,9 @@ interface NotificationSettings {
 // Default values
 const defaultPricing: PricingSettings = {
   hourlyPlay: {
-    childGuardian: 300,
-    childOnly: 250,
-    groupDiscount: 10
+    guardianFee: 100,
+    childFee: 200,
+    socksFee: 50,
   },
   events: {
     basic: 5000,
