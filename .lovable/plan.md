@@ -1,46 +1,35 @@
 
 
-## Plan: Rides Page Table & Modal Redesign
+## Plan: Ride Form ও Table আপডেট
 
-### Reference Analysis
-The uploaded screenshots show a professional ride management table with columns: **SL, Image, Name, Type, Price, Duration, Max Rider, Status, Action** — plus search bar, pagination, and "Show entries" control. Current DB is missing `duration` and `max_rider` columns.
+### পরিবর্তন
 
-### Changes
-
-#### 1. Database Migration — Add missing columns
+#### 1. Database Migration — `description` কলাম যোগ
 ```sql
-ALTER TABLE public.rides ADD COLUMN duration_minutes integer DEFAULT 0;
-ALTER TABLE public.rides ADD COLUMN max_riders integer DEFAULT null;
-ALTER TABLE public.rides ADD COLUMN ride_type text DEFAULT 'Paid';
+ALTER TABLE public.rides ADD COLUMN description text DEFAULT '';
 ```
 
-#### 2. Table Redesign (`AdminRides.tsx`)
-- **Add SL column** (serial number)
-- **Replace "Category" with "Type"** column showing Paid/Free badge (green text)
-- **Add "Duration" column** — display as `X min`
-- **Add "Max Rider" column** — numeric display
-- **Status column** — replace Switch with colored text badge ("Active" green / "Inactive" red)
-- **Actions column** — styled Edit (yellow) and Delete (red) icon buttons matching reference
-- **Add search bar** — filter by ride name (top-right)
-- **Add pagination** — "Showing X to Y of Z entries" + Previous/Next + page numbers
-- **Add "Show entries" dropdown** — 10/25/50 per page (top-left)
-- **Remove category filter** from card header (replaced by search)
+#### 2. `AdminRides.tsx` পরিবর্তন
 
-#### 3. Form/Modal Updates
-- Add **Duration (minutes)** input field
-- Add **Max Riders** input field
-- Add **Type** select (Paid/Free)
-- Keep existing: Name, Price, Image upload, Active toggle
+**ফর্ম (`renderRideForm`):**
+- **Description** টেক্সটএরিয়া যোগ (Name ফিল্ডের নিচে)
+- **Duration** লেবেল `"Duration (minutes)"` → `"Duration (hour)"` এবং ভ্যালু hour হিসেবে handle (ইনপুটে hour, DB তে minutes এ কনভার্ট)
+- **Max Riders** ফিল্ড সম্পূর্ণ রিমুভ
 
-#### 4. Stats Cards Update
-- Keep 5 cards but replace Kids/Family/Thrill with: **Total, Active, Inactive, Paid, Free**
+**Interface ও Data:**
+- `Ride` interface এ `description: string | null` যোগ
+- `defaultFormData` এ `description: ''` যোগ, `max_riders` রিমুভ
+- `handleEdit` এ `description` ম্যাপ, `max_riders` রিমুভ
+- Create/Update mutation থেকে `max_riders` রিমুভ, `description` যোগ
+- Duration ইনপুট hour এ দেখাবে, সেভের সময় `hours * 60` করে minutes এ DB তে পাঠাবে
 
-### Files Modified
-| File | Change |
+**টেবিল:**
+- **Max Rider** কলাম রিমুভ
+- **Duration** কলামে `X hr` বা `X.Y hr` ফরম্যাটে দেখাবে
+
+### ফাইল
+| ফাইল | পরিবর্তন |
 |------|--------|
-| `src/pages/admin/AdminRides.tsx` | Full table + modal + pagination redesign |
-| Database migration | Add `duration_minutes`, `max_riders`, `ride_type` columns |
-
-### Summary
-Table gets SL numbers, Type/Duration/MaxRider columns, search, pagination, and styled action buttons matching the reference. Modals get new fields for the added columns.
+| Database migration | `description` কলাম যোগ |
+| `src/pages/admin/AdminRides.tsx` | ফর্মে Description যোগ, Duration hour এ, Max Riders রিমুভ |
 
