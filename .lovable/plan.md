@@ -1,36 +1,33 @@
 
 
-## Plan: Membership Packages পেজ — টেবিল ভিউ ডিজাইন
+## Plan: Create Package মোডাল রিডিজাইন
 
-রেফারেন্স ইমেজের মতো কার্ড লেআউট থেকে **টেবিল লেআউট**-এ রূপান্তর করা হবে।
+রেফারেন্স ইমেজ অনুযায়ী Create Package ডায়ালগকে সেকশন-ভিত্তিক, পরিষ্কার লেআউটে রূপান্তর।
 
 ### পরিবর্তন — `src/pages/admin/AdminMembershipPackages.tsx`
 
-বর্তমান কার্ড-গ্রিড লেআউট সম্পূর্ণ বদলে টেবিল-ভিত্তিক ডিজাইন:
+**Create Dialog (lines 348-444) সম্পূর্ণ রিডিজাইন:**
 
-1. **হেডার সেকশন**: টাইটেল + সার্চ ইনপুট + "+ Create Package" বাটন
-2. **ডাটা টেবিল** কলামসমূহ:
-   - SL (serial number)
-   - Package Name
-   - Validity (duration_days → "X Days" ফরম্যাট)
-   - Allowed Person (Guardian + Kids সংখ্যা — max_children থেকে)
-   - Price (৳ ফরম্যাট)
-   - Discount
-   - Status (Active/Inactive ব্যাজ — সবুজ/ধূসর)
-   - Action (Select ড্রপডাউন → Edit / Activate-Deactivate)
+1. **ডায়ালগ সাইজ বড়**: `max-w-2xl` করা হবে, `max-h-[85vh] overflow-y-auto` স্ক্রলযোগ্য
+2. **সেকশন হেডার** — রেফারেন্সের মতো রঙিন সেকশন টাইটেল:
+   - **PACKAGE INFORMATION** (প্রাইমারি কালার হেডিং + ডিভাইডার)
+   - **PACKAGE BENEFITS** (প্রাইমারি কালার হেডিং + ডিভাইডার)
+3. **ফিল্ড লেআউট** — 2-কলাম গ্রিড:
+   - Row 1: Package Name | Price (৳ BDT ব্যাজসহ)
+   - Row 2: Validity (Days ব্যাজসহ) | Duration (Minutes ব্যাজসহ)
+   - Row 3: Allowed Person (Guardian) Select | Allowed Person (Kids) Select
+   - Row 4: Entrance Method | Allowed Visit (Times ব্যাজসহ)
+4. **ইনপুট ব্যাজ/সাফিক্স**: Price → "BDT", Validity → "Days", Duration → "Minutes", Visit → "Times" — ইনপুটের ডানে ব্যাজ
+5. **Package Benefits সেকশন**: Benefit Title ইনপুট + Description টেক্সটেরিয়া
+6. **ফুটার বাটন**: "Discard" (আউটলাইন, ফুল-উইডথ) | "Save Package" (প্রাইমারি, ফুল-উইডথ)
 
-3. **ইনলাইন এডিটিং** — Action ড্রপডাউনে Edit ক্লিক করলে Dialog/Sheet-এ ফর্ম ওপেন হবে (টেবিল ক্লিন থাকবে)
-4. **সার্চ ফিল্টার** — নাম দিয়ে ক্লায়েন্ট-সাইড ফিল্টার
-5. **DB স্কিমায় `max_guardians` কলাম নেই** — তাই Allowed Person-এ Guardian সংখ্যা হিসেবে 2 ডিফল্ট দেখাবো, অথবা features JSON থেকে পড়বো। পরে আলাদা কলাম যোগ করা যাবে।
+### নতুন ফিল্ড (DB ছাড়া, features JSON-এ সেভ):
+- `duration_minutes`, `entrance_method`, `allowed_visits`, `benefit_title`, `benefit_description` — সবই `features` JSON কলামে সংরক্ষণ
 
 ### টেকনিক্যাল ডিটেইলস
-
-| ফাইল | পরিবর্তন |
-|---|---|
-| `src/pages/admin/AdminMembershipPackages.tsx` | সম্পূর্ণ রি-রাইট — Table কম্পোনেন্ট ব্যবহার, সার্চ, ড্রপডাউন অ্যাকশন, এডিট ডায়ালগ |
-
-- `Table, TableHeader, TableBody, TableRow, TableHead, TableCell` থেকে ইম্পোর্ট
-- `DropdownMenu` ব্যবহার Action কলামে
-- `Dialog` ব্যবহার এডিট ফর্মের জন্য
-- স্ট্যাটাস ব্যাজ: Active → সবুজ, Inactive → ধূসর
+- `createForm` state-এ নতুন ফিল্ড যোগ
+- `createMutation`-এ features JSON-এ এক্সট্রা ডাটা ইনসার্ট
+- `Separator` কম্পোনেন্ট ব্যবহার সেকশন ডিভাইডারে
+- `Textarea` কম্পোনেন্ট ইম্পোর্ট Description-এর জন্য
+- Select কম্পোনেন্ট Guardian/Kids ড্রপডাউনে
 
