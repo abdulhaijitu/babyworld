@@ -389,6 +389,51 @@ export type Database = {
           },
         ]
       }
+      hero_cards: {
+        Row: {
+          badge: string
+          created_at: string
+          cta_link: string
+          cta_text: string
+          date_text: string | null
+          description: string
+          id: string
+          is_active: boolean
+          sort_order: number
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          badge?: string
+          created_at?: string
+          cta_link?: string
+          cta_text?: string
+          date_text?: string | null
+          description?: string
+          id?: string
+          is_active?: boolean
+          sort_order?: number
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          badge?: string
+          created_at?: string
+          cta_link?: string
+          cta_text?: string
+          date_text?: string | null
+          description?: string
+          id?: string
+          is_active?: boolean
+          sort_order?: number
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       memberships: {
         Row: {
           child_count: number
