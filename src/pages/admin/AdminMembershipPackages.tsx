@@ -37,6 +37,17 @@ export default function AdminMembershipPackages() {
   const [search, setSearch] = useState('');
   const [editOpen, setEditOpen] = useState(false);
   const [editForm, setEditForm] = useState<Partial<MembershipPackage>>({});
+  const [createOpen, setCreateOpen] = useState(false);
+  const [createForm, setCreateForm] = useState({
+    name: '',
+    name_bn: '',
+    membership_type: 'monthly' as 'monthly' | 'quarterly' | 'yearly',
+    duration_days: 30,
+    price: 0,
+    discount_percent: 100,
+    max_children: 1,
+    is_active: true,
+  });
 
   const { data: packages = [], isLoading } = useQuery({
     queryKey: ['membership-packages'],
