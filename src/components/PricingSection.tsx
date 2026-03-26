@@ -56,28 +56,27 @@ export function PricingSection() {
 
         {/* Package Cards */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12">
-          {/* Family Package */}
+          {/* Hourly Play Pricing */}
           <ScaleIn>
             <div className="bg-card rounded-3xl p-6 shadow-card hover:shadow-card-hover transition-shadow duration-300 h-full border">
               <div className="space-y-4">
                 <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
                   <Users className="w-4 h-4 text-primary" />
-                  <span className="text-sm font-medium text-primary">Family Package</span>
+                  <span className="text-sm font-medium text-primary">Hourly Play</span>
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-foreground mb-1">1 Child + 1 Guardian</h3>
+                  <h3 className="text-xl font-bold text-foreground mb-1">Per Person Pricing</h3>
                   <p className="text-sm text-muted-foreground">Soft Play Zone access</p>
                 </div>
-                <div className="flex items-baseline gap-3">
-                  <span className="text-3xl font-bold text-foreground">৳{packagePricing.familyRegular}</span>
-                  <Badge variant="secondary" className="text-xs">Regular</Badge>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Sparkles className="w-4 h-4 text-orange-500" />
-                  <span>Eid Special: <strong className="text-orange-600">৳{packagePricing.familyOffer}</strong></span>
-                </div>
-                <div className="text-sm text-muted-foreground pt-2 border-t border-border">
-                  Extra Guardian: ৳{packagePricing.extraGuardian}/-
+                <div className="space-y-2 pt-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">Guardian Fee</span>
+                    <span className="text-lg font-bold text-foreground">৳{packagePricing.extraGuardian}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">Child Fee</span>
+                    <span className="text-lg font-bold text-foreground">৳{packagePricing.familyRegular}</span>
+                  </div>
                 </div>
               </div>
             </div>

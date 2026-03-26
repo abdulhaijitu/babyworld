@@ -270,9 +270,9 @@ export function useSettings() {
     try {
       await Promise.all([
         saveSetting('pricing_hourly', {
-          child_guardian: pricing.hourlyPlay.childGuardian,
-          child_only: pricing.hourlyPlay.childOnly,
-          group_discount: pricing.hourlyPlay.groupDiscount
+          guardian_fee: pricing.hourlyPlay.guardianFee,
+          child_fee: pricing.hourlyPlay.childFee,
+          socks_fee: pricing.hourlyPlay.socksFee,
         }, 'pricing'),
         saveSetting('pricing_events', {
           basic: pricing.events.basic,
