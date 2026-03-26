@@ -4,9 +4,9 @@ import type { Json } from '@/integrations/supabase/types';
 
 interface PricingSettings {
   hourlyPlay: {
-    childGuardian: number;
-    childOnly: number;
-    groupDiscount: number;
+    guardianFee: number;
+    childFee: number;
+    socksFee: number;
   };
   events: {
     basic: number;
