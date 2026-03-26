@@ -168,12 +168,12 @@ export default function AdminRides() {
     setSelectedRide(ride);
     setFormData({
       name: ride.name,
+      description: (ride as any).description || '',
       price: ride.price,
       category: ride.category,
       is_active: ride.is_active,
       image_url: ride.image_url || '',
-      duration_minutes: ride.duration_minutes || 0,
-      max_riders: ride.max_riders || 0,
+      duration_hours: (ride.duration_minutes || 0) / 60,
       ride_type: ride.ride_type || 'Paid',
     });
     setEditOpen(true);
