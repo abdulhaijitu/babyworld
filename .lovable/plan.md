@@ -1,25 +1,27 @@
 
 
-## Plan: ট্যাব সিস্টেম সরিয়ে সরাসরি কন্টেন্ট দেখানো
+## Plan: পেজ হেডার ডাইনামিক করা
 
 ### পরিবর্তন
 
-**`src/pages/admin/AdminTicketing.tsx`**:
+**`src/pages/admin/AdminTicketing.tsx`** (line 389-393):
 
-1. **Tabs কম্পোনেন্ট সম্পূর্ণ সরানো** — `TabsList`, `TabsTrigger`, `TabsContent` সব রিমুভ
-2. **URL param (`?tab=create` / `?tab=list`) অনুযায়ী conditionally render** করা:
-   - `tab === 'create'` হলে শুধু `<CounterTicketForm />` দেখাবে
-   - অন্যথায় (default `list`) শুধু stats cards + ticket table দেখাবে
-3. **Tabs import সরানো** — `Tabs, TabsContent, TabsList, TabsTrigger` import রিমুভ
-4. টিকেট তৈরি সফল হলে `handleTicketCreated`-এ `setSearchParams({ tab: 'list' })` দিয়ে লিস্টে ফিরে যাবে
+হেডার টেক্সট `activeView` অনুযায়ী পরিবর্তন হবে:
 
-### ফলাফল
-- Sidebar-এ "Create Ticket" ক্লিক → শুধু Create Ticket ফর্ম
-- Sidebar-এ "Ticket List" ক্লিক → শুধু টিকেট লিস্ট/টেবিল
-- কোনো ট্যাব বার থাকবে না
+- `tab=create` → **Create Ticket** (আইকন + টেক্সট), subtitle: "Create a new ticket"
+- `tab=list` বা default → **Ticket List** (আইকন + টেক্সট), subtitle: "Manage tickets"
 
-### ফাইল
+```tsx
+<h1 className="text-2xl font-bold flex items-center gap-2">
+  <Ticket className="w-6 h-6" />
+  {activeView === 'create' ? 'Create Ticket' : 'Ticket List'}
+</h1>
+<p className="text-muted-foreground">
+  {activeView === 'create' ? 'Create a new ticket' : 'Manage tickets'}
+</p>
+```
+
 | ফাইল | পরিবর্তন |
 |---|---|
-| `src/pages/admin/AdminTicketing.tsx` | Tabs রিমুভ, conditional rendering |
+| `src/pages/admin/AdminTicketing.tsx` | হেডার টেক্সট conditional |
 
