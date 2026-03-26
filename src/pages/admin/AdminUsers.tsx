@@ -58,7 +58,7 @@ import {
 import { toast } from 'sonner';
 import { format, parseISO } from 'date-fns';
 
-type UserRole = 'admin' | 'manager' | 'staff';
+type UserRole = 'super_admin' | 'admin' | 'manager' | 'staff';
 
 interface UserRoleRecord {
   id: string;
