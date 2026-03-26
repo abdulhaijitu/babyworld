@@ -16,7 +16,6 @@ import { format } from 'date-fns';
 interface Ride {
   id: string;
   name: string;
-  name_bn: string | null;
 }
 
 interface Review {
@@ -50,7 +49,7 @@ export default function AdminRideReviews() {
       const [{ data: reviewsData }, { data: ridesData }] = await Promise.all([
         supabase
           .from('ride_reviews')
-          .select('*, rides(id, name, name_bn)')
+          .select('*, rides(id, name)')
           .order('created_at', { ascending: false }),
         supabase
           .from('rides')
