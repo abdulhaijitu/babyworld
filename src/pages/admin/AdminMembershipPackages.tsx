@@ -228,6 +228,16 @@ export default function AdminMembershipPackages() {
                           <ToggleLeft className="h-4 w-4 mr-2" />
                           {pkg.is_active ? 'Deactivate' : 'Activate'}
                         </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="text-destructive focus:text-destructive"
+                          onClick={() => {
+                            if (confirm('Are you sure you want to delete this package?')) {
+                              deleteMutation.mutate(pkg.id);
+                            }
+                          }}
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" /> Delete
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
