@@ -376,6 +376,8 @@ export function useSettings() {
     saving,
     pricing,
     setPricing,
+    packagePricing,
+    setPackagePricing,
     timeSlots,
     setTimeSlots,
     toggleTimeSlot,

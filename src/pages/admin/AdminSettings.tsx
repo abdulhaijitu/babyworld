@@ -279,14 +279,73 @@ export default function AdminSettings() {
                 {'Package Pricing'}
               </CardTitle>
               <CardDescription>
-                {'Family, Full Board & Ride Zone package prices (managed in Settings → Database)'}
+                {'Family, Full Board & Ride Zone package prices'}
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Package pricing is stored under <code className="text-xs bg-muted px-1 py-0.5 rounded">package_pricing</code> key in settings. 
-                Family Regular: ৳500, Eid Special: ৳350, Full Board: ৳800, Extra Guardian: ৳150, Ride Zone Regular: ৳1350, Ride Zone Offer: ৳500.
-              </p>
+            <CardContent className="space-y-6">
+              {/* Family Package */}
+              <div>
+                <p className="text-sm font-semibold mb-2">Family Package</p>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Regular</Label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">৳</span>
+                      <Input type="number" value={packagePricing.familyRegular} onChange={(e) => setPackagePricing({...packagePricing, familyRegular: Number(e.target.value)})} className="pl-8" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Eid/Offer</Label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">৳</span>
+                      <Input type="number" value={packagePricing.familyOffer} onChange={(e) => setPackagePricing({...packagePricing, familyOffer: Number(e.target.value)})} className="pl-8" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Full Board & Extra Guardian */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Full Board</Label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">৳</span>
+                    <Input type="number" value={packagePricing.fullBoard} onChange={(e) => setPackagePricing({...packagePricing, fullBoard: Number(e.target.value)})} className="pl-8" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Extra Guardian</Label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">৳</span>
+                    <Input type="number" value={packagePricing.extraGuardian} onChange={(e) => setPackagePricing({...packagePricing, extraGuardian: Number(e.target.value)})} className="pl-8" />
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Ride Zone Package */}
+              <div>
+                <p className="text-sm font-semibold mb-2">Ride Zone Package</p>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Regular</Label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">৳</span>
+                      <Input type="number" value={packagePricing.rideZoneRegular} onChange={(e) => setPackagePricing({...packagePricing, rideZoneRegular: Number(e.target.value)})} className="pl-8" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Eid/Offer</Label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">৳</span>
+                      <Input type="number" value={packagePricing.rideZoneOffer} onChange={(e) => setPackagePricing({...packagePricing, rideZoneOffer: Number(e.target.value)})} className="pl-8" />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </CardContent>
           </Card>
 
