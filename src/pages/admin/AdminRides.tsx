@@ -82,14 +82,14 @@ export default function AdminRides() {
 
   const createMutation = useMutation({
     mutationFn: async (data: typeof formData) => {
-      const { error } = await supabase.from('rides').insert([{
+    const { error } = await supabase.from('rides').insert([{
         name: data.name,
+        description: data.description || '',
         price: data.price,
         category: data.category as 'kids' | 'family' | 'thrill',
         is_active: data.is_active,
         image_url: data.image_url || null,
-        duration_minutes: data.duration_minutes || 0,
-        max_riders: data.max_riders || null,
+        duration_minutes: Math.round((data.duration_hours || 0) * 60),
         ride_type: data.ride_type || 'Paid',
       }]);
       if (error) throw error;
