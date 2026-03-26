@@ -190,9 +190,15 @@ export default function AdminRides() {
 
   // Filtered + paginated
   const filteredRides = useMemo(() => {
-    if (!searchQuery.trim()) return rides;
-    return rides.filter(r => r.name.toLowerCase().includes(searchQuery.toLowerCase()));
-  }, [rides, searchQuery]);
+    let result = rides;
+    if (filterCategory !== 'all') {
+      result = result.filter(r => r.category === filterCategory);
+    }
+    if (searchQuery.trim()) {
+      result = result.filter(r => r.name.toLowerCase().includes(searchQuery.toLowerCase()));
+    }
+    return result;
+  }, [rides, searchQuery, filterCategory]);
 
   const totalPages = Math.max(1, Math.ceil(filteredRides.length / entriesPerPage));
   const safePage = Math.min(currentPage, totalPages);
