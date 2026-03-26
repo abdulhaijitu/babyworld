@@ -380,9 +380,10 @@ export default function AdminUsers() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{'All'}</SelectItem>
-                  <SelectItem value="admin">{'Admin'}</SelectItem>
-                  <SelectItem value="manager">{'Manager'}</SelectItem>
-                  <SelectItem value="staff">{'Staff'}</SelectItem>
+                   <SelectItem value="super_admin">{'Super Admin'}</SelectItem>
+                   <SelectItem value="admin">{'Admin'}</SelectItem>
+                   <SelectItem value="manager">{'Manager'}</SelectItem>
+                   <SelectItem value="staff">{'Staff'}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
