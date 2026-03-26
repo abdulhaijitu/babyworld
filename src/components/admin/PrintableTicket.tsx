@@ -15,8 +15,6 @@ import {
   Ticket as TicketIcon
 } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
-import { bn } from 'date-fns/locale';
-import { useLanguage } from '@/contexts/LanguageContext';
 import babyWorldLogo from '@/assets/baby-world-logo.png';
 
 interface TicketData {
@@ -46,7 +44,6 @@ interface PrintableTicketProps {
 }
 
 export function PrintableTicket({ ticket, onClose }: PrintableTicketProps) {
-  const { language } = useLanguage();
   const printRef = useRef<HTMLDivElement>(null);
 
   const handlePrint = () => {

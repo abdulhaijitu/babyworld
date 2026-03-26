@@ -25,7 +25,6 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { useState, useMemo } from 'react';
 import { useUserRoles, type AppRole } from '@/hooks/useUserRoles';
 import babyWorldLogo from '@/assets/baby-world-logo.png';
@@ -76,7 +75,6 @@ function SidebarContent({
 }: AdminSidebarProps & { isMobile?: boolean; onMobileClose?: () => void }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { language } = useLanguage();
   const { roles, isAdmin, loading: rolesLoading } = useUserRoles();
 
   // Filter menu items based on user roles
@@ -197,7 +195,6 @@ function SidebarContent({
 
 export function AdminSidebar({ collapsed, onCollapse, onSignOut, userEmail }: AdminSidebarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { language } = useLanguage();
 
   return (
     <>

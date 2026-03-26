@@ -34,9 +34,7 @@ import {
   X
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { format, startOfWeek, endOfWeek, addDays, addWeeks, subWeeks, parseISO, isSameDay } from 'date-fns';
-import { bn } from 'date-fns/locale';
 
 interface Employee {
   id: string;
@@ -61,7 +59,6 @@ const timeSlots = [
 ];
 
 export default function AdminRoster() {
-  const { language } = useLanguage();
   const [currentWeekStart, setCurrentWeekStart] = useState(() => startOfWeek(new Date(), { weekStartsOn: 6 })); // Saturday
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [shifts, setShifts] = useState<RosterShift[]>([]);

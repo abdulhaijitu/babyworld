@@ -18,7 +18,7 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 const WHATSAPP_NUMBER = "8809606990128"; // Baby World's WhatsApp number (with country code)
 
 export function ContactForm() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     name: "",
     phone: "",

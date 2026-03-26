@@ -1,12 +1,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { TrendingUp, TrendingDown, Minus, Calendar, BarChart3 } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, LineChart, Line } from 'recharts';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, subWeeks, subMonths } from 'date-fns';
-import { bn as bnLocale } from 'date-fns/locale';
 
 interface ComparisonData {
   label: string;
@@ -23,7 +21,6 @@ interface PeriodData {
 }
 
 export function ComparisonCharts() {
-  const { language } = useLanguage();
   const today = new Date();
 
   // Fetch weekly comparison data

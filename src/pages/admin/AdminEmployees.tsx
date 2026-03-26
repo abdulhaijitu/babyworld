@@ -61,9 +61,7 @@ import {
   Eye
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { format, parseISO } from 'date-fns';
-import { bn } from 'date-fns/locale';
 import { TableRowSkeleton } from '@/components/admin/AdminSkeleton';
 
 interface Employee {
@@ -89,7 +87,6 @@ const initialEmployeeState = {
 };
 
 export default function AdminEmployees() {
-  const { language } = useLanguage();
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

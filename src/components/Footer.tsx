@@ -6,7 +6,7 @@ import { SocialLinks } from "./SocialLinks";
 import babyWorldLogo from "@/assets/baby-world-logo.png";
 
 export function Footer() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
 
   const quickLinks = [
     { label: t("nav.home"), href: "/" },

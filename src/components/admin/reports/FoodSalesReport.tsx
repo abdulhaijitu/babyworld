@@ -3,7 +3,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { UtensilsCrossed, TrendingUp, Wallet, CreditCard } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import type { ReportsSummary } from '@/hooks/useReportsSummary';
 
@@ -15,7 +14,6 @@ interface FoodSalesReportProps {
 const COLORS = ['hsl(var(--primary))', 'hsl(var(--chart-2))', 'hsl(var(--chart-3))', 'hsl(var(--chart-4))', 'hsl(var(--chart-5))'];
 
 export function FoodSalesReport({ data, isLoading }: FoodSalesReportProps) {
-  const { language } = useLanguage();
 
   const categoryLabels: Record<string, { en: string; bn: string }> = {
     snacks: { en: 'Snacks', bn: 'স্ন্যাকস' },

@@ -18,8 +18,6 @@ import {
   BarChart3
 } from 'lucide-react';
 import { format, startOfMonth, endOfMonth } from 'date-fns';
-import { bn } from 'date-fns/locale';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { useReportsSummary } from '@/hooks/useReportsSummary';
 import { ReportsSummaryCards } from '@/components/admin/reports/ReportsSummaryCards';
 import { TicketSalesReport } from '@/components/admin/reports/TicketSalesReport';
@@ -32,7 +30,6 @@ import { cn } from '@/lib/utils';
 type DateRangeType = 'today' | 'week' | 'month' | 'custom';
 
 export default function AdminReports() {
-  const { language } = useLanguage();
   const [dateRange, setDateRange] = useState<DateRangeType>('month');
   const [customStart, setCustomStart] = useState<Date>();
   const [customEnd, setCustomEnd] = useState<Date>();

@@ -21,8 +21,6 @@ import {
   addMonths,
   subMonths
 } from 'date-fns';
-import { bn } from 'date-fns/locale';
-import { useLanguage } from '@/contexts/LanguageContext';
 import {
   Dialog,
   DialogContent,
@@ -51,7 +49,6 @@ interface BookingCalendarViewProps {
 }
 
 export function BookingCalendarView({ bookings, onBookingSelect }: BookingCalendarViewProps) {
-  const { language } = useLanguage();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [dayDialogOpen, setDayDialogOpen] = useState(false);

@@ -2,10 +2,8 @@ import { useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Printer, X } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
 import type { ReportsSummary } from '@/hooks/useReportsSummary';
 import { format } from 'date-fns';
-import { bn } from 'date-fns/locale';
 
 interface PrintableReportProps {
   data: ReportsSummary;
@@ -13,7 +11,6 @@ interface PrintableReportProps {
 }
 
 export function PrintableReport({ data, onClose }: PrintableReportProps) {
-  const { language } = useLanguage();
   const printRef = useRef<HTMLDivElement>(null);
 
   const handlePrint = () => {

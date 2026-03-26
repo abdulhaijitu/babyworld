@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollFadeIn } from "./ScrollAnimations";
-import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { z } from "zod";
@@ -17,7 +16,6 @@ const reviewSchema = z.object({
 });
 
 export function ReviewForm() {
-  const { t, language } = useLanguage();
   const [name, setName] = useState("");
   const [review, setReview] = useState("");
   const [rating, setRating] = useState(0);

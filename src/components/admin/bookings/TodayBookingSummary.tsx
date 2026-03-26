@@ -8,9 +8,7 @@ import {
   Users,
   TrendingUp
 } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { format } from 'date-fns';
-import { bn } from 'date-fns/locale';
 
 interface Booking {
   id: string;
@@ -25,7 +23,6 @@ interface TodayBookingSummaryProps {
 }
 
 export function TodayBookingSummary({ bookings }: TodayBookingSummaryProps) {
-  const { language } = useLanguage();
   const todayStr = format(new Date(), 'yyyy-MM-dd');
   
   // Filter today's bookings

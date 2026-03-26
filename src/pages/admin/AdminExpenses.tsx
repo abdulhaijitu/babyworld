@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { format, startOfMonth, endOfMonth } from 'date-fns';
-import { bn } from 'date-fns/locale';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useUserRoles } from '@/hooks/useUserRoles';
 import { toast } from 'sonner';
@@ -72,7 +70,6 @@ interface Expense {
 }
 
 export default function AdminExpenses() {
-  const { language } = useLanguage();
   const { isAdmin } = useUserRoles();
   const queryClient = useQueryClient();
 

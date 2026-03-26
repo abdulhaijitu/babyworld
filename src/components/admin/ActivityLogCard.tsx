@@ -19,8 +19,6 @@ import {
   Eye
 } from 'lucide-react';
 import { formatDistanceToNow, parseISO } from 'date-fns';
-import { bn } from 'date-fns/locale';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { cn } from '@/lib/utils';
 
 interface ActivityLog {
@@ -34,7 +32,6 @@ interface ActivityLog {
 }
 
 export function ActivityLogCard() {
-  const { language } = useLanguage();
 
   const { data: logs, isLoading } = useQuery({
     queryKey: ['activity-logs'],

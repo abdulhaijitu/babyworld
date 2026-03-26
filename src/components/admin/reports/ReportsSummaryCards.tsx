@@ -1,7 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Banknote, Ticket, UtensilsCrossed, TrendingUp, CreditCard, Wallet } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
 import type { ReportsSummary } from '@/hooks/useReportsSummary';
 
 interface ReportsSummaryCardsProps {
@@ -10,7 +9,6 @@ interface ReportsSummaryCardsProps {
 }
 
 export function ReportsSummaryCards({ data, isLoading }: ReportsSummaryCardsProps) {
-  const { language } = useLanguage();
 
   const cards = [
     {

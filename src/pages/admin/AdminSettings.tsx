@@ -26,13 +26,11 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from 'next-themes';
 import { useSettings } from '@/hooks/useSettings';
 import NotificationTemplateEditor from '@/components/admin/NotificationTemplateEditor';
 
 export default function AdminSettings() {
-  const { language } = useLanguage();
   const { theme, setTheme } = useTheme();
   const [activeTab, setActiveTab] = useState('pricing');
   

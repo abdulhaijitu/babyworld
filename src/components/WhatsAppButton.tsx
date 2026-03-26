@@ -15,7 +15,7 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 );
 
 export function WhatsAppButton({ variant = "navbar", className }: WhatsAppButtonProps) {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
 
   const defaultMessage = "Hello, Baby World! I'd like to know more about your services.";
 

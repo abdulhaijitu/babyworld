@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,7 +12,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { toast } from 'sonner';
 import { Loader2, Star, Check, X, Trash2, Eye, MessageSquare, Filter } from 'lucide-react';
 import { format } from 'date-fns';
-import { bn } from 'date-fns/locale';
 
 interface Ride {
   id: string;
@@ -34,7 +32,6 @@ interface Review {
 }
 
 export default function AdminRideReviews() {
-  const { language } = useLanguage();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [rides, setRides] = useState<Ride[]>([]);
   const [loading, setLoading] = useState(true);

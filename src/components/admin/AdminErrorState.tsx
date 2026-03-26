@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { AlertCircle, RefreshCw, Home, LogIn } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { Link } from 'react-router-dom';
 
 interface AdminErrorStateProps {
@@ -12,7 +11,6 @@ interface AdminErrorStateProps {
 }
 
 export function AdminErrorState({ type, message, onRetry, retrying }: AdminErrorStateProps) {
-  const { language } = useLanguage();
 
   const getErrorContent = () => {
     switch (type) {
