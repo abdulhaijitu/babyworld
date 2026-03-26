@@ -215,6 +215,19 @@ export function useSettings() {
                 }));
               }
               break;
+            case 'package_pricing':
+              if (value) {
+                setPackagePricing(prev => ({
+                  ...prev,
+                  familyRegular: (value.familyRegular as number) ?? prev.familyRegular,
+                  familyOffer: (value.familyOffer as number) ?? prev.familyOffer,
+                  fullBoard: (value.fullBoard as number) ?? prev.fullBoard,
+                  extraGuardian: (value.extraGuardian as number) ?? prev.extraGuardian,
+                  rideZoneRegular: (value.rideZoneRegular as number) ?? prev.rideZoneRegular,
+                  rideZoneOffer: (value.rideZoneOffer as number) ?? prev.rideZoneOffer,
+                }));
+              }
+              break;
           }
         });
       }
