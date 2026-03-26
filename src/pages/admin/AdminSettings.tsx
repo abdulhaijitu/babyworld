@@ -39,6 +39,8 @@ export default function AdminSettings() {
     saving,
     pricing,
     setPricing,
+    packagePricing,
+    setPackagePricing,
     businessInfo,
     setBusinessInfo,
     notifications,
