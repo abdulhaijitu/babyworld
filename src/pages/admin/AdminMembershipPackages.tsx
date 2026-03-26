@@ -280,83 +280,124 @@ export default function AdminMembershipPackages() {
 
       {/* Edit Dialog */}
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit Package</DialogTitle>
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto p-0">
+          <DialogHeader className="px-6 pt-6 pb-2">
+            <DialogTitle className="flex items-center gap-2 text-xl">
+              <Package className="h-5 w-5 text-primary" />
+              Edit Package
+            </DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 py-2">
-            <div className="space-y-2">
-              <Label>Name</Label>
-              <Input
-                value={editForm.name || ''}
-                onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Name (Bangla)</Label>
-              <Input
-                value={editForm.name_bn || ''}
-                onChange={(e) => setEditForm({ ...editForm, name_bn: e.target.value })}
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Price (৳)</Label>
-                <Input
-                  type="number"
-                  value={editForm.price || 0}
-                  onChange={(e) => setEditForm({ ...editForm, price: Number(e.target.value) })}
-                />
+
+          <div className="px-6 space-y-6 pb-2">
+            {/* Section: PACKAGE INFORMATION */}
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-xs font-bold tracking-widest text-primary uppercase">Package Information</span>
               </div>
-              <div className="space-y-2">
-                <Label>Duration (days)</Label>
-                <Input
-                  type="number"
-                  value={editForm.duration_days || 0}
-                  onChange={(e) => setEditForm({ ...editForm, duration_days: Number(e.target.value) })}
-                />
+              <Separator className="mb-4" />
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-medium text-muted-foreground">Package Name *</Label>
+                  <Input
+                    value={editForm.name || ''}
+                    onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-medium text-muted-foreground">Price *</Label>
+                  <div className="relative">
+                    <Input
+                      type="number"
+                      value={editForm.price || 0}
+                      onChange={(e) => setEditForm({ ...editForm, price: Number(e.target.value) })}
+                      className="pr-14"
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground bg-muted px-2 py-0.5 rounded">BDT</span>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Discount %</Label>
-                <Input
-                  type="number"
-                  value={editForm.discount_percent || 0}
-                  onChange={(e) => setEditForm({ ...editForm, discount_percent: Number(e.target.value) })}
-                />
+
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-medium text-muted-foreground">Name (Bangla)</Label>
+                  <Input
+                    value={editForm.name_bn || ''}
+                    onChange={(e) => setEditForm({ ...editForm, name_bn: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-medium text-muted-foreground">Validity</Label>
+                  <div className="relative">
+                    <Input
+                      type="number"
+                      value={editForm.duration_days || 0}
+                      onChange={(e) => setEditForm({ ...editForm, duration_days: Number(e.target.value) })}
+                      className="pr-14"
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground bg-muted px-2 py-0.5 rounded">Days</span>
+                  </div>
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label>Max Children</Label>
-                <Input
-                  type="number"
-                  value={editForm.max_children || 1}
-                  onChange={(e) => setEditForm({ ...editForm, max_children: Number(e.target.value) })}
-                />
+
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-medium text-muted-foreground">Allowed Person (Guardian)</Label>
+                  <select
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    value={(editForm as any).max_guardians || 2}
+                    onChange={(e) => setEditForm({ ...editForm, max_guardians: Number(e.target.value) } as any)}
+                  >
+                    {[1, 2, 3, 4, 5].map((n) => (
+                      <option key={n} value={n}>{n} Guardian{n > 1 ? 's' : ''}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-medium text-muted-foreground">Allowed Person (Kids)</Label>
+                  <select
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    value={editForm.max_children || 1}
+                    onChange={(e) => setEditForm({ ...editForm, max_children: Number(e.target.value) })}
+                  >
+                    {[1, 2, 3, 4, 5].map((n) => (
+                      <option key={n} value={n}>{n} Kid{n > 1 ? 's' : ''}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Max Guardians</Label>
-                <Input
-                  type="number"
-                  value={(editForm as any).max_guardians || 2}
-                  onChange={(e) => setEditForm({ ...editForm, max_guardians: Number(e.target.value) } as any)}
-                />
+
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-medium text-muted-foreground">Discount %</Label>
+                  <Input
+                    type="number"
+                    value={editForm.discount_percent || 0}
+                    onChange={(e) => setEditForm({ ...editForm, discount_percent: Number(e.target.value) })}
+                  />
+                </div>
+                <div className="flex items-end pb-1 gap-2">
+                  <Switch
+                    checked={editForm.is_active ?? true}
+                    onCheckedChange={(checked) => setEditForm({ ...editForm, is_active: checked })}
+                  />
+                  <Label className="text-sm">Active</Label>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <Switch
-                checked={editForm.is_active ?? true}
-                onCheckedChange={(checked) => setEditForm({ ...editForm, is_active: checked })}
-              />
-              <Label>Active</Label>
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setEditOpen(false)}>Cancel</Button>
-            <Button onClick={saveEdit} disabled={updateMutation.isPending}>Save Changes</Button>
-          </DialogFooter>
+
+          <div className="px-6 pb-6 pt-2">
+            <Separator className="mb-4" />
+            <div className="grid grid-cols-2 gap-3">
+              <Button variant="outline" className="w-full" onClick={() => setEditOpen(false)}>
+                Discard
+              </Button>
+              <Button className="w-full" onClick={saveEdit} disabled={updateMutation.isPending}>
+                Save Changes
+              </Button>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
 
