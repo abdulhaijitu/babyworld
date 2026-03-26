@@ -43,10 +43,10 @@ export default function AdminMembershipPackages() {
 
   const updateMutation = useMutation({
     mutationFn: async (pkg: Partial<MembershipPackage> & { id: string }) => {
-      const { id, ...updates } = pkg;
+      const { id, membership_type, ...updates } = pkg;
       const { error } = await supabase
         .from('membership_packages')
-        .update(updates)
+        .update(updates as any)
         .eq('id', id);
       if (error) throw error;
     },
