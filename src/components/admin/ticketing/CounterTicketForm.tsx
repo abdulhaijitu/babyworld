@@ -53,6 +53,17 @@ interface MembershipInfo {
   valid_till: string;
 }
 
+interface VisitRecord {
+  id: string;
+  ticket_number: string;
+  slot_date: string;
+  total_price: number | null;
+  child_count: number | null;
+  guardian_count: number | null;
+  status: string;
+  created_at: string;
+}
+
 interface CounterTicketFormProps {
   onSuccess?: (ticket: any) => void;
 }
