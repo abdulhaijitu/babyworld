@@ -45,6 +45,8 @@ export default function AdminMemberships() {
     membership_type: 'monthly' as 'monthly' | 'quarterly' | 'yearly',
     discount_percent: 100,
     notes: '',
+    payment_type: 'cash' as 'cash' | 'online' | 'pending',
+    payment_amount: 0,
   });
 
   const { data: packages = [] } = useQuery({
