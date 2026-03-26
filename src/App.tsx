@@ -72,6 +72,7 @@ const App = () => (
                   <Route path="rides" element={<AdminRides />} />
                   <Route path="ride-reviews" element={<AdminRideReviews />} />
                   <Route path="notifications" element={<AdminNotificationLogs />} />
+                  <Route path="hero-cards" element={<AdminHeroCards />} />
                   <Route path="users" element={<AdminUsers />} />
                   <Route path="settings" element={<AdminSettings />} />
                 </Route>
