@@ -556,76 +556,114 @@ export default function AdminMemberships() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredMemberships.map((membership) => {
-                  const remainingDays = getRemainingDays(membership.valid_till);
+                {(() => {
+                  const totalPages = Math.ceil(filteredMemberships.length / itemsPerPage);
+                  const startIndex = (currentPage - 1) * itemsPerPage;
+                  const paginatedItems = filteredMemberships.slice(startIndex, startIndex + itemsPerPage);
                   return (
-                    <TableRow key={membership.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                            <User className="h-5 w-5 text-primary" />
-                          </div>
-                          <div>
-                            <p className="font-medium">{membership.member_name}</p>
-                            <p className="text-sm text-muted-foreground flex items-center gap-1">
-                              <Phone className="h-3 w-3" />
-                              {membership.phone}
-                            </p>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{getTypeBadge(membership.membership_type)}</Badge>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {membership.child_count} {'child(ren)'}
-                        </p>
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm">
-                          <p>{membership.valid_from} - {membership.valid_till}</p>
-                          {membership.status === 'active' && (
-                            <p className={`text-xs ${remainingDays <= 7 ? 'text-orange-600' : 'text-muted-foreground'}`}>
-                              {remainingDays} {'days left'}
-                            </p>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>{getStatusBadge(membership.status)}</TableCell>
-                      <TableCell>
-                        <Badge variant="secondary">{membership.discount_percent}%</Badge>
-                      </TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                              <MoreVertical className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            {membership.status === 'active' && (
-                              <DropdownMenuItem 
-                                onClick={() => updateStatusMutation.mutate({ id: membership.id, status: 'cancelled' })}
-                              >
-                                <XCircle className="h-4 w-4 mr-2" />
-                                {'Cancel'}
-                              </DropdownMenuItem>
-                            )}
-                            {membership.status !== 'active' && (
-                              <DropdownMenuItem 
-                                onClick={() => updateStatusMutation.mutate({ id: membership.id, status: 'active' })}
-                              >
-                                <CheckCircle className="h-4 w-4 mr-2" />
-                                {'Activate'}
-                              </DropdownMenuItem>
-                            )}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
+                    <>
+                      {paginatedItems.map((membership) => {
+                        const remainingDays = getRemainingDays(membership.valid_till);
+                        return (
+                          <TableRow key={membership.id}>
+                            <TableCell>
+                              <div className="flex items-center gap-3">
+                                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                                  <User className="h-5 w-5 text-primary" />
+                                </div>
+                                <div>
+                                  <p className="font-medium">{membership.member_name}</p>
+                                  <p className="text-sm text-muted-foreground flex items-center gap-1">
+                                    <Phone className="h-3 w-3" />
+                                    {membership.phone}
+                                  </p>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant="outline">{getTypeBadge(membership.membership_type)}</Badge>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {membership.child_count} {'child(ren)'}
+                              </p>
+                            </TableCell>
+                            <TableCell>
+                              <div className="text-sm">
+                                <p>{membership.valid_from} - {membership.valid_till}</p>
+                                {membership.status === 'active' && (
+                                  <p className={`text-xs ${remainingDays <= 7 ? 'text-orange-600' : 'text-muted-foreground'}`}>
+                                    {remainingDays} {'days left'}
+                                  </p>
+                                )}
+                              </div>
+                            </TableCell>
+                            <TableCell>{getStatusBadge(membership.status)}</TableCell>
+                            <TableCell>
+                              <Badge variant="secondary">{membership.discount_percent}%</Badge>
+                            </TableCell>
+                            <TableCell>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button variant="ghost" size="icon">
+                                    <MoreVertical className="h-4 w-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  {membership.status === 'active' && (
+                                    <DropdownMenuItem 
+                                      onClick={() => updateStatusMutation.mutate({ id: membership.id, status: 'cancelled' })}
+                                    >
+                                      <XCircle className="h-4 w-4 mr-2" />
+                                      {'Cancel'}
+                                    </DropdownMenuItem>
+                                  )}
+                                  {membership.status !== 'active' && (
+                                    <DropdownMenuItem 
+                                      onClick={() => updateStatusMutation.mutate({ id: membership.id, status: 'active' })}
+                                    >
+                                      <CheckCircle className="h-4 w-4 mr-2" />
+                                      {'Activate'}
+                                    </DropdownMenuItem>
+                                  )}
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </>
                   );
-                })}
+                })()}
               </TableBody>
             </Table>
+          )}
+          {/* Pagination */}
+          {filteredMemberships.length > itemsPerPage && (
+            <div className="flex items-center justify-between px-4 py-3 border-t">
+              <p className="text-sm text-muted-foreground">
+                Showing {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, filteredMemberships.length)} of {filteredMemberships.length}
+              </p>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(p => p - 1)}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <span className="text-sm font-medium">
+                  {currentPage} / {Math.ceil(filteredMemberships.length / itemsPerPage)}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={currentPage >= Math.ceil(filteredMemberships.length / itemsPerPage)}
+                  onClick={() => setCurrentPage(p => p + 1)}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
           )}
         </CardContent>
       </Card>
