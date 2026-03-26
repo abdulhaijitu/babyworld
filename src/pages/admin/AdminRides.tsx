@@ -20,6 +20,8 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
+import { Separator } from '@/components/ui/separator';
 import { 
   Plus, Edit, Trash2, Loader2, FerrisWheel,
   Upload, X, Image as ImageIcon, Search,
@@ -209,75 +211,96 @@ export default function AdminRides() {
 
   // Form renderer
   const renderRideForm = () => (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        <Label>Name</Label>
-        <Input value={formData.name} onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))} placeholder="Ferris Wheel" />
-      </div>
-
-      <div className="space-y-2">
-        <Label>Description</Label>
-        <textarea
-          className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-          value={formData.description}
-          onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-          placeholder="Write a short description about this ride..."
-          rows={3}
-        />
-      </div>
-      
-      <div className="grid grid-cols-2 gap-4">
+    <div className="space-y-5 max-h-[65vh] overflow-y-auto pr-1">
+      {/* Basic Info */}
+      <div className="space-y-3">
+        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Basic Info</p>
         <div className="space-y-2">
-          <Label>Price (৳)</Label>
-          <Input type="number" value={formData.price} onChange={(e) => setFormData(prev => ({ ...prev, price: Number(e.target.value) }))} min={0} />
+          <Label>Name <span className="text-destructive">*</span></Label>
+          <Input value={formData.name} onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))} placeholder="Ferris Wheel" />
         </div>
         <div className="space-y-2">
-          <Label>Type</Label>
-          <Select value={formData.ride_type} onValueChange={(value) => setFormData(prev => ({ ...prev, ride_type: value }))}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Paid">Paid</SelectItem>
-              <SelectItem value="Free">Free</SelectItem>
-            </SelectContent>
-          </Select>
+          <Label>Description</Label>
+          <Textarea
+            value={formData.description}
+            onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+            placeholder="Write a short description about this ride..."
+            rows={3}
+          />
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Label>Duration (hour)</Label>
-        <Input type="number" value={formData.duration_hours} onChange={(e) => setFormData(prev => ({ ...prev, duration_hours: Number(e.target.value) }))} min={0} step={0.5} />
+      <Separator />
+
+      {/* Pricing & Type */}
+      <div className="space-y-3">
+        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Pricing & Type</p>
+        <div className="grid grid-cols-3 gap-3">
+          <div className="space-y-2">
+            <Label>Price (৳)</Label>
+            <Input type="number" value={formData.price} onChange={(e) => setFormData(prev => ({ ...prev, price: Number(e.target.value) }))} min={0} />
+          </div>
+          <div className="space-y-2">
+            <Label>Type</Label>
+            <Select value={formData.ride_type} onValueChange={(value) => setFormData(prev => ({ ...prev, ride_type: value }))}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Paid">Paid</SelectItem>
+                <SelectItem value="Free">Free</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label>Duration (hr)</Label>
+            <Input type="number" value={formData.duration_hours} onChange={(e) => setFormData(prev => ({ ...prev, duration_hours: Number(e.target.value) }))} min={0} step={0.5} />
+          </div>
+        </div>
       </div>
 
-      <div className="space-y-2">
-        <Label>Category</Label>
-        <Select value={formData.category} onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}>
-          <SelectTrigger><SelectValue /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="kids">Kids</SelectItem>
-            <SelectItem value="family">Family</SelectItem>
-            <SelectItem value="thrill">Thrill</SelectItem>
-          </SelectContent>
-        </Select>
+      <Separator />
+
+      {/* Settings */}
+      <div className="space-y-3">
+        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Settings</p>
+        <div className="grid grid-cols-2 gap-3 items-end">
+          <div className="space-y-2">
+            <Label>Category</Label>
+            <Select value={formData.category} onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="kids">Kids</SelectItem>
+                <SelectItem value="family">Family</SelectItem>
+                <SelectItem value="thrill">Thrill</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-center gap-2 pb-1">
+            <Switch checked={formData.is_active} onCheckedChange={(checked) => setFormData(prev => ({ ...prev, is_active: checked }))} />
+            <Label>Active</Label>
+          </div>
+        </div>
       </div>
 
-      <div className="flex items-center gap-2">
-        <Switch checked={formData.is_active} onCheckedChange={(checked) => setFormData(prev => ({ ...prev, is_active: checked }))} />
-        <Label>Active</Label>
-      </div>
+      <Separator />
 
-      <div className="space-y-2">
-        <Label>Ride Image</Label>
+      {/* Image */}
+      <div className="space-y-3">
+        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Image</p>
         {formData.image_url ? (
-          <div className="relative w-full h-32 rounded-lg overflow-hidden border">
+          <div className="relative w-full h-40 rounded-lg overflow-hidden border">
             <img src={formData.image_url} alt="Preview" className="w-full h-full object-cover" />
-            <Button type="button" variant="destructive" size="icon" className="absolute top-2 right-2 h-6 w-6" onClick={() => setFormData(prev => ({ ...prev, image_url: '' }))}>
-              <X className="h-3 w-3" />
+            <Button type="button" variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7" onClick={() => setFormData(prev => ({ ...prev, image_url: '' }))}>
+              <X className="h-3.5 w-3.5" />
             </Button>
           </div>
         ) : (
-          <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
+          <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
             {uploading ? <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /> : (
-              <><Upload className="h-8 w-8 text-muted-foreground mb-2" /><span className="text-sm text-muted-foreground">Upload image</span></>
+              <>
+                <Upload className="h-8 w-8 text-muted-foreground mb-2" />
+                <span className="text-sm font-medium text-muted-foreground">Click to upload image</span>
+                <span className="text-xs text-muted-foreground/70 mt-1">Max 2MB</span>
+              </>
             )}
             <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={uploading} />
           </label>
@@ -495,13 +518,13 @@ export default function AdminRides() {
 
       {/* Create Dialog */}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-xl">
           <DialogHeader>
             <DialogTitle>Add New Ride</DialogTitle>
-            <DialogDescription>Enter ride details</DialogDescription>
+            <DialogDescription>Fill in the details to add a new ride</DialogDescription>
           </DialogHeader>
           {renderRideForm()}
-          <DialogFooter>
+          <DialogFooter className="pt-2 border-t">
             <Button variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
             <Button onClick={() => createMutation.mutate(formData)} disabled={!formData.name || formData.price < 0 || createMutation.isPending}>
               {createMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
@@ -513,13 +536,13 @@ export default function AdminRides() {
 
       {/* Edit Dialog */}
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-xl">
           <DialogHeader>
             <DialogTitle>Edit Ride</DialogTitle>
-            <DialogDescription>Update ride details</DialogDescription>
+            <DialogDescription>Update the ride details below</DialogDescription>
           </DialogHeader>
           {renderRideForm()}
-          <DialogFooter>
+          <DialogFooter className="pt-2 border-t">
             <Button variant="outline" onClick={() => setEditOpen(false)}>Cancel</Button>
             <Button onClick={() => selectedRide && updateMutation.mutate({ id: selectedRide.id, data: formData })} disabled={!formData.name || formData.price < 0 || updateMutation.isPending}>
               {updateMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
@@ -535,7 +558,7 @@ export default function AdminRides() {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Ride?</AlertDialogTitle>
             <AlertDialogDescription>
-              {`"${selectedRide?.name}" will be permanently deleted. This action cannot be undone.`}
+              <span className="font-semibold text-foreground">"{selectedRide?.name}"</span> will be permanently deleted. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
