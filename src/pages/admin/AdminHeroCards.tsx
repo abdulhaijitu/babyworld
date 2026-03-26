@@ -9,7 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Gift, Calendar, Save, X, Upload, ImageIcon } from "lucide-react";
+import { Plus, Pencil, Trash2, Gift, Calendar, Save, X, Upload, ImageIcon, Clock } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -27,6 +27,7 @@ interface HeroCard {
   cta_link: string;
   date_text: string | null;
   image_url: string | null;
+  expires_at: string | null;
   is_active: boolean;
   sort_order: number;
   created_at: string;
@@ -44,6 +45,7 @@ const emptyCard: CardForm = {
   cta_link: "/",
   date_text: null,
   image_url: null,
+  expires_at: null,
   is_active: true,
   sort_order: 0,
 };
@@ -114,6 +116,7 @@ export default function AdminHeroCards() {
         cta_link: card.cta_link,
         date_text: card.date_text,
         image_url: card.image_url,
+        expires_at: card.expires_at,
         is_active: card.is_active,
         sort_order: card.sort_order,
       };
@@ -176,6 +179,7 @@ export default function AdminHeroCards() {
       cta_link: card.cta_link,
       date_text: card.date_text,
       image_url: card.image_url,
+      expires_at: card.expires_at,
       is_active: card.is_active,
       sort_order: card.sort_order,
     });
@@ -268,6 +272,13 @@ export default function AdminHeroCards() {
                 <p className="text-sm text-muted-foreground line-clamp-2">
                   {card.description}
                 </p>
+                {card.expires_at && (
+                  <p className={`text-xs flex items-center gap-1 ${new Date(card.expires_at) < new Date() ? "text-destructive" : "text-muted-foreground"}`}>
+                    <Clock className="w-3 h-3" />
+                    {new Date(card.expires_at) < new Date() ? "Expired: " : "Expires: "}
+                    {new Date(card.expires_at).toLocaleDateString()}
+                  </p>
+                )}
                 {card.date_text && (
                   <p className="text-xs text-muted-foreground flex items-center gap-1">
                     <Calendar className="w-3 h-3" /> {card.date_text}
@@ -437,6 +448,27 @@ export default function AdminHeroCards() {
                 />
               </div>
             )}
+
+            {/* Expiry Date */}
+            <div className="space-y-2">
+              <Label>Expiry Date (optional — card auto-hides after this date)</Label>
+              <Input
+                type="datetime-local"
+                value={form.expires_at ? form.expires_at.slice(0, 16) : ""}
+                onChange={(e) => setForm({ ...form, expires_at: e.target.value ? new Date(e.target.value).toISOString() : null })}
+              />
+              {form.expires_at && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="text-xs text-muted-foreground"
+                  onClick={() => setForm({ ...form, expires_at: null })}
+                >
+                  Clear expiry date
+                </Button>
+              )}
+            </div>
 
             <div className="flex items-center gap-2">
               <Switch
