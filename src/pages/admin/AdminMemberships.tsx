@@ -115,6 +115,8 @@ export default function AdminMemberships() {
         membership_type: 'monthly',
         discount_percent: 100,
         notes: '',
+        payment_type: 'cash',
+        payment_amount: 0,
       });
       queryClient.invalidateQueries({ queryKey: ['memberships'] });
     } catch (error: any) {
