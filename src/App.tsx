@@ -31,6 +31,7 @@ import AdminSettings from "./pages/admin/AdminSettings";
 import AdminReports from "./pages/admin/AdminReports";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminMemberships from "./pages/admin/AdminMemberships";
+import AdminMembershipPackages from "./pages/admin/AdminMembershipPackages";
 import AdminExpenses from "./pages/admin/AdminExpenses";
 import AdminProfitReports from "./pages/admin/AdminProfitReports";
 import AdminRides from "./pages/admin/AdminRides";
