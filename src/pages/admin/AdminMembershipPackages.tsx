@@ -123,13 +123,14 @@ export default function AdminMembershipPackages() {
           max_children: createForm.max_children,
           max_guardians: createForm.max_guardians,
           sort_order: packages.length,
+          features: features,
         } as any);
       if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['membership-packages'] });
       setCreateOpen(false);
-      setCreateForm({ name: '', name_bn: '', membership_type: 'monthly', duration_days: 30, price: 0, discount_percent: 100, max_children: 1, max_guardians: 2, is_active: true });
+      setCreateForm({ name: '', name_bn: '', membership_type: 'monthly', duration_days: 30, price: 0, discount_percent: 100, max_children: 1, max_guardians: 2, is_active: true, duration_minutes: 60, entrance_method: 'QR Code', allowed_visits: 1, benefit_title: '', benefit_description: '' });
       toast.success('Package created successfully');
     },
     onError: (err: any) => toast.error(err.message),
