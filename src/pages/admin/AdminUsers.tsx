@@ -221,6 +221,12 @@ export default function AdminUsers() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="super_admin">
+                      <div className="flex items-center gap-2">
+                        <Crown className="w-4 h-4" />
+                        {'Super Admin (Manage admins)'}
+                      </div>
+                    </SelectItem>
                     <SelectItem value="admin">
                       <div className="flex items-center gap-2">
                         <Shield className="w-4 h-4" />
