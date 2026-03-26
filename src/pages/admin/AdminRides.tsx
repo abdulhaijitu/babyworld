@@ -558,7 +558,7 @@ export default function AdminRides() {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Ride?</AlertDialogTitle>
             <AlertDialogDescription>
-              {`"${selectedRide?.name}" will be permanently deleted. This action cannot be undone.`}
+              <span className="font-semibold text-foreground">"{selectedRide?.name}"</span> will be permanently deleted. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
