@@ -5,7 +5,7 @@ import { AdminSidebar } from '@/components/admin/AdminSidebar';
 import { AdminDashboardSkeleton } from '@/components/admin/AdminSkeleton';
 import { AdminErrorState } from '@/components/admin/AdminErrorState';
 import { NotificationBell } from '@/components/admin/NotificationBell';
-import { LanguageToggle } from '@/components/LanguageToggle';
+
 import { cn } from '@/lib/utils';
 
 export default function AdminLayout() {
@@ -55,7 +55,6 @@ export default function AdminLayout() {
       )}>
         {/* Top bar with notifications */}
         <div className="hidden md:flex items-center justify-end gap-2 p-4 border-b">
-          <LanguageToggle />
           <NotificationBell />
         </div>
         <Outlet />

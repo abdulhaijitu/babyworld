@@ -157,11 +157,11 @@ function SidebarContent({
                   : "text-muted-foreground hover:bg-muted hover:text-foreground",
                 collapsed && "justify-center px-2"
               )}
-              title={collapsed ? (language === 'bn' ? item.labelBn : item.label) : undefined}
+              title={collapsed ? (item.label) : undefined}
             >
               <Icon className="h-5 w-5 shrink-0" />
               {!collapsed && (
-                <span>{language === 'bn' ? item.labelBn : item.label}</span>
+                <span>{item.label}</span>
               )}
             </button>
           );
@@ -188,7 +188,7 @@ function SidebarContent({
           )}
         >
           <LogOut className="h-4 w-4" />
-          {!collapsed && <span className="ml-2">{language === 'bn' ? 'লগআউট' : 'Logout'}</span>}
+          {!collapsed && <span className="ml-2">{'Logout'}</span>}
         </Button>
       </div>
     </div>
@@ -232,7 +232,7 @@ export function AdminSidebar({ collapsed, onCollapse, onSignOut, userEmail }: Ad
         </Sheet>
         <div className="flex items-center gap-2 ml-3">
           <img src={babyWorldLogo} alt="Baby World" className="h-8 w-auto" />
-          <span className="font-bold text-sm">{language === 'bn' ? 'অ্যাডমিন' : 'Admin'}</span>
+          <span className="font-bold text-sm">{'Admin'}</span>
         </div>
       </div>
     </>

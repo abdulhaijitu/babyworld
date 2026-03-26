@@ -81,7 +81,7 @@ export function QRScanner() {
       setIsScanning(true);
     } catch (err) {
       console.error('Scanner error:', err);
-      toast.error(language === 'bn' ? 'ক্যামেরা অ্যাক্সেস ব্যর্থ' : 'Failed to access camera');
+      toast.error('Failed to access camera');
     }
   };
 
@@ -138,8 +138,8 @@ export function QRScanner() {
       if (data.success) {
         toast.success(
           scanMode === 'entry' 
-            ? (language === 'bn' ? 'এন্ট্রি সফল!' : 'Entry successful!')
-            : (language === 'bn' ? 'এক্সিট সফল!' : 'Exit successful!')
+            ? ('Entry successful!')
+            : ('Exit successful!')
         );
       }
     } catch (err: unknown) {
@@ -150,7 +150,7 @@ export function QRScanner() {
         code: 'SCAN_ERROR'
       });
       setShowResult(true);
-      toast.error(language === 'bn' ? 'স্ক্যান ব্যর্থ' : 'Scan failed');
+      toast.error('Scan failed');
     } finally {
       setProcessing(false);
     }
@@ -170,10 +170,10 @@ export function QRScanner() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Camera className="w-5 h-5" />
-          {language === 'bn' ? 'QR স্ক্যানার' : 'QR Scanner'}
+          {'QR Scanner'}
         </CardTitle>
         <CardDescription>
-          {language === 'bn' ? 'টিকেট QR কোড স্ক্যান করুন' : 'Scan ticket QR code'}
+          {'Scan ticket QR code'}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -181,7 +181,7 @@ export function QRScanner() {
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="text-sm text-muted-foreground mb-1 block">
-              {language === 'bn' ? 'মোড' : 'Mode'}
+              {'Mode'}
             </label>
             <Select value={scanMode} onValueChange={(v) => setScanMode(v as 'entry' | 'exit')}>
               <SelectTrigger>
@@ -191,13 +191,13 @@ export function QRScanner() {
                 <SelectItem value="entry">
                   <div className="flex items-center gap-2">
                     <DoorOpen className="w-4 h-4 text-green-600" />
-                    {language === 'bn' ? 'এন্ট্রি' : 'Entry'}
+                    {'Entry'}
                   </div>
                 </SelectItem>
                 <SelectItem value="exit">
                   <div className="flex items-center gap-2">
                     <DoorClosed className="w-4 h-4 text-orange-600" />
-                    {language === 'bn' ? 'এক্সিট' : 'Exit'}
+                    {'Exit'}
                   </div>
                 </SelectItem>
               </SelectContent>
@@ -205,7 +205,7 @@ export function QRScanner() {
           </div>
           <div>
             <label className="text-sm text-muted-foreground mb-1 block">
-              {language === 'bn' ? 'গেট' : 'Gate'}
+              {'Gate'}
             </label>
             <Select value={selectedGate} onValueChange={setSelectedGate}>
               <SelectTrigger>
@@ -228,7 +228,7 @@ export function QRScanner() {
           {!isScanning && (
             <div className="text-center text-muted-foreground">
               <Camera className="w-12 h-12 mx-auto mb-2 opacity-50" />
-              <p className="text-sm">{language === 'bn' ? 'স্ক্যান শুরু করুন' : 'Start scanning'}</p>
+              <p className="text-sm">{'Start scanning'}</p>
             </div>
           )}
         </div>
@@ -237,7 +237,7 @@ export function QRScanner() {
         {processing && (
           <div className="flex items-center justify-center gap-2 py-2 text-primary">
             <Loader2 className="w-5 h-5 animate-spin" />
-            <span>{language === 'bn' ? 'প্রসেসিং...' : 'Processing...'}</span>
+            <span>{'Processing...'}</span>
           </div>
         )}
 
@@ -248,9 +248,9 @@ export function QRScanner() {
             className={`text-lg py-2 px-4 ${scanMode === 'entry' ? 'border-green-500 text-green-600' : 'border-orange-500 text-orange-600'}`}
           >
             {scanMode === 'entry' ? (
-              <><DoorOpen className="w-5 h-5 mr-2" /> {language === 'bn' ? 'এন্ট্রি মোড' : 'ENTRY MODE'}</>
+              <><DoorOpen className="w-5 h-5 mr-2" /> {'ENTRY MODE'}</>
             ) : (
-              <><DoorClosed className="w-5 h-5 mr-2" /> {language === 'bn' ? 'এক্সিট মোড' : 'EXIT MODE'}</>
+              <><DoorClosed className="w-5 h-5 mr-2" /> {'EXIT MODE'}</>
             )}
           </Badge>
         </div>
@@ -263,9 +263,9 @@ export function QRScanner() {
           size="lg"
         >
           {isScanning ? (
-            <><CameraOff className="w-5 h-5 mr-2" /> {language === 'bn' ? 'বন্ধ করুন' : 'Stop Scanner'}</>
+            <><CameraOff className="w-5 h-5 mr-2" /> {'Stop Scanner'}</>
           ) : (
-            <><Camera className="w-5 h-5 mr-2" /> {language === 'bn' ? 'স্ক্যান শুরু করুন' : 'Start Scanner'}</>
+            <><Camera className="w-5 h-5 mr-2" /> {'Start Scanner'}</>
           )}
         </Button>
       </CardContent>
@@ -281,14 +281,14 @@ export function QRScanner() {
                 <XCircle className="w-6 h-6 text-destructive" />
               )}
               {lastResult?.success 
-                ? (language === 'bn' ? 'সফল!' : 'Success!')
-                : (language === 'bn' ? 'ব্যর্থ' : 'Failed')}
+                ? ('Success!')
+                : ('Failed')}
             </DialogTitle>
             <DialogDescription>
               {lastResult?.success 
                 ? (lastResult.action === 'entry' 
-                    ? (language === 'bn' ? 'এন্ট্রি রেকর্ড হয়েছে' : 'Entry has been recorded')
-                    : (language === 'bn' ? 'এক্সিট রেকর্ড হয়েছে' : 'Exit has been recorded'))
+                    ? ('Entry has been recorded')
+                    : ('Exit has been recorded'))
                 : lastResult?.error}
             </DialogDescription>
           </DialogHeader>
@@ -298,14 +298,14 @@ export function QRScanner() {
               <div className="flex items-center gap-3">
                 <Ticket className="w-5 h-5 text-muted-foreground" />
                 <div>
-                  <p className="text-sm text-muted-foreground">{language === 'bn' ? 'টিকেট' : 'Ticket'}</p>
+                  <p className="text-sm text-muted-foreground">{'Ticket'}</p>
                   <p className="font-mono font-medium">{lastResult.ticket.ticket_number}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 <User className="w-5 h-5 text-muted-foreground" />
                 <div>
-                  <p className="text-sm text-muted-foreground">{language === 'bn' ? 'অতিথি' : 'Guest'}</p>
+                  <p className="text-sm text-muted-foreground">{'Guest'}</p>
                   <p className="font-medium">{lastResult.ticket.guardian_name}</p>
                   {lastResult.ticket.child_name && (
                     <p className="text-sm text-muted-foreground">{lastResult.ticket.child_name}</p>
@@ -320,19 +320,19 @@ export function QRScanner() {
               <AlertTriangle className="w-5 h-5 text-destructive shrink-0" />
               <div>
                 <p className="font-medium text-destructive">
-                  {lastResult?.code === 'ALREADY_INSIDE' && (language === 'bn' ? 'অতিথি ইতোমধ্যে ভিতরে' : 'Guest already inside')}
-                  {lastResult?.code === 'NOT_INSIDE' && (language === 'bn' ? 'অতিথি ভিতরে নেই' : 'Guest not inside')}
-                  {lastResult?.code === 'TICKET_NOT_FOUND' && (language === 'bn' ? 'টিকেট পাওয়া যায়নি' : 'Ticket not found')}
-                  {lastResult?.code === 'TICKET_CANCELLED' && (language === 'bn' ? 'টিকেট বাতিল' : 'Ticket cancelled')}
-                  {lastResult?.code === 'TICKET_COMPLETED' && (language === 'bn' ? 'টিকেট শেষ হয়ে গেছে' : 'Ticket already used')}
-                  {!lastResult?.code && (language === 'bn' ? 'অজানা সমস্যা' : 'Unknown error')}
+                  {lastResult?.code === 'ALREADY_INSIDE' && ('Guest already inside')}
+                  {lastResult?.code === 'NOT_INSIDE' && ('Guest not inside')}
+                  {lastResult?.code === 'TICKET_NOT_FOUND' && ('Ticket not found')}
+                  {lastResult?.code === 'TICKET_CANCELLED' && ('Ticket cancelled')}
+                  {lastResult?.code === 'TICKET_COMPLETED' && ('Ticket already used')}
+                  {!lastResult?.code && ('Unknown error')}
                 </p>
               </div>
             </div>
           )}
 
           <Button onClick={() => setShowResult(false)} className="w-full mt-4">
-            {language === 'bn' ? 'ঠিক আছে' : 'OK'}
+            {'OK'}
           </Button>
         </DialogContent>
       </Dialog>

@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Phone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { LanguageToggle } from "./LanguageToggle";
+
 import { ThemeToggle } from "./ThemeToggle";
 import { WhatsAppButton } from "./WhatsAppButton";
 import { SocialLinks } from "./SocialLinks";
@@ -80,7 +80,6 @@ export function Navbar() {
             <SocialLinks variant="header" />
             <div className="w-px h-5 bg-border mx-1" />
             <ThemeToggle />
-            <LanguageToggle />
             <WhatsAppButton variant="navbar" />
             <a
               href="tel:09606990128"
@@ -96,7 +95,6 @@ export function Navbar() {
 
           <div className="lg:hidden flex items-center gap-2">
             <ThemeToggle />
-            <LanguageToggle />
             <button
               className="p-2 text-foreground"
               onClick={() => setIsOpen(!isOpen)}

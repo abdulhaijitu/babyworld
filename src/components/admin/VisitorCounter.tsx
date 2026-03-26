@@ -100,22 +100,22 @@ export function VisitorCounter() {
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2 text-lg">
             <Users className="w-5 h-5" />
-            {language === 'bn' ? 'লাইভ ভিজিটর' : 'Live Visitors'}
+            {'Live Visitors'}
           </CardTitle>
           {isAtCapacity && (
             <Badge variant="destructive" className="animate-pulse">
               <AlertCircle className="w-3 h-3 mr-1" />
-              {language === 'bn' ? 'পূর্ণ' : 'Full'}
+              {'Full'}
             </Badge>
           )}
           {isNearCapacity && !isAtCapacity && (
             <Badge variant="outline" className="border-yellow-500 text-yellow-600">
-              {language === 'bn' ? 'প্রায় পূর্ণ' : 'Near Capacity'}
+              {'Near Capacity'}
             </Badge>
           )}
         </div>
         <CardDescription>
-          {language === 'bn' ? 'বর্তমানে প্লেগ্রাউন্ডে' : 'Currently in playground'}
+          {'Currently in playground'}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -133,7 +133,7 @@ export function VisitorCounter() {
               <span className="text-xl text-muted-foreground">/ {MAX_CAPACITY}</span>
             </div>
             <p className="text-sm text-muted-foreground mt-1">
-              {language === 'bn' ? 'সর্বোচ্চ ধারণক্ষমতা' : 'max capacity'}
+              {'max capacity'}
             </p>
           </div>
           <div className={cn(
@@ -151,7 +151,7 @@ export function VisitorCounter() {
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">
-              {language === 'bn' ? 'ধারণক্ষমতা' : 'Capacity'}
+              {'Capacity'}
             </span>
             <span className={cn(
               "font-medium",
@@ -177,7 +177,7 @@ export function VisitorCounter() {
             <TrendingUp className="w-4 h-4 text-primary" />
             <div>
               <p className="text-xs text-muted-foreground">
-                {language === 'bn' ? 'আজকের মোট' : "Today's Total"}
+                {"Today's Total"}
               </p>
               <p className="font-semibold">{totalVisitorsToday}</p>
             </div>
@@ -186,7 +186,7 @@ export function VisitorCounter() {
             <Clock className="w-4 h-4 text-chart-2" />
             <div>
               <p className="text-xs text-muted-foreground">
-                {language === 'bn' ? 'চেক আউট' : 'Checked Out'}
+                {'Checked Out'}
               </p>
               <p className="font-semibold">{usedTickets.length}</p>
             </div>

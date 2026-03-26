@@ -17,9 +17,7 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 export function WhatsAppButton({ variant = "navbar", className }: WhatsAppButtonProps) {
   const { t, language } = useLanguage();
 
-  const defaultMessage = language === "bn"
-    ? "আসসালামু আলাইকুম, Baby World! আমি আপনাদের সেবা সম্পর্কে জানতে চাই।"
-    : "Hello, Baby World! I'd like to know more about your services.";
+  const defaultMessage = "Hello, Baby World! I'd like to know more about your services.";
 
   const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(defaultMessage)}`;
 

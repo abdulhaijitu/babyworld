@@ -187,12 +187,12 @@ export function ManualBookingForm({ onSuccess, onCancel }: ManualBookingFormProp
         }
       });
 
-      toast.success(language === 'bn' ? 'বুকিং সফল হয়েছে!' : 'Booking created successfully!');
+      toast.success('Booking created successfully!');
       form.reset();
       onSuccess?.();
     } catch (error: any) {
       console.error('Booking error:', error);
-      toast.error(error.message || (language === 'bn' ? 'বুকিং ব্যর্থ হয়েছে' : 'Booking failed'));
+      toast.error(error.message || ('Booking failed'));
     } finally {
       setIsSubmitting(false);
     }
@@ -214,7 +214,7 @@ export function ManualBookingForm({ onSuccess, onCancel }: ManualBookingFormProp
             <FormItem>
               <FormLabel className="flex items-center gap-2">
                 <CalendarIcon className="h-4 w-4" />
-                {language === 'bn' ? 'তারিখ' : 'Date'}
+                {'Date'}
               </FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
@@ -227,9 +227,9 @@ export function ManualBookingForm({ onSuccess, onCancel }: ManualBookingFormProp
                       )}
                     >
                       {field.value ? (
-                        format(field.value, 'PPP', { locale: language === 'bn' ? bn : undefined })
+                        format(field.value, 'PPP', { locale: undefined })
                       ) : (
-                        <span>{language === 'bn' ? 'তারিখ নির্বাচন করুন' : 'Pick a date'}</span>
+                        <span>{'Pick a date'}</span>
                       )}
                       <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                     </Button>
@@ -258,7 +258,7 @@ export function ManualBookingForm({ onSuccess, onCancel }: ManualBookingFormProp
             <FormItem>
               <FormLabel className="flex items-center gap-2">
                 <Clock className="h-4 w-4" />
-                {language === 'bn' ? 'সময় স্লট' : 'Time Slot'}
+                {'Time Slot'}
               </FormLabel>
               <FormControl>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
@@ -289,7 +289,7 @@ export function ManualBookingForm({ onSuccess, onCancel }: ManualBookingFormProp
                             <span>{slot}</span>
                             {isBooked && (
                               <Badge variant="secondary" className="text-[10px] px-1 py-0">
-                                {language === 'bn' ? 'বুকড' : 'Booked'}
+                                {'Booked'}
                               </Badge>
                             )}
                           </div>
@@ -313,10 +313,10 @@ export function ManualBookingForm({ onSuccess, onCancel }: ManualBookingFormProp
               <FormItem>
                 <FormLabel className="flex items-center gap-2">
                   <User className="h-4 w-4" />
-                  {language === 'bn' ? 'অভিভাবকের নাম' : 'Parent Name'}
+                  {'Parent Name'}
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder={language === 'bn' ? 'নাম লিখুন' : 'Enter name'} {...field} />
+                  <Input placeholder={'Enter name'} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -330,7 +330,7 @@ export function ManualBookingForm({ onSuccess, onCancel }: ManualBookingFormProp
               <FormItem>
                 <FormLabel className="flex items-center gap-2">
                   <Phone className="h-4 w-4" />
-                  {language === 'bn' ? 'ফোন নম্বর' : 'Phone Number'}
+                  {'Phone Number'}
                 </FormLabel>
                 <FormControl>
                   <Input placeholder="01XXXXXXXXX" {...field} />
@@ -348,7 +348,7 @@ export function ManualBookingForm({ onSuccess, onCancel }: ManualBookingFormProp
             name="ticket_type"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{language === 'bn' ? 'টিকেট টাইপ' : 'Ticket Type'}</FormLabel>
+                <FormLabel>{'Ticket Type'}</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
@@ -357,13 +357,13 @@ export function ManualBookingForm({ onSuccess, onCancel }: ManualBookingFormProp
                   </FormControl>
                   <SelectContent>
                     <SelectItem value="child_guardian">
-                      {language === 'bn' ? 'শিশু + অভিভাবক' : 'Child + Guardian'}
+                      {'Child + Guardian'}
                     </SelectItem>
                     <SelectItem value="child_only">
-                      {language === 'bn' ? 'শুধু শিশু' : 'Child Only'}
+                      {'Child Only'}
                     </SelectItem>
                     <SelectItem value="group">
-                      {language === 'bn' ? 'গ্রুপ' : 'Group'}
+                      {'Group'}
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -377,7 +377,7 @@ export function ManualBookingForm({ onSuccess, onCancel }: ManualBookingFormProp
             name="booking_type"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{language === 'bn' ? 'বুকিং টাইপ' : 'Booking Type'}</FormLabel>
+                <FormLabel>{'Booking Type'}</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
@@ -386,13 +386,13 @@ export function ManualBookingForm({ onSuccess, onCancel }: ManualBookingFormProp
                   </FormControl>
                   <SelectContent>
                     <SelectItem value="hourly_play">
-                      {language === 'bn' ? 'ঘণ্টাভিত্তিক খেলা' : 'Hourly Play'}
+                      {'Hourly Play'}
                     </SelectItem>
                     <SelectItem value="birthday_event">
-                      {language === 'bn' ? 'জন্মদিন ইভেন্ট' : 'Birthday Event'}
+                      {'Birthday Event'}
                     </SelectItem>
                     <SelectItem value="private_event">
-                      {language === 'bn' ? 'প্রাইভেট ইভেন্ট' : 'Private Event'}
+                      {'Private Event'}
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -408,7 +408,7 @@ export function ManualBookingForm({ onSuccess, onCancel }: ManualBookingFormProp
           name="payment_status"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{language === 'bn' ? 'পেমেন্ট স্ট্যাটাস' : 'Payment Status'}</FormLabel>
+              <FormLabel>{'Payment Status'}</FormLabel>
               <FormControl>
                 <RadioGroup
                   onValueChange={field.onChange}
@@ -418,19 +418,19 @@ export function ManualBookingForm({ onSuccess, onCancel }: ManualBookingFormProp
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="paid" id="paid" />
                     <Label htmlFor="paid" className="text-green-600 font-medium">
-                      {language === 'bn' ? 'পরিশোধিত' : 'Paid'}
+                      {'Paid'}
                     </Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="unpaid" id="unpaid" />
                     <Label htmlFor="unpaid">
-                      {language === 'bn' ? 'অপরিশোধিত' : 'Unpaid'}
+                      {'Unpaid'}
                     </Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="pending" id="pending" />
                     <Label htmlFor="pending" className="text-amber-600">
-                      {language === 'bn' ? 'অপেক্ষমান' : 'Pending'}
+                      {'Pending'}
                     </Label>
                   </div>
                 </RadioGroup>
@@ -446,10 +446,10 @@ export function ManualBookingForm({ onSuccess, onCancel }: ManualBookingFormProp
           name="notes"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{language === 'bn' ? 'নোট (ঐচ্ছিক)' : 'Notes (Optional)'}</FormLabel>
+              <FormLabel>{'Notes (Optional)'}</FormLabel>
               <FormControl>
                 <Textarea 
-                  placeholder={language === 'bn' ? 'অতিরিক্ত তথ্য...' : 'Additional notes...'} 
+                  placeholder={'Additional notes...'} 
                   {...field} 
                   rows={2}
                 />
@@ -463,19 +463,19 @@ export function ManualBookingForm({ onSuccess, onCancel }: ManualBookingFormProp
         <div className="flex gap-3 pt-2">
           {onCancel && (
             <Button type="button" variant="outline" onClick={onCancel} className="flex-1">
-              {language === 'bn' ? 'বাতিল' : 'Cancel'}
+              {'Cancel'}
             </Button>
           )}
           <Button type="submit" disabled={isSubmitting} className="flex-1">
             {isSubmitting ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                {language === 'bn' ? 'অপেক্ষা করুন...' : 'Please wait...'}
+                {'Please wait...'}
               </>
             ) : (
               <>
                 <CheckCircle className="h-4 w-4 mr-2" />
-                {language === 'bn' ? 'বুকিং করুন' : 'Create Booking'}
+                {'Create Booking'}
               </>
             )}
           </Button>

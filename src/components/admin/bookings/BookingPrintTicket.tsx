@@ -141,7 +141,7 @@ export function BookingPrintTicket({ booking, onClose }: BookingPrintTicketProps
       child_only: { en: 'Child Only', bn: 'শুধু শিশু' },
       group: { en: 'Group', bn: 'গ্রুপ' }
     };
-    return labels[type]?.[language === 'bn' ? 'bn' : 'en'] || type;
+    return labels[type]?.['en'] || type;
   };
 
   const getBookingTypeLabel = (type: string) => {
@@ -150,7 +150,7 @@ export function BookingPrintTicket({ booking, onClose }: BookingPrintTicketProps
       birthday_event: { en: 'Birthday Event', bn: 'বার্থডে ইভেন্ট' },
       private_event: { en: 'Private Event', bn: 'প্রাইভেট ইভেন্ট' }
     };
-    return labels[type]?.[language === 'bn' ? 'bn' : 'en'] || type;
+    return labels[type]?.['en'] || type;
   };
 
   return (
@@ -163,7 +163,7 @@ export function BookingPrintTicket({ booking, onClose }: BookingPrintTicketProps
             <img src={babyWorldLogo} alt="Baby World" className="h-12 mx-auto mb-2" />
             <h1 className="text-lg font-bold">Baby World Indoor Playground</h1>
             <p className="text-xs text-muted-foreground">
-              {language === 'bn' ? 'বুকিং কনফার্মেশন' : 'Booking Confirmation'}
+              {'Booking Confirmation'}
             </p>
           </div>
 
@@ -182,7 +182,7 @@ export function BookingPrintTicket({ booking, onClose }: BookingPrintTicketProps
           {/* Booking Ref */}
           <div className="text-center">
             <p className="text-xs text-muted-foreground uppercase tracking-wide">
-              {language === 'bn' ? 'বুকিং রেফারেন্স' : 'Booking Reference'}
+              {'Booking Reference'}
             </p>
             <p className="text-2xl font-bold text-primary tracking-widest">
               {bookingRef}
@@ -196,7 +196,7 @@ export function BookingPrintTicket({ booking, onClose }: BookingPrintTicketProps
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-2 text-muted-foreground">
                 <User className="w-4 h-4" />
-                {language === 'bn' ? 'অভিভাবক' : 'Parent'}
+                {'Parent'}
               </span>
               <span className="font-medium">{booking.parent_name}</span>
             </div>
@@ -204,7 +204,7 @@ export function BookingPrintTicket({ booking, onClose }: BookingPrintTicketProps
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-2 text-muted-foreground">
                 <Phone className="w-4 h-4" />
-                {language === 'bn' ? 'ফোন' : 'Phone'}
+                {'Phone'}
               </span>
               <span className="font-medium">{booking.parent_phone}</span>
             </div>
@@ -214,11 +214,11 @@ export function BookingPrintTicket({ booking, onClose }: BookingPrintTicketProps
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-2 text-muted-foreground">
                 <Calendar className="w-4 h-4" />
-                {language === 'bn' ? 'তারিখ' : 'Date'}
+                {'Date'}
               </span>
               <span className="font-medium">
                 {format(parseISO(booking.slot_date), 'dd MMM yyyy', { 
-                  locale: language === 'bn' ? bn : undefined 
+                  locale: undefined 
                 })}
               </span>
             </div>
@@ -226,7 +226,7 @@ export function BookingPrintTicket({ booking, onClose }: BookingPrintTicketProps
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-2 text-muted-foreground">
                 <Clock className="w-4 h-4" />
-                {language === 'bn' ? 'সময়' : 'Time'}
+                {'Time'}
               </span>
               <span className="font-medium">{booking.time_slot}</span>
             </div>
@@ -234,14 +234,14 @@ export function BookingPrintTicket({ booking, onClose }: BookingPrintTicketProps
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-2 text-muted-foreground">
                 <TicketIcon className="w-4 h-4" />
-                {language === 'bn' ? 'টাইপ' : 'Type'}
+                {'Type'}
               </span>
               <span className="font-medium">{getTicketTypeLabel(booking.ticket_type)}</span>
             </div>
 
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground">
-                {language === 'bn' ? 'বুকিং টাইপ' : 'Booking Type'}
+                {'Booking Type'}
               </span>
               <span className="font-medium">{getBookingTypeLabel(booking.booking_type)}</span>
             </div>
@@ -252,10 +252,10 @@ export function BookingPrintTicket({ booking, onClose }: BookingPrintTicketProps
           {/* Status */}
           <div className="flex justify-center gap-2">
             <span className={`status-badge ${booking.status === 'confirmed' ? 'bg-green-500/10 text-green-600' : 'bg-yellow-500/10 text-yellow-600'} px-3 py-1 rounded-full text-xs`}>
-              {booking.status === 'confirmed' ? (language === 'bn' ? 'নিশ্চিত' : 'Confirmed') : (language === 'bn' ? 'অপেক্ষমাণ' : 'Pending')}
+              {booking.status === 'confirmed' ? ('Confirmed') : ('Pending')}
             </span>
             <span className={`px-3 py-1 rounded-full text-xs ${booking.payment_status === 'paid' ? 'bg-blue-500/10 text-blue-600' : 'bg-muted text-muted-foreground'}`}>
-              {booking.payment_status === 'paid' ? (language === 'bn' ? 'পেইড' : 'Paid') : (language === 'bn' ? 'আনপেইড' : 'Unpaid')}
+              {booking.payment_status === 'paid' ? ('Paid') : ('Unpaid')}
             </span>
           </div>
 
@@ -272,9 +272,7 @@ export function BookingPrintTicket({ booking, onClose }: BookingPrintTicketProps
               +880 1234-567890
             </p>
             <p className="mt-2 italic">
-              {language === 'bn' 
-                ? 'এই টিকেটটি প্রবেশের সময় দেখান' 
-                : 'Please show this ticket at entry'}
+              {'Please show this ticket at entry'}
             </p>
           </div>
         </div>
@@ -284,11 +282,11 @@ export function BookingPrintTicket({ booking, onClose }: BookingPrintTicketProps
       <div className="flex gap-3 justify-center no-print">
         <Button onClick={handlePrint}>
           <Printer className="w-4 h-4 mr-2" />
-          {language === 'bn' ? 'প্রিন্ট করুন' : 'Print'}
+          {'Print'}
         </Button>
         {onClose && (
           <Button variant="outline" onClick={onClose}>
-            {language === 'bn' ? 'বন্ধ করুন' : 'Close'}
+            {'Close'}
           </Button>
         )}
       </div>

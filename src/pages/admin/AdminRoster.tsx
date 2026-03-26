@@ -115,12 +115,12 @@ export default function AdminRoster() {
 
   const handleSaveShift = async () => {
     if (!formData.employee_id || !selectedDate) {
-      toast.error(language === 'bn' ? 'কর্মী সিলেক্ট করুন' : 'Select an employee');
+      toast.error('Select an employee');
       return;
     }
 
     if (formData.start_time >= formData.end_time) {
-      toast.error(language === 'bn' ? 'সময় সঠিক নয়' : 'Invalid time range');
+      toast.error('Invalid time range');
       return;
     }
 
@@ -141,14 +141,14 @@ export default function AdminRoster() {
           .eq('id', selectedShift.id);
 
         if (updateError) throw updateError;
-        toast.success(language === 'bn' ? 'শিফট আপডেট হয়েছে' : 'Shift updated');
+        toast.success('Shift updated');
       } else {
         const { error: insertError } = await supabase
           .from('roster_shifts')
           .insert([shiftData]);
 
         if (insertError) throw insertError;
-        toast.success(language === 'bn' ? 'শিফট যোগ হয়েছে' : 'Shift added');
+        toast.success('Shift added');
       }
 
       closeDialog();
@@ -156,9 +156,9 @@ export default function AdminRoster() {
     } catch (err: any) {
       console.error('[Roster] Save error:', err);
       if (err.message?.includes('unique')) {
-        toast.error(language === 'bn' ? 'এই কর্মী ইতিমধ্যে এই সময়ে আছেন' : 'Employee already has a shift at this time');
+        toast.error('Employee already has a shift at this time');
       } else {
-        toast.error(language === 'bn' ? 'সেভ ব্যর্থ' : 'Save failed');
+        toast.error('Save failed');
       }
     } finally {
       setSaving(false);
@@ -173,10 +173,10 @@ export default function AdminRoster() {
         .eq('id', shiftId);
 
       if (deleteError) throw deleteError;
-      toast.success(language === 'bn' ? 'শিফট মুছে ফেলা হয়েছে' : 'Shift deleted');
+      toast.success('Shift deleted');
       setShifts(prev => prev.filter(s => s.id !== shiftId));
     } catch (err) {
-      toast.error(language === 'bn' ? 'মুছতে ব্যর্থ' : 'Delete failed');
+      toast.error('Delete failed');
     }
   };
 
@@ -241,16 +241,16 @@ export default function AdminRoster() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <CalendarDays className="w-6 h-6" />
-            {language === 'bn' ? 'রোস্টার' : 'Roster'}
+            {'Roster'}
           </h1>
           <p className="text-muted-foreground">
-            {language === 'bn' ? 'সাপ্তাহিক শিফট ক্যালেন্ডার' : 'Weekly shift calendar'}
+            {'Weekly shift calendar'}
           </p>
         </div>
 
         <Button variant="outline" size="sm" onClick={fetchData} disabled={loading}>
           <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-          {language === 'bn' ? 'রিফ্রেশ' : 'Refresh'}
+          {'Refresh'}
         </Button>
       </div>
 
@@ -258,19 +258,19 @@ export default function AdminRoster() {
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'এই সপ্তাহে শিফট' : 'Shifts This Week'}</CardDescription>
+            <CardDescription>{'Shifts This Week'}</CardDescription>
             <CardTitle className="text-2xl">{totalShifts}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'কর্মী' : 'Employees'}</CardDescription>
+            <CardDescription>{'Employees'}</CardDescription>
             <CardTitle className="text-2xl">{uniqueEmployees}</CardTitle>
           </CardHeader>
         </Card>
         <Card className="hidden sm:block">
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'সক্রিয় কর্মী' : 'Active Staff'}</CardDescription>
+            <CardDescription>{'Active Staff'}</CardDescription>
             <CardTitle className="text-2xl">{employees.length}</CardTitle>
           </CardHeader>
         </Card>
@@ -288,11 +288,11 @@ export default function AdminRoster() {
                 <ChevronRight className="w-4 h-4" />
               </Button>
               <Button variant="ghost" size="sm" onClick={goToCurrentWeek}>
-                {language === 'bn' ? 'এই সপ্তাহ' : 'This Week'}
+                {'This Week'}
               </Button>
             </div>
             <CardTitle className="text-lg">
-              {format(currentWeekStart, 'dd MMM', { locale: language === 'bn' ? bn : undefined })} - {format(addDays(currentWeekStart, 6), 'dd MMM yyyy', { locale: language === 'bn' ? bn : undefined })}
+              {format(currentWeekStart, 'dd MMM', { locale: undefined })} - {format(addDays(currentWeekStart, 6), 'dd MMM yyyy', { locale: undefined })}
             </CardTitle>
           </div>
         </CardHeader>
@@ -302,7 +302,7 @@ export default function AdminRoster() {
               <AlertCircle className="w-12 h-12 mx-auto mb-4 text-destructive" />
               <p className="text-destructive">{error}</p>
               <Button onClick={fetchData} className="mt-4" size="sm">
-                {language === 'bn' ? 'আবার চেষ্টা করুন' : 'Try Again'}
+                {'Try Again'}
               </Button>
             </div>
           ) : loading ? (
@@ -325,7 +325,7 @@ export default function AdminRoster() {
                     <div className="flex items-center justify-between mb-2">
                       <div>
                         <p className={`text-xs font-medium ${isToday ? 'text-primary' : 'text-muted-foreground'}`}>
-                          {format(day, 'EEE', { locale: language === 'bn' ? bn : undefined })}
+                          {format(day, 'EEE', { locale: undefined })}
                         </p>
                         <p className={`text-lg font-bold ${isToday ? 'text-primary' : ''}`}>
                           {format(day, 'd')}
@@ -357,7 +357,7 @@ export default function AdminRoster() {
                       ))}
                       {dayShifts.length === 0 && (
                         <p className="text-xs text-muted-foreground text-center py-2">
-                          {language === 'bn' ? 'কোনো শিফট নেই' : 'No shifts'}
+                          {'No shifts'}
                         </p>
                       )}
                     </div>
@@ -375,21 +375,21 @@ export default function AdminRoster() {
           <DialogHeader>
             <DialogTitle>
               {selectedShift 
-                ? (language === 'bn' ? 'শিফট সম্পাদনা' : 'Edit Shift')
-                : (language === 'bn' ? 'নতুন শিফট' : 'New Shift')
+                ? ('Edit Shift')
+                : ('New Shift')
               }
             </DialogTitle>
             <DialogDescription>
-              {selectedDate && format(selectedDate, 'EEEE, dd MMMM yyyy', { locale: language === 'bn' ? bn : undefined })}
+              {selectedDate && format(selectedDate, 'EEEE, dd MMMM yyyy', { locale: undefined })}
             </DialogDescription>
           </DialogHeader>
           
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label>{language === 'bn' ? 'কর্মী' : 'Employee'} *</Label>
+              <Label>{'Employee'} *</Label>
               <Select value={formData.employee_id} onValueChange={(v) => setFormData({...formData, employee_id: v})}>
                 <SelectTrigger>
-                  <SelectValue placeholder={language === 'bn' ? 'কর্মী সিলেক্ট করুন' : 'Select employee'} />
+                  <SelectValue placeholder={'Select employee'} />
                 </SelectTrigger>
                 <SelectContent>
                   {employees.map((emp) => (
@@ -407,7 +407,7 @@ export default function AdminRoster() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>{language === 'bn' ? 'শুরু' : 'Start Time'}</Label>
+                <Label>{'Start Time'}</Label>
                 <Select value={formData.start_time} onValueChange={(v) => setFormData({...formData, start_time: v})}>
                   <SelectTrigger>
                     <SelectValue />
@@ -420,7 +420,7 @@ export default function AdminRoster() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>{language === 'bn' ? 'শেষ' : 'End Time'}</Label>
+                <Label>{'End Time'}</Label>
                 <Select value={formData.end_time} onValueChange={(v) => setFormData({...formData, end_time: v})}>
                   <SelectTrigger>
                     <SelectValue />
@@ -435,12 +435,12 @@ export default function AdminRoster() {
             </div>
 
             <div className="space-y-2">
-              <Label>{language === 'bn' ? 'নোট' : 'Notes'}</Label>
+              <Label>{'Notes'}</Label>
               <Textarea
                 value={formData.notes}
                 onChange={(e) => setFormData({...formData, notes: e.target.value})}
                 rows={2}
-                placeholder={language === 'bn' ? 'ঐচ্ছিক...' : 'Optional...'}
+                placeholder={'Optional...'}
               />
             </div>
           </div>
@@ -453,15 +453,15 @@ export default function AdminRoster() {
                 className="sm:mr-auto"
               >
                 <Trash2 className="w-4 h-4 mr-2" />
-                {language === 'bn' ? 'মুছুন' : 'Delete'}
+                {'Delete'}
               </Button>
             )}
             <Button variant="outline" onClick={closeDialog}>
-              {language === 'bn' ? 'বাতিল' : 'Cancel'}
+              {'Cancel'}
             </Button>
             <Button onClick={handleSaveShift} disabled={saving}>
               {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              {language === 'bn' ? 'সেভ করুন' : 'Save'}
+              {'Save'}
             </Button>
           </DialogFooter>
         </DialogContent>

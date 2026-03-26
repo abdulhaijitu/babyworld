@@ -149,7 +149,7 @@ export function NotificationBell() {
       <PopoverContent className="w-80 p-0" align="end">
         <div className="flex items-center justify-between p-3 border-b">
           <h4 className="font-semibold">
-            {language === 'bn' ? 'নোটিফিকেশন' : 'Notifications'}
+            {'Notifications'}
           </h4>
           {unreadCount > 0 && (
             <Button
@@ -159,7 +159,7 @@ export function NotificationBell() {
               onClick={() => markAllAsReadMutation.mutate()}
             >
               <CheckCheck className="w-3 h-3 mr-1" />
-              {language === 'bn' ? 'সব পঠিত' : 'Mark all read'}
+              {'Mark all read'}
             </Button>
           )}
         </div>
@@ -168,7 +168,7 @@ export function NotificationBell() {
             <div className="p-6 text-center text-muted-foreground">
               <Bell className="w-8 h-8 mx-auto mb-2 opacity-50" />
               <p className="text-sm">
-                {language === 'bn' ? 'কোনো নোটিফিকেশন নেই' : 'No notifications'}
+                {'No notifications'}
               </p>
             </div>
           ) : (
@@ -201,7 +201,7 @@ export function NotificationBell() {
                       <p className="text-xs text-muted-foreground mt-1">
                         {formatDistanceToNow(parseISO(notification.created_at), {
                           addSuffix: true,
-                          locale: language === 'bn' ? bn : undefined
+                          locale: undefined
                         })}
                       </p>
                     </div>

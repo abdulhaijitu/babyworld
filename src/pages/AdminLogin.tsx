@@ -70,9 +70,7 @@ export default function AdminLogin() {
       if (mountedRef.current && authStatus === 'loading') {
         setAuthStatus('error');
         setErrorMessage(
-          language === 'bn' 
-            ? 'সংযোগ করতে সময় লাগছে। অনুগ্রহ করে আবার চেষ্টা করুন।' 
-            : 'Connection is taking too long. Please try again.'
+          'Connection is taking too long. Please try again.'
         );
       }
     }, AUTH_TIMEOUT);
@@ -93,24 +91,18 @@ export default function AdminLogin() {
         // Map common error messages to user-friendly text
         let friendlyMessage = error.message;
         if (error.message?.includes('Invalid login credentials')) {
-          friendlyMessage = language === 'bn' 
-            ? 'ইমেইল বা পাসওয়ার্ড ভুল' 
-            : 'Invalid email or password';
+          friendlyMessage = 'Invalid email or password';
         } else if (error.message?.includes('Email not confirmed')) {
-          friendlyMessage = language === 'bn' 
-            ? 'ইমেইল যাচাই করা হয়নি' 
-            : 'Email not confirmed';
+          friendlyMessage = 'Email not confirmed';
         } else if (error.message?.includes('Too many requests')) {
-          friendlyMessage = language === 'bn' 
-            ? 'অনেক চেষ্টা হয়েছে। কিছুক্ষণ পর আবার চেষ্টা করুন।' 
-            : 'Too many attempts. Please try again later.';
+          friendlyMessage = 'Too many attempts. Please try again later.';
         }
         
         setErrorMessage(friendlyMessage);
         console.error('[AdminLogin] Sign in error:', error.message);
       } else {
         setAuthStatus('success');
-        toast.success(language === 'bn' ? 'সফলভাবে লগইন হয়েছে' : 'Logged in successfully');
+        toast.success('Logged in successfully');
         // Navigation will happen via the useEffect above
       }
     } catch (err: any) {
@@ -122,9 +114,7 @@ export default function AdminLogin() {
       
       setAuthStatus('error');
       setErrorMessage(
-        language === 'bn' 
-          ? 'একটি অপ্রত্যাশিত ত্রুটি হয়েছে' 
-          : 'An unexpected error occurred'
+        'An unexpected error occurred'
       );
       console.error('[AdminLogin] Unexpected error:', err);
     }
@@ -151,12 +141,10 @@ export default function AdminLogin() {
           <div className="space-y-2">
             <CardTitle className="text-2xl font-bold flex items-center justify-center gap-2">
               <ShieldCheck className="w-6 h-6 text-primary" />
-              {language === 'bn' ? 'অ্যাডমিন লগইন' : 'Admin Login'}
+              {'Admin Login'}
             </CardTitle>
             <CardDescription>
-              {language === 'bn' 
-                ? 'আপনার অ্যাডমিন অ্যাকাউন্টে প্রবেশ করুন'
-                : 'Sign in to your admin account'}
+              {'Sign in to your admin account'}
             </CardDescription>
           </div>
         </CardHeader>
@@ -182,7 +170,7 @@ export default function AdminLogin() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">
-                {language === 'bn' ? 'ইমেইল' : 'Email'}
+                {'Email'}
               </Label>
               <Input
                 id="email"
@@ -199,7 +187,7 @@ export default function AdminLogin() {
             
             <div className="space-y-2">
               <Label htmlFor="password">
-                {language === 'bn' ? 'পাসওয়ার্ড' : 'Password'}
+                {'Password'}
               </Label>
               <div className="relative">
                 <Input
@@ -232,15 +220,15 @@ export default function AdminLogin() {
               {isSubmitting ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  {language === 'bn' ? 'লগইন হচ্ছে...' : 'Signing in...'}
+                  {'Signing in...'}
                 </>
               ) : authStatus === 'success' ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  {language === 'bn' ? 'রিডাইরেক্ট হচ্ছে...' : 'Redirecting...'}
+                  {'Redirecting...'}
                 </>
               ) : (
-                language === 'bn' ? 'লগইন করুন' : 'Sign In'
+                'Sign In'
               )}
             </Button>
           </form>
@@ -252,7 +240,7 @@ export default function AdminLogin() {
               className="text-muted-foreground"
               disabled={isSubmitting}
             >
-              {language === 'bn' ? '← হোমপেজে ফিরে যান' : '← Back to Homepage'}
+              {'← Back to Homepage'}
             </Button>
           </div>
         </CardContent>

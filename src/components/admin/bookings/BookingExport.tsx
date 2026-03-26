@@ -51,7 +51,7 @@ export function BookingExport({ bookings }: BookingExportProps) {
 
   const exportToCSV = () => {
     if (bookings.length === 0) {
-      toast.error(language === 'bn' ? 'কোনো বুকিং নেই' : 'No bookings to export');
+      toast.error('No bookings to export');
       return;
     }
 
@@ -98,18 +98,18 @@ export function BookingExport({ bookings }: BookingExportProps) {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 
-    toast.success(language === 'bn' ? 'CSV ফাইল ডাউনলোড হয়েছে' : 'CSV file downloaded');
+    toast.success('CSV file downloaded');
   };
 
   const exportToPDF = () => {
     if (bookings.length === 0) {
-      toast.error(language === 'bn' ? 'কোনো বুকিং নেই' : 'No bookings to export');
+      toast.error('No bookings to export');
       return;
     }
 
     const printWindow = window.open('', '_blank');
     if (!printWindow) {
-      toast.error(language === 'bn' ? 'পপ-আপ ব্লক করা হয়েছে' : 'Popup blocked');
+      toast.error('Popup blocked');
       return;
     }
 
@@ -244,7 +244,7 @@ export function BookingExport({ bookings }: BookingExportProps) {
       printWindow.print();
     }, 500);
 
-    toast.success(language === 'bn' ? 'PDF প্রিন্ট উইন্ডো খোলা হয়েছে' : 'PDF print window opened');
+    toast.success('PDF print window opened');
   };
 
   return (
@@ -252,17 +252,17 @@ export function BookingExport({ bookings }: BookingExportProps) {
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm">
           <Download className="w-4 h-4 mr-2" />
-          {language === 'bn' ? 'এক্সপোর্ট' : 'Export'}
+          {'Export'}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={exportToCSV}>
           <FileSpreadsheet className="w-4 h-4 mr-2" />
-          {language === 'bn' ? 'CSV ফাইল' : 'Export CSV'}
+          {'Export CSV'}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={exportToPDF}>
           <FileText className="w-4 h-4 mr-2" />
-          {language === 'bn' ? 'PDF প্রিন্ট' : 'Print PDF'}
+          {'Print PDF'}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

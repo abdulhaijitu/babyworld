@@ -90,21 +90,21 @@ export default function AdminNotificationLogs() {
         return (
           <Badge variant="outline" className="bg-green-500/10 text-green-600 border-green-500/20">
             <CheckCircle className="w-3 h-3 mr-1" />
-            {language === 'bn' ? 'সেন্ট' : 'Sent'}
+            {'Sent'}
           </Badge>
         );
       case 'failed':
         return (
           <Badge variant="outline" className="bg-red-500/10 text-red-600 border-red-500/20">
             <XCircle className="w-3 h-3 mr-1" />
-            {language === 'bn' ? 'ব্যর্থ' : 'Failed'}
+            {'Failed'}
           </Badge>
         );
       default:
         return (
           <Badge variant="outline" className="bg-yellow-500/10 text-yellow-600 border-yellow-500/20">
             <Clock className="w-3 h-3 mr-1" />
-            {language === 'bn' ? 'পেন্ডিং' : 'Pending'}
+            {'Pending'}
           </Badge>
         );
     }
@@ -119,9 +119,9 @@ export default function AdminNotificationLogs() {
   const getReferenceTypeBadge = (type: string | null) => {
     if (!type) return null;
     const labels: Record<string, string> = {
-      ticket: language === 'bn' ? 'টিকিট' : 'Ticket',
-      food_order: language === 'bn' ? 'ফুড অর্ডার' : 'Food Order',
-      booking: language === 'bn' ? 'বুকিং' : 'Booking'
+      ticket: 'Ticket',
+      food_order: 'Food Order',
+      booking: 'Booking'
     };
     return <Badge variant="secondary">{labels[type] || type}</Badge>;
   };
@@ -144,15 +144,15 @@ export default function AdminNotificationLogs() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <MessageSquare className="w-6 h-6" />
-            {language === 'bn' ? 'নোটিফিকেশন লগ' : 'Notification Logs'}
+            {'Notification Logs'}
           </h1>
           <p className="text-muted-foreground">
-            {language === 'bn' ? 'SMS এবং WhatsApp নোটিফিকেশন ইতিহাস' : 'SMS and WhatsApp notification history'}
+            {'SMS and WhatsApp notification history'}
           </p>
         </div>
         <Button variant="outline" onClick={fetchLogs}>
           <RefreshCw className="w-4 h-4 mr-2" />
-          {language === 'bn' ? 'রিফ্রেশ' : 'Refresh'}
+          {'Refresh'}
         </Button>
       </div>
 
@@ -162,7 +162,7 @@ export default function AdminNotificationLogs() {
           <CardContent className="pt-4">
             <div className="text-2xl font-bold text-green-600">{totalSent}</div>
             <div className="text-sm text-muted-foreground">
-              {language === 'bn' ? 'সফল' : 'Sent'}
+              {'Sent'}
             </div>
           </CardContent>
         </Card>
@@ -170,7 +170,7 @@ export default function AdminNotificationLogs() {
           <CardContent className="pt-4">
             <div className="text-2xl font-bold text-red-600">{totalFailed}</div>
             <div className="text-sm text-muted-foreground">
-              {language === 'bn' ? 'ব্যর্থ' : 'Failed'}
+              {'Failed'}
             </div>
           </CardContent>
         </Card>
@@ -195,7 +195,7 @@ export default function AdminNotificationLogs() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
-                placeholder={language === 'bn' ? 'ফোন বা মেসেজ খুঁজুন...' : 'Search phone or message...'}
+                placeholder={'Search phone or message...'}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
@@ -207,7 +207,7 @@ export default function AdminNotificationLogs() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{language === 'bn' ? 'সব চ্যানেল' : 'All Channels'}</SelectItem>
+                <SelectItem value="all">{'All Channels'}</SelectItem>
                 <SelectItem value="sms">SMS</SelectItem>
                 <SelectItem value="whatsapp">WhatsApp</SelectItem>
               </SelectContent>
@@ -217,10 +217,10 @@ export default function AdminNotificationLogs() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{language === 'bn' ? 'সব স্ট্যাটাস' : 'All Status'}</SelectItem>
-                <SelectItem value="sent">{language === 'bn' ? 'সেন্ট' : 'Sent'}</SelectItem>
-                <SelectItem value="failed">{language === 'bn' ? 'ব্যর্থ' : 'Failed'}</SelectItem>
-                <SelectItem value="pending">{language === 'bn' ? 'পেন্ডিং' : 'Pending'}</SelectItem>
+                <SelectItem value="all">{'All Status'}</SelectItem>
+                <SelectItem value="sent">{'Sent'}</SelectItem>
+                <SelectItem value="failed">{'Failed'}</SelectItem>
+                <SelectItem value="pending">{'Pending'}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -230,9 +230,9 @@ export default function AdminNotificationLogs() {
       {/* Logs Table */}
       <Card>
         <CardHeader>
-          <CardTitle>{language === 'bn' ? 'সাম্প্রতিক নোটিফিকেশন' : 'Recent Notifications'}</CardTitle>
+          <CardTitle>{'Recent Notifications'}</CardTitle>
           <CardDescription>
-            {language === 'bn' ? `${filteredLogs.length}টি এন্ট্রি` : `${filteredLogs.length} entries`}
+            {`${filteredLogs.length} entries`}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -244,19 +244,19 @@ export default function AdminNotificationLogs() {
             </div>
           ) : filteredLogs.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
-              {language === 'bn' ? 'কোনো নোটিফিকেশন পাওয়া যায়নি' : 'No notifications found'}
+              {'No notifications found'}
             </div>
           ) : (
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{language === 'bn' ? 'চ্যানেল' : 'Channel'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'প্রাপক' : 'Recipient'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'টাইপ' : 'Type'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'স্ট্যাটাস' : 'Status'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'মেসেজ' : 'Message'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'সময়' : 'Time'}</TableHead>
+                    <TableHead>{'Channel'}</TableHead>
+                    <TableHead>{'Recipient'}</TableHead>
+                    <TableHead>{'Type'}</TableHead>
+                    <TableHead>{'Status'}</TableHead>
+                    <TableHead>{'Message'}</TableHead>
+                    <TableHead>{'Time'}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

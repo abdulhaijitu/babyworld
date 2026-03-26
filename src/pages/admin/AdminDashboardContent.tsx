@@ -99,9 +99,9 @@ export default function AdminDashboardContent() {
   const handleStatusChange = async (bookingId: string, status: 'confirmed' | 'pending' | 'cancelled') => {
     const success = await updateBookingStatus(bookingId, status);
     if (success) {
-      toast.success(language === 'bn' ? 'স্ট্যাটাস আপডেট হয়েছে' : 'Status updated');
+      toast.success('Status updated');
     } else {
-      toast.error(language === 'bn' ? 'আপডেট ব্যর্থ হয়েছে' : 'Update failed');
+      toast.error('Update failed');
     }
   };
 
@@ -120,21 +120,21 @@ export default function AdminDashboardContent() {
     setCancelling(false);
     
     if (result?.success) {
-      toast.success(language === 'bn' ? 'বুকিং বাতিল হয়েছে' : 'Booking cancelled');
+      toast.success('Booking cancelled');
       setCancelDialogOpen(false);
     } else {
-      toast.error(language === 'bn' ? 'বাতিল ব্যর্থ হয়েছে' : 'Cancellation failed');
+      toast.error('Cancellation failed');
     }
   };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'confirmed':
-        return <Badge className="bg-green-500/10 text-green-600 border-green-500/20"><CheckCircle className="w-3 h-3 mr-1" /> {language === 'bn' ? 'নিশ্চিত' : 'Confirmed'}</Badge>;
+        return <Badge className="bg-green-500/10 text-green-600 border-green-500/20"><CheckCircle className="w-3 h-3 mr-1" /> {'Confirmed'}</Badge>;
       case 'pending':
-        return <Badge variant="outline" className="text-yellow-600 border-yellow-500/20"><AlertCircle className="w-3 h-3 mr-1" /> {language === 'bn' ? 'অপেক্ষমাণ' : 'Pending'}</Badge>;
+        return <Badge variant="outline" className="text-yellow-600 border-yellow-500/20"><AlertCircle className="w-3 h-3 mr-1" /> {'Pending'}</Badge>;
       case 'cancelled':
-        return <Badge variant="destructive"><XCircle className="w-3 h-3 mr-1" /> {language === 'bn' ? 'বাতিল' : 'Cancelled'}</Badge>;
+        return <Badge variant="destructive"><XCircle className="w-3 h-3 mr-1" /> {'Cancelled'}</Badge>;
       default:
         return <Badge variant="secondary">{status}</Badge>;
     }
@@ -143,15 +143,15 @@ export default function AdminDashboardContent() {
   const getPaymentBadge = (status: string) => {
     switch (status) {
       case 'paid':
-        return <Badge className="bg-green-500/10 text-green-600 border-green-500/20"><CreditCard className="w-3 h-3 mr-1" /> {language === 'bn' ? 'পরিশোধিত' : 'Paid'}</Badge>;
+        return <Badge className="bg-green-500/10 text-green-600 border-green-500/20"><CreditCard className="w-3 h-3 mr-1" /> {'Paid'}</Badge>;
       case 'pending':
-        return <Badge variant="outline" className="text-yellow-600"><CreditCard className="w-3 h-3 mr-1" /> {language === 'bn' ? 'অপেক্ষমাণ' : 'Pending'}</Badge>;
+        return <Badge variant="outline" className="text-yellow-600"><CreditCard className="w-3 h-3 mr-1" /> {'Pending'}</Badge>;
       case 'failed':
-        return <Badge variant="destructive"><CreditCard className="w-3 h-3 mr-1" /> {language === 'bn' ? 'ব্যর্থ' : 'Failed'}</Badge>;
+        return <Badge variant="destructive"><CreditCard className="w-3 h-3 mr-1" /> {'Failed'}</Badge>;
       case 'refunded':
-        return <Badge variant="outline" className="text-blue-600"><Undo2 className="w-3 h-3 mr-1" /> {language === 'bn' ? 'রিফান্ড' : 'Refunded'}</Badge>;
+        return <Badge variant="outline" className="text-blue-600"><Undo2 className="w-3 h-3 mr-1" /> {'Refunded'}</Badge>;
       default:
-        return <Badge variant="secondary"><CreditCard className="w-3 h-3 mr-1" /> {language === 'bn' ? 'অপরিশোধিত' : 'Unpaid'}</Badge>;
+        return <Badge variant="secondary"><CreditCard className="w-3 h-3 mr-1" /> {'Unpaid'}</Badge>;
     }
   };
 
@@ -228,10 +228,10 @@ export default function AdminDashboardContent() {
       {/* Page Title */}
       <div>
         <h1 className="text-2xl font-bold">
-          {language === 'bn' ? 'ড্যাশবোর্ড' : 'Dashboard'}
+          {'Dashboard'}
         </h1>
         <p className="text-muted-foreground">
-          {language === 'bn' ? 'আজকের সারসংক্ষেপ এবং বুকিং' : "Today's overview and bookings"}
+          {"Today's overview and bookings"}
         </p>
       </div>
 
@@ -239,52 +239,52 @@ export default function AdminDashboardContent() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'আজকের আয়' : "Today's Revenue"}</CardDescription>
+            <CardDescription>{"Today's Revenue"}</CardDescription>
             <CardTitle className="text-2xl">৳{todayRevenue.toLocaleString()}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center text-muted-foreground text-sm">
               <Banknote className="w-4 h-4 mr-1" />
-              {todayBookings.filter(b => b.payment_status === 'paid').length} {language === 'bn' ? 'টি পেমেন্ট' : 'payments'}
+              {todayBookings.filter(b => b.payment_status === 'paid').length} {'payments'}
             </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'এই সপ্তাহে' : 'This Week'}</CardDescription>
+            <CardDescription>{'This Week'}</CardDescription>
             <CardTitle className="text-2xl">৳{weeklyRevenue.toLocaleString()}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center text-muted-foreground text-sm">
               <TrendingUp className="w-4 h-4 mr-1" />
-              {weeklyBookings.length} {language === 'bn' ? 'টি বুকিং' : 'bookings'}
+              {weeklyBookings.length} {'bookings'}
             </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'এই মাসে' : 'This Month'}</CardDescription>
+            <CardDescription>{'This Month'}</CardDescription>
             <CardTitle className="text-2xl">৳{monthlyRevenue.toLocaleString()}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center text-muted-foreground text-sm">
               <CalendarDays className="w-4 h-4 mr-1" />
-              {monthlyBookings.length} {language === 'bn' ? 'টি বুকিং' : 'bookings'}
+              {monthlyBookings.length} {'bookings'}
             </div>
           </CardContent>
         </Card>
 
         <Card className="bg-gradient-to-br from-green-500/10 to-green-500/5 border-green-500/20">
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'মোট আয়' : 'Total Revenue'}</CardDescription>
+            <CardDescription>{'Total Revenue'}</CardDescription>
             <CardTitle className="text-2xl">৳{totalRevenue.toLocaleString()}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center text-muted-foreground text-sm">
               <CreditCard className="w-4 h-4 mr-1" />
-              {paidBookings.length} {language === 'bn' ? 'টি পেমেন্ট' : 'total paid'}
+              {paidBookings.length} {'total paid'}
             </div>
           </CardContent>
         </Card>
@@ -304,25 +304,25 @@ export default function AdminDashboardContent() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'মোট বুকিং' : 'Total Bookings'}</CardDescription>
+            <CardDescription>{'Total Bookings'}</CardDescription>
             <CardTitle className="text-2xl">{bookings.length}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'আজকের বুকিং' : "Today's"}</CardDescription>
+            <CardDescription>{"Today's"}</CardDescription>
             <CardTitle className="text-2xl">{todayBookings.length}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'নিশ্চিত' : 'Confirmed'}</CardDescription>
+            <CardDescription>{'Confirmed'}</CardDescription>
             <CardTitle className="text-2xl text-green-600">{confirmedBookings.length}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'পেমেন্ট সম্পন্ন' : 'Paid'}</CardDescription>
+            <CardDescription>{'Paid'}</CardDescription>
             <CardTitle className="text-2xl text-primary">{paidBookings.length}</CardTitle>
           </CardHeader>
         </Card>
@@ -333,14 +333,14 @@ export default function AdminDashboardContent() {
         <CardHeader>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <CardTitle>{language === 'bn' ? 'সাম্প্রতিক বুকিং' : 'Recent Bookings'}</CardTitle>
+              <CardTitle>{'Recent Bookings'}</CardTitle>
               <CardDescription>
-                {filteredBookings.length} {language === 'bn' ? 'টি বুকিং' : 'bookings'}
+                {filteredBookings.length} {'bookings'}
               </CardDescription>
             </div>
             <Button variant="outline" size="sm" onClick={handleRetry} disabled={bookingsLoading || retrying}>
               <RefreshCw className={`w-4 h-4 mr-2 ${(bookingsLoading || retrying) ? 'animate-spin' : ''}`} />
-              {language === 'bn' ? 'রিফ্রেশ' : 'Refresh'}
+              {'Refresh'}
             </Button>
           </div>
           
@@ -349,7 +349,7 @@ export default function AdminDashboardContent() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
-                placeholder={language === 'bn' ? 'সার্চ করুন...' : 'Search...'}
+                placeholder={'Search...'}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-9"
@@ -361,10 +361,10 @@ export default function AdminDashboardContent() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{language === 'bn' ? 'সব সময়' : 'All Time'}</SelectItem>
-                <SelectItem value="today">{language === 'bn' ? 'আজ' : 'Today'}</SelectItem>
-                <SelectItem value="week">{language === 'bn' ? 'এই সপ্তাহ' : 'This Week'}</SelectItem>
-                <SelectItem value="month">{language === 'bn' ? 'এই মাস' : 'This Month'}</SelectItem>
+                <SelectItem value="all">{'All Time'}</SelectItem>
+                <SelectItem value="today">{'Today'}</SelectItem>
+                <SelectItem value="week">{'This Week'}</SelectItem>
+                <SelectItem value="month">{'This Month'}</SelectItem>
               </SelectContent>
             </Select>
             
@@ -373,10 +373,10 @@ export default function AdminDashboardContent() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{language === 'bn' ? 'সব' : 'All'}</SelectItem>
-                <SelectItem value="confirmed">{language === 'bn' ? 'নিশ্চিত' : 'Confirmed'}</SelectItem>
-                <SelectItem value="pending">{language === 'bn' ? 'অপেক্ষমাণ' : 'Pending'}</SelectItem>
-                <SelectItem value="cancelled">{language === 'bn' ? 'বাতিল' : 'Cancelled'}</SelectItem>
+                <SelectItem value="all">{'All'}</SelectItem>
+                <SelectItem value="confirmed">{'Confirmed'}</SelectItem>
+                <SelectItem value="pending">{'Pending'}</SelectItem>
+                <SelectItem value="cancelled">{'Cancelled'}</SelectItem>
               </SelectContent>
             </Select>
             
@@ -391,10 +391,10 @@ export default function AdminDashboardContent() {
           {bookingsError ? (
             <div className="text-center py-8">
               <AlertCircle className="w-12 h-12 mx-auto mb-4 text-destructive" />
-              <p className="text-destructive font-medium mb-2">{language === 'bn' ? 'ডেটা লোড ব্যর্থ' : 'Failed to load'}</p>
+              <p className="text-destructive font-medium mb-2">{'Failed to load'}</p>
               <Button onClick={handleRetry} disabled={retrying} size="sm">
                 <RefreshCw className={`w-4 h-4 mr-2 ${retrying ? 'animate-spin' : ''}`} />
-                {language === 'bn' ? 'আবার চেষ্টা করুন' : 'Try Again'}
+                {'Try Again'}
               </Button>
             </div>
           ) : bookingsLoading ? (
@@ -402,10 +402,10 @@ export default function AdminDashboardContent() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{language === 'bn' ? 'তারিখ' : 'Date'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'অভিভাবক' : 'Parent'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'স্ট্যাটাস' : 'Status'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'পেমেন্ট' : 'Payment'}</TableHead>
+                    <TableHead>{'Date'}</TableHead>
+                    <TableHead>{'Parent'}</TableHead>
+                    <TableHead>{'Status'}</TableHead>
+                    <TableHead>{'Payment'}</TableHead>
                     <TableHead></TableHead>
                   </TableRow>
                 </TableHeader>
@@ -417,10 +417,10 @@ export default function AdminDashboardContent() {
           ) : filteredBookings.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <Ticket className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>{language === 'bn' ? 'কোনো বুকিং নেই' : 'No bookings found'}</p>
+              <p>{'No bookings found'}</p>
               {hasActiveFilters && (
                 <Button variant="link" onClick={clearFilters} className="mt-2">
-                  {language === 'bn' ? 'ফিল্টার মুছুন' : 'Clear filters'}
+                  {'Clear filters'}
                 </Button>
               )}
             </div>
@@ -429,11 +429,11 @@ export default function AdminDashboardContent() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{language === 'bn' ? 'তারিখ ও সময়' : 'Date & Time'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'অভিভাবক' : 'Parent'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'ফোন' : 'Phone'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'স্ট্যাটাস' : 'Status'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'পেমেন্ট' : 'Payment'}</TableHead>
+                    <TableHead>{'Date & Time'}</TableHead>
+                    <TableHead>{'Parent'}</TableHead>
+                    <TableHead>{'Phone'}</TableHead>
+                    <TableHead>{'Status'}</TableHead>
+                    <TableHead>{'Payment'}</TableHead>
                     <TableHead className="text-right"></TableHead>
                   </TableRow>
                 </TableHeader>
@@ -443,7 +443,7 @@ export default function AdminDashboardContent() {
                       <TableCell>
                         <div className="font-medium">
                           {format(parseISO(booking.slot_date), 'dd MMM yyyy', { 
-                            locale: language === 'bn' ? bn : undefined 
+                            locale: undefined 
                           })}
                         </div>
                         <div className="text-sm text-muted-foreground">{booking.time_slot}</div>
@@ -470,7 +470,7 @@ export default function AdminDashboardContent() {
                               disabled={booking.status === 'confirmed'}
                             >
                               <CheckCircle className="w-4 h-4 mr-2 text-green-600" />
-                              {language === 'bn' ? 'নিশ্চিত করুন' : 'Confirm'}
+                              {'Confirm'}
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem 
@@ -479,7 +479,7 @@ export default function AdminDashboardContent() {
                               className="text-destructive"
                             >
                               <Ban className="w-4 h-4 mr-2" />
-                              {language === 'bn' ? 'বাতিল করুন' : 'Cancel'}
+                              {'Cancel'}
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -499,7 +499,7 @@ export default function AdminDashboardContent() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Ban className="w-5 h-5 text-destructive" />
-              {language === 'bn' ? 'বুকিং বাতিল করুন' : 'Cancel Booking'}
+              {'Cancel Booking'}
             </DialogTitle>
             <DialogDescription>
               {selectedBooking?.parent_name} - {selectedBooking?.slot_date}
@@ -508,9 +508,9 @@ export default function AdminDashboardContent() {
           
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label>{language === 'bn' ? 'কারণ' : 'Reason'}</Label>
+              <Label>{'Reason'}</Label>
               <Textarea
-                placeholder={language === 'bn' ? 'কারণ লিখুন (ঐচ্ছিক)' : 'Enter reason (optional)'}
+                placeholder={'Enter reason (optional)'}
                 value={cancelReason}
                 onChange={(e) => setCancelReason(e.target.value)}
               />
@@ -525,7 +525,7 @@ export default function AdminDashboardContent() {
                 />
                 <Label htmlFor="refund" className="flex items-center gap-2 cursor-pointer">
                   <Undo2 className="w-4 h-4" />
-                  {language === 'bn' ? 'রিফান্ড করুন' : 'Process Refund'}
+                  {'Process Refund'}
                 </Label>
               </div>
             )}
@@ -533,11 +533,11 @@ export default function AdminDashboardContent() {
           
           <DialogFooter>
             <Button variant="outline" onClick={() => setCancelDialogOpen(false)}>
-              {language === 'bn' ? 'না' : 'No'}
+              {'No'}
             </Button>
             <Button variant="destructive" onClick={handleCancelBooking} disabled={cancelling}>
               {cancelling && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              {language === 'bn' ? 'বাতিল করুন' : 'Confirm Cancel'}
+              {'Confirm Cancel'}
             </Button>
           </DialogFooter>
         </DialogContent>

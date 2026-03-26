@@ -20,15 +20,13 @@ export function VideoSection() {
         {/* Header */}
         <ScrollFadeIn className="text-center max-w-2xl mx-auto mb-8 sm:mb-10 lg:mb-12 space-y-3 sm:space-y-4">
           <span className="text-xs sm:text-sm font-semibold text-primary uppercase tracking-wider">
-            {language === "bn" ? "ভার্চুয়াল ট্যুর" : "Virtual Tour"}
+            {"Virtual Tour"}
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
-            {language === "bn" ? "প্লেগ্রাউন্ড দেখুন" : "See Our Playground"}
+            {"See Our Playground"}
           </h2>
           <p className="text-sm sm:text-base lg:text-lg text-muted-foreground">
-            {language === "bn" 
-              ? "আমাদের নিরাপদ ও মজার প্লে এরিয়া দেখুন যেখানে আপনার সন্তান খেলতে পারবে" 
-              : "Take a look at our safe and fun play areas where your child can explore"}
+            {"Take a look at our safe and fun play areas where your child can explore"}
           </p>
         </ScrollFadeIn>
 
@@ -48,7 +46,7 @@ export function VideoSection() {
                 {/* Main thumbnail image */}
                   <img 
                     src={playgroundKids} 
-                    alt={language === "bn" ? "বেবি ওয়ার্ল্ড প্লেগ্রাউন্ডে বাচ্চারা খেলছে" : "Kids playing at Baby World playground"}
+                    alt={"Kids playing at Baby World playground"}
                     className="absolute inset-0 w-full h-full object-cover"
                   />
                   
@@ -69,7 +67,7 @@ export function VideoSection() {
                   {/* Text overlay */}
                   <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-6 text-center">
                     <p className="text-white text-sm sm:text-base lg:text-lg font-medium">
-                      {language === "bn" ? "ভিডিও দেখতে ক্লিক করুন" : "Click to watch video"}
+                      {"Click to watch video"}
                     </p>
                   </div>
                 </motion.div>
@@ -109,19 +107,19 @@ export function VideoSection() {
             <div className="text-center space-y-1 sm:space-y-2">
               <span className="text-2xl sm:text-3xl lg:text-4xl">🎠</span>
               <p className="text-xs sm:text-sm font-medium text-foreground">
-                {language === "bn" ? "ক্যারোসেল রাইড" : "Carousel Rides"}
+                {"Carousel Rides"}
               </p>
             </div>
             <div className="text-center space-y-1 sm:space-y-2">
               <span className="text-2xl sm:text-3xl lg:text-4xl">🎮</span>
               <p className="text-xs sm:text-sm font-medium text-foreground">
-                {language === "bn" ? "আর্কেড গেমস" : "Arcade Games"}
+                {"Arcade Games"}
               </p>
             </div>
             <div className="text-center space-y-1 sm:space-y-2">
               <span className="text-2xl sm:text-3xl lg:text-4xl">🏰</span>
               <p className="text-xs sm:text-sm font-medium text-foreground">
-                {language === "bn" ? "সফট প্লে" : "Soft Play"}
+                {"Soft Play"}
               </p>
             </div>
           </div>

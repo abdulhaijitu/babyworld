@@ -61,7 +61,7 @@ export function MobileBottomNav() {
             {navItems.map((item) => {
               const isActive = location.pathname === item.href;
               const Icon = item.icon;
-              const label = language === "bn" ? item.labelBn : item.labelEn;
+              const label = item.labelEn;
 
               return (
                 <Link

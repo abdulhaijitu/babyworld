@@ -22,39 +22,39 @@ export function EventsGallery() {
   const galleryImages = [
     { 
       src: playgroundKids, 
-      alt: language === "bn" ? "বাচ্চারা ক্রাফট কার্যক্রমে ব্যস্ত" : "Kids enjoying craft activities" 
+      alt: "Kids enjoying craft activities" 
     },
     { 
       src: mascotKids, 
-      alt: language === "bn" ? "মারিও মাসকটের সাথে বাচ্চারা" : "Kids with Mario mascot" 
+      alt: "Kids with Mario mascot" 
     },
     { 
       src: carouselRides, 
-      alt: language === "bn" ? "ক্যারোসেল ও রাইডস জোন" : "Carousel and rides zone" 
+      alt: "Carousel and rides zone" 
     },
     { 
       src: arcadeGames, 
-      alt: language === "bn" ? "আর্কেড গেমস জোন" : "Arcade games zone" 
+      alt: "Arcade games zone" 
     },
     { 
       src: clawMachine, 
-      alt: language === "bn" ? "ক্ল মেশিন গেম" : "Claw machine game" 
+      alt: "Claw machine game" 
     },
     { 
       src: mascotClaw, 
-      alt: language === "bn" ? "মাসকট লাকি গিফট দেখাচ্ছে" : "Mascot showing lucky gift" 
+      alt: "Mascot showing lucky gift" 
     },
     { 
       src: newYearEvent, 
-      alt: language === "bn" ? "নববর্ষ ২০২৬ উদযাপন" : "New Year 2026 celebration" 
+      alt: "New Year 2026 celebration" 
     },
     { 
       src: tomMascot, 
-      alt: language === "bn" ? "টম মাসকটের সাথে ছোট্ট অতিথি" : "Little guest with Tom mascot" 
+      alt: "Little guest with Tom mascot" 
     },
     { 
       src: birthdayParty, 
-      alt: language === "bn" ? "জন্মদিনের পার্টি উদযাপন" : "Birthday party celebration" 
+      alt: "Birthday party celebration" 
     },
   ];
 

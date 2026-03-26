@@ -245,7 +245,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
 
-      toast.success(language === 'bn' ? 'টিকেট তৈরি হয়েছে!' : 'Ticket created successfully!');
+      toast.success('Ticket created successfully!');
       
       // Send payment notification for paid tickets (non-blocking)
       if (values.payment_type === 'cash' && data.ticket) {
@@ -273,7 +273,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
 
       onSuccess?.(data.ticket);
     } catch (error: any) {
-      toast.error(error.message || (language === 'bn' ? 'টিকেট তৈরি ব্যর্থ' : 'Failed to create ticket'));
+      toast.error(error.message || ('Failed to create ticket'));
     } finally {
       setIsSubmitting(false);
     }
@@ -320,7 +320,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center gap-2">
                   <Ticket className="h-5 w-5" />
-                  {language === 'bn' ? 'টিকেট তথ্য' : 'Ticket Information'}
+                  {'Ticket Information'}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -331,7 +331,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                     name="date"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{language === 'bn' ? 'তারিখ' : 'Date'}</FormLabel>
+                        <FormLabel>{'Date'}</FormLabel>
                         <Popover>
                           <PopoverTrigger asChild>
                             <FormControl>
@@ -343,9 +343,9 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                                 )}
                               >
                                 {field.value ? (
-                                  format(field.value, 'PPP', { locale: language === 'bn' ? bn : undefined })
+                                  format(field.value, 'PPP', { locale: undefined })
                                 ) : (
-                                  <span>{language === 'bn' ? 'তারিখ নির্বাচন করুন' : 'Pick a date'}</span>
+                                  <span>{'Pick a date'}</span>
                                 )}
                                 <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                               </Button>
@@ -372,7 +372,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                     name="phone"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{language === 'bn' ? 'ফোন নম্বর *' : 'Phone Number *'}</FormLabel>
+                        <FormLabel>{'Phone Number *'}</FormLabel>
                         <FormControl>
                           <div className="relative">
                             <Input placeholder="01XXXXXXXXX" {...field} />
@@ -393,14 +393,14 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                     <Crown className="h-5 w-5 text-primary" />
                     <div className="flex-1">
                       <p className="font-medium text-primary">
-                        {language === 'bn' ? 'মেম্বারশিপ সক্রিয়!' : 'Membership Active!'}
+                        {'Membership Active!'}
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        {membershipInfo.member_name} • {membershipInfo.discount_percent}% {language === 'bn' ? 'ছাড়' : 'discount'}
+                        {membershipInfo.member_name} • {membershipInfo.discount_percent}% {'discount'}
                       </p>
                     </div>
                     <Badge variant="secondary">
-                      {language === 'bn' ? 'মেয়াদ:' : 'Valid till:'} {membershipInfo.valid_till}
+                      {'Valid till:'} {membershipInfo.valid_till}
                     </Badge>
                   </div>
                 )}
@@ -411,9 +411,9 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                   name="guardian_name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{language === 'bn' ? 'অভিভাবকের নাম' : 'Guardian Name'}</FormLabel>
+                      <FormLabel>{'Guardian Name'}</FormLabel>
                       <FormControl>
-                        <Input placeholder={language === 'bn' ? 'নাম লিখুন' : 'Enter name'} {...field} />
+                        <Input placeholder={'Enter name'} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -427,7 +427,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center gap-2">
                   <Users className="h-5 w-5" />
-                  {language === 'bn' ? 'প্রবেশের বিবরণ' : 'Entry Details'}
+                  {'Entry Details'}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -436,7 +436,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                   <div className="space-y-2">
                     <Label className="flex items-center gap-2">
                       <Users className="h-4 w-4" />
-                      {language === 'bn' ? 'অভিভাবক সংখ্যা' : 'Guardian Count'}
+                      {'Guardian Count'}
                     </Label>
                     <CounterButton
                       value={guardianCount}
@@ -446,7 +446,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                     />
                     {guardianCount > 1 && (
                       <p className="text-xs text-muted-foreground">
-                        +৳{(guardianCount - 1) * pricing.extra_guardian_price} {language === 'bn' ? 'অতিরিক্ত' : 'extra'}
+                        +৳{(guardianCount - 1) * pricing.extra_guardian_price} {'extra'}
                       </p>
                     )}
                   </div>
@@ -455,7 +455,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                   <div className="space-y-2">
                     <Label className="flex items-center gap-2">
                       <Baby className="h-4 w-4" />
-                      {language === 'bn' ? 'শিশু সংখ্যা' : 'Child Count'}
+                      {'Child Count'}
                     </Label>
                     <CounterButton
                       value={childCount}
@@ -465,7 +465,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                     />
                     {childCount > 1 && (
                       <p className="text-xs text-muted-foreground">
-                        +৳{(childCount - 1) * pricing.extra_child_price} {language === 'bn' ? 'অতিরিক্ত' : 'extra'}
+                        +৳{(childCount - 1) * pricing.extra_child_price} {'extra'}
                       </p>
                     )}
                   </div>
@@ -474,7 +474,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                   <div className="space-y-2">
                     <Label className="flex items-center gap-2">
                       <Footprints className="h-4 w-4" />
-                      {language === 'bn' ? 'মোজা (জোড়া)' : 'Socks (pairs)'}
+                      {'Socks (pairs)'}
                     </Label>
                     <CounterButton
                       value={socksCount}
@@ -498,9 +498,9 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                 <CardHeader className="pb-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <CardTitle>{language === 'bn' ? 'রাইড যোগ করুন (ঐচ্ছিক)' : 'Add Rides (Optional)'}</CardTitle>
+                      <CardTitle>{'Add Rides (Optional)'}</CardTitle>
                       <CardDescription>
-                        {language === 'bn' ? 'অতিরিক্ত রাইড নির্বাচন করুন' : 'Select additional rides'}
+                        {'Select additional rides'}
                       </CardDescription>
                     </div>
                     <div className="flex gap-2">
@@ -516,7 +516,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                           setSelectedRides(allRides);
                         }}
                       >
-                        {language === 'bn' ? 'সব সিলেক্ট' : 'Select All'}
+                        {'Select All'}
                       </Button>
                       {Object.keys(selectedRides).length > 0 && (
                         <Button
@@ -525,7 +525,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                           size="sm"
                           onClick={() => setSelectedRides({})}
                         >
-                          {language === 'bn' ? 'বাদ দিন' : 'Clear'}
+                          {'Clear'}
                         </Button>
                       )}
                     </div>
@@ -541,10 +541,10 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                       <div key={category}>
                         <div className="flex items-center gap-2 mb-2">
                           <Badge variant="outline" className={cn("text-xs", catInfo.color)}>
-                            {language === 'bn' ? catInfo.label_bn : catInfo.label}
+                            {catInfo.label}
                           </Badge>
                           <span className="text-xs text-muted-foreground">
-                            ({categoryRides.length} {language === 'bn' ? 'টি রাইড' : 'rides'})
+                            ({categoryRides.length} {'rides'})
                           </span>
                         </div>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -591,7 +591,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
 
                                 {/* Ride Info */}
                                 <p className="font-medium text-sm line-clamp-1">
-                                  {language === 'bn' ? ride.name_bn || ride.name : ride.name}
+                                  {ride.name}
                                 </p>
 
                                 {/* Rating */}
@@ -631,7 +631,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
             {/* Notes & Payment */}
             <Card>
               <CardHeader className="pb-4">
-                <CardTitle>{language === 'bn' ? 'অতিরিক্ত তথ্য' : 'Additional Information'}</CardTitle>
+                <CardTitle>{'Additional Information'}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <FormField
@@ -639,10 +639,10 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                   name="notes"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{language === 'bn' ? 'নোট' : 'Notes'}</FormLabel>
+                      <FormLabel>{'Notes'}</FormLabel>
                       <FormControl>
                         <Textarea 
-                          placeholder={language === 'bn' ? 'বিশেষ নির্দেশনা...' : 'Special instructions...'} 
+                          placeholder={'Special instructions...'} 
                           {...field} 
                         />
                       </FormControl>
@@ -656,7 +656,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                   name="payment_type"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{language === 'bn' ? 'পেমেন্ট পদ্ধতি' : 'Payment Method'}</FormLabel>
+                      <FormLabel>{'Payment Method'}</FormLabel>
                       <FormControl>
                         <RadioGroup
                           onValueChange={field.onChange}
@@ -665,11 +665,11 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                         >
                           <div className="flex items-center space-x-2">
                             <RadioGroupItem value="cash" id="cash" />
-                            <Label htmlFor="cash">{language === 'bn' ? 'নগদ' : 'Cash'}</Label>
+                            <Label htmlFor="cash">{'Cash'}</Label>
                           </div>
                           <div className="flex items-center space-x-2">
                             <RadioGroupItem value="online" id="online" />
-                            <Label htmlFor="online">{language === 'bn' ? 'অনলাইন' : 'Online'}</Label>
+                            <Label htmlFor="online">{'Online'}</Label>
                           </div>
                         </RadioGroup>
                       </FormControl>
@@ -685,13 +685,13 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
           <div className="lg:col-span-1">
             <Card className="sticky top-4">
               <CardHeader className="pb-4">
-                <CardTitle>{language === 'bn' ? 'মূল্য বিবরণ' : 'Price Summary'}</CardTitle>
+                <CardTitle>{'Price Summary'}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">
-                      {language === 'bn' ? 'এন্ট্রি ফি' : 'Entry Fee'}
+                      {'Entry Fee'}
                     </span>
                     <span>৳{prices.entryPrice}</span>
                   </div>
@@ -699,7 +699,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                   {prices.socksPrice > 0 && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">
-                        {language === 'bn' ? 'মোজা' : 'Socks'} ({socksCount})
+                        {'Socks'} ({socksCount})
                       </span>
                       <span>৳{prices.socksPrice}</span>
                     </div>
@@ -708,7 +708,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                   {prices.ridesPrice > 0 && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">
-                        {language === 'bn' ? 'রাইড' : 'Rides'}
+                        {'Rides'}
                       </span>
                       <span>৳{prices.ridesPrice}</span>
                     </div>
@@ -718,7 +718,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
 
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">
-                      {language === 'bn' ? 'সাবটোটাল' : 'Subtotal'}
+                      {'Subtotal'}
                     </span>
                     <span>৳{prices.subtotal}</span>
                   </div>
@@ -726,7 +726,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                   {membershipInfo && prices.discountAmount > 0 && (
                     <div className="flex justify-between text-green-600">
                       <span>
-                        {language === 'bn' ? 'মেম্বারশিপ ছাড়' : 'Membership Discount'} ({membershipInfo.discount_percent}%)
+                        {'Membership Discount'} ({membershipInfo.discount_percent}%)
                       </span>
                       <span>-৳{prices.discountAmount}</span>
                     </div>
@@ -735,7 +735,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                   <Separator />
 
                   <div className="flex justify-between text-lg font-bold">
-                    <span>{language === 'bn' ? 'মোট' : 'Total'}</span>
+                    <span>{'Total'}</span>
                     <span className="text-primary">৳{prices.total}</span>
                   </div>
                 </div>
@@ -743,15 +743,15 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                 {/* Time Info */}
                 <div className="p-3 rounded-lg bg-muted/50 space-y-1 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">{language === 'bn' ? 'প্রবেশ সময়' : 'In Time'}</span>
+                    <span className="text-muted-foreground">{'In Time'}</span>
                     <span className="font-medium">{format(new Date(), 'hh:mm a')}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">{language === 'bn' ? 'বের হওয়ার সময়' : 'Out Time'}</span>
+                    <span className="text-muted-foreground">{'Out Time'}</span>
                     <span className="font-medium">{format(new Date(Date.now() + 60 * 60 * 1000), 'hh:mm a')}</span>
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">
-                    {language === 'bn' ? '১ ঘণ্টার জন্য বৈধ' : 'Valid for 1 hour'}
+                    {'Valid for 1 hour'}
                   </p>
                 </div>
 
@@ -764,12 +764,12 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                   {isSubmitting ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      {language === 'bn' ? 'তৈরি হচ্ছে...' : 'Creating...'}
+                      {'Creating...'}
                     </>
                   ) : (
                     <>
                       <CheckCircle className="mr-2 h-4 w-4" />
-                      {language === 'bn' ? 'টিকেট তৈরি করুন' : 'Create Ticket'}
+                      {'Create Ticket'}
                     </>
                   )}
                 </Button>

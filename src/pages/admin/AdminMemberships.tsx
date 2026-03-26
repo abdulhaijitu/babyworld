@@ -72,16 +72,16 @@ export default function AdminMemberships() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['memberships'] });
-      toast.success(language === 'bn' ? 'স্ট্যাটাস আপডেট হয়েছে' : 'Status updated');
+      toast.success('Status updated');
     },
     onError: () => {
-      toast.error(language === 'bn' ? 'আপডেট ব্যর্থ' : 'Update failed');
+      toast.error('Update failed');
     },
   });
 
   const handleCreate = async () => {
     if (!formData.member_name || !formData.phone) {
-      toast.error(language === 'bn' ? 'নাম ও ফোন প্রয়োজন' : 'Name and phone are required');
+      toast.error('Name and phone are required');
       return;
     }
 
@@ -94,7 +94,7 @@ export default function AdminMemberships() {
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
 
-      toast.success(language === 'bn' ? 'মেম্বারশিপ তৈরি হয়েছে' : 'Membership created');
+      toast.success('Membership created');
       setIsCreateOpen(false);
       setFormData({
         member_name: '',
@@ -106,7 +106,7 @@ export default function AdminMemberships() {
       });
       queryClient.invalidateQueries({ queryKey: ['memberships'] });
     } catch (error: any) {
-      toast.error(error.message || (language === 'bn' ? 'তৈরি ব্যর্থ' : 'Creation failed'));
+      toast.error(error.message || ('Creation failed'));
     } finally {
       setIsCreating(false);
     }
@@ -129,11 +129,11 @@ export default function AdminMemberships() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'active':
-        return <Badge className="bg-green-500/10 text-green-600 border-green-200">{language === 'bn' ? 'সক্রিয়' : 'Active'}</Badge>;
+        return <Badge className="bg-green-500/10 text-green-600 border-green-200">{'Active'}</Badge>;
       case 'expired':
-        return <Badge variant="secondary">{language === 'bn' ? 'মেয়াদ শেষ' : 'Expired'}</Badge>;
+        return <Badge variant="secondary">{'Expired'}</Badge>;
       case 'cancelled':
-        return <Badge variant="destructive">{language === 'bn' ? 'বাতিল' : 'Cancelled'}</Badge>;
+        return <Badge variant="destructive">{'Cancelled'}</Badge>;
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
@@ -145,7 +145,7 @@ export default function AdminMemberships() {
       quarterly: { en: 'Quarterly', bn: 'ত্রৈমাসিক' },
       yearly: { en: 'Yearly', bn: 'বার্ষিক' },
     };
-    return labels[type as keyof typeof labels]?.[language === 'bn' ? 'bn' : 'en'] || type;
+    return labels[type as keyof typeof labels]?.['en'] || type;
   };
 
   const getRemainingDays = (validTill: string) => {
@@ -160,37 +160,37 @@ export default function AdminMemberships() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Crown className="h-6 w-6 text-primary" />
-            {language === 'bn' ? 'মেম্বারশিপ ব্যবস্থাপনা' : 'Membership Management'}
+            {'Membership Management'}
           </h1>
           <p className="text-muted-foreground">
-            {language === 'bn' ? 'সদস্যদের তথ্য পরিচালনা করুন' : 'Manage member subscriptions'}
+            {'Manage member subscriptions'}
           </p>
         </div>
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="h-4 w-4 mr-2" />
-              {language === 'bn' ? 'নতুন মেম্বার' : 'New Member'}
+              {'New Member'}
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle>{language === 'bn' ? 'নতুন মেম্বারশিপ তৈরি' : 'Create New Membership'}</DialogTitle>
+              <DialogTitle>{'Create New Membership'}</DialogTitle>
               <DialogDescription>
-                {language === 'bn' ? 'সদস্যের তথ্য পূরণ করুন' : 'Fill in member details'}
+                {'Fill in member details'}
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 mt-4">
               <div className="space-y-2">
-                <Label>{language === 'bn' ? 'সদস্যের নাম *' : 'Member Name *'}</Label>
+                <Label>{'Member Name *'}</Label>
                 <Input
-                  placeholder={language === 'bn' ? 'নাম লিখুন' : 'Enter name'}
+                  placeholder={'Enter name'}
                   value={formData.member_name}
                   onChange={(e) => setFormData({ ...formData, member_name: e.target.value })}
                 />
               </div>
               <div className="space-y-2">
-                <Label>{language === 'bn' ? 'ফোন নম্বর *' : 'Phone Number *'}</Label>
+                <Label>{'Phone Number *'}</Label>
                 <Input
                   placeholder="01XXXXXXXXX"
                   value={formData.phone}
@@ -199,7 +199,7 @@ export default function AdminMemberships() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>{language === 'bn' ? 'শিশু সংখ্যা' : 'Child Count'}</Label>
+                  <Label>{'Child Count'}</Label>
                   <Input
                     type="number"
                     min={1}
@@ -208,7 +208,7 @@ export default function AdminMemberships() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>{language === 'bn' ? 'ছাড় (%)' : 'Discount (%)'}</Label>
+                  <Label>{'Discount (%)'}</Label>
                   <Input
                     type="number"
                     min={0}
@@ -219,7 +219,7 @@ export default function AdminMemberships() {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label>{language === 'bn' ? 'প্ল্যান' : 'Plan'}</Label>
+                <Label>{'Plan'}</Label>
                 <Select
                   value={formData.membership_type}
                   onValueChange={(value: 'monthly' | 'quarterly' | 'yearly') => 
@@ -230,16 +230,16 @@ export default function AdminMemberships() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="monthly">{language === 'bn' ? 'মাসিক' : 'Monthly'}</SelectItem>
-                    <SelectItem value="quarterly">{language === 'bn' ? 'ত্রৈমাসিক' : 'Quarterly'}</SelectItem>
-                    <SelectItem value="yearly">{language === 'bn' ? 'বার্ষিক' : 'Yearly'}</SelectItem>
+                    <SelectItem value="monthly">{'Monthly'}</SelectItem>
+                    <SelectItem value="quarterly">{'Quarterly'}</SelectItem>
+                    <SelectItem value="yearly">{'Yearly'}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>{language === 'bn' ? 'নোট' : 'Notes'}</Label>
+                <Label>{'Notes'}</Label>
                 <Textarea
-                  placeholder={language === 'bn' ? 'অতিরিক্ত তথ্য...' : 'Additional notes...'}
+                  placeholder={'Additional notes...'}
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                 />
@@ -248,12 +248,12 @@ export default function AdminMemberships() {
                 {isCreating ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    {language === 'bn' ? 'তৈরি হচ্ছে...' : 'Creating...'}
+                    {'Creating...'}
                   </>
                 ) : (
                   <>
                     <CheckCircle className="h-4 w-4 mr-2" />
-                    {language === 'bn' ? 'মেম্বারশিপ তৈরি করুন' : 'Create Membership'}
+                    {'Create Membership'}
                   </>
                 )}
               </Button>
@@ -267,19 +267,19 @@ export default function AdminMemberships() {
         <Card>
           <CardContent className="p-4 text-center">
             <p className="text-3xl font-bold">{stats.total}</p>
-            <p className="text-sm text-muted-foreground">{language === 'bn' ? 'মোট সদস্য' : 'Total Members'}</p>
+            <p className="text-sm text-muted-foreground">{'Total Members'}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
             <p className="text-3xl font-bold text-green-600">{stats.active}</p>
-            <p className="text-sm text-muted-foreground">{language === 'bn' ? 'সক্রিয়' : 'Active'}</p>
+            <p className="text-sm text-muted-foreground">{'Active'}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
             <p className="text-3xl font-bold text-muted-foreground">{stats.expired}</p>
-            <p className="text-sm text-muted-foreground">{language === 'bn' ? 'মেয়াদ শেষ' : 'Expired'}</p>
+            <p className="text-sm text-muted-foreground">{'Expired'}</p>
           </CardContent>
         </Card>
       </div>
@@ -291,7 +291,7 @@ export default function AdminMemberships() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder={language === 'bn' ? 'নাম বা ফোন দিয়ে খুঁজুন...' : 'Search by name or phone...'}
+                placeholder={'Search by name or phone...'}
                 className="pl-10"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -299,13 +299,13 @@ export default function AdminMemberships() {
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder={language === 'bn' ? 'স্ট্যাটাস' : 'Status'} />
+                <SelectValue placeholder={'Status'} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{language === 'bn' ? 'সব' : 'All'}</SelectItem>
-                <SelectItem value="active">{language === 'bn' ? 'সক্রিয়' : 'Active'}</SelectItem>
-                <SelectItem value="expired">{language === 'bn' ? 'মেয়াদ শেষ' : 'Expired'}</SelectItem>
-                <SelectItem value="cancelled">{language === 'bn' ? 'বাতিল' : 'Cancelled'}</SelectItem>
+                <SelectItem value="all">{'All'}</SelectItem>
+                <SelectItem value="active">{'Active'}</SelectItem>
+                <SelectItem value="expired">{'Expired'}</SelectItem>
+                <SelectItem value="cancelled">{'Cancelled'}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -324,17 +324,17 @@ export default function AdminMemberships() {
           ) : filteredMemberships.length === 0 ? (
             <div className="p-8 text-center text-muted-foreground">
               <Crown className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p>{language === 'bn' ? 'কোনো মেম্বারশিপ পাওয়া যায়নি' : 'No memberships found'}</p>
+              <p>{'No memberships found'}</p>
             </div>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>{language === 'bn' ? 'সদস্য' : 'Member'}</TableHead>
-                  <TableHead>{language === 'bn' ? 'প্ল্যান' : 'Plan'}</TableHead>
-                  <TableHead>{language === 'bn' ? 'মেয়াদ' : 'Validity'}</TableHead>
-                  <TableHead>{language === 'bn' ? 'স্ট্যাটাস' : 'Status'}</TableHead>
-                  <TableHead>{language === 'bn' ? 'ছাড়' : 'Discount'}</TableHead>
+                  <TableHead>{'Member'}</TableHead>
+                  <TableHead>{'Plan'}</TableHead>
+                  <TableHead>{'Validity'}</TableHead>
+                  <TableHead>{'Status'}</TableHead>
+                  <TableHead>{'Discount'}</TableHead>
                   <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
@@ -360,7 +360,7 @@ export default function AdminMemberships() {
                       <TableCell>
                         <Badge variant="outline">{getTypeBadge(membership.membership_type)}</Badge>
                         <p className="text-xs text-muted-foreground mt-1">
-                          {membership.child_count} {language === 'bn' ? 'শিশু' : 'child(ren)'}
+                          {membership.child_count} {'child(ren)'}
                         </p>
                       </TableCell>
                       <TableCell>
@@ -368,7 +368,7 @@ export default function AdminMemberships() {
                           <p>{membership.valid_from} - {membership.valid_till}</p>
                           {membership.status === 'active' && (
                             <p className={`text-xs ${remainingDays <= 7 ? 'text-orange-600' : 'text-muted-foreground'}`}>
-                              {remainingDays} {language === 'bn' ? 'দিন বাকি' : 'days left'}
+                              {remainingDays} {'days left'}
                             </p>
                           )}
                         </div>
@@ -390,7 +390,7 @@ export default function AdminMemberships() {
                                 onClick={() => updateStatusMutation.mutate({ id: membership.id, status: 'cancelled' })}
                               >
                                 <XCircle className="h-4 w-4 mr-2" />
-                                {language === 'bn' ? 'বাতিল করুন' : 'Cancel'}
+                                {'Cancel'}
                               </DropdownMenuItem>
                             )}
                             {membership.status !== 'active' && (
@@ -398,7 +398,7 @@ export default function AdminMemberships() {
                                 onClick={() => updateStatusMutation.mutate({ id: membership.id, status: 'active' })}
                               >
                                 <CheckCircle className="h-4 w-4 mr-2" />
-                                {language === 'bn' ? 'সক্রিয় করুন' : 'Activate'}
+                                {'Activate'}
                               </DropdownMenuItem>
                             )}
                           </DropdownMenuContent>

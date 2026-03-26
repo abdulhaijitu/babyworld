@@ -125,7 +125,7 @@ export default function AdminGateLogs() {
       setGates(data.gates || []);
     } catch (err: unknown) {
       console.error('[GateLogs] Error:', err);
-      toast.error(language === 'bn' ? 'লোড করতে সমস্যা হয়েছে' : 'Failed to load logs');
+      toast.error('Failed to load logs');
     } finally {
       setLoading(false);
     }
@@ -149,7 +149,7 @@ export default function AdminGateLogs() {
   const copyToClipboard = (text: string, field: string) => {
     navigator.clipboard.writeText(text);
     setCopiedField(field);
-    toast.success(language === 'bn' ? 'কপি হয়েছে' : 'Copied to clipboard');
+    toast.success('Copied to clipboard');
     setTimeout(() => setCopiedField(null), 2000);
   };
 
@@ -180,15 +180,15 @@ export default function AdminGateLogs() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Video className="w-6 h-6" />
-            {language === 'bn' ? 'গেট লগ' : 'Gate Logs'}
+            {'Gate Logs'}
           </h1>
           <p className="text-muted-foreground">
-            {language === 'bn' ? 'এন্ট্রি/এক্সিট ট্র্যাকিং ও CCTV রেফারেন্স' : 'Entry/Exit tracking with CCTV reference'}
+            {'Entry/Exit tracking with CCTV reference'}
           </p>
         </div>
         <Button variant="outline" onClick={fetchLogs} disabled={loading}>
           <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-          {language === 'bn' ? 'রিফ্রেশ' : 'Refresh'}
+          {'Refresh'}
         </Button>
       </div>
 
@@ -196,7 +196,7 @@ export default function AdminGateLogs() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'আজকের এন্ট্রি' : "Today's Entries"}</CardDescription>
+            <CardDescription>{"Today's Entries"}</CardDescription>
             <CardTitle className="text-2xl text-green-600 flex items-center gap-2">
               <DoorOpen className="w-5 h-5" />
               {entryCount}
@@ -205,7 +205,7 @@ export default function AdminGateLogs() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'আজকের এক্সিট' : "Today's Exits"}</CardDescription>
+            <CardDescription>{"Today's Exits"}</CardDescription>
             <CardTitle className="text-2xl text-orange-600 flex items-center gap-2">
               <DoorClosed className="w-5 h-5" />
               {exitCount}
@@ -214,7 +214,7 @@ export default function AdminGateLogs() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'বর্তমানে ভিতরে' : 'Currently Inside'}</CardDescription>
+            <CardDescription>{'Currently Inside'}</CardDescription>
             <CardTitle className="text-2xl text-blue-600 flex items-center gap-2">
               <User className="w-5 h-5" />
               {entryCount - exitCount}
@@ -227,11 +227,11 @@ export default function AdminGateLogs() {
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <CardTitle>{language === 'bn' ? 'লগ তালিকা' : 'Log History'}</CardTitle>
+            <CardTitle>{'Log History'}</CardTitle>
             {hasActiveFilters && (
               <Button variant="ghost" size="sm" onClick={clearFilters}>
                 <X className="w-4 h-4 mr-1" />
-                {language === 'bn' ? 'ফিল্টার মুছুন' : 'Clear Filters'}
+                {'Clear Filters'}
               </Button>
             )}
           </div>
@@ -241,7 +241,7 @@ export default function AdminGateLogs() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
-                placeholder={language === 'bn' ? 'টিকেট নং, নাম বা ফোন...' : 'Ticket #, name or phone...'}
+                placeholder={'Ticket #, name or phone...'}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-9"
@@ -252,7 +252,7 @@ export default function AdminGateLogs() {
               <PopoverTrigger asChild>
                 <Button variant="outline" size="sm">
                   <CalendarDays className="w-4 h-4 mr-2" />
-                  {dateFrom ? format(dateFrom, 'dd MMM') : (language === 'bn' ? 'থেকে' : 'From')}
+                  {dateFrom ? format(dateFrom, 'dd MMM') : ('From')}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0">
@@ -264,7 +264,7 @@ export default function AdminGateLogs() {
               <PopoverTrigger asChild>
                 <Button variant="outline" size="sm">
                   <CalendarDays className="w-4 h-4 mr-2" />
-                  {dateTo ? format(dateTo, 'dd MMM') : (language === 'bn' ? 'পর্যন্ত' : 'To')}
+                  {dateTo ? format(dateTo, 'dd MMM') : ('To')}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0">
@@ -274,10 +274,10 @@ export default function AdminGateLogs() {
 
             <Select value={gateFilter} onValueChange={(v) => { setGateFilter(v); setPage(1); }}>
               <SelectTrigger className="w-full md:w-[140px]">
-                <SelectValue placeholder={language === 'bn' ? 'গেট' : 'Gate'} />
+                <SelectValue placeholder={'Gate'} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{language === 'bn' ? 'সব গেট' : 'All Gates'}</SelectItem>
+                <SelectItem value="all">{'All Gates'}</SelectItem>
                 {gates.map(g => (
                   <SelectItem key={g.gate_id} value={g.gate_id}>{g.gate_name}</SelectItem>
                 ))}
@@ -289,9 +289,9 @@ export default function AdminGateLogs() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{language === 'bn' ? 'সব' : 'All'}</SelectItem>
-                <SelectItem value="entry">{language === 'bn' ? 'এন্ট্রি' : 'Entry'}</SelectItem>
-                <SelectItem value="exit">{language === 'bn' ? 'এক্সিট' : 'Exit'}</SelectItem>
+                <SelectItem value="all">{'All'}</SelectItem>
+                <SelectItem value="entry">{'Entry'}</SelectItem>
+                <SelectItem value="exit">{'Exit'}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -307,7 +307,7 @@ export default function AdminGateLogs() {
           ) : filteredLogs.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <Video className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>{language === 'bn' ? 'কোনো লগ পাওয়া যায়নি' : 'No logs found'}</p>
+              <p>{'No logs found'}</p>
             </div>
           ) : (
             <>
@@ -315,14 +315,14 @@ export default function AdminGateLogs() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>{language === 'bn' ? 'সময়' : 'Time'}</TableHead>
-                      <TableHead>{language === 'bn' ? 'টাইপ' : 'Type'}</TableHead>
-                      <TableHead>{language === 'bn' ? 'টিকেট' : 'Ticket'}</TableHead>
-                      <TableHead className="hidden md:table-cell">{language === 'bn' ? 'অতিথি' : 'Guest'}</TableHead>
-                      <TableHead className="hidden lg:table-cell">{language === 'bn' ? 'গেট' : 'Gate'}</TableHead>
-                      <TableHead className="hidden lg:table-cell">{language === 'bn' ? 'ক্যামেরা' : 'Camera'}</TableHead>
-                      <TableHead className="hidden md:table-cell">{language === 'bn' ? 'স্ক্যানকারী' : 'Scanned By'}</TableHead>
-                      <TableHead className="text-right">{language === 'bn' ? 'অ্যাকশন' : 'Action'}</TableHead>
+                      <TableHead>{'Time'}</TableHead>
+                      <TableHead>{'Type'}</TableHead>
+                      <TableHead>{'Ticket'}</TableHead>
+                      <TableHead className="hidden md:table-cell">{'Guest'}</TableHead>
+                      <TableHead className="hidden lg:table-cell">{'Gate'}</TableHead>
+                      <TableHead className="hidden lg:table-cell">{'Camera'}</TableHead>
+                      <TableHead className="hidden md:table-cell">{'Scanned By'}</TableHead>
+                      <TableHead className="text-right">{'Action'}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -335,12 +335,12 @@ export default function AdminGateLogs() {
                           {log.entry_type === 'entry' ? (
                             <Badge className="bg-green-500/10 text-green-600">
                               <DoorOpen className="w-3 h-3 mr-1" />
-                              {language === 'bn' ? 'এন্ট্রি' : 'Entry'}
+                              {'Entry'}
                             </Badge>
                           ) : (
                             <Badge className="bg-orange-500/10 text-orange-600">
                               <DoorClosed className="w-3 h-3 mr-1" />
-                              {language === 'bn' ? 'এক্সিট' : 'Exit'}
+                              {'Exit'}
                             </Badge>
                           )}
                         </TableCell>
@@ -361,7 +361,7 @@ export default function AdminGateLogs() {
                         </TableCell>
                         <TableCell className="text-right">
                           <Button variant="ghost" size="sm">
-                            {language === 'bn' ? 'বিস্তারিত' : 'Details'}
+                            {'Details'}
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -374,9 +374,7 @@ export default function AdminGateLogs() {
               {totalPages > 1 && (
                 <div className="flex items-center justify-between mt-4">
                   <p className="text-sm text-muted-foreground">
-                    {language === 'bn' 
-                      ? `মোট ${total} টি লগের মধ্যে ${(page - 1) * limit + 1}-${Math.min(page * limit, total)} দেখাচ্ছে`
-                      : `Showing ${(page - 1) * limit + 1}-${Math.min(page * limit, total)} of ${total} logs`}
+                    {`Showing ${(page - 1) * limit + 1}-${Math.min(page * limit, total)} of ${total} logs`}
                   </p>
                   <div className="flex gap-2">
                     <Button 
@@ -413,10 +411,10 @@ export default function AdminGateLogs() {
               ) : (
                 <DoorClosed className="w-5 h-5 text-orange-600" />
               )}
-              {language === 'bn' ? 'লগ বিস্তারিত' : 'Log Details'}
+              {'Log Details'}
             </DialogTitle>
             <DialogDescription>
-              {language === 'bn' ? 'CCTV ফুটেজ খুঁজতে নীচের তথ্য ব্যবহার করুন' : 'Use the info below to find CCTV footage'}
+              {'Use the info below to find CCTV footage'}
             </DialogDescription>
           </DialogHeader>
 
@@ -427,13 +425,13 @@ export default function AdminGateLogs() {
                 <CardHeader className="pb-2">
                   <CardDescription className="flex items-center gap-2">
                     <Camera className="w-4 h-4" />
-                    {language === 'bn' ? 'CCTV রেফারেন্স' : 'CCTV Reference'}
+                    {'CCTV Reference'}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-muted-foreground">{language === 'bn' ? 'ক্যামেরা' : 'Camera'}</p>
+                      <p className="text-sm text-muted-foreground">{'Camera'}</p>
                       <p className="font-mono text-lg font-bold">{selectedLog.camera_ref || 'N/A'}</p>
                     </div>
                     {selectedLog.camera_ref && (
@@ -448,7 +446,7 @@ export default function AdminGateLogs() {
                   </div>
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-muted-foreground">{language === 'bn' ? 'টাইমস্ট্যাম্প' : 'Timestamp'}</p>
+                      <p className="text-sm text-muted-foreground">{'Timestamp'}</p>
                       <p className="font-mono font-bold">{format(parseISO(selectedLog.created_at), 'yyyy-MM-dd HH:mm:ss')}</p>
                     </div>
                     <Button 
@@ -465,15 +463,15 @@ export default function AdminGateLogs() {
               {/* Other Details */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-muted-foreground">{language === 'bn' ? 'টাইপ' : 'Type'}</Label>
+                  <Label className="text-muted-foreground">{'Type'}</Label>
                   <p className="font-medium">
                     {selectedLog.entry_type === 'entry' 
-                      ? (language === 'bn' ? 'এন্ট্রি' : 'Entry')
-                      : (language === 'bn' ? 'এক্সিট' : 'Exit')}
+                      ? ('Entry')
+                      : ('Exit')}
                   </p>
                 </div>
                 <div>
-                  <Label className="text-muted-foreground">{language === 'bn' ? 'গেট' : 'Gate'}</Label>
+                  <Label className="text-muted-foreground">{'Gate'}</Label>
                   <p className="font-medium">
                     {gates.find(g => g.gate_id === selectedLog.gate_id)?.gate_name || selectedLog.gate_id}
                   </p>
@@ -481,7 +479,7 @@ export default function AdminGateLogs() {
               </div>
 
               <div>
-                <Label className="text-muted-foreground">{language === 'bn' ? 'টিকেট নম্বর' : 'Ticket Number'}</Label>
+                <Label className="text-muted-foreground">{'Ticket Number'}</Label>
                 <div className="flex items-center gap-2">
                   <p className="font-mono font-medium">{selectedLog.tickets?.ticket_number}</p>
                   <Button 
@@ -495,14 +493,14 @@ export default function AdminGateLogs() {
               </div>
 
               <div>
-                <Label className="text-muted-foreground">{language === 'bn' ? 'অতিথি' : 'Guest'}</Label>
+                <Label className="text-muted-foreground">{'Guest'}</Label>
                 <p className="font-medium">{selectedLog.tickets?.guardian_name}</p>
                 <p className="text-sm text-muted-foreground">{selectedLog.tickets?.guardian_phone}</p>
               </div>
 
               {selectedLog.scanned_by_name && (
                 <div>
-                  <Label className="text-muted-foreground">{language === 'bn' ? 'স্ক্যান করেছেন' : 'Scanned By'}</Label>
+                  <Label className="text-muted-foreground">{'Scanned By'}</Label>
                   <p className="font-medium">{selectedLog.scanned_by_name}</p>
                 </div>
               )}

@@ -657,17 +657,16 @@ const translations: Record<Language, Record<string, string>> = {
 };
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>("en");
+  const language: Language = "en";
+  const setLanguage = (_lang: Language) => {};
 
   const t = (key: string): string => {
-    return translations[language][key] || key;
+    return translations.en[key] || key;
   };
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t }}>
-      <div className={language === "bn" ? "font-bangla" : ""}>
-        {children}
-      </div>
+      {children}
     </LanguageContext.Provider>
   );
 }

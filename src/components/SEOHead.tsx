@@ -84,7 +84,7 @@ export function SEOHead({ page }: SEOHeadProps) {
       <link rel="canonical" href={canonicalUrl} />
       
       {/* Language */}
-      <html lang={language === "bn" ? "bn-BD" : "en"} />
+      <html lang={"en"} />
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content="website" />
@@ -93,7 +93,7 @@ export function SEOHead({ page }: SEOHeadProps) {
       <meta property="og:description" content={data.description} />
       <meta property="og:image" content={ogImages[page]} />
       <meta property="og:site_name" content="Baby World (বেবি ওয়ার্ল্ড)" />
-      <meta property="og:locale" content={language === "bn" ? "bn_BD" : "en_US"} />
+      <meta property="og:locale" content={"en_US"} />
 
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />

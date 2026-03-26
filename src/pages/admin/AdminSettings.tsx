@@ -57,36 +57,36 @@ export default function AdminSettings() {
   const handleSavePricing = async () => {
     try {
       await savePricing();
-      toast.success(language === 'bn' ? 'প্রাইসিং সেভ হয়েছে' : 'Pricing saved');
+      toast.success('Pricing saved');
     } catch (error) {
-      toast.error(language === 'bn' ? 'সেভ করতে সমস্যা হয়েছে' : 'Failed to save');
+      toast.error('Failed to save');
     }
   };
 
   const handleSaveTimeSlots = async () => {
     try {
       await saveTimeSlots();
-      toast.success(language === 'bn' ? 'টাইম স্লট সেভ হয়েছে' : 'Time slots saved');
+      toast.success('Time slots saved');
     } catch (error) {
-      toast.error(language === 'bn' ? 'সেভ করতে সমস্যা হয়েছে' : 'Failed to save');
+      toast.error('Failed to save');
     }
   };
 
   const handleSaveBusinessInfo = async () => {
     try {
       await saveBusinessInfo();
-      toast.success(language === 'bn' ? 'তথ্য সেভ হয়েছে' : 'Business info saved');
+      toast.success('Business info saved');
     } catch (error) {
-      toast.error(language === 'bn' ? 'সেভ করতে সমস্যা হয়েছে' : 'Failed to save');
+      toast.error('Failed to save');
     }
   };
 
   const handleSaveNotifications = async () => {
     try {
       await saveNotifications();
-      toast.success(language === 'bn' ? 'নোটিফিকেশন সেটিংস সেভ হয়েছে' : 'Notification settings saved');
+      toast.success('Notification settings saved');
     } catch (error) {
-      toast.error(language === 'bn' ? 'সেভ করতে সমস্যা হয়েছে' : 'Failed to save');
+      toast.error('Failed to save');
     }
   };
 
@@ -115,15 +115,15 @@ export default function AdminSettings() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Settings className="w-6 h-6" />
-            {language === 'bn' ? 'সেটিংস' : 'Settings'}
+            {'Settings'}
           </h1>
           <p className="text-muted-foreground">
-            {language === 'bn' ? 'অ্যাপ্লিকেশন কনফিগারেশন (ডাটাবেসে সংরক্ষিত)' : 'Application configuration (saved to database)'}
+            {'Application configuration (saved to database)'}
           </p>
         </div>
         <Button variant="outline" size="sm" onClick={loadSettings}>
           <RefreshCw className="w-4 h-4 mr-2" />
-          {language === 'bn' ? 'রিফ্রেশ' : 'Refresh'}
+          {'Refresh'}
         </Button>
       </div>
 
@@ -131,23 +131,23 @@ export default function AdminSettings() {
         <TabsList className="grid w-full grid-cols-2 md:grid-cols-5">
           <TabsTrigger value="pricing" className="gap-2">
             <Banknote className="w-4 h-4 hidden sm:inline" />
-            {language === 'bn' ? 'প্রাইসিং' : 'Pricing'}
+            {'Pricing'}
           </TabsTrigger>
           <TabsTrigger value="timeslots" className="gap-2">
             <Clock className="w-4 h-4 hidden sm:inline" />
-            {language === 'bn' ? 'টাইম স্লট' : 'Time Slots'}
+            {'Time Slots'}
           </TabsTrigger>
           <TabsTrigger value="business" className="gap-2">
             <Building className="w-4 h-4 hidden sm:inline" />
-            {language === 'bn' ? 'ব্যবসায়িক তথ্য' : 'Business'}
+            {'Business'}
           </TabsTrigger>
           <TabsTrigger value="notifications" className="gap-2">
             <MessageSquare className="w-4 h-4 hidden sm:inline" />
-            {language === 'bn' ? 'নোটিফিকেশন' : 'Notifications'}
+            {'Notifications'}
           </TabsTrigger>
           <TabsTrigger value="general" className="gap-2">
             <Settings className="w-4 h-4 hidden sm:inline" />
-            {language === 'bn' ? 'জেনারেল' : 'General'}
+            {'General'}
           </TabsTrigger>
         </TabsList>
 
@@ -157,16 +157,16 @@ export default function AdminSettings() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Banknote className="w-5 h-5" />
-                {language === 'bn' ? 'আওয়ারলি প্লে প্রাইসিং' : 'Hourly Play Pricing'}
+                {'Hourly Play Pricing'}
               </CardTitle>
               <CardDescription>
-                {language === 'bn' ? 'টিকেটের দাম নির্ধারণ করুন' : 'Set ticket prices'}
+                {'Set ticket prices'}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <Label>{language === 'bn' ? 'শিশু + অভিভাবক' : 'Child + Guardian'}</Label>
+                  <Label>{'Child + Guardian'}</Label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">৳</span>
                     <Input
@@ -181,7 +181,7 @@ export default function AdminSettings() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label>{language === 'bn' ? 'শুধু শিশু' : 'Child Only'}</Label>
+                  <Label>{'Child Only'}</Label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">৳</span>
                     <Input
@@ -196,7 +196,7 @@ export default function AdminSettings() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label>{language === 'bn' ? 'গ্রুপ ডিসকাউন্ট (%)' : 'Group Discount (%)'}</Label>
+                  <Label>{'Group Discount (%)'}</Label>
                   <div className="relative">
                     <Input
                       type="number"
@@ -215,15 +215,15 @@ export default function AdminSettings() {
 
           <Card>
             <CardHeader>
-              <CardTitle>{language === 'bn' ? 'ইভেন্ট প্যাকেজ প্রাইসিং' : 'Event Package Pricing'}</CardTitle>
+              <CardTitle>{'Event Package Pricing'}</CardTitle>
               <CardDescription>
-                {language === 'bn' ? 'বার্থডে/প্রাইভেট ইভেন্ট প্যাকেজের দাম' : 'Birthday/Private event package prices'}
+                {'Birthday/Private event package prices'}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="space-y-2">
-                  <Label>{language === 'bn' ? 'বেসিক' : 'Basic'}</Label>
+                  <Label>{'Basic'}</Label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">৳</span>
                     <Input
@@ -238,7 +238,7 @@ export default function AdminSettings() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label>{language === 'bn' ? 'স্ট্যান্ডার্ড' : 'Standard'}</Label>
+                  <Label>{'Standard'}</Label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">৳</span>
                     <Input
@@ -253,7 +253,7 @@ export default function AdminSettings() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label>{language === 'bn' ? 'প্রিমিয়াম' : 'Premium'}</Label>
+                  <Label>{'Premium'}</Label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">৳</span>
                     <Input
@@ -268,7 +268,7 @@ export default function AdminSettings() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label>{language === 'bn' ? 'ডিলাক্স' : 'Deluxe'}</Label>
+                  <Label>{'Deluxe'}</Label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">৳</span>
                     <Input
@@ -290,7 +290,7 @@ export default function AdminSettings() {
             <Button onClick={handleSavePricing} disabled={saving}>
               {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               <Save className="w-4 h-4 mr-2" />
-              {language === 'bn' ? 'সেভ করুন' : 'Save Changes'}
+              {'Save Changes'}
             </Button>
           </div>
         </TabsContent>
@@ -303,10 +303,10 @@ export default function AdminSettings() {
                 <div>
                   <CardTitle className="flex items-center gap-2">
                     <Clock className="w-5 h-5" />
-                    {language === 'bn' ? 'টাইম স্লট কনফিগারেশন' : 'Time Slot Configuration'}
+                    {'Time Slot Configuration'}
                   </CardTitle>
                   <CardDescription>
-                    {enabledSlotsCount} {language === 'bn' ? 'টি স্লট সক্রিয়' : 'slots enabled'}
+                    {enabledSlotsCount} {'slots enabled'}
                   </CardDescription>
                 </div>
               </div>
@@ -327,11 +327,11 @@ export default function AdminSettings() {
                     <div className="flex items-center gap-3">
                       {slot.enabled ? (
                         <Badge variant="outline" className="text-green-600 border-green-500/20">
-                          {language === 'bn' ? 'সক্রিয়' : 'Active'}
+                          {'Active'}
                         </Badge>
                       ) : (
                         <Badge variant="secondary">
-                          {language === 'bn' ? 'নিষ্ক্রিয়' : 'Disabled'}
+                          {'Disabled'}
                         </Badge>
                       )}
                       <Switch
@@ -349,7 +349,7 @@ export default function AdminSettings() {
             <Button onClick={handleSaveTimeSlots} disabled={saving}>
               {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               <Save className="w-4 h-4 mr-2" />
-              {language === 'bn' ? 'সেভ করুন' : 'Save Changes'}
+              {'Save Changes'}
             </Button>
           </div>
         </TabsContent>
@@ -360,23 +360,23 @@ export default function AdminSettings() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Building className="w-5 h-5" />
-                {language === 'bn' ? 'ব্যবসায়িক তথ্য' : 'Business Information'}
+                {'Business Information'}
               </CardTitle>
               <CardDescription>
-                {language === 'bn' ? 'প্রতিষ্ঠানের মৌলিক তথ্য' : 'Basic business details'}
+                {'Basic business details'}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>{language === 'bn' ? 'নাম (English)' : 'Name (English)'}</Label>
+                  <Label>{'Name (English)'}</Label>
                   <Input
                     value={businessInfo.name}
                     onChange={(e) => setBusinessInfo({...businessInfo, name: e.target.value})}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>{language === 'bn' ? 'নাম (বাংলা)' : 'Name (Bangla)'}</Label>
+                  <Label>{'Name (Bangla)'}</Label>
                   <Input
                     value={businessInfo.nameBn}
                     onChange={(e) => setBusinessInfo({...businessInfo, nameBn: e.target.value})}
@@ -387,7 +387,7 @@ export default function AdminSettings() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label className="flex items-center gap-2">
-                    <Phone className="w-4 h-4" /> {language === 'bn' ? 'ফোন' : 'Phone'}
+                    <Phone className="w-4 h-4" /> {'Phone'}
                   </Label>
                   <Input
                     value={businessInfo.phone}
@@ -396,7 +396,7 @@ export default function AdminSettings() {
                 </div>
                 <div className="space-y-2">
                   <Label className="flex items-center gap-2">
-                    <Globe className="w-4 h-4" /> {language === 'bn' ? 'ইমেইল' : 'Email'}
+                    <Globe className="w-4 h-4" /> {'Email'}
                   </Label>
                   <Input
                     type="email"
@@ -409,7 +409,7 @@ export default function AdminSettings() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4" /> {language === 'bn' ? 'ঠিকানা (English)' : 'Address (English)'}
+                    <MapPin className="w-4 h-4" /> {'Address (English)'}
                   </Label>
                   <Input
                     value={businessInfo.address}
@@ -418,7 +418,7 @@ export default function AdminSettings() {
                 </div>
                 <div className="space-y-2">
                   <Label className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4" /> {language === 'bn' ? 'ঠিকানা (বাংলা)' : 'Address (Bangla)'}
+                    <MapPin className="w-4 h-4" /> {'Address (Bangla)'}
                   </Label>
                   <Input
                     value={businessInfo.addressBn}
@@ -431,7 +431,7 @@ export default function AdminSettings() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <Label>{language === 'bn' ? 'খোলার সময়' : 'Opening Time'}</Label>
+                  <Label>{'Opening Time'}</Label>
                   <Input
                     type="time"
                     value={businessInfo.openingTime}
@@ -439,7 +439,7 @@ export default function AdminSettings() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>{language === 'bn' ? 'বন্ধের সময়' : 'Closing Time'}</Label>
+                  <Label>{'Closing Time'}</Label>
                   <Input
                     type="time"
                     value={businessInfo.closingTime}
@@ -447,7 +447,7 @@ export default function AdminSettings() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>{language === 'bn' ? 'ওয়েবসাইট' : 'Website'}</Label>
+                  <Label>{'Website'}</Label>
                   <Input
                     value={businessInfo.website}
                     onChange={(e) => setBusinessInfo({...businessInfo, website: e.target.value})}
@@ -461,7 +461,7 @@ export default function AdminSettings() {
             <Button onClick={handleSaveBusinessInfo} disabled={saving}>
               {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               <Save className="w-4 h-4 mr-2" />
-              {language === 'bn' ? 'সেভ করুন' : 'Save Changes'}
+              {'Save Changes'}
             </Button>
           </div>
         </TabsContent>
@@ -473,18 +473,18 @@ export default function AdminSettings() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Bell className="w-5 h-5" />
-                {language === 'bn' ? 'নোটিফিকেশন চ্যানেল' : 'Notification Channels'}
+                {'Notification Channels'}
               </CardTitle>
               <CardDescription>
-                {language === 'bn' ? 'কোন চ্যানেলে নোটিফিকেশন পাঠাবেন সিলেক্ট করুন' : 'Select which channels to use for notifications'}
+                {'Select which channels to use for notifications'}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <p className="font-medium">{language === 'bn' ? 'SMS নোটিফিকেশন' : 'SMS Notifications'}</p>
+                  <p className="font-medium">{'SMS Notifications'}</p>
                   <p className="text-sm text-muted-foreground">
-                    {language === 'bn' ? 'পেমেন্ট সফল হলে SMS পাঠান' : 'Send SMS on successful payment'}
+                    {'Send SMS on successful payment'}
                   </p>
                 </div>
                 <Switch
@@ -495,9 +495,9 @@ export default function AdminSettings() {
               <Separator />
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <p className="font-medium">{language === 'bn' ? 'WhatsApp নোটিফিকেশন' : 'WhatsApp Notifications'}</p>
+                  <p className="font-medium">{'WhatsApp Notifications'}</p>
                   <p className="text-sm text-muted-foreground">
-                    {language === 'bn' ? 'পেমেন্ট সফল হলে WhatsApp পাঠান' : 'Send WhatsApp on successful payment'}
+                    {'Send WhatsApp on successful payment'}
                   </p>
                 </div>
                 <Switch
@@ -512,7 +512,7 @@ export default function AdminSettings() {
             <Button onClick={handleSaveNotifications} disabled={saving}>
               {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               <Save className="w-4 h-4 mr-2" />
-              {language === 'bn' ? 'চ্যানেল সেটিংস সেভ করুন' : 'Save Channel Settings'}
+              {'Save Channel Settings'}
             </Button>
           </div>
 
@@ -527,18 +527,18 @@ export default function AdminSettings() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 {theme === 'dark' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
-                {language === 'bn' ? 'থিম' : 'Theme'}
+                {'Theme'}
               </CardTitle>
               <CardDescription>
-                {language === 'bn' ? 'অ্যাপের রঙ সেটিং' : 'App color settings'}
+                {'App color settings'}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <p className="font-medium">{language === 'bn' ? 'ডার্ক মোড' : 'Dark Mode'}</p>
+                  <p className="font-medium">{'Dark Mode'}</p>
                   <p className="text-sm text-muted-foreground">
-                    {language === 'bn' ? 'অন্ধকার থিম ব্যবহার করুন' : 'Use dark theme'}
+                    {'Use dark theme'}
                   </p>
                 </div>
                 <Switch
@@ -554,22 +554,22 @@ export default function AdminSettings() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Shield className="w-5 h-5" />
-                {language === 'bn' ? 'নিরাপত্তা' : 'Security'}
+                {'Security'}
               </CardTitle>
               <CardDescription>
-                {language === 'bn' ? 'অ্যাকাউন্ট নিরাপত্তা সেটিংস' : 'Account security settings'}
+                {'Account security settings'}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <p className="font-medium">{language === 'bn' ? 'পাসওয়ার্ড পরিবর্তন' : 'Change Password'}</p>
+                  <p className="font-medium">{'Change Password'}</p>
                   <p className="text-sm text-muted-foreground">
-                    {language === 'bn' ? 'আপনার অ্যাকাউন্ট পাসওয়ার্ড আপডেট করুন' : 'Update your account password'}
+                    {'Update your account password'}
                   </p>
                 </div>
                 <Button variant="outline" size="sm">
-                  {language === 'bn' ? 'পরিবর্তন' : 'Change'}
+                  {'Change'}
                 </Button>
               </div>
             </CardContent>

@@ -34,14 +34,12 @@ export function ContactForm() {
   };
 
   const generateWhatsAppMessage = () => {
-    const greeting = language === "bn" 
-      ? "আসসালামু আলাইকুম, Baby World!" 
-      : "Hello, Baby World!";
+    const greeting = "Hello, Baby World!";
     
-    const nameLabel = language === "bn" ? "নাম" : "Name";
-    const phoneLabel = language === "bn" ? "ফোন" : "Phone";
-    const emailLabel = language === "bn" ? "ইমেইল" : "Email";
-    const messageLabel = language === "bn" ? "বার্তা" : "Message";
+    const nameLabel = "Name";
+    const phoneLabel = "Phone";
+    const emailLabel = "Email";
+    const messageLabel = "Message";
     
     let message = `${greeting}\n\n`;
     message += `${nameLabel}: ${formData.name}\n`;

@@ -141,10 +141,10 @@ export default function NotificationTemplateEditor() {
         if (error) throw error;
       }
 
-      toast.success(language === 'bn' ? 'টেমপ্লেট সেভ হয়েছে!' : 'Templates saved!');
+      toast.success('Templates saved!');
     } catch (error) {
       console.error('Save error:', error);
-      toast.error(language === 'bn' ? 'সেভ ব্যর্থ' : 'Save failed');
+      toast.error('Save failed');
     } finally {
       setSaving(false);
     }
@@ -155,7 +155,7 @@ export default function NotificationTemplateEditor() {
       ...prev,
       [type]: defaultTemplates[type]
     }));
-    toast.info(language === 'bn' ? 'ডিফল্ট টেমপ্লেটে রিসেট হয়েছে' : 'Reset to default template');
+    toast.info('Reset to default template');
   };
 
   const updateTemplate = (type: keyof NotificationTemplates, lang: 'bn' | 'en', value: string) => {
@@ -190,12 +190,10 @@ export default function NotificationTemplateEditor() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <MessageSquare className="w-5 h-5" />
-          {language === 'bn' ? 'নোটিফিকেশন টেমপ্লেট' : 'Notification Templates'}
+          {'Notification Templates'}
         </CardTitle>
         <CardDescription>
-          {language === 'bn' 
-            ? 'SMS ও WhatsApp মেসেজ কাস্টমাইজ করুন। ভেরিয়েবল ব্যবহার করতে {{variable}} ফরম্যাট ব্যবহার করুন।'
-            : 'Customize SMS & WhatsApp messages. Use {{variable}} format for dynamic content.'}
+          {'Customize SMS & WhatsApp messages. Use {{variable}} format for dynamic content.'}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -207,7 +205,7 @@ export default function NotificationTemplateEditor() {
                 <TabsTrigger key={key} value={key} className="gap-2">
                   <TabIcon className="w-4 h-4 hidden sm:inline" />
                   <span className="text-xs sm:text-sm">
-                    {language === 'bn' ? info.labelBn : info.label}
+                    {info.label}
                   </span>
                 </TabsTrigger>
               );
@@ -220,7 +218,7 @@ export default function NotificationTemplateEditor() {
               <div className="flex flex-wrap items-center gap-2 p-3 rounded-lg bg-muted/50 border">
                 <Info className="w-4 h-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">
-                  {language === 'bn' ? 'ব্যবহারযোগ্য ভেরিয়েবল:' : 'Available variables:'}
+                  {'Available variables:'}
                 </span>
                 {templateInfo[type as keyof NotificationTemplates].variables.map((v) => (
                   <Badge key={v} variant="secondary" className="font-mono text-xs">
@@ -233,7 +231,7 @@ export default function NotificationTemplateEditor() {
                 {/* Bangla Template */}
                 <div className="space-y-2">
                   <Label className="flex items-center gap-2">
-                    🇧🇩 {language === 'bn' ? 'বাংলা টেমপ্লেট' : 'Bangla Template'}
+                    🇧🇩 {'Bangla Template'}
                   </Label>
                   <Textarea
                     value={content.bn}
@@ -242,14 +240,14 @@ export default function NotificationTemplateEditor() {
                     className="font-mono text-sm"
                   />
                   <p className="text-xs text-muted-foreground">
-                    {content.bn.length} {language === 'bn' ? 'অক্ষর' : 'characters'}
+                    {content.bn.length} {'characters'}
                   </p>
                 </div>
 
                 {/* English Template */}
                 <div className="space-y-2">
                   <Label className="flex items-center gap-2">
-                    🇬🇧 {language === 'bn' ? 'ইংরেজি টেমপ্লেট' : 'English Template'}
+                    🇬🇧 {'English Template'}
                   </Label>
                   <Textarea
                     value={content.en}
@@ -258,14 +256,14 @@ export default function NotificationTemplateEditor() {
                     className="font-mono text-sm"
                   />
                   <p className="text-xs text-muted-foreground">
-                    {content.en.length} {language === 'bn' ? 'অক্ষর' : 'characters'}
+                    {content.en.length} {'characters'}
                   </p>
                 </div>
               </div>
 
               {/* Preview */}
               <div className="space-y-2">
-                <Label>{language === 'bn' ? 'প্রিভিউ (বাংলা)' : 'Preview (Bangla)'}</Label>
+                <Label>{'Preview (Bangla)'}</Label>
                 <div className="p-4 rounded-lg bg-muted/30 border whitespace-pre-wrap text-sm">
                   {content.bn
                     .replace('{{ticket_number}}', 'TKT-123456')
@@ -283,7 +281,7 @@ export default function NotificationTemplateEditor() {
                   onClick={() => handleReset(type as keyof NotificationTemplates)}
                 >
                   <RotateCcw className="w-4 h-4 mr-2" />
-                  {language === 'bn' ? 'ডিফল্ট রিসেট' : 'Reset to Default'}
+                  {'Reset to Default'}
                 </Button>
               </div>
             </TabsContent>
@@ -297,7 +295,7 @@ export default function NotificationTemplateEditor() {
             ) : (
               <Save className="w-4 h-4 mr-2" />
             )}
-            {language === 'bn' ? 'সব টেমপ্লেট সেভ করুন' : 'Save All Templates'}
+            {'Save All Templates'}
           </Button>
         </div>
       </CardContent>

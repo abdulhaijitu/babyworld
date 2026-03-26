@@ -19,15 +19,13 @@ export function AdminErrorState({ type, message, onRetry, retrying }: AdminError
       case 'auth':
         return {
           icon: <LogIn className="w-12 h-12 text-muted-foreground" />,
-          title: language === 'bn' ? 'লগইন প্রয়োজন' : 'Login Required',
-          description: language === 'bn' 
-            ? 'অ্যাডমিন ড্যাশবোর্ড অ্যাক্সেস করতে লগইন করুন' 
-            : 'Please login to access the admin dashboard',
+          title: 'Login Required',
+          description: 'Please login to access the admin dashboard',
           action: (
             <Link to="/admin/login">
               <Button>
                 <LogIn className="w-4 h-4 mr-2" />
-                {language === 'bn' ? 'লগইন করুন' : 'Login'}
+                {'Login'}
               </Button>
             </Link>
           )
@@ -35,15 +33,13 @@ export function AdminErrorState({ type, message, onRetry, retrying }: AdminError
       case 'permission':
         return {
           icon: <AlertCircle className="w-12 h-12 text-destructive" />,
-          title: language === 'bn' ? 'অ্যাক্সেস নেই' : 'Access Denied',
-          description: language === 'bn' 
-            ? 'আপনার অ্যাডমিন অনুমতি নেই' 
-            : 'You do not have admin permissions',
+          title: 'Access Denied',
+          description: 'You do not have admin permissions',
           action: (
             <Link to="/">
               <Button variant="outline">
                 <Home className="w-4 h-4 mr-2" />
-                {language === 'bn' ? 'হোম পেজে যান' : 'Go to Home'}
+                {'Go to Home'}
               </Button>
             </Link>
           )
@@ -52,14 +48,12 @@ export function AdminErrorState({ type, message, onRetry, retrying }: AdminError
       default:
         return {
           icon: <AlertCircle className="w-12 h-12 text-destructive" />,
-          title: language === 'bn' ? 'ডেটা লোড ব্যর্থ' : 'Failed to Load Data',
-          description: message || (language === 'bn' 
-            ? 'বুকিং ডেটা লোড করতে সমস্যা হয়েছে' 
-            : 'There was a problem loading booking data'),
+          title: 'Failed to Load Data',
+          description: message || ('There was a problem loading booking data'),
           action: onRetry && (
             <Button onClick={onRetry} disabled={retrying}>
               <RefreshCw className={`w-4 h-4 mr-2 ${retrying ? 'animate-spin' : ''}`} />
-              {language === 'bn' ? 'আবার চেষ্টা করুন' : 'Try Again'}
+              {'Try Again'}
             </Button>
           )
         };

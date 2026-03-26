@@ -115,7 +115,7 @@ export default function AdminFoodSales() {
       setFoodItems((data || []) as FoodItem[]);
     } catch (err) {
       console.error('[Food] Items error:', err);
-      toast.error(language === 'bn' ? 'আইটেম লোড ব্যর্থ' : 'Failed to load items');
+      toast.error('Failed to load items');
     } finally {
       setItemsLoading(false);
     }
@@ -146,7 +146,7 @@ export default function AdminFoodSales() {
 
   const handleSaveItem = async () => {
     if (!newItem.name || newItem.price <= 0) {
-      toast.error(language === 'bn' ? 'নাম এবং দাম দিন' : 'Name and price required');
+      toast.error('Name and price required');
       return;
     }
 
@@ -165,7 +165,7 @@ export default function AdminFoodSales() {
           .eq('id', editingItem.id);
 
         if (error) throw error;
-        toast.success(language === 'bn' ? 'আপডেট হয়েছে' : 'Item updated');
+        toast.success('Item updated');
       } else {
         const { error } = await supabase
           .from('food_items')
@@ -178,7 +178,7 @@ export default function AdminFoodSales() {
           }]);
 
         if (error) throw error;
-        toast.success(language === 'bn' ? 'আইটেম যোগ হয়েছে' : 'Item added');
+        toast.success('Item added');
       }
 
       setItemDialogOpen(false);
@@ -186,7 +186,7 @@ export default function AdminFoodSales() {
       setNewItem({ name: '', name_bn: '', category: 'snacks', price: 0, is_available: true });
       fetchFoodItems();
     } catch (err) {
-      toast.error(language === 'bn' ? 'সেভ ব্যর্থ' : 'Save failed');
+      toast.error('Save failed');
     } finally {
       setSavingItem(false);
     }
@@ -196,10 +196,10 @@ export default function AdminFoodSales() {
     try {
       const { error } = await supabase.from('food_items').delete().eq('id', id);
       if (error) throw error;
-      toast.success(language === 'bn' ? 'ডিলিট হয়েছে' : 'Item deleted');
+      toast.success('Item deleted');
       setFoodItems(prev => prev.filter(i => i.id !== id));
     } catch (err) {
-      toast.error(language === 'bn' ? 'ডিলিট ব্যর্থ' : 'Delete failed');
+      toast.error('Delete failed');
     }
   };
 
@@ -213,7 +213,7 @@ export default function AdminFoodSales() {
       if (error) throw error;
       setFoodItems(prev => prev.map(i => i.id === id ? {...i, is_available: available} : i));
     } catch (err) {
-      toast.error(language === 'bn' ? 'আপডেট ব্যর্থ' : 'Update failed');
+      toast.error('Update failed');
     }
   };
 
@@ -238,7 +238,7 @@ export default function AdminFoodSales() {
 
   const handleCreateOrder = async () => {
     if (orderItems.length === 0) {
-      toast.error(language === 'bn' ? 'আইটেম সিলেক্ট করুন' : 'Select items');
+      toast.error('Select items');
       return;
     }
 
@@ -284,7 +284,7 @@ export default function AdminFoodSales() {
 
       if (itemsError) throw itemsError;
 
-      toast.success(language === 'bn' ? 'অর্ডার তৈরি হয়েছে' : 'Order created');
+      toast.success('Order created');
 
       // Send payment notification for food order (non-blocking)
       if (orderCustomer) {
@@ -310,7 +310,7 @@ export default function AdminFoodSales() {
       fetchOrders();
     } catch (err) {
       console.error('[Food] Order error:', err);
-      toast.error(language === 'bn' ? 'অর্ডার ব্যর্থ' : 'Order failed');
+      toast.error('Order failed');
     } finally {
       setCreatingOrder(false);
     }
@@ -325,9 +325,9 @@ export default function AdminFoodSales() {
 
       if (error) throw error;
       setOrders(prev => prev.map(o => o.id === orderId ? {...o, status} : o));
-      toast.success(language === 'bn' ? 'আপডেট হয়েছে' : 'Status updated');
+      toast.success('Status updated');
     } catch (err) {
-      toast.error(language === 'bn' ? 'আপডেট ব্যর্থ' : 'Update failed');
+      toast.error('Update failed');
     }
   };
 
@@ -357,11 +357,11 @@ export default function AdminFoodSales() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'pending':
-        return <Badge variant="outline" className="text-yellow-600">{language === 'bn' ? 'অপেক্ষমাণ' : 'Pending'}</Badge>;
+        return <Badge variant="outline" className="text-yellow-600">{'Pending'}</Badge>;
       case 'served':
-        return <Badge className="bg-green-500/10 text-green-600">{language === 'bn' ? 'সার্ভড' : 'Served'}</Badge>;
+        return <Badge className="bg-green-500/10 text-green-600">{'Served'}</Badge>;
       case 'cancelled':
-        return <Badge variant="destructive">{language === 'bn' ? 'বাতিল' : 'Cancelled'}</Badge>;
+        return <Badge variant="destructive">{'Cancelled'}</Badge>;
       default:
         return <Badge variant="secondary">{status}</Badge>;
     }
@@ -380,10 +380,10 @@ export default function AdminFoodSales() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <UtensilsCrossed className="w-6 h-6" />
-            {language === 'bn' ? 'খাবার বিক্রয়' : 'Food Sales'}
+            {'Food Sales'}
           </h1>
           <p className="text-muted-foreground">
-            {language === 'bn' ? 'খাবার ও স্ন্যাকস ম্যানেজমেন্ট' : 'Manage food & snacks'}
+            {'Manage food & snacks'}
           </p>
         </div>
       </div>
@@ -392,19 +392,19 @@ export default function AdminFoodSales() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'মোট আইটেম' : 'Total Items'}</CardDescription>
+            <CardDescription>{'Total Items'}</CardDescription>
             <CardTitle className="text-2xl">{foodItems.length}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'উপলব্ধ' : 'Available'}</CardDescription>
+            <CardDescription>{'Available'}</CardDescription>
             <CardTitle className="text-2xl text-green-600">{availableItems.length}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'আজকের অর্ডার' : "Today's Orders"}</CardDescription>
+            <CardDescription>{"Today's Orders"}</CardDescription>
             <CardTitle className="text-2xl">{orders.filter(o => 
               format(new Date(o.created_at), 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd')
             ).length}</CardTitle>
@@ -414,8 +414,8 @@ export default function AdminFoodSales() {
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
-          <TabsTrigger value="items">{language === 'bn' ? 'আইটেম' : 'Items'}</TabsTrigger>
-          <TabsTrigger value="orders">{language === 'bn' ? 'অর্ডার' : 'Orders'}</TabsTrigger>
+          <TabsTrigger value="items">{'Items'}</TabsTrigger>
+          <TabsTrigger value="orders">{'Orders'}</TabsTrigger>
         </TabsList>
 
         {/* Food Items Tab */}
@@ -423,7 +423,7 @@ export default function AdminFoodSales() {
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>{language === 'bn' ? 'খাবার আইটেম' : 'Food Items'}</CardTitle>
+                <CardTitle>{'Food Items'}</CardTitle>
                 <Dialog open={itemDialogOpen} onOpenChange={(open) => {
                   setItemDialogOpen(open);
                   if (!open) {
@@ -434,29 +434,29 @@ export default function AdminFoodSales() {
                   <DialogTrigger asChild>
                     <Button size="sm">
                       <Plus className="w-4 h-4 mr-2" />
-                      {language === 'bn' ? 'নতুন আইটেম' : 'Add Item'}
+                      {'Add Item'}
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
                       <DialogTitle>
                         {editingItem 
-                          ? (language === 'bn' ? 'আইটেম এডিট' : 'Edit Item')
-                          : (language === 'bn' ? 'নতুন আইটেম' : 'New Item')
+                          ? ('Edit Item')
+                          : ('New Item')
                         }
                       </DialogTitle>
                     </DialogHeader>
                     
                     <div className="space-y-4 py-4">
                       <div className="space-y-2">
-                        <Label>{language === 'bn' ? 'নাম (English)' : 'Name (English)'}</Label>
+                        <Label>{'Name (English)'}</Label>
                         <Input
                           value={newItem.name}
                           onChange={(e) => setNewItem({...newItem, name: e.target.value})}
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label>{language === 'bn' ? 'নাম (বাংলা)' : 'Name (Bangla)'}</Label>
+                        <Label>{'Name (Bangla)'}</Label>
                         <Input
                           value={newItem.name_bn}
                           onChange={(e) => setNewItem({...newItem, name_bn: e.target.value})}
@@ -464,20 +464,20 @@ export default function AdminFoodSales() {
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label>{language === 'bn' ? 'ক্যাটেগরি' : 'Category'}</Label>
+                          <Label>{'Category'}</Label>
                           <Select value={newItem.category} onValueChange={(v: any) => setNewItem({...newItem, category: v})}>
                             <SelectTrigger>
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="snacks">{language === 'bn' ? 'স্ন্যাকস' : 'Snacks'}</SelectItem>
-                              <SelectItem value="drinks">{language === 'bn' ? 'ড্রিংকস' : 'Drinks'}</SelectItem>
-                              <SelectItem value="meals">{language === 'bn' ? 'মিল' : 'Meals'}</SelectItem>
+                              <SelectItem value="snacks">{'Snacks'}</SelectItem>
+                              <SelectItem value="drinks">{'Drinks'}</SelectItem>
+                              <SelectItem value="meals">{'Meals'}</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
                         <div className="space-y-2">
-                          <Label>{language === 'bn' ? 'দাম (৳)' : 'Price (৳)'}</Label>
+                          <Label>{'Price (৳)'}</Label>
                           <Input
                             type="number"
                             value={newItem.price}
@@ -490,17 +490,17 @@ export default function AdminFoodSales() {
                           checked={newItem.is_available}
                           onCheckedChange={(checked) => setNewItem({...newItem, is_available: checked})}
                         />
-                        <Label>{language === 'bn' ? 'উপলব্ধ' : 'Available'}</Label>
+                        <Label>{'Available'}</Label>
                       </div>
                     </div>
                     
                     <DialogFooter>
                       <Button variant="outline" onClick={() => setItemDialogOpen(false)}>
-                        {language === 'bn' ? 'বাতিল' : 'Cancel'}
+                        {'Cancel'}
                       </Button>
                       <Button onClick={handleSaveItem} disabled={savingItem}>
                         {savingItem && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                        {language === 'bn' ? 'সেভ' : 'Save'}
+                        {'Save'}
                       </Button>
                     </DialogFooter>
                   </DialogContent>
@@ -512,10 +512,10 @@ export default function AdminFoodSales() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>{language === 'bn' ? 'আইটেম' : 'Item'}</TableHead>
-                      <TableHead>{language === 'bn' ? 'ক্যাটেগরি' : 'Category'}</TableHead>
-                      <TableHead>{language === 'bn' ? 'দাম' : 'Price'}</TableHead>
-                      <TableHead>{language === 'bn' ? 'স্ট্যাটাস' : 'Status'}</TableHead>
+                      <TableHead>{'Item'}</TableHead>
+                      <TableHead>{'Category'}</TableHead>
+                      <TableHead>{'Price'}</TableHead>
+                      <TableHead>{'Status'}</TableHead>
                       <TableHead></TableHead>
                     </TableRow>
                   </TableHeader>
@@ -526,16 +526,16 @@ export default function AdminFoodSales() {
               ) : foodItems.length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground">
                   <UtensilsCrossed className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                  <p>{language === 'bn' ? 'কোনো আইটেম নেই' : 'No items yet'}</p>
+                  <p>{'No items yet'}</p>
                 </div>
               ) : (
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>{language === 'bn' ? 'আইটেম' : 'Item'}</TableHead>
-                      <TableHead>{language === 'bn' ? 'ক্যাটেগরি' : 'Category'}</TableHead>
-                      <TableHead>{language === 'bn' ? 'দাম' : 'Price'}</TableHead>
-                      <TableHead>{language === 'bn' ? 'উপলব্ধ' : 'Available'}</TableHead>
+                      <TableHead>{'Item'}</TableHead>
+                      <TableHead>{'Category'}</TableHead>
+                      <TableHead>{'Price'}</TableHead>
+                      <TableHead>{'Available'}</TableHead>
                       <TableHead className="text-right"></TableHead>
                     </TableRow>
                   </TableHeader>
@@ -543,7 +543,7 @@ export default function AdminFoodSales() {
                     {foodItems.map((item) => (
                       <TableRow key={item.id}>
                         <TableCell>
-                          <div className="font-medium">{language === 'bn' && item.name_bn ? item.name_bn : item.name}</div>
+                          <div className="font-medium">{item.name}</div>
                         </TableCell>
                         <TableCell>
                           <Badge variant="outline" className="gap-1">
@@ -582,31 +582,31 @@ export default function AdminFoodSales() {
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>{language === 'bn' ? 'অর্ডার' : 'Orders'}</CardTitle>
+                <CardTitle>{'Orders'}</CardTitle>
                 <Dialog open={orderDialogOpen} onOpenChange={setOrderDialogOpen}>
                   <DialogTrigger asChild>
                     <Button size="sm">
                       <ShoppingCart className="w-4 h-4 mr-2" />
-                      {language === 'bn' ? 'নতুন অর্ডার' : 'New Order'}
+                      {'New Order'}
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="max-w-lg">
                     <DialogHeader>
-                      <DialogTitle>{language === 'bn' ? 'নতুন অর্ডার' : 'New Order'}</DialogTitle>
+                      <DialogTitle>{'New Order'}</DialogTitle>
                     </DialogHeader>
                     
                     <div className="space-y-4 py-4">
                       <div className="space-y-2">
-                        <Label>{language === 'bn' ? 'কাস্টমার নাম' : 'Customer Name'}</Label>
+                        <Label>{'Customer Name'}</Label>
                         <Input
                           value={orderCustomer}
                           onChange={(e) => setOrderCustomer(e.target.value)}
-                          placeholder={language === 'bn' ? 'ঐচ্ছিক' : 'Optional'}
+                          placeholder={'Optional'}
                         />
                       </div>
                       
                       <div className="space-y-2">
-                        <Label>{language === 'bn' ? 'আইটেম সিলেক্ট' : 'Select Items'}</Label>
+                        <Label>{'Select Items'}</Label>
                         <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto">
                           {availableItems.map(item => (
                             <Button
@@ -617,7 +617,7 @@ export default function AdminFoodSales() {
                               onClick={() => addItemToOrder(item.id)}
                             >
                               <Plus className="w-3 h-3 mr-1" />
-                              {language === 'bn' && item.name_bn ? item.name_bn : item.name} - ৳{item.price}
+                              {item.name} - ৳{item.price}
                             </Button>
                           ))}
                         </div>
@@ -625,7 +625,7 @@ export default function AdminFoodSales() {
 
                       {orderItems.length > 0 && (
                         <div className="space-y-2">
-                          <Label>{language === 'bn' ? 'অর্ডার আইটেম' : 'Order Items'}</Label>
+                          <Label>{'Order Items'}</Label>
                           <div className="space-y-2 p-3 bg-muted rounded-lg">
                             {orderItems.map(oi => {
                               const item = foodItems.find(f => f.id === oi.itemId);
@@ -643,7 +643,7 @@ export default function AdminFoodSales() {
                               );
                             })}
                             <div className="pt-2 border-t flex justify-between font-bold">
-                              <span>{language === 'bn' ? 'মোট' : 'Total'}</span>
+                              <span>{'Total'}</span>
                               <span>৳{orderTotal}</span>
                             </div>
                           </div>
@@ -651,14 +651,14 @@ export default function AdminFoodSales() {
                       )}
 
                       <div className="space-y-2">
-                        <Label>{language === 'bn' ? 'পেমেন্ট' : 'Payment'}</Label>
+                        <Label>{'Payment'}</Label>
                         <Select value={orderPaymentType} onValueChange={(v: any) => setOrderPaymentType(v)}>
                           <SelectTrigger>
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="cash">{language === 'bn' ? 'ক্যাশ' : 'Cash'}</SelectItem>
-                            <SelectItem value="pending">{language === 'bn' ? 'পরে' : 'Later'}</SelectItem>
+                            <SelectItem value="cash">{'Cash'}</SelectItem>
+                            <SelectItem value="pending">{'Later'}</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -666,11 +666,11 @@ export default function AdminFoodSales() {
                     
                     <DialogFooter>
                       <Button variant="outline" onClick={() => setOrderDialogOpen(false)}>
-                        {language === 'bn' ? 'বাতিল' : 'Cancel'}
+                        {'Cancel'}
                       </Button>
                       <Button onClick={handleCreateOrder} disabled={creatingOrder || orderItems.length === 0}>
                         {creatingOrder && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                        {language === 'bn' ? 'অর্ডার করুন' : 'Create Order'}
+                        {'Create Order'}
                       </Button>
                     </DialogFooter>
                   </DialogContent>
@@ -682,10 +682,10 @@ export default function AdminFoodSales() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>{language === 'bn' ? 'অর্ডার নং' : 'Order #'}</TableHead>
-                      <TableHead>{language === 'bn' ? 'কাস্টমার' : 'Customer'}</TableHead>
-                      <TableHead>{language === 'bn' ? 'মোট' : 'Total'}</TableHead>
-                      <TableHead>{language === 'bn' ? 'স্ট্যাটাস' : 'Status'}</TableHead>
+                      <TableHead>{'Order #'}</TableHead>
+                      <TableHead>{'Customer'}</TableHead>
+                      <TableHead>{'Total'}</TableHead>
+                      <TableHead>{'Status'}</TableHead>
                       <TableHead></TableHead>
                     </TableRow>
                   </TableHeader>
@@ -696,17 +696,17 @@ export default function AdminFoodSales() {
               ) : orders.length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground">
                   <ShoppingCart className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                  <p>{language === 'bn' ? 'কোনো অর্ডার নেই' : 'No orders yet'}</p>
+                  <p>{'No orders yet'}</p>
                 </div>
               ) : (
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>{language === 'bn' ? 'অর্ডার নং' : 'Order #'}</TableHead>
-                      <TableHead>{language === 'bn' ? 'কাস্টমার' : 'Customer'}</TableHead>
-                      <TableHead>{language === 'bn' ? 'মোট' : 'Total'}</TableHead>
-                      <TableHead>{language === 'bn' ? 'পেমেন্ট' : 'Payment'}</TableHead>
-                      <TableHead>{language === 'bn' ? 'স্ট্যাটাস' : 'Status'}</TableHead>
+                      <TableHead>{'Order #'}</TableHead>
+                      <TableHead>{'Customer'}</TableHead>
+                      <TableHead>{'Total'}</TableHead>
+                      <TableHead>{'Payment'}</TableHead>
+                      <TableHead>{'Status'}</TableHead>
                       <TableHead className="text-right"></TableHead>
                     </TableRow>
                   </TableHeader>
@@ -725,7 +725,7 @@ export default function AdminFoodSales() {
                             <div className="flex justify-end gap-2">
                               <Button size="sm" variant="outline" onClick={() => handleUpdateOrderStatus(order.id, 'served')}>
                                 <Check className="w-3 h-3 mr-1" />
-                                {language === 'bn' ? 'সার্ভড' : 'Served'}
+                                {'Served'}
                               </Button>
                               <Button size="sm" variant="ghost" className="text-destructive" onClick={() => handleUpdateOrderStatus(order.id, 'cancelled')}>
                                 <X className="w-3 h-3" />

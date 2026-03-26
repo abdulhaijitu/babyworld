@@ -12,7 +12,7 @@ export function Footer() {
     { label: t("nav.home"), href: "/" },
     { label: t("nav.pricing"), href: "/play-booking" },
     { label: t("nav.events"), href: "/birthday-events" },
-    { label: language === "bn" ? "গ্যালারি" : "Gallery", href: "/gallery" },
+    { label: "Gallery", href: "/gallery" },
     { label: t("nav.contact"), href: "/contact" },
   ];
 

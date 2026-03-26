@@ -135,12 +135,12 @@ export default function AdminExpenses() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['expenses'] });
-      toast.success(language === 'bn' ? 'খরচ যোগ হয়েছে' : 'Expense added successfully');
+      toast.success('Expense added successfully');
       setCreateOpen(false);
       resetForm();
     },
     onError: (error) => {
-      toast.error(language === 'bn' ? 'খরচ যোগ করতে ব্যর্থ' : 'Failed to add expense');
+      toast.error('Failed to add expense');
       console.error(error);
     }
   });
@@ -164,13 +164,13 @@ export default function AdminExpenses() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['expenses'] });
-      toast.success(language === 'bn' ? 'খরচ আপডেট হয়েছে' : 'Expense updated successfully');
+      toast.success('Expense updated successfully');
       setEditOpen(false);
       setSelectedExpense(null);
       resetForm();
     },
     onError: (error) => {
-      toast.error(language === 'bn' ? 'খরচ আপডেট করতে ব্যর্থ' : 'Failed to update expense');
+      toast.error('Failed to update expense');
       console.error(error);
     }
   });
@@ -186,10 +186,10 @@ export default function AdminExpenses() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['expenses'] });
-      toast.success(language === 'bn' ? 'খরচ মুছে ফেলা হয়েছে' : 'Expense deleted successfully');
+      toast.success('Expense deleted successfully');
     },
     onError: (error) => {
-      toast.error(language === 'bn' ? 'খরচ মুছতে ব্যর্থ' : 'Failed to delete expense');
+      toast.error('Failed to delete expense');
       console.error(error);
     }
   });
@@ -235,10 +235,10 @@ export default function AdminExpenses() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Receipt className="w-6 h-6" />
-            {language === 'bn' ? 'খরচ ব্যবস্থাপনা' : 'Expense Management'}
+            {'Expense Management'}
           </h1>
           <p className="text-muted-foreground">
-            {language === 'bn' ? 'ব্যবসার সকল খরচ ট্র্যাক করুন' : 'Track all business expenses'}
+            {'Track all business expenses'}
           </p>
         </div>
 
@@ -246,26 +246,26 @@ export default function AdminExpenses() {
           <DialogTrigger asChild>
             <Button>
               <Plus className="w-4 h-4 mr-2" />
-              {language === 'bn' ? 'নতুন খরচ' : 'Add Expense'}
+              {'Add Expense'}
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle>{language === 'bn' ? 'নতুন খরচ যোগ করুন' : 'Add New Expense'}</DialogTitle>
+              <DialogTitle>{'Add New Expense'}</DialogTitle>
               <DialogDescription>
-                {language === 'bn' ? 'খরচের বিবরণ পূরণ করুন' : 'Fill in the expense details'}
+                {'Fill in the expense details'}
               </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-4 py-4">
               {/* Date */}
               <div className="space-y-2">
-                <Label>{language === 'bn' ? 'তারিখ' : 'Date'}</Label>
+                <Label>{'Date'}</Label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="w-full justify-start">
                       <CalendarIcon className="w-4 h-4 mr-2" />
-                      {format(formData.expense_date, 'dd MMM yyyy', { locale: language === 'bn' ? bn : undefined })}
+                      {format(formData.expense_date, 'dd MMM yyyy', { locale: undefined })}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
@@ -280,17 +280,17 @@ export default function AdminExpenses() {
 
               {/* Category */}
               <div className="space-y-2">
-                <Label>{language === 'bn' ? 'ক্যাটাগরি' : 'Category'} *</Label>
+                <Label>{'Category'} *</Label>
                 <Select value={formData.category} onValueChange={(v) => setFormData({ ...formData, category: v })}>
                   <SelectTrigger>
-                    <SelectValue placeholder={language === 'bn' ? 'ক্যাটাগরি নির্বাচন করুন' : 'Select category'} />
+                    <SelectValue placeholder={'Select category'} />
                   </SelectTrigger>
                   <SelectContent>
                     {EXPENSE_CATEGORIES.map(cat => (
                       <SelectItem key={cat.value} value={cat.value}>
                         <div className="flex items-center gap-2">
                           <cat.icon className="w-4 h-4" />
-                          {language === 'bn' ? cat.labelBn : cat.label}
+                          {cat.label}
                         </div>
                       </SelectItem>
                     ))}
@@ -300,17 +300,17 @@ export default function AdminExpenses() {
 
               {/* Description */}
               <div className="space-y-2">
-                <Label>{language === 'bn' ? 'বিবরণ' : 'Description'} *</Label>
+                <Label>{'Description'} *</Label>
                 <Input
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder={language === 'bn' ? 'খরচের বিবরণ লিখুন' : 'Enter expense description'}
+                  placeholder={'Enter expense description'}
                 />
               </div>
 
               {/* Amount */}
               <div className="space-y-2">
-                <Label>{language === 'bn' ? 'পরিমাণ (৳)' : 'Amount (BDT)'} *</Label>
+                <Label>{'Amount (BDT)'} *</Label>
                 <Input
                   type="number"
                   min="1"
@@ -322,7 +322,7 @@ export default function AdminExpenses() {
 
               {/* Payment Method */}
               <div className="space-y-2">
-                <Label>{language === 'bn' ? 'পেমেন্ট পদ্ধতি' : 'Payment Method'}</Label>
+                <Label>{'Payment Method'}</Label>
                 <Select value={formData.payment_method} onValueChange={(v) => setFormData({ ...formData, payment_method: v })}>
                   <SelectTrigger>
                     <SelectValue />
@@ -332,7 +332,7 @@ export default function AdminExpenses() {
                       <SelectItem key={pm.value} value={pm.value}>
                         <div className="flex items-center gap-2">
                           <pm.icon className="w-4 h-4" />
-                          {language === 'bn' ? pm.labelBn : pm.label}
+                          {pm.label}
                         </div>
                       </SelectItem>
                     ))}
@@ -342,11 +342,11 @@ export default function AdminExpenses() {
 
               {/* Notes */}
               <div className="space-y-2">
-                <Label>{language === 'bn' ? 'নোট' : 'Notes'}</Label>
+                <Label>{'Notes'}</Label>
                 <Textarea
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                  placeholder={language === 'bn' ? 'অতিরিক্ত নোট (ঐচ্ছিক)' : 'Additional notes (optional)'}
+                  placeholder={'Additional notes (optional)'}
                   rows={2}
                 />
               </div>
@@ -354,14 +354,14 @@ export default function AdminExpenses() {
 
             <DialogFooter>
               <Button variant="outline" onClick={() => { setCreateOpen(false); resetForm(); }}>
-                {language === 'bn' ? 'বাতিল' : 'Cancel'}
+                {'Cancel'}
               </Button>
               <Button 
                 onClick={() => createMutation.mutate(formData)}
                 disabled={!formData.category || !formData.description || !formData.amount || createMutation.isPending}
               >
                 {createMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                {language === 'bn' ? 'যোগ করুন' : 'Add Expense'}
+                {'Add Expense'}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -372,13 +372,13 @@ export default function AdminExpenses() {
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-lg">
-            {language === 'bn' ? 'মোট খরচ' : 'Total Expenses'}
+            {'Total Expenses'}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-3xl font-bold text-destructive">৳{totalExpenses.toLocaleString()}</div>
           <p className="text-sm text-muted-foreground">
-            {format(startDate, 'dd MMM', { locale: language === 'bn' ? bn : undefined })} - {format(endDate, 'dd MMM yyyy', { locale: language === 'bn' ? bn : undefined })}
+            {format(startDate, 'dd MMM', { locale: undefined })} - {format(endDate, 'dd MMM yyyy', { locale: undefined })}
           </p>
         </CardContent>
       </Card>
@@ -389,7 +389,7 @@ export default function AdminExpenses() {
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-2">
               <Filter className="w-4 h-4 text-muted-foreground" />
-              <span className="text-sm font-medium">{language === 'bn' ? 'ফিল্টার:' : 'Filter:'}</span>
+              <span className="text-sm font-medium">{'Filter:'}</span>
             </div>
 
             {/* Date Range */}
@@ -416,13 +416,13 @@ export default function AdminExpenses() {
             {/* Category Filter */}
             <Select value={categoryFilter} onValueChange={setCategoryFilter}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder={language === 'bn' ? 'সব ক্যাটাগরি' : 'All Categories'} />
+                <SelectValue placeholder={'All Categories'} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{language === 'bn' ? 'সব ক্যাটাগরি' : 'All Categories'}</SelectItem>
+                <SelectItem value="all">{'All Categories'}</SelectItem>
                 {EXPENSE_CATEGORIES.map(cat => (
                   <SelectItem key={cat.value} value={cat.value}>
-                    {language === 'bn' ? cat.labelBn : cat.label}
+                    {cat.label}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -443,20 +443,20 @@ export default function AdminExpenses() {
           ) : expensesData?.expenses?.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <Receipt className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>{language === 'bn' ? 'কোনো খরচ নেই' : 'No expenses recorded'}</p>
+              <p>{'No expenses recorded'}</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{language === 'bn' ? 'তারিখ' : 'Date'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'ক্যাটাগরি' : 'Category'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'বিবরণ' : 'Description'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'পরিমাণ' : 'Amount'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'পেমেন্ট' : 'Payment'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'যোগ করেছে' : 'Added By'}</TableHead>
-                    {isAdmin && <TableHead className="text-right">{language === 'bn' ? 'অ্যাকশন' : 'Actions'}</TableHead>}
+                    <TableHead>{'Date'}</TableHead>
+                    <TableHead>{'Category'}</TableHead>
+                    <TableHead>{'Description'}</TableHead>
+                    <TableHead>{'Amount'}</TableHead>
+                    <TableHead>{'Payment'}</TableHead>
+                    <TableHead>{'Added By'}</TableHead>
+                    {isAdmin && <TableHead className="text-right">{'Actions'}</TableHead>}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -469,12 +469,12 @@ export default function AdminExpenses() {
                     return (
                       <TableRow key={expense.id}>
                         <TableCell className="font-medium">
-                          {format(new Date(expense.expense_date), 'dd MMM yyyy', { locale: language === 'bn' ? bn : undefined })}
+                          {format(new Date(expense.expense_date), 'dd MMM yyyy', { locale: undefined })}
                         </TableCell>
                         <TableCell>
                           <Badge className={catInfo.color}>
                             <CatIcon className="w-3 h-3 mr-1" />
-                            {language === 'bn' ? catInfo.labelBn : catInfo.label}
+                            {catInfo.label}
                           </Badge>
                         </TableCell>
                         <TableCell>
@@ -489,7 +489,7 @@ export default function AdminExpenses() {
                         <TableCell>
                           <div className="flex items-center gap-1 text-sm">
                             <PmIcon className="w-3 h-3" />
-                            {language === 'bn' ? pmInfo.labelBn : pmInfo.label}
+                            {pmInfo.label}
                           </div>
                         </TableCell>
                         <TableCell className="text-sm text-muted-foreground">
@@ -509,20 +509,18 @@ export default function AdminExpenses() {
                                 </AlertDialogTrigger>
                                 <AlertDialogContent>
                                   <AlertDialogHeader>
-                                    <AlertDialogTitle>{language === 'bn' ? 'খরচ মুছে ফেলবেন?' : 'Delete Expense?'}</AlertDialogTitle>
+                                    <AlertDialogTitle>{'Delete Expense?'}</AlertDialogTitle>
                                     <AlertDialogDescription>
-                                      {language === 'bn' 
-                                        ? 'এই খরচটি স্থায়ীভাবে মুছে ফেলা হবে। এই কাজটি পূর্বাবস্থায় ফেরানো যাবে না।'
-                                        : 'This expense will be permanently deleted. This action cannot be undone.'}
+                                      {'This expense will be permanently deleted. This action cannot be undone.'}
                                     </AlertDialogDescription>
                                   </AlertDialogHeader>
                                   <AlertDialogFooter>
-                                    <AlertDialogCancel>{language === 'bn' ? 'বাতিল' : 'Cancel'}</AlertDialogCancel>
+                                    <AlertDialogCancel>{'Cancel'}</AlertDialogCancel>
                                     <AlertDialogAction
                                       onClick={() => deleteMutation.mutate(expense.id)}
                                       className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                                     >
-                                      {language === 'bn' ? 'মুছে ফেলুন' : 'Delete'}
+                                      {'Delete'}
                                     </AlertDialogAction>
                                   </AlertDialogFooter>
                                 </AlertDialogContent>
@@ -544,13 +542,13 @@ export default function AdminExpenses() {
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>{language === 'bn' ? 'খরচ সম্পাদনা' : 'Edit Expense'}</DialogTitle>
+            <DialogTitle>{'Edit Expense'}</DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4 py-4">
             {/* Same form fields as create */}
             <div className="space-y-2">
-              <Label>{language === 'bn' ? 'তারিখ' : 'Date'}</Label>
+              <Label>{'Date'}</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button variant="outline" className="w-full justify-start">
@@ -569,7 +567,7 @@ export default function AdminExpenses() {
             </div>
 
             <div className="space-y-2">
-              <Label>{language === 'bn' ? 'ক্যাটাগরি' : 'Category'} *</Label>
+              <Label>{'Category'} *</Label>
               <Select value={formData.category} onValueChange={(v) => setFormData({ ...formData, category: v })}>
                 <SelectTrigger>
                   <SelectValue />
@@ -577,7 +575,7 @@ export default function AdminExpenses() {
                 <SelectContent>
                   {EXPENSE_CATEGORIES.map(cat => (
                     <SelectItem key={cat.value} value={cat.value}>
-                      {language === 'bn' ? cat.labelBn : cat.label}
+                      {cat.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -585,7 +583,7 @@ export default function AdminExpenses() {
             </div>
 
             <div className="space-y-2">
-              <Label>{language === 'bn' ? 'বিবরণ' : 'Description'} *</Label>
+              <Label>{'Description'} *</Label>
               <Input
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -593,7 +591,7 @@ export default function AdminExpenses() {
             </div>
 
             <div className="space-y-2">
-              <Label>{language === 'bn' ? 'পরিমাণ (৳)' : 'Amount (BDT)'} *</Label>
+              <Label>{'Amount (BDT)'} *</Label>
               <Input
                 type="number"
                 min="1"
@@ -603,7 +601,7 @@ export default function AdminExpenses() {
             </div>
 
             <div className="space-y-2">
-              <Label>{language === 'bn' ? 'পেমেন্ট পদ্ধতি' : 'Payment Method'}</Label>
+              <Label>{'Payment Method'}</Label>
               <Select value={formData.payment_method} onValueChange={(v) => setFormData({ ...formData, payment_method: v })}>
                 <SelectTrigger>
                   <SelectValue />
@@ -611,7 +609,7 @@ export default function AdminExpenses() {
                 <SelectContent>
                   {PAYMENT_METHODS.map(pm => (
                     <SelectItem key={pm.value} value={pm.value}>
-                      {language === 'bn' ? pm.labelBn : pm.label}
+                      {pm.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -619,7 +617,7 @@ export default function AdminExpenses() {
             </div>
 
             <div className="space-y-2">
-              <Label>{language === 'bn' ? 'নোট' : 'Notes'}</Label>
+              <Label>{'Notes'}</Label>
               <Textarea
                 value={formData.notes}
                 onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
@@ -630,14 +628,14 @@ export default function AdminExpenses() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => { setEditOpen(false); resetForm(); }}>
-              {language === 'bn' ? 'বাতিল' : 'Cancel'}
+              {'Cancel'}
             </Button>
             <Button 
               onClick={() => selectedExpense && updateMutation.mutate({ id: selectedExpense.id, ...formData })}
               disabled={!formData.category || !formData.description || !formData.amount || updateMutation.isPending}
             >
               {updateMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              {language === 'bn' ? 'আপডেট করুন' : 'Update'}
+              {'Update'}
             </Button>
           </DialogFooter>
         </DialogContent>

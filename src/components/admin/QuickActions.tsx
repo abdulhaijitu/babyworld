@@ -99,22 +99,20 @@ export function QuickActions({ onAction }: QuickActionsProps) {
       queryClient.invalidateQueries({ queryKey: ['tickets'] });
       queryClient.invalidateQueries({ queryKey: ['activity-logs'] });
       toast.success(
-        language === 'bn' 
-          ? `টিকেট তৈরি হয়েছে: ${data.ticket_number}` 
-          : `Ticket created: ${data.ticket_number}`
+        `Ticket created: ${data.ticket_number}`
       );
       setTicketDialogOpen(false);
       setTicketForm({ guardianName: '', guardianPhone: '', childName: '', ticketType: 'hourly_play' });
       onAction?.('ticket_created', data);
     },
     onError: () => {
-      toast.error(language === 'bn' ? 'টিকেট তৈরি করতে সমস্যা হয়েছে' : 'Failed to create ticket');
+      toast.error('Failed to create ticket');
     }
   });
 
   const handleCreateTicket = () => {
     if (!ticketForm.guardianName || !ticketForm.guardianPhone) {
-      toast.error(language === 'bn' ? 'নাম ও ফোন নম্বর দিন' : 'Please enter name and phone');
+      toast.error('Please enter name and phone');
       return;
     }
     createTicketMutation.mutate();
@@ -126,10 +124,10 @@ export function QuickActions({ onAction }: QuickActionsProps) {
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-lg">
             <Zap className="w-5 h-5 text-yellow-500" />
-            {language === 'bn' ? 'কুইক অ্যাকশন' : 'Quick Actions'}
+            {'Quick Actions'}
           </CardTitle>
           <CardDescription>
-            {language === 'bn' ? 'দ্রুত কাজ সম্পন্ন করুন' : 'Quickly complete common tasks'}
+            {'Quickly complete common tasks'}
           </CardDescription>
         </CardHeader>
         <CardContent className="grid grid-cols-2 gap-3">
@@ -142,10 +140,10 @@ export function QuickActions({ onAction }: QuickActionsProps) {
               <Ticket className="w-5 h-5 text-primary" />
             </div>
             <span className="font-medium">
-              {language === 'bn' ? 'টিকেট ইস্যু' : 'Issue Ticket'}
+              {'Issue Ticket'}
             </span>
             <Badge variant="secondary" className="text-xs">
-              {language === 'bn' ? 'ওয়াক-ইন' : 'Walk-in'}
+              {'Walk-in'}
             </Badge>
           </Button>
 
@@ -158,10 +156,10 @@ export function QuickActions({ onAction }: QuickActionsProps) {
               <UtensilsCrossed className="w-5 h-5 text-chart-2" />
             </div>
             <span className="font-medium">
-              {language === 'bn' ? 'ফুড অর্ডার' : 'Food Order'}
+              {'Food Order'}
             </span>
             <Badge variant="secondary" className="text-xs">
-              {language === 'bn' ? 'দ্রুত' : 'Quick'}
+              {'Quick'}
             </Badge>
           </Button>
         </CardContent>
@@ -173,28 +171,28 @@ export function QuickActions({ onAction }: QuickActionsProps) {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Ticket className="w-5 h-5" />
-              {language === 'bn' ? 'দ্রুত টিকেট ইস্যু' : 'Quick Ticket Issue'}
+              {'Quick Ticket Issue'}
             </DialogTitle>
             <DialogDescription>
-              {language === 'bn' ? 'ওয়াক-ইন কাস্টমারের জন্য টিকেট' : 'Ticket for walk-in customer'}
+              {'Ticket for walk-in customer'}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label className="flex items-center gap-2">
                 <User className="w-4 h-4" />
-                {language === 'bn' ? 'অভিভাবকের নাম' : 'Guardian Name'} *
+                {'Guardian Name'} *
               </Label>
               <Input
                 value={ticketForm.guardianName}
                 onChange={(e) => setTicketForm({ ...ticketForm, guardianName: e.target.value })}
-                placeholder={language === 'bn' ? 'নাম লিখুন' : 'Enter name'}
+                placeholder={'Enter name'}
               />
             </div>
             <div className="space-y-2">
               <Label className="flex items-center gap-2">
                 <Phone className="w-4 h-4" />
-                {language === 'bn' ? 'ফোন নম্বর' : 'Phone Number'} *
+                {'Phone Number'} *
               </Label>
               <Input
                 value={ticketForm.guardianPhone}
@@ -203,17 +201,17 @@ export function QuickActions({ onAction }: QuickActionsProps) {
               />
             </div>
             <div className="space-y-2">
-              <Label>{language === 'bn' ? 'শিশুর নাম (ঐচ্ছিক)' : 'Child Name (optional)'}</Label>
+              <Label>{'Child Name (optional)'}</Label>
               <Input
                 value={ticketForm.childName}
                 onChange={(e) => setTicketForm({ ...ticketForm, childName: e.target.value })}
-                placeholder={language === 'bn' ? 'শিশুর নাম' : "Child's name"}
+                placeholder={"Child's name"}
               />
             </div>
             <div className="space-y-2">
               <Label className="flex items-center gap-2">
                 <Clock className="w-4 h-4" />
-                {language === 'bn' ? 'টিকেট টাইপ' : 'Ticket Type'}
+                {'Ticket Type'}
               </Label>
               <Select
                 value={ticketForm.ticketType}
@@ -224,10 +222,10 @@ export function QuickActions({ onAction }: QuickActionsProps) {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="hourly_play">
-                    {language === 'bn' ? 'আওয়ারলি প্লে (১ ঘন্টা)' : 'Hourly Play (1 hour)'}
+                    {'Hourly Play (1 hour)'}
                   </SelectItem>
                   <SelectItem value="extended">
-                    {language === 'bn' ? 'এক্সটেন্ডেড (২ ঘন্টা)' : 'Extended (2 hours)'}
+                    {'Extended (2 hours)'}
                   </SelectItem>
                 </SelectContent>
               </Select>
@@ -235,12 +233,12 @@ export function QuickActions({ onAction }: QuickActionsProps) {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setTicketDialogOpen(false)}>
-              {language === 'bn' ? 'বাতিল' : 'Cancel'}
+              {'Cancel'}
             </Button>
             <Button onClick={handleCreateTicket} disabled={createTicketMutation.isPending}>
               {createTicketMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               <Ticket className="w-4 h-4 mr-2" />
-              {language === 'bn' ? 'টিকেট তৈরি করুন' : 'Create Ticket'}
+              {'Create Ticket'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -252,10 +250,10 @@ export function QuickActions({ onAction }: QuickActionsProps) {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <UtensilsCrossed className="w-5 h-5" />
-              {language === 'bn' ? 'ফুড অর্ডার' : 'Food Order'}
+              {'Food Order'}
             </DialogTitle>
             <DialogDescription>
-              {language === 'bn' ? 'ফুড সেলস পেজে যান' : 'Go to food sales page for full ordering'}
+              {'Go to food sales page for full ordering'}
             </DialogDescription>
           </DialogHeader>
           <div className="py-6 text-center">
@@ -263,16 +261,14 @@ export function QuickActions({ onAction }: QuickActionsProps) {
               <UtensilsCrossed className="w-8 h-8 text-chart-2" />
             </div>
             <p className="text-muted-foreground mb-4">
-              {language === 'bn' 
-                ? 'সম্পূর্ণ অর্ডার ফিচারের জন্য ফুড সেলস পেজে যান'
-                : 'For full order features, go to Food Sales page'}
+              {'For full order features, go to Food Sales page'}
             </p>
             <Button onClick={() => {
               setFoodDialogOpen(false);
               window.location.href = '/admin/food';
             }}>
               <UtensilsCrossed className="w-4 h-4 mr-2" />
-              {language === 'bn' ? 'ফুড সেলস যান' : 'Go to Food Sales'}
+              {'Go to Food Sales'}
             </Button>
           </div>
         </DialogContent>

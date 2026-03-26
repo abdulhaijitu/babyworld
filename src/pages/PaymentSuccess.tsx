@@ -40,7 +40,7 @@ export default function PaymentSuccess() {
             <div className="py-8">
               <Loader2 className="w-12 h-12 mx-auto animate-spin text-primary" />
               <p className="mt-4 text-muted-foreground">
-                {language === 'bn' ? 'পেমেন্ট যাচাই করা হচ্ছে...' : 'Verifying payment...'}
+                {'Verifying payment...'}
               </p>
             </div>
           ) : (
@@ -49,7 +49,7 @@ export default function PaymentSuccess() {
                 <CheckCircle className="w-10 h-10 text-green-600" />
               </div>
               <CardTitle className="text-2xl text-green-600">
-                {language === 'bn' ? 'পেমেন্ট সফল!' : 'Payment Successful!'}
+                {'Payment Successful!'}
               </CardTitle>
             </>
           )}
@@ -59,9 +59,7 @@ export default function PaymentSuccess() {
           {!loading && (
             <>
               <p className="text-muted-foreground">
-                {language === 'bn' 
-                  ? 'আপনার বুকিং সম্পূর্ণ হয়েছে। আমরা আপনাকে স্বাগত জানাতে অপেক্ষা করছি!'
-                  : 'Your booking is complete. We look forward to seeing you!'}
+                {'Your booking is complete. We look forward to seeing you!'}
               </p>
 
               {paymentData && (
@@ -82,11 +80,11 @@ export default function PaymentSuccess() {
               <div className="flex flex-col gap-3">
                 <Button onClick={() => navigate('/')} className="w-full">
                   <Home className="w-4 h-4 mr-2" />
-                  {language === 'bn' ? 'হোমপেজে ফিরে যান' : 'Back to Home'}
+                  {'Back to Home'}
                 </Button>
                 <Button variant="outline" onClick={() => navigate('/play-booking')}>
                   <CalendarCheck className="w-4 h-4 mr-2" />
-                  {language === 'bn' ? 'আরো বুকিং করুন' : 'Book Another Session'}
+                  {'Book Another Session'}
                 </Button>
               </div>
             </>
