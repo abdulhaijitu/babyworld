@@ -748,7 +748,7 @@ export default function AdminTicketing() {
             </CardContent>
           </Card>
         </div>
-      )}
+      </div>
 
       {/* Print Dialog */}
       <Dialog open={printOpen} onOpenChange={setPrintOpen}>
@@ -790,14 +790,6 @@ export default function AdminTicketing() {
           )}
         </DialogContent>
       </Dialog>
-
-      {/* Success Dialog */}
-      <TicketSuccessDialog
-        open={showSuccessDialog}
-        onClose={() => setShowSuccessDialog(false)}
-        ticket={createdTicket}
-        rideNames={rideNames}
-      />
     </div>
   );
 }
