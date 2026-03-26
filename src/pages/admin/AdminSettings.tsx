@@ -116,7 +116,7 @@ export default function AdminSettings() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-5">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
           <TabsTrigger value="pricing" className="gap-2">
             <Banknote className="w-4 h-4 hidden sm:inline" />
             {'Pricing'}
