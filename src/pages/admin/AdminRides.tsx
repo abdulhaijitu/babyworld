@@ -31,6 +31,7 @@ import { cn } from '@/lib/utils';
 interface Ride {
   id: string;
   name: string;
+  description: string | null;
   price: number;
   category: string;
   is_active: boolean;
@@ -38,7 +39,6 @@ interface Ride {
   avg_rating: number | null;
   review_count: number | null;
   duration_minutes: number | null;
-  max_riders: number | null;
   ride_type: string | null;
   created_at: string;
 }
