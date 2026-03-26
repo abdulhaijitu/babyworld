@@ -25,6 +25,11 @@ interface TicketData {
   guardianCount?: number;
   childCount?: number;
   socksCount?: number;
+  inTime?: string;
+  outTime?: string;
+  paymentType?: string;
+  paymentStatus?: string;
+  rides?: Array<{ name: string; quantity: number; total_price: number }>;
 }
 
 interface PrintableTicketProps {
