@@ -345,7 +345,16 @@ export default function AdminMemberships() {
                   }}
                 />
                 {phoneError && <p className="text-xs text-destructive">{phoneError}</p>}
-              </div>
+                {lookupLoading && (
+                  <p className="text-xs text-muted-foreground flex items-center gap-1">
+                    <Loader2 className="h-3 w-3 animate-spin" /> খুঁজছে...
+                  </p>
+                )}
+                {foundMember && !lookupLoading && (
+                  <p className="text-xs text-primary flex items-center gap-1 bg-primary/10 rounded px-2 py-1">
+                    🔄 পুরনো মেম্বার: <span className="font-semibold">{foundMember.member_name}</span> — তথ্য অটো-ফিল করা হয়েছে
+                  </p>
+                )}
               <div className="space-y-2">
                 <Label>{'Plan *'}</Label>
                 <Select
