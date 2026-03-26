@@ -158,7 +158,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
         try {
           // Check membership
           const today = new Date().toISOString().split('T')[0];
-          const [membershipRes, ticketRes] = await Promise.all([
+          const [membershipRes, ticketRes, historyRes] = await Promise.all([
             supabase
               .from('memberships')
               .select('*')
@@ -174,6 +174,12 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
               .order('created_at', { ascending: false })
               .limit(1)
               .maybeSingle(),
+            supabase
+              .from('tickets')
+              .select('id, ticket_number, slot_date, total_price, child_count, guardian_count, status, created_at')
+              .eq('guardian_phone', phone)
+              .order('created_at', { ascending: false })
+              .limit(20),
           ]);
 
           if (membershipRes.data) {
