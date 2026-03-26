@@ -16,9 +16,8 @@ const TikTokIcon = ({ className }: { className?: string }) => (
 export const SOCIAL_LINKS = {
   facebook: "https://www.facebook.com/BabyWorldLimited",
   youtube: "https://www.youtube.com/@BabyWorldLimited",
-  // Instagram এবং TikTok লিংক যোগ করুন যখন অ্যাকাউন্ট তৈরি হবে
-  // instagram: "https://www.instagram.com/BabyWorldLimited",
-  // tiktok: "https://www.tiktok.com/@BabyWorldLimited",
+  instagram: "https://www.instagram.com/BabyWorldLimited",
+  tiktok: "https://www.tiktok.com/@BabyWorldLimited",
 };
 
 interface SocialLinksProps {
@@ -44,24 +43,20 @@ export function SocialLinks({ variant = "footer", className, showLabels = false 
       ariaLabel: "Visit our YouTube channel",
       active: true,
     },
-    // Instagram - লিংক যোগ করলে active: true করুন
-    // {
-    //   name: "Instagram",
-    //   nameBn: "ইনস্টাগ্রাম",
-    //   href: SOCIAL_LINKS.instagram,
-    //   icon: Instagram,
-    //   ariaLabel: "Visit our Instagram profile",
-    //   active: false,
-    // },
-    // TikTok - লিংক যোগ করলে active: true করুন
-    // {
-    //   name: "TikTok",
-    //   nameBn: "টিকটক",
-    //   href: SOCIAL_LINKS.tiktok,
-    //   icon: TikTokIcon,
-    //   ariaLabel: "Visit our TikTok profile",
-    //   active: false,
-    // },
+    {
+      name: "Instagram",
+      href: SOCIAL_LINKS.instagram,
+      icon: Instagram,
+      ariaLabel: "Visit our Instagram profile",
+      active: true,
+    },
+    {
+      name: "TikTok",
+      href: SOCIAL_LINKS.tiktok,
+      icon: TikTokIcon,
+      ariaLabel: "Visit our TikTok profile",
+      active: true,
+    },
   ].filter(link => link.active);
 
   const isHeader = variant === "header";
