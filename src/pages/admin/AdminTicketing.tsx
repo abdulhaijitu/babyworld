@@ -107,18 +107,7 @@ export default function AdminTicketing() {
   const [selectedTicket, setSelectedTicket] = useState<TicketType | null>(null);
   const [sendingSMS, setSendingSMS] = useState<string | null>(null);
   const [gateActionLoading, setGateActionLoading] = useState<string | null>(null);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const activeView = searchParams.get('tab') || 'list';
-  const [createdTicket, setCreatedTicket] = useState<any>(null);
-  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [displayCount, setDisplayCount] = useState(PAGE_SIZE);
-
-  const handleTicketCreated = (ticket: any) => {
-    setCreatedTicket(ticket);
-    setShowSuccessDialog(true);
-    fetchTickets();
-    setSearchParams({ tab: 'list' }, { replace: true });
-  };
 
   const fetchTickets = useCallback(async () => {
     setLoading(true);
