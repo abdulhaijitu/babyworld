@@ -34,6 +34,8 @@ export default function AdminMemberships() {
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [packageFilter, setPackageFilter] = useState<string>('all');
+  const [paymentFilter, setPaymentFilter] = useState<string>('all');
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -144,7 +146,14 @@ export default function AdminMemberships() {
       m.member_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       m.phone.includes(searchQuery);
     const matchesStatus = statusFilter === 'all' || m.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    const matchesPackage = packageFilter === 'all' || m.membership_type === packageFilter;
+    // Payment filter: check from paymentLogs
+    const matchesPayment = paymentFilter === 'all' || (() => {
+      const log = paymentLogs.find(l => (l.details as any)?.membership_id === m.id);
+      const pt = (log?.details as any)?.payment_type || 'unknown';
+      return pt === paymentFilter;
+    })();
+    return matchesSearch && matchesStatus && matchesPackage && matchesPayment;
   }) || [];
 
   const paymentStats = {
@@ -440,14 +449,36 @@ export default function AdminMemberships() {
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[140px]">
                 <SelectValue placeholder={'Status'} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{'All'}</SelectItem>
+                <SelectItem value="all">{'All Status'}</SelectItem>
                 <SelectItem value="active">{'Active'}</SelectItem>
                 <SelectItem value="expired">{'Expired'}</SelectItem>
                 <SelectItem value="cancelled">{'Cancelled'}</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={packageFilter} onValueChange={setPackageFilter}>
+              <SelectTrigger className="w-[140px]">
+                <SelectValue placeholder={'Package'} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{'All Package'}</SelectItem>
+                <SelectItem value="monthly">{'Monthly'}</SelectItem>
+                <SelectItem value="quarterly">{'Quarterly'}</SelectItem>
+                <SelectItem value="yearly">{'Yearly'}</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={paymentFilter} onValueChange={setPaymentFilter}>
+              <SelectTrigger className="w-[140px]">
+                <SelectValue placeholder={'Payment'} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{'All Payment'}</SelectItem>
+                <SelectItem value="cash">{'Cash'}</SelectItem>
+                <SelectItem value="online">{'Online'}</SelectItem>
+                <SelectItem value="pending">{'Pending'}</SelectItem>
               </SelectContent>
             </Select>
           </div>
