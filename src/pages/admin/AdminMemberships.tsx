@@ -289,8 +289,47 @@ export default function AdminMemberships() {
                 <Input
                   placeholder="01XXXXXXXXX"
                   value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, phone: e.target.value });
+                    if (e.target.value) validatePhone(e.target.value);
+                  }}
                 />
+                {phoneError && <p className="text-xs text-destructive">{phoneError}</p>}
+              </div>
+              <div className="space-y-2">
+                <Label>{'Plan *'}</Label>
+                <Select
+                  value={formData.selected_package_id}
+                  onValueChange={(value: string) => {
+                    const pkg = packages.find((p: any) => p.id === value);
+                    setFormData({
+                      ...formData,
+                      selected_package_id: value,
+                      child_count: pkg ? pkg.max_children : formData.child_count,
+                      guardian_count: pkg ? (pkg as any).max_guardians : formData.guardian_count,
+                      payment_amount: pkg ? pkg.price : 0,
+                    });
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a package" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {packages.map((pkg: any) => (
+                      <SelectItem key={pkg.id} value={pkg.id}>
+                        {pkg.name} — ৳{pkg.price}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {selectedPackage && (
+                  <div className="text-xs text-muted-foreground rounded border p-2 bg-muted/30">
+                    Duration: {selectedPackage.duration_days} days | 
+                    Max Guardian: {(selectedPackage as any).max_guardians} | 
+                    Max Kids: {selectedPackage.max_children} | 
+                    Discount: {selectedPackage.discount_percent}%
+                  </div>
+                )}
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -298,60 +337,29 @@ export default function AdminMemberships() {
                   <Input
                     type="number"
                     min={1}
+                    max={selectedPackage?.max_children || 10}
                     value={formData.child_count}
                     onChange={(e) => setFormData({ ...formData, child_count: parseInt(e.target.value) || 1 })}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>{'Discount (%)'}</Label>
+                  <Label>{'Guardian Count'}</Label>
                   <Input
                     type="number"
-                    min={0}
-                    max={100}
-                    value={formData.discount_percent}
-                    onChange={(e) => setFormData({ ...formData, discount_percent: parseInt(e.target.value) || 0 })}
+                    min={1}
+                    max={(selectedPackage as any)?.max_guardians || 5}
+                    value={formData.guardian_count}
+                    onChange={(e) => setFormData({ ...formData, guardian_count: parseInt(e.target.value) || 1 })}
                   />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label>{'Plan'}</Label>
-                <Select
-                  value={formData.membership_type}
-                  onValueChange={(value: 'monthly' | 'quarterly' | 'yearly') => {
-                    const pkg = packages.find((p: any) => p.membership_type === value);
-                    setFormData({
-                      ...formData,
-                      membership_type: value,
-                      discount_percent: pkg ? pkg.discount_percent : formData.discount_percent,
-                      child_count: pkg ? pkg.max_children : formData.child_count,
-                      payment_amount: pkg ? pkg.price : 0,
-                    });
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {packages.length > 0 ? packages.map((pkg: any) => (
-                      <SelectItem key={pkg.id} value={pkg.membership_type}>
-                        {pkg.name} — ৳{pkg.price}
-                      </SelectItem>
-                    )) : (
-                      <>
-                        <SelectItem value="monthly">Monthly</SelectItem>
-                        <SelectItem value="quarterly">Quarterly</SelectItem>
-                        <SelectItem value="yearly">Yearly</SelectItem>
-                      </>
-                    )}
-                  </SelectContent>
-                </Select>
-                {packages.find((p: any) => p.membership_type === formData.membership_type) && (
-                  <p className="text-xs text-muted-foreground">
-                    Price: ৳{packages.find((p: any) => p.membership_type === formData.membership_type)?.price} | 
-                    Max Guardian: {(packages.find((p: any) => p.membership_type === formData.membership_type) as any)?.max_guardians ?? 2} | 
-                    Max Kids: {packages.find((p: any) => p.membership_type === formData.membership_type)?.max_children}
-                  </p>
-                )}
+                <Label>{'Valid From'}</Label>
+                <Input
+                  type="date"
+                  value={formData.valid_from}
+                  onChange={(e) => setFormData({ ...formData, valid_from: e.target.value })}
+                />
               </div>
               {/* Payment Section */}
               <div className="rounded-lg border border-dashed border-primary/30 bg-primary/5 p-4 space-y-3">
