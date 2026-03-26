@@ -39,17 +39,31 @@ export default function AdminMemberships() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
+  const [phoneError, setPhoneError] = useState('');
+
   // Form state
   const [formData, setFormData] = useState({
     member_name: '',
     phone: '',
     child_count: 1,
-    membership_type: 'monthly' as 'monthly' | 'quarterly' | 'yearly',
-    discount_percent: 100,
+    guardian_count: 1,
+    selected_package_id: '',
     notes: '',
     payment_type: 'cash' as 'cash' | 'online' | 'pending',
     payment_amount: 0,
+    valid_from: format(new Date(), 'yyyy-MM-dd'),
   });
+
+  
+
+  const validatePhone = (phone: string) => {
+    const cleaned = phone.replace(/\s/g, '');
+    const regex = /^(\+?880|0)?1[3-9]\d{8}$/;
+    if (!cleaned) { setPhoneError(''); return false; }
+    if (!regex.test(cleaned)) { setPhoneError('সঠিক বাংলাদেশি ফোন নম্বর দিন (01XXXXXXXXX)'); return false; }
+    setPhoneError('');
+    return true;
+  };
 
   const { data: packages = [] } = useQuery({
     queryKey: ['membership-packages-active'],
@@ -106,16 +120,36 @@ export default function AdminMemberships() {
     },
   });
 
+  const selectedPackage = packages.find((p: any) => p.id === formData.selected_package_id);
+
   const handleCreate = async () => {
     if (!formData.member_name || !formData.phone) {
       toast.error('Name and phone are required');
+      return;
+    }
+    if (!validatePhone(formData.phone)) {
+      toast.error('সঠিক ফোন নম্বর দিন');
+      return;
+    }
+    if (!selectedPackage) {
+      toast.error('Please select a package');
       return;
     }
 
     setIsCreating(true);
     try {
       const { data, error } = await supabase.functions.invoke('manage-membership?action=create', {
-        body: formData,
+        body: {
+          member_name: formData.member_name,
+          phone: formData.phone,
+          child_count: formData.child_count,
+          membership_type: selectedPackage.membership_type,
+          discount_percent: selectedPackage.discount_percent,
+          notes: formData.notes,
+          payment_type: formData.payment_type,
+          payment_amount: formData.payment_amount,
+          valid_from: formData.valid_from,
+        },
       });
 
       if (error) throw error;
@@ -127,12 +161,14 @@ export default function AdminMemberships() {
         member_name: '',
         phone: '',
         child_count: 1,
-        membership_type: 'monthly',
-        discount_percent: 100,
+        guardian_count: 1,
+        selected_package_id: '',
         notes: '',
         payment_type: 'cash',
         payment_amount: 0,
+        valid_from: format(new Date(), 'yyyy-MM-dd'),
       });
+      setPhoneError('');
       queryClient.invalidateQueries({ queryKey: ['memberships'] });
     } catch (error: any) {
       toast.error(error.message || ('Creation failed'));
@@ -253,8 +289,47 @@ export default function AdminMemberships() {
                 <Input
                   placeholder="01XXXXXXXXX"
                   value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, phone: e.target.value });
+                    if (e.target.value) validatePhone(e.target.value);
+                  }}
                 />
+                {phoneError && <p className="text-xs text-destructive">{phoneError}</p>}
+              </div>
+              <div className="space-y-2">
+                <Label>{'Plan *'}</Label>
+                <Select
+                  value={formData.selected_package_id}
+                  onValueChange={(value: string) => {
+                    const pkg = packages.find((p: any) => p.id === value);
+                    setFormData({
+                      ...formData,
+                      selected_package_id: value,
+                      child_count: pkg ? pkg.max_children : formData.child_count,
+                      guardian_count: pkg ? (pkg as any).max_guardians : formData.guardian_count,
+                      payment_amount: pkg ? pkg.price : 0,
+                    });
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a package" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {packages.map((pkg: any) => (
+                      <SelectItem key={pkg.id} value={pkg.id}>
+                        {pkg.name} — ৳{pkg.price}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {selectedPackage && (
+                  <div className="text-xs text-muted-foreground rounded border p-2 bg-muted/30">
+                    Duration: {selectedPackage.duration_days} days | 
+                    Max Guardian: {(selectedPackage as any).max_guardians} | 
+                    Max Kids: {selectedPackage.max_children} | 
+                    Discount: {selectedPackage.discount_percent}%
+                  </div>
+                )}
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -262,60 +337,29 @@ export default function AdminMemberships() {
                   <Input
                     type="number"
                     min={1}
+                    max={selectedPackage?.max_children || 10}
                     value={formData.child_count}
                     onChange={(e) => setFormData({ ...formData, child_count: parseInt(e.target.value) || 1 })}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>{'Discount (%)'}</Label>
+                  <Label>{'Guardian Count'}</Label>
                   <Input
                     type="number"
-                    min={0}
-                    max={100}
-                    value={formData.discount_percent}
-                    onChange={(e) => setFormData({ ...formData, discount_percent: parseInt(e.target.value) || 0 })}
+                    min={1}
+                    max={(selectedPackage as any)?.max_guardians || 5}
+                    value={formData.guardian_count}
+                    onChange={(e) => setFormData({ ...formData, guardian_count: parseInt(e.target.value) || 1 })}
                   />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label>{'Plan'}</Label>
-                <Select
-                  value={formData.membership_type}
-                  onValueChange={(value: 'monthly' | 'quarterly' | 'yearly') => {
-                    const pkg = packages.find((p: any) => p.membership_type === value);
-                    setFormData({
-                      ...formData,
-                      membership_type: value,
-                      discount_percent: pkg ? pkg.discount_percent : formData.discount_percent,
-                      child_count: pkg ? pkg.max_children : formData.child_count,
-                      payment_amount: pkg ? pkg.price : 0,
-                    });
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {packages.length > 0 ? packages.map((pkg: any) => (
-                      <SelectItem key={pkg.id} value={pkg.membership_type}>
-                        {pkg.name} — ৳{pkg.price}
-                      </SelectItem>
-                    )) : (
-                      <>
-                        <SelectItem value="monthly">Monthly</SelectItem>
-                        <SelectItem value="quarterly">Quarterly</SelectItem>
-                        <SelectItem value="yearly">Yearly</SelectItem>
-                      </>
-                    )}
-                  </SelectContent>
-                </Select>
-                {packages.find((p: any) => p.membership_type === formData.membership_type) && (
-                  <p className="text-xs text-muted-foreground">
-                    Price: ৳{packages.find((p: any) => p.membership_type === formData.membership_type)?.price} | 
-                    Max Guardian: {(packages.find((p: any) => p.membership_type === formData.membership_type) as any)?.max_guardians ?? 2} | 
-                    Max Kids: {packages.find((p: any) => p.membership_type === formData.membership_type)?.max_children}
-                  </p>
-                )}
+                <Label>{'Valid From'}</Label>
+                <Input
+                  type="date"
+                  value={formData.valid_from}
+                  onChange={(e) => setFormData({ ...formData, valid_from: e.target.value })}
+                />
               </div>
               {/* Payment Section */}
               <div className="rounded-lg border border-dashed border-primary/30 bg-primary/5 p-4 space-y-3">
