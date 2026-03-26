@@ -37,6 +37,17 @@ export default function AdminMembershipPackages() {
   const [search, setSearch] = useState('');
   const [editOpen, setEditOpen] = useState(false);
   const [editForm, setEditForm] = useState<Partial<MembershipPackage>>({});
+  const [createOpen, setCreateOpen] = useState(false);
+  const [createForm, setCreateForm] = useState({
+    name: '',
+    name_bn: '',
+    membership_type: 'monthly' as 'monthly' | 'quarterly' | 'yearly',
+    duration_days: 30,
+    price: 0,
+    discount_percent: 100,
+    max_children: 1,
+    is_active: true,
+  });
 
   const { data: packages = [], isLoading } = useQuery({
     queryKey: ['membership-packages'],
@@ -63,6 +74,32 @@ export default function AdminMembershipPackages() {
       queryClient.invalidateQueries({ queryKey: ['membership-packages'] });
       setEditOpen(false);
       toast.success('Package updated successfully');
+    },
+    onError: (err: any) => toast.error(err.message),
+  });
+
+  const createMutation = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase
+        .from('membership_packages')
+        .insert({
+          name: createForm.name,
+          name_bn: createForm.name_bn || null,
+          membership_type: createForm.membership_type,
+          duration_days: createForm.duration_days,
+          price: createForm.price,
+          discount_percent: createForm.discount_percent,
+          max_children: createForm.max_children,
+          is_active: createForm.is_active,
+          sort_order: packages.length,
+        } as any);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['membership-packages'] });
+      setCreateOpen(false);
+      setCreateForm({ name: '', name_bn: '', membership_type: 'monthly', duration_days: 30, price: 0, discount_percent: 100, max_children: 1, is_active: true });
+      toast.success('Package created successfully');
     },
     onError: (err: any) => toast.error(err.message),
   });
@@ -109,7 +146,7 @@ export default function AdminMembershipPackages() {
           </h1>
           <p className="text-sm text-muted-foreground">Manage membership plans and pricing</p>
         </div>
-        <Button className="gap-2">
+        <Button className="gap-2" onClick={() => setCreateOpen(true)}>
           <Plus className="h-4 w-4" /> Create Package
         </Button>
       </div>
@@ -266,6 +303,94 @@ export default function AdminMembershipPackages() {
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditOpen(false)}>Cancel</Button>
             <Button onClick={saveEdit} disabled={updateMutation.isPending}>Save Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Create Dialog */}
+      <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create New Package</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label>Name</Label>
+              <Input
+                value={createForm.name}
+                onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
+                placeholder="e.g. Monthly Package"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Name (Bangla)</Label>
+              <Input
+                value={createForm.name_bn}
+                onChange={(e) => setCreateForm({ ...createForm, name_bn: e.target.value })}
+                placeholder="e.g. মাসিক প্যাকেজ"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Type</Label>
+              <select
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                value={createForm.membership_type}
+                onChange={(e) => setCreateForm({ ...createForm, membership_type: e.target.value as any })}
+              >
+                <option value="monthly">Monthly</option>
+                <option value="quarterly">Quarterly</option>
+                <option value="yearly">Yearly</option>
+              </select>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Price (৳)</Label>
+                <Input
+                  type="number"
+                  value={createForm.price}
+                  onChange={(e) => setCreateForm({ ...createForm, price: Number(e.target.value) })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Duration (days)</Label>
+                <Input
+                  type="number"
+                  value={createForm.duration_days}
+                  onChange={(e) => setCreateForm({ ...createForm, duration_days: Number(e.target.value) })}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Discount %</Label>
+                <Input
+                  type="number"
+                  value={createForm.discount_percent}
+                  onChange={(e) => setCreateForm({ ...createForm, discount_percent: Number(e.target.value) })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Max Children</Label>
+                <Input
+                  type="number"
+                  value={createForm.max_children}
+                  onChange={(e) => setCreateForm({ ...createForm, max_children: Number(e.target.value) })}
+                />
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Switch
+                checked={createForm.is_active}
+                onCheckedChange={(checked) => setCreateForm({ ...createForm, is_active: checked })}
+              />
+              <Label>Active</Label>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
+            <Button onClick={() => createMutation.mutate()} disabled={createMutation.isPending || !createForm.name}>
+              Create Package
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
