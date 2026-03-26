@@ -1,34 +1,46 @@
 
 
-## পরিকল্পনা: `/admin/rides` পেইজ অডিট ও ফিক্স
+## Plan: Rides Page Table & Modal Redesign
 
-### সমস্যা চিহ্নিত
+### Reference Analysis
+The uploaded screenshots show a professional ride management table with columns: **SL, Image, Name, Type, Price, Duration, Max Rider, Status, Action** — plus search bar, pagination, and "Show entries" control. Current DB is missing `duration` and `max_rider` columns.
 
-| # | সমস্যা | তীব্রতা |
-|---|--------|---------|
-| 1 | `name_bn` ফর্মে এখনও আছে (`defaultFormData`, interface, mutations) — আগের ক্লিনআপে UI ফিল্ড বাদ হলেও ডেটা লেয়ারে রয়ে গেছে | Bug |
-| 2 | `avg_rating` ও `review_count` টেবিলে দেখানো হচ্ছে না — রাইডের রেটিং তথ্য মিসিং | UX |
-| 3 | Create ও Edit ডায়ালগে প্রায় একই কোড দুইবার লেখা (DRY violation) — ~140 লাইন ডুপ্লিকেট | Code quality |
-| 4 | Edit ডায়ালগে `DialogDescription` নেই — accessibility warning | Bug |
-| 5 | ক্যাটাগরি ফিল্টার নেই — সব রাইড একসাথে দেখায়, ফিল্টার করার উপায় নেই | UX |
-| 6 | টেবিলে inactive রাইড আলাদা করা যায় না — ভিজুয়ালি পার্থক্য নেই | UX |
-| 7 | Stats cards-এ "Family/Thrill" একত্রে — আলাদা করলে বেশি তথ্যবহুল | UX |
+### Changes
 
-### পরিবর্তনসমূহ
+#### 1. Database Migration — Add missing columns
+```sql
+ALTER TABLE public.rides ADD COLUMN duration_minutes integer DEFAULT 0;
+ALTER TABLE public.rides ADD COLUMN max_riders integer DEFAULT null;
+ALTER TABLE public.rides ADD COLUMN ride_type text DEFAULT 'Paid';
+```
 
-#### ফাইল: `src/pages/admin/AdminRides.tsx`
+#### 2. Table Redesign (`AdminRides.tsx`)
+- **Add SL column** (serial number)
+- **Replace "Category" with "Type"** column showing Paid/Free badge (green text)
+- **Add "Duration" column** — display as `X min`
+- **Add "Max Rider" column** — numeric display
+- **Status column** — replace Switch with colored text badge ("Active" green / "Inactive" red)
+- **Actions column** — styled Edit (yellow) and Delete (red) icon buttons matching reference
+- **Add search bar** — filter by ride name (top-right)
+- **Add pagination** — "Showing X to Y of Z entries" + Previous/Next + page numbers
+- **Add "Show entries" dropdown** — 10/25/50 per page (top-left)
+- **Remove category filter** from card header (replaced by search)
 
-1. **`name_bn` সম্পূর্ণ রিমুভ**: `Ride` interface, `defaultFormData`, `handleEdit`, create/update mutation থেকে `name_bn` বাদ
-2. **Rating/Review কলাম যোগ**: টেবিলে "Rating" কলাম — স্টার আইকন + `avg_rating` ও `review_count` দেখাবে
-3. **ক্যাটাগরি ফিল্টার যোগ**: টেবিল কার্ডের হেডারে Select ড্রপডাউন — All/Kids/Family/Thrill
-4. **Inactive রাইড ভিজুয়াল**: inactive রাইডের row তে `opacity-50` ক্লাস
-5. **Edit dialog-এ `DialogDescription` যোগ**
-6. **DRY ফিক্স**: ফর্ম রেন্ডারিং একটি `renderRideForm()` ফাংশনে extract করা — Create ও Edit উভয় ডায়ালগে ব্যবহার
-7. **Stats cards আপডেট**: 5টি কার্ড — Total, Active, Kids, Family, Thrill (2+3 গ্রিড বা 5-কলাম)
+#### 3. Form/Modal Updates
+- Add **Duration (minutes)** input field
+- Add **Max Riders** input field
+- Add **Type** select (Paid/Free)
+- Keep existing: Name, Price, Image upload, Active toggle
 
-#### ফাইল: `src/pages/admin/AdminRideReviews.tsx`
-- `name_bn` রেফারেন্স রিমুভ (Ride interface থেকে, select query থেকে)
+#### 4. Stats Cards Update
+- Keep 5 cards but replace Kids/Family/Thrill with: **Total, Active, Inactive, Paid, Free**
 
-### সারাংশ
-মূলত `name_bn` ক্লিনআপ, রেটিং ডিসপ্লে, ক্যাটাগরি ফিল্টার, ফর্ম DRY ফিক্স, এবং inactive ভিজুয়াল — দুইটি ফাইলে পরিবর্তন।
+### Files Modified
+| File | Change |
+|------|--------|
+| `src/pages/admin/AdminRides.tsx` | Full table + modal + pagination redesign |
+| Database migration | Add `duration_minutes`, `max_riders`, `ride_type` columns |
+
+### Summary
+Table gets SL numbers, Type/Duration/MaxRider columns, search, pagination, and styled action buttons matching the reference. Modals get new fields for the added columns.
 
