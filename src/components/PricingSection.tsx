@@ -77,6 +77,10 @@ export function PricingSection() {
                     <span className="text-sm text-muted-foreground">Child Fee</span>
                     <span className="text-lg font-bold text-foreground">৳{pricing.hourlyPlay.childFee}</span>
                   </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">Socks Fee</span>
+                    <span className="text-lg font-bold text-foreground">৳{pricing.hourlyPlay.socksFee}</span>
+                  </div>
                 </div>
               </div>
             </div>
