@@ -240,11 +240,17 @@ export default function AdminRides() {
       {/* Pricing & Type */}
       <div className="space-y-3">
         <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Pricing & Type</p>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 gap-3">
           <div className="space-y-2">
-            <Label>Price (৳)</Label>
+            <Label>Regular Price (৳)</Label>
             <Input type="number" value={formData.price} onChange={(e) => setFormData(prev => ({ ...prev, price: Number(e.target.value) }))} min={0} />
           </div>
+          <div className="space-y-2">
+            <Label>Offer Price (৳)</Label>
+            <Input type="number" value={formData.offer_price} onChange={(e) => setFormData(prev => ({ ...prev, offer_price: Number(e.target.value) }))} min={0} placeholder="0 = no offer" />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
           <div className="space-y-2">
             <Label>Type</Label>
             <Select value={formData.ride_type} onValueChange={(value) => setFormData(prev => ({ ...prev, ride_type: value }))}>
