@@ -5,7 +5,6 @@ import { PageTransition } from "@/components/PageTransition";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { ScrollFadeIn, StaggerContainer, StaggerItem } from "@/components/ScrollAnimations";
-import { useLanguage } from "@/contexts/LanguageContext";
 import { ImageLightbox, GalleryItem } from "@/components/ImageLightbox";
 import { Helmet } from "react-helmet-async";
 import { Camera, Play, X } from "lucide-react";
@@ -25,7 +24,6 @@ import playgroundKids from "@/assets/playground-kids.jpg";
 import tomMascot from "@/assets/tom-mascot.jpg";
 
 const Gallery = () => {
-  const { language } = useLanguage();
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [videoOpen, setVideoOpen] = useState(false);
@@ -59,17 +57,11 @@ const Gallery = () => {
   ];
 
   const seoData = {
-    en: {
-      title: "Photo & Video Gallery | Baby World - Indoor Playground Dhaka",
-      description: "Explore our photo and video gallery showcasing the fun, safe, and exciting environment at Baby World indoor playground in Dhaka.",
-    },
-    bn: {
-      title: "ফটো ও ভিডিও গ্যালারি | বেবি ওয়ার্ল্ড - ইনডোর প্লেগ্রাউন্ড ঢাকা",
-      description: "বেবি ওয়ার্ল্ড ইনডোর প্লেগ্রাউন্ডের মজার, নিরাপদ এবং উত্তেজনাপূর্ণ পরিবেশ দেখুন আমাদের ফটো ও ভিডিও গ্যালারিতে।",
-    },
+    title: "Photo & Video Gallery | Baby World - Indoor Playground Dhaka",
+    description: "Explore our photo and video gallery showcasing the fun, safe, and exciting environment at Baby World indoor playground in Dhaka.",
   };
 
-  const data = seoData[language];
+  const data = seoData;
 
   const openLightbox = (index: number) => {
     setSelectedImageIndex(index);

@@ -2,14 +2,13 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Shield, Clock } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { t } from "@/lib/translations";
 import playgroundKids from "@/assets/playground-kids.jpg";
 import mascotKids from "@/assets/mascot-kids.jpg";
 import carouselRides from "@/assets/carousel-rides.jpg";
 import arcadeGames from "@/assets/arcade-games.jpg";
 
 export function HeroSection() {
-  const { t } = useLanguage();
 
   return (
     <section

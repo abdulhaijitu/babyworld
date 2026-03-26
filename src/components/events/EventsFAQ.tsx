@@ -6,10 +6,9 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ScrollFadeIn } from "@/components/ScrollAnimations";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { t } from "@/lib/translations";
 
 export function EventsFAQ() {
-  const { t } = useLanguage();
 
   const faqItems = [
     {

@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { PartyPopper, Star } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { t } from "@/lib/translations";
 
 interface EventsHeroProps {
   onExplorePackages: () => void;
@@ -9,7 +9,6 @@ interface EventsHeroProps {
 }
 
 export function EventsHero({ onExplorePackages, onRequestBooking }: EventsHeroProps) {
-  const { t } = useLanguage();
 
   return (
     <section className="relative min-h-[75svh] flex items-center py-12 sm:py-16 overflow-hidden">

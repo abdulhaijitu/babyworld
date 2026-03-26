@@ -1,6 +1,6 @@
 import { Star, Quote, ChevronLeft, ChevronRight } from "lucide-react";
 import { ScrollFadeIn } from "./ScrollAnimations";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { t } from "@/lib/translations";
 import {
   Carousel,
   CarouselContent,
@@ -12,7 +12,6 @@ import Autoplay from "embla-carousel-autoplay";
 import { useRef } from "react";
 
 export function TestimonialsSection() {
-  const { t } = useLanguage();
   const plugin = useRef(
     Autoplay({ delay: 5000, stopOnInteraction: true })
   );

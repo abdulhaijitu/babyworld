@@ -47,7 +47,6 @@ import {
   Edit
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { format } from 'date-fns';
 import { bn } from 'date-fns/locale';
 import { TableRowSkeleton } from '@/components/admin/AdminSkeleton';
@@ -76,7 +75,6 @@ interface FoodOrder {
 }
 
 export default function AdminFoodSales() {
-  const { language } = useLanguage();
   const [activeTab, setActiveTab] = useState('items');
   
   // Food Items state
@@ -119,7 +117,7 @@ export default function AdminFoodSales() {
     } finally {
       setItemsLoading(false);
     }
-  }, [language]);
+  }, []);
 
   const fetchOrders = useCallback(async () => {
     setOrdersLoading(true);

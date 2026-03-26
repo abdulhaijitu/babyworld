@@ -16,7 +16,7 @@ import {
   CheckCircle
 } from "lucide-react";
 import { ScrollFadeIn } from "@/components/ScrollAnimations";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { t } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -28,7 +28,6 @@ interface EventBookingFormProps {
 const TOTAL_STEPS = 5;
 
 export function EventBookingForm({ selectedPackage, onSelectPackage }: EventBookingFormProps) {
-  const { t } = useLanguage();
   const [currentStep, setCurrentStep] = useState(1);
   const [eventType, setEventType] = useState<"birthday" | "other" | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);

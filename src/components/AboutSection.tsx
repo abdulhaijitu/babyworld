@@ -1,9 +1,8 @@
 import { Heart, Sparkles, Users } from "lucide-react";
 import { ScrollFadeIn, StaggerContainer, StaggerItem } from "./ScrollAnimations";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { t } from "@/lib/translations";
 
 export function AboutSection() {
-  const { t } = useLanguage();
 
   return (
     <section id="about" className="py-16 sm:py-20 lg:py-24 bg-card overflow-hidden">

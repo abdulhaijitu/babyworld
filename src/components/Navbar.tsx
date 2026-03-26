@@ -7,14 +7,13 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "./ThemeToggle";
 import { WhatsAppButton } from "./WhatsAppButton";
 import { SocialLinks } from "./SocialLinks";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { t } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 import babyWorldLogo from "@/assets/baby-world-logo.png";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const { t } = useLanguage();
   const location = useLocation();
 
   const navLinks = [

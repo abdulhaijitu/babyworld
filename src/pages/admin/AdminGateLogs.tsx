@@ -48,7 +48,6 @@ import {
   Video
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { format, parseISO } from 'date-fns';
 import { bn } from 'date-fns/locale';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -79,7 +78,6 @@ interface GateCamera {
 }
 
 export default function AdminGateLogs() {
-  const { language } = useLanguage();
   const [logs, setLogs] = useState<GateLog[]>([]);
   const [gates, setGates] = useState<GateCamera[]>([]);
   const [loading, setLoading] = useState(true);
@@ -129,7 +127,7 @@ export default function AdminGateLogs() {
     } finally {
       setLoading(false);
     }
-  }, [page, dateFrom, dateTo, gateFilter, entryTypeFilter, language]);
+  }, [page, dateFrom, dateTo, gateFilter, entryTypeFilter]);
 
   useEffect(() => {
     fetchLogs();

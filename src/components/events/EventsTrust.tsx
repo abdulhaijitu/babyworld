@@ -1,9 +1,8 @@
 import { Shield, Users, Sparkles, Wind } from "lucide-react";
 import { ScrollFadeIn, StaggerContainer, StaggerItem } from "@/components/ScrollAnimations";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { t } from "@/lib/translations";
 
 export function EventsTrust() {
-  const { t } = useLanguage();
 
   const trustItems = [
     {

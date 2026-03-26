@@ -1,10 +1,9 @@
 import { Clock, Users, Ticket, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollFadeIn, ScaleIn } from "./ScrollAnimations";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { t } from "@/lib/translations";
 
 export function PricingSection() {
-  const { t } = useLanguage();
 
   const inclusions = [
     t("pricing.inclusion1"),

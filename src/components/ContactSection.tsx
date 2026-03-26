@@ -2,10 +2,9 @@ import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollFadeIn, ScaleIn } from "./ScrollAnimations";
 import { ContactForm } from "./ContactForm";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { t } from "@/lib/translations";
 
 export function ContactSection() {
-  const { t } = useLanguage();
 
   return (
     <section id="contact" className="py-16 sm:py-20 lg:py-24 bg-card overflow-hidden">

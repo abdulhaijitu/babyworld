@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Camera } from "lucide-react";
 import { ScrollFadeIn, StaggerContainer, StaggerItem } from "@/components/ScrollAnimations";
 import { ImageLightbox, GalleryItem } from "@/components/ImageLightbox";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { t } from "@/lib/translations";
 
 import playgroundKids from "@/assets/playground-kids.jpg";
 import mascotKids from "@/assets/mascot-kids.jpg";
@@ -15,7 +15,6 @@ import tomMascot from "@/assets/tom-mascot.jpg";
 import birthdayParty from "@/assets/birthday-party.jpg";
 
 export function EventsGallery() {
-  const { t } = useLanguage();
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
