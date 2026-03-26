@@ -43,6 +43,33 @@ function generatePrintHTML(ticket: TicketData, qrSvgString: string, logoUrl: str
   })();
 
   const hasPricing = ticket.totalPrice !== undefined && ticket.totalPrice > 0;
+  const hasRides = ticket.rides && ticket.rides.length > 0;
+  const hasTime = ticket.inTime || ticket.outTime;
+
+  const formatTimeStr = (iso: string | undefined) => {
+    if (!iso) return '';
+    try { return format(new Date(iso), 'hh:mm a'); } catch { return ''; }
+  };
+
+  const timeBoxHTML = hasTime ? `
+    <div class="time-box">
+      <div class="time-item"><div class="time-label">IN</div><div class="time-value">${formatTimeStr(ticket.inTime) || '-'}</div></div>
+      <div class="time-arrow">→</div>
+      <div class="time-item"><div class="time-label">OUT</div><div class="time-value">${formatTimeStr(ticket.outTime) || '-'}</div></div>
+    </div>
+  ` : '';
+
+  const ridesListHTML = hasRides ? `
+    <div class="rides-section">
+      <div class="rides-title">🎠 Rides</div>
+      ${ticket.rides!.map(r => `
+        <div class="ride-item">
+          <span>${r.name} ×${r.quantity}</span>
+          <span>৳${r.total_price}</span>
+        </div>
+      `).join('')}
+    </div>
+  ` : '';
 
   const priceBreakdownHTML = hasPricing ? `
     <div class="sep"></div>
@@ -58,6 +85,7 @@ function generatePrintHTML(ticket: TicketData, qrSvgString: string, logoUrl: str
     <div class="total-box">
       <div class="total-label">Total</div>
       <div class="total-amount">৳${ticket.totalPrice}</div>
+      ${ticket.paymentType ? `<div class="payment-badge">${ticket.paymentType === 'cash' ? 'Cash' : 'Online'} • ${ticket.paymentStatus === 'paid' ? 'Paid' : 'Unpaid'}</div>` : ''}
     </div>
   ` : '';
 
@@ -87,11 +115,20 @@ body{font-family:'Segoe UI','Hind Siliguri',Arial,sans-serif;padding:20px;max-wi
 .label{color:#666}
 .value{font-weight:600}
 .sep{border-top:1px dashed #ddd;margin:12px 0}
+.time-box{background:linear-gradient(135deg,#fce4ec 0%,#f8bbd0 100%);padding:14px;border-radius:12px;margin:14px 0;display:flex;align-items:center;justify-content:space-around}
+.time-item{text-align:center}
+.time-label{font-size:10px;color:#666;text-transform:uppercase;letter-spacing:1px}
+.time-value{font-size:20px;font-weight:bold;color:#c2185b}
+.time-arrow{font-size:22px;color:#e91e63}
+.rides-section{background:#f5f5f5;padding:12px;border-radius:10px;margin:12px 0}
+.rides-title{font-size:12px;font-weight:600;color:#666;margin-bottom:6px}
+.ride-item{display:flex;justify-content:space-between;font-size:12px;margin:3px 0}
 .breakdown .discount{color:#4caf50}
 .total-divider{border-top:2px solid #e91e63;margin:8px 0}
 .total-box{text-align:center;padding:14px;background:linear-gradient(135deg,#e91e63,#c2185b);border-radius:12px;color:#fff;margin:10px 0}
 .total-label{font-size:11px;opacity:.85}
 .total-amount{font-size:28px;font-weight:bold}
+.payment-badge{display:inline-block;background:rgba(255,255,255,.2);padding:4px 14px;border-radius:12px;font-size:11px;margin-top:6px}
 .footer{text-align:center;font-size:11px;color:#888;margin-top:14px;padding-top:12px;border-top:1px dashed #ddd}
 @media print{body{padding:0}.ticket{border:2px dashed #e91e63!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 </style></head>
@@ -108,8 +145,9 @@ body{font-family:'Segoe UI','Hind Siliguri',Arial,sans-serif;padding:20px;max-wi
   <div class="info-row"><span class="label">📞 Phone</span><span class="value">${ticket.guardianPhone}</span></div>
   <div class="sep"></div>
   <div class="info-row"><span class="label">📅 Date</span><span class="value">${dateFormatted}</span></div>
-  <div class="info-row"><span class="label">⏰ Time</span><span class="value">${ticket.timeSlot}</span></div>
   <div class="info-row"><span class="label">🎟️ Type</span><span class="value">${typeLabel[ticket.ticketType] || ticket.ticketType}</span></div>
+  ${timeBoxHTML}
+  ${ridesListHTML}
   ${priceBreakdownHTML}
   <div class="footer">
     <p>📍 Dhaka, Bangladesh</p>
