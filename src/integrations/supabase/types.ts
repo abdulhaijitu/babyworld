@@ -473,6 +473,54 @@ export type Database = {
         }
         Relationships: []
       }
+      membership_packages: {
+        Row: {
+          created_at: string
+          discount_percent: number
+          duration_days: number
+          features: Json | null
+          id: string
+          is_active: boolean
+          max_children: number
+          membership_type: Database["public"]["Enums"]["membership_type"]
+          name: string
+          name_bn: string | null
+          price: number
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          discount_percent?: number
+          duration_days: number
+          features?: Json | null
+          id?: string
+          is_active?: boolean
+          max_children?: number
+          membership_type: Database["public"]["Enums"]["membership_type"]
+          name: string
+          name_bn?: string | null
+          price?: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          discount_percent?: number
+          duration_days?: number
+          features?: Json | null
+          id?: string
+          is_active?: boolean
+          max_children?: number
+          membership_type?: Database["public"]["Enums"]["membership_type"]
+          name?: string
+          name_bn?: string | null
+          price?: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       memberships: {
         Row: {
           child_count: number
