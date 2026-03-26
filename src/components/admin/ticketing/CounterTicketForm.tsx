@@ -470,11 +470,20 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                   />
                 </div>
 
+                {/* Previous customer badge */}
+                {previousCustomer && !membershipInfo && (
+                  <div className="p-2 rounded-md bg-accent/50 border border-accent flex items-center gap-2 text-xs">
+                    <UserCheck className="h-4 w-4 text-foreground shrink-0" />
+                    <span className="font-medium">Previous customer found — info synced</span>
+                  </div>
+                )}
+
                 {/* Membership badge */}
                 {membershipInfo && (
                   <div className="p-2 rounded-md bg-primary/10 border border-primary/20 flex items-center gap-2 text-xs">
                     <Crown className="h-4 w-4 text-primary shrink-0" />
                     <span className="font-medium text-primary">{membershipInfo.member_name}</span>
+                    {previousCustomer && <Badge variant="outline" className="text-[10px]">Returning</Badge>}
                     <Badge variant="secondary" className="text-[10px] ml-auto">{membershipInfo.discount_percent}% off</Badge>
                   </div>
                 )}
