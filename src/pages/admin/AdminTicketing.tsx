@@ -459,11 +459,34 @@ export default function AdminTicketing() {
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="w-full md:w-auto">
                       <CalendarDays className="w-4 h-4 mr-2" />
-                      {dateFilter ? format(dateFilter, 'dd MMM') : 'Date'}
+                      {dateFrom ? format(dateFrom, 'dd MMM') : 'From'}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar mode="single" selected={dateFilter} onSelect={setDateFilter} />
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar 
+                      mode="single" 
+                      selected={dateFrom} 
+                      onSelect={setDateFrom}
+                      className="p-3 pointer-events-auto"
+                    />
+                  </PopoverContent>
+                </Popover>
+
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className="w-full md:w-auto">
+                      <CalendarDays className="w-4 h-4 mr-2" />
+                      {dateTo ? format(dateTo, 'dd MMM') : 'To'}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar 
+                      mode="single" 
+                      selected={dateTo} 
+                      onSelect={setDateTo}
+                      disabled={(date) => dateFrom ? date < dateFrom : false}
+                      className="p-3 pointer-events-auto"
+                    />
                   </PopoverContent>
                 </Popover>
                 
