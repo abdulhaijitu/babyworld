@@ -373,57 +373,64 @@ export default function AdminTicketing() {
   const hasActiveFilters = searchQuery || statusFilter !== 'all' || dateFrom || dateTo;
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 space-y-6">
+    <TooltipProvider>
+    <div className="p-4 md:p-6 lg:p-8 space-y-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Ticket className="w-6 h-6" />
+          <h1 className="text-xl font-bold flex items-center gap-2">
+            <Ticket className="w-5 h-5" />
             Ticket List
           </h1>
-          <p className="text-muted-foreground">Manage tickets</p>
+          <p className="text-muted-foreground text-sm">Manage tickets</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button onClick={() => navigate('/admin/create-ticket')}>
-            <Plus className="w-4 h-4 mr-2" />
+          <Button size="sm" onClick={() => navigate('/admin/create-ticket')}>
+            <Plus className="w-4 h-4 mr-1" />
             Create Ticket
           </Button>
           <QRScannerDialog />
         </div>
       </div>
 
-        <div className="space-y-6">
-          {/* Stats Cards - 4 columns */}
+        <div className="space-y-4">
+          {/* Stats Cards - compact */}
           {loading ? (
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[1, 2, 3, 4].map(i => <StatsCardSkeleton key={i} />)}
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <Card>
-                <CardHeader className="pb-2">
-                  <CardDescription>Active Tickets</CardDescription>
-                  <CardTitle className="text-2xl text-green-600">{activeCount}</CardTitle>
+                <CardHeader className="p-3 pb-2">
+                  <CardDescription className="flex items-center gap-1 text-xs">
+                    <CheckCircle className="w-3 h-3" /> Active
+                  </CardDescription>
+                  <CardTitle className="text-xl text-green-600">{activeCount}</CardTitle>
                 </CardHeader>
               </Card>
               <Card>
-                <CardHeader className="pb-2">
-                  <CardDescription>Today's Tickets</CardDescription>
-                  <CardTitle className="text-2xl">{todayCount}</CardTitle>
+                <CardHeader className="p-3 pb-2">
+                  <CardDescription className="flex items-center gap-1 text-xs">
+                    <CalendarDays className="w-3 h-3" /> Today
+                  </CardDescription>
+                  <CardTitle className="text-xl">{todayCount}</CardTitle>
                 </CardHeader>
               </Card>
               <Card className="border-primary/30">
-                <CardHeader className="pb-2">
-                  <CardDescription className="flex items-center gap-1">
-                    <Users className="w-3 h-3" /> Inside Venue
+                <CardHeader className="p-3 pb-2">
+                  <CardDescription className="flex items-center gap-1 text-xs">
+                    <Users className="w-3 h-3" /> Inside
                   </CardDescription>
-                  <CardTitle className="text-2xl text-primary">{insideCount}</CardTitle>
+                  <CardTitle className="text-xl text-primary">{insideCount}</CardTitle>
                 </CardHeader>
               </Card>
               <Card>
-                <CardHeader className="pb-2">
-                  <CardDescription>Used</CardDescription>
-                  <CardTitle className="text-2xl text-muted-foreground">{usedCount}</CardTitle>
+                <CardHeader className="p-3 pb-2">
+                  <CardDescription className="flex items-center gap-1 text-xs">
+                    <Clock className="w-3 h-3" /> Used
+                  </CardDescription>
+                  <CardTitle className="text-xl text-muted-foreground">{usedCount}</CardTitle>
                 </CardHeader>
               </Card>
             </div>
@@ -431,34 +438,21 @@ export default function AdminTicketing() {
 
           {/* Tickets Table */}
           <Card>
-            <CardHeader>
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="flex items-center gap-2">
-                  <CardTitle>Ticket List</CardTitle>
-                  <Badge variant="secondary" className="text-xs">
-                    {filteredTickets.length}
-                  </Badge>
-                </div>
-                <Button variant="outline" size="sm" onClick={fetchTickets} disabled={loading}>
-                  <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-                  Refresh
-                </Button>
-              </div>
-              
-              {/* Filters */}
-              <div className="flex flex-col md:flex-row gap-3 mt-4">
+            <CardHeader className="p-3 pb-2">
+              {/* Filters - no duplicate title */}
+              <div className="flex flex-col md:flex-row gap-2">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
                     placeholder="Ticket #, name or phone..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-9"
+                    className="pl-8 h-9 text-sm"
                   />
                 </div>
                 
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-full md:w-[130px]">
+                  <SelectTrigger className="w-full md:w-[120px] h-9 text-sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -471,8 +465,8 @@ export default function AdminTicketing() {
 
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-full md:w-auto">
-                      <CalendarDays className="w-4 h-4 mr-2" />
+                    <Button variant="outline" size="sm" className="w-full md:w-auto h-9">
+                      <CalendarDays className="w-3.5 h-3.5 mr-1" />
                       {dateFrom ? format(dateFrom, 'dd MMM') : 'From'}
                     </Button>
                   </PopoverTrigger>
@@ -488,8 +482,8 @@ export default function AdminTicketing() {
 
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-full md:w-auto">
-                      <CalendarDays className="w-4 h-4 mr-2" />
+                    <Button variant="outline" size="sm" className="w-full md:w-auto h-9">
+                      <CalendarDays className="w-3.5 h-3.5 mr-1" />
                       {dateTo ? format(dateTo, 'dd MMM') : 'To'}
                     </Button>
                   </PopoverTrigger>
@@ -505,46 +499,55 @@ export default function AdminTicketing() {
                 </Popover>
                 
                 {hasActiveFilters && (
-                  <Button variant="ghost" size="icon" onClick={clearFilters}>
+                  <Button variant="ghost" size="icon" className="h-9 w-9" onClick={clearFilters}>
                     <X className="w-4 h-4" />
                   </Button>
                 )}
+
+                <div className="flex items-center gap-2 ml-auto">
+                  <Badge variant="secondary" className="text-xs">
+                    {filteredTickets.length}
+                  </Badge>
+                  <Button variant="ghost" size="icon" className="h-9 w-9" onClick={fetchTickets} disabled={loading}>
+                    <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                  </Button>
+                </div>
               </div>
             </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Customer Summary */}
+            <CardContent className="p-3 pt-0 space-y-3">
+              {/* Customer Summary - compact */}
               {customerSummary && (
-                <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Users className="w-4 h-4 text-primary" />
+                <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Users className="w-3.5 h-3.5 text-primary" />
                     <span className="font-semibold text-sm">{customerSummary.customerName}</span>
                     <span className="text-xs text-muted-foreground font-mono">{customerSummary.phone}</span>
                   </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
                     <div>
-                      <p className="text-muted-foreground text-xs">Total Visits</p>
-                      <p className="font-bold text-lg">{customerSummary.totalVisits}</p>
+                      <p className="text-muted-foreground text-xs">Visits</p>
+                      <p className="font-bold">{customerSummary.totalVisits}</p>
                     </div>
                     <div>
-                      <p className="text-muted-foreground text-xs">Total Spent</p>
-                      <p className="font-bold text-lg">৳{customerSummary.totalSpent.toLocaleString()}</p>
+                      <p className="text-muted-foreground text-xs">Spent</p>
+                      <p className="font-bold">৳{customerSummary.totalSpent.toLocaleString()}</p>
                     </div>
                     <div>
                       <p className="text-muted-foreground text-xs">Last Visit</p>
-                      <p className="font-medium">{customerSummary.lastVisit ? format(new Date(customerSummary.lastVisit), 'dd MMM yyyy') : 'N/A'}</p>
+                      <p className="font-medium text-xs">{customerSummary.lastVisit ? format(new Date(customerSummary.lastVisit), 'dd MMM yyyy') : 'N/A'}</p>
                     </div>
                     <div>
-                      <p className="text-muted-foreground text-xs">Active / Cancelled</p>
+                      <p className="text-muted-foreground text-xs">Active / Cancel</p>
                       <p className="font-medium">{customerSummary.activeTickets} / {customerSummary.cancelledTickets}</p>
                     </div>
                   </div>
                 </div>
               )}
               {error ? (
-                <div className="text-center py-8">
-                  <AlertCircle className="w-12 h-12 mx-auto mb-4 text-destructive" />
-                  <p className="text-destructive">{error}</p>
-                  <Button onClick={fetchTickets} className="mt-4" size="sm">Try Again</Button>
+                <div className="text-center py-6">
+                  <AlertCircle className="w-10 h-10 mx-auto mb-3 text-destructive" />
+                  <p className="text-destructive text-sm">{error}</p>
+                  <Button onClick={fetchTickets} className="mt-3" size="sm">Try Again</Button>
                 </div>
               ) : loading ? (
                 <Table>
@@ -562,52 +565,62 @@ export default function AdminTicketing() {
                   </tbody>
                 </Table>
               ) : filteredTickets.length === 0 ? (
-                <div className="text-center py-12 text-muted-foreground">
-                  <Ticket className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                  <p>No tickets found</p>
+                <div className="text-center py-8 text-muted-foreground">
+                  <Ticket className="w-10 h-10 mx-auto mb-3 opacity-50" />
+                  <p className="text-sm">No tickets found</p>
                 </div>
               ) : (
                 <>
                   <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
-                        <TableRow>
-                          <TableHead>Ticket #</TableHead>
-                          <TableHead>Guardian</TableHead>
-                          <TableHead>Date</TableHead>
-                          <TableHead>Price</TableHead>
-                          <TableHead className="hidden md:table-cell">Payment</TableHead>
-                          <TableHead className="hidden md:table-cell">Time</TableHead>
-                          <TableHead className="hidden lg:table-cell">Discount</TableHead>
-                          <TableHead className="hidden lg:table-cell">Source</TableHead>
-                          <TableHead>Location</TableHead>
-                          <TableHead>Status</TableHead>
-                          <TableHead className="text-right">Actions</TableHead>
+                        <TableRow className="text-xs">
+                          <TableHead className="py-2 px-3">Ticket #</TableHead>
+                          <TableHead className="py-2 px-3">Guardian</TableHead>
+                          <TableHead className="py-2 px-3">Date</TableHead>
+                          <TableHead className="py-2 px-3">Price</TableHead>
+                          <TableHead className="py-2 px-3 hidden md:table-cell">Payment</TableHead>
+                          <TableHead className="py-2 px-3 hidden md:table-cell">Time</TableHead>
+                          <TableHead className="py-2 px-3 hidden lg:table-cell">Source</TableHead>
+                          <TableHead className="py-2 px-3">Status</TableHead>
+                          <TableHead className="py-2 px-3 text-right">Actions</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {paginatedTickets.map((ticket) => (
-                          <TableRow key={ticket.id}>
-                            <TableCell className="font-mono text-sm">{ticket.ticket_number}</TableCell>
-                            <TableCell>
-                              <div className="font-medium">{ticket.guardian_name}</div>
-                              <div className="text-sm text-muted-foreground">{ticket.guardian_phone}</div>
+                          <TableRow key={ticket.id} className="text-sm">
+                            <TableCell className="py-2 px-3 font-mono text-xs">{ticket.ticket_number}</TableCell>
+                            <TableCell className="py-2 px-3">
+                              <div className="font-medium text-sm leading-tight">{ticket.guardian_name}</div>
+                              <div className="text-xs text-muted-foreground">{ticket.guardian_phone}</div>
                             </TableCell>
-                            <TableCell>
-                              {format(parseISO(ticket.slot_date), 'dd MMM yyyy')}
+                            <TableCell className="py-2 px-3 text-xs">
+                              {format(parseISO(ticket.slot_date), 'dd MMM')}
                             </TableCell>
-                            <TableCell>
-                              <div className="font-medium">৳{ticket.total_price || 0}</div>
-                              {ticket.entry_price && ticket.entry_price > 0 && (
-                                <div className="text-xs text-muted-foreground">
-                                  এন্ট্রি: ৳{ticket.entry_price}
-                                </div>
-                              )}
+                            <TableCell className="py-2 px-3">
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <div className="cursor-default">
+                                    <div className="font-medium text-sm">৳{ticket.total_price || 0}</div>
+                                    {ticket.discount_applied && ticket.discount_applied > 0 && (
+                                      <span className="text-xs text-green-600">-৳{ticket.discount_applied}</span>
+                                    )}
+                                  </div>
+                                </TooltipTrigger>
+                                <TooltipContent side="bottom" className="text-xs">
+                                  <div className="space-y-0.5">
+                                    <div>Entry: ৳{ticket.entry_price || 0}</div>
+                                    {(ticket.socks_price ?? 0) > 0 && <div>Socks: ৳{ticket.socks_price}</div>}
+                                    {(ticket.addons_price ?? 0) > 0 && <div>Addons: ৳{ticket.addons_price}</div>}
+                                    {(ticket.discount_applied ?? 0) > 0 && <div>Discount: -৳{ticket.discount_applied}</div>}
+                                  </div>
+                                </TooltipContent>
+                              </Tooltip>
                             </TableCell>
-                            <TableCell className="hidden md:table-cell">
+                            <TableCell className="py-2 px-3 hidden md:table-cell">
                               {getPaymentBadge(ticket)}
                             </TableCell>
-                            <TableCell className="hidden md:table-cell">
+                            <TableCell className="py-2 px-3 hidden md:table-cell">
                               <div className="text-xs space-y-0.5">
                                 {formatTime(ticket.in_time) && (
                                   <div className="flex items-center gap-1 text-green-600">
@@ -626,101 +639,110 @@ export default function AdminTicketing() {
                                 )}
                               </div>
                             </TableCell>
-                            <TableCell className="hidden lg:table-cell">
-                              {ticket.discount_applied && ticket.discount_applied > 0 ? (
-                                <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                                  -৳{ticket.discount_applied}
-                                </Badge>
-                              ) : (
-                                <span className="text-muted-foreground text-sm">-</span>
-                              )}
+                            <TableCell className="py-2 px-3 hidden lg:table-cell">
+                              <Badge variant="outline" className="capitalize text-xs">{ticket.source}</Badge>
                             </TableCell>
-                            <TableCell className="hidden lg:table-cell">
-                              <Badge variant="outline" className="capitalize">{ticket.source}</Badge>
+                            {/* Merged Status + Location column */}
+                            <TableCell className="py-2 px-3">
+                              <div className="flex flex-col gap-1">
+                                {getStatusBadge(ticket.status)}
+                                {ticket.inside_venue ? (
+                                  <Badge className="bg-primary/10 text-primary text-xs w-fit">
+                                    <DoorOpen className="w-2.5 h-2.5 mr-0.5" />
+                                    Inside
+                                  </Badge>
+                                ) : ticket.status === 'used' ? (
+                                  <Badge variant="secondary" className="text-xs w-fit">
+                                    <DoorClosed className="w-2.5 h-2.5 mr-0.5" />
+                                    Exited
+                                  </Badge>
+                                ) : null}
+                              </div>
                             </TableCell>
-                            <TableCell>
-                              {ticket.inside_venue ? (
-                                <Badge className="bg-primary/10 text-primary">
-                                  <DoorOpen className="w-3 h-3 mr-1" />
-                                  Inside
-                                </Badge>
-                              ) : ticket.status === 'used' ? (
-                                <Badge variant="secondary">
-                                  <DoorClosed className="w-3 h-3 mr-1" />
-                                  Exited
-                                </Badge>
-                              ) : (
-                                <span className="text-muted-foreground text-sm">-</span>
-                              )}
-                            </TableCell>
-                            <TableCell>{getStatusBadge(ticket.status)}</TableCell>
-                            <TableCell className="text-right">
-                              <div className="flex justify-end gap-1 flex-wrap">
+                            <TableCell className="py-2 px-3 text-right">
+                              <div className="flex justify-end gap-0.5">
                                 {ticket.status !== 'cancelled' && (
                                   <>
                                     {!ticket.inside_venue && ticket.status === 'active' && (
-                                      <Button 
-                                        size="sm" 
-                                        variant="default"
-                                        onClick={() => handleGateEntry(ticket)}
-                                        disabled={gateActionLoading === ticket.id}
-                                        title="Gate Entry"
-                                        className="bg-green-600 hover:bg-green-700"
-                                      >
-                                        {gateActionLoading === ticket.id ? (
-                                          <Loader2 className="w-3 h-3 animate-spin" />
-                                        ) : (
-                                          <>
-                                            <DoorOpen className="w-3 h-3 mr-1" />
-                                            Entry
-                                          </>
-                                        )}
-                                      </Button>
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>
+                                          <Button 
+                                            size="icon"
+                                            variant="default"
+                                            className="h-7 w-7 bg-green-600 hover:bg-green-700"
+                                            onClick={() => handleGateEntry(ticket)}
+                                            disabled={gateActionLoading === ticket.id}
+                                          >
+                                            {gateActionLoading === ticket.id ? (
+                                              <Loader2 className="w-3 h-3 animate-spin" />
+                                            ) : (
+                                              <DoorOpen className="w-3 h-3" />
+                                            )}
+                                          </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>Entry</TooltipContent>
+                                      </Tooltip>
                                     )}
                                     {ticket.inside_venue && (
-                                      <Button 
-                                        size="sm" 
-                                        variant="default"
-                                        onClick={() => handleGateExit(ticket)}
-                                        disabled={gateActionLoading === ticket.id}
-                                        title="Gate Exit"
-                                        className="bg-orange-600 hover:bg-orange-700"
-                                      >
-                                        {gateActionLoading === ticket.id ? (
-                                          <Loader2 className="w-3 h-3 animate-spin" />
-                                        ) : (
-                                          <>
-                                            <DoorClosed className="w-3 h-3 mr-1" />
-                                            Exit
-                                          </>
-                                        )}
-                                      </Button>
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>
+                                          <Button 
+                                            size="icon"
+                                            variant="default"
+                                            className="h-7 w-7 bg-orange-600 hover:bg-orange-700"
+                                            onClick={() => handleGateExit(ticket)}
+                                            disabled={gateActionLoading === ticket.id}
+                                          >
+                                            {gateActionLoading === ticket.id ? (
+                                              <Loader2 className="w-3 h-3 animate-spin" />
+                                            ) : (
+                                              <DoorClosed className="w-3 h-3" />
+                                            )}
+                                          </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>Exit</TooltipContent>
+                                      </Tooltip>
                                     )}
                                   </>
                                 )}
 
-                                <Button size="sm" variant="ghost" onClick={() => handlePrintTicket(ticket)} title="Print">
-                                  <Printer className="w-3 h-3" />
-                                </Button>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => handlePrintTicket(ticket)}>
+                                      <Printer className="w-3 h-3" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>Print</TooltipContent>
+                                </Tooltip>
                                 
-                                <Button 
-                                  size="sm" 
-                                  variant="ghost" 
-                                  onClick={() => handleSendSMS(ticket)}
-                                  disabled={sendingSMS === ticket.id}
-                                  title="Send SMS"
-                                >
-                                  {sendingSMS === ticket.id ? (
-                                    <Loader2 className="w-3 h-3 animate-spin" />
-                                  ) : (
-                                    <MessageSquare className="w-3 h-3" />
-                                  )}
-                                </Button>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button 
+                                      size="icon"
+                                      variant="ghost"
+                                      className="h-7 w-7"
+                                      onClick={() => handleSendSMS(ticket)}
+                                      disabled={sendingSMS === ticket.id}
+                                    >
+                                      {sendingSMS === ticket.id ? (
+                                        <Loader2 className="w-3 h-3 animate-spin" />
+                                      ) : (
+                                        <MessageSquare className="w-3 h-3" />
+                                      )}
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>SMS</TooltipContent>
+                                </Tooltip>
                                 
                                 {ticket.status === 'active' && !ticket.inside_venue && (
-                                  <Button size="sm" variant="ghost" className="text-destructive" onClick={() => handleCancelTicket(ticket.id)}>
-                                    <XCircle className="w-3 h-3" />
-                                  </Button>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => handleCancelTicket(ticket.id)}>
+                                        <XCircle className="w-3 h-3" />
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>Cancel</TooltipContent>
+                                  </Tooltip>
                                 )}
                               </div>
                             </TableCell>
@@ -730,15 +752,16 @@ export default function AdminTicketing() {
                     </Table>
                   </div>
 
-                  {/* Pagination footer */}
-                  <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
+                  {/* Pagination footer - compact */}
+                  <div className="flex items-center justify-between text-xs text-muted-foreground">
                     <span>
-                      Showing {paginatedTickets.length} of {filteredTickets.length} tickets
+                      {paginatedTickets.length} of {filteredTickets.length}
                     </span>
                     {hasMore && (
                       <Button 
                         variant="outline" 
-                        size="sm" 
+                        size="sm"
+                        className="h-7 text-xs"
                         onClick={() => setDisplayCount(prev => prev + PAGE_SIZE)}
                       >
                         Show more
@@ -792,5 +815,6 @@ export default function AdminTicketing() {
         </DialogContent>
       </Dialog>
     </div>
+    </TooltipProvider>
   );
 }
