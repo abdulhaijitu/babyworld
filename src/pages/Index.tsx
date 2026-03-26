@@ -16,7 +16,6 @@ const Index = () => {
     <PageTransition>
       <SEOHead page="home" />
       <div className="min-h-screen bg-background overflow-x-hidden">
-        <PromoBanner />
         <Navbar />
         <main>
           <HeroSection />

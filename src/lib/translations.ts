@@ -306,11 +306,18 @@ const translations: Record<string, string> = {
   "playFAQ.moreQuestions": "Have more questions?",
   "playFAQ.contactUs": "Contact us",
 
-  // Promo Banner
-  "promo.badge": "🎈 Eid Special!",
-  "promo.message": "Book birthday parties for Eid holidays – Get 15% off!",
-  "promo.validUntil": "Valid until Apr 15",
-  "promo.cta": "Book Now",
+  // Hero Offer Card
+  "hero.offer.badge": "Eid Special!",
+  "hero.offer.title": "15% Off Birthday Parties",
+  "hero.offer.description": "Book birthday parties for Eid holidays and get 15% off all packages. Limited time offer!",
+  "hero.offer.cta": "Book Now",
+
+  // Hero Upcoming Event Card
+  "hero.upcoming.badge": "Upcoming",
+  "hero.upcoming.title": "Eid Carnival 2026",
+  "hero.upcoming.description": "Join us for a fun-filled Eid carnival with games, rides, and special surprises for all kids!",
+  "hero.upcoming.date": "April 10–12, 2026",
+  "hero.upcoming.cta": "Learn More",
 
   // Footer
   "footer.description": "A safe, hygienic, and joyful indoor playground for children aged 1–10 years. Where kids learn & play in a supervised, nurturing environment.",
