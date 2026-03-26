@@ -395,25 +395,14 @@ export default function AdminSettings() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4" /> {'Address (English)'}
-                  </Label>
-                  <Input
-                    value={businessInfo.address}
-                    onChange={(e) => setBusinessInfo({...businessInfo, address: e.target.value})}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4" /> {'Address (Bangla)'}
-                  </Label>
-                  <Input
-                    value={businessInfo.addressBn}
-                    onChange={(e) => setBusinessInfo({...businessInfo, addressBn: e.target.value})}
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4" /> {'Address'}
+                </Label>
+                <Input
+                  value={businessInfo.address}
+                  onChange={(e) => setBusinessInfo({...businessInfo, address: e.target.value})}
+                />
               </div>
 
               <Separator />

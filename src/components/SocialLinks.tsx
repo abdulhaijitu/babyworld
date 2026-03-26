@@ -32,7 +32,6 @@ export function SocialLinks({ variant = "footer", className, showLabels = false 
   const links = [
     {
       name: "Facebook",
-      nameBn: "ফেসবুক",
       href: SOCIAL_LINKS.facebook,
       icon: Facebook,
       ariaLabel: "Visit our Facebook page",
@@ -40,7 +39,6 @@ export function SocialLinks({ variant = "footer", className, showLabels = false 
     },
     {
       name: "YouTube",
-      nameBn: "ইউটিউব",
       href: SOCIAL_LINKS.youtube,
       icon: Youtube,
       ariaLabel: "Visit our YouTube channel",

@@ -41,20 +41,20 @@ import {
 } from 'lucide-react';
 
 const EXPENSE_CATEGORIES = [
-  { value: 'rent', label: 'Rent', labelBn: 'ভাড়া', icon: Building, color: 'bg-blue-100 text-blue-800' },
-  { value: 'staff_salary', label: 'Staff Salary', labelBn: 'বেতন', icon: Users, color: 'bg-purple-100 text-purple-800' },
-  { value: 'utilities', label: 'Utilities', labelBn: 'ইউটিলিটি', icon: Zap, color: 'bg-yellow-100 text-yellow-800' },
-  { value: 'food_purchase', label: 'Food Purchase', labelBn: 'খাদ্য ক্রয়', icon: ShoppingCart, color: 'bg-orange-100 text-orange-800' },
-  { value: 'toys_equipment', label: 'Toys & Equipment', labelBn: 'খেলনা ও যন্ত্রপাতি', icon: Gamepad2, color: 'bg-pink-100 text-pink-800' },
-  { value: 'maintenance', label: 'Maintenance', labelBn: 'রক্ষণাবেক্ষণ', icon: Wrench, color: 'bg-gray-100 text-gray-800' },
-  { value: 'marketing', label: 'Marketing', labelBn: 'মার্কেটিং', icon: Megaphone, color: 'bg-green-100 text-green-800' },
-  { value: 'other', label: 'Other', labelBn: 'অন্যান্য', icon: MoreHorizontal, color: 'bg-slate-100 text-slate-800' },
+  { value: 'rent', label: 'Rent', icon: Building, color: 'bg-blue-100 text-blue-800' },
+  { value: 'staff_salary', label: 'Staff Salary', icon: Users, color: 'bg-purple-100 text-purple-800' },
+  { value: 'utilities', label: 'Utilities', icon: Zap, color: 'bg-yellow-100 text-yellow-800' },
+  { value: 'food_purchase', label: 'Food Purchase', icon: ShoppingCart, color: 'bg-orange-100 text-orange-800' },
+  { value: 'toys_equipment', label: 'Toys & Equipment', icon: Gamepad2, color: 'bg-pink-100 text-pink-800' },
+  { value: 'maintenance', label: 'Maintenance', icon: Wrench, color: 'bg-gray-100 text-gray-800' },
+  { value: 'marketing', label: 'Marketing', icon: Megaphone, color: 'bg-green-100 text-green-800' },
+  { value: 'other', label: 'Other', icon: MoreHorizontal, color: 'bg-slate-100 text-slate-800' },
 ];
 
 const PAYMENT_METHODS = [
-  { value: 'cash', label: 'Cash', labelBn: 'নগদ', icon: Banknote },
-  { value: 'bank', label: 'Bank', labelBn: 'ব্যাংক', icon: CreditCard },
-  { value: 'online', label: 'Online', labelBn: 'অনলাইন', icon: Wallet },
+  { value: 'cash', label: 'Cash', icon: Banknote },
+  { value: 'bank', label: 'Bank', icon: CreditCard },
+  { value: 'online', label: 'Online', icon: Wallet },
 ];
 
 interface Expense {

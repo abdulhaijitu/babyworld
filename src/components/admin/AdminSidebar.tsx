@@ -33,31 +33,30 @@ import babyWorldLogo from '@/assets/baby-world-logo.png';
 interface MenuItem {
   id: string;
   label: string;
-  labelBn: string;
   icon: React.ElementType;
   path: string;
   requiredRoles?: AppRole[];
 }
 
 const allMenuItems: MenuItem[] = [
-  { id: 'dashboard', label: 'Dashboard', labelBn: 'ড্যাশবোর্ড', icon: LayoutDashboard, path: '/admin' },
-  { id: 'ticketing', label: 'Ticketing', labelBn: 'টিকেটিং', icon: Ticket, path: '/admin/ticketing', requiredRoles: ['super_admin', 'admin', 'manager', 'staff'] },
-  { id: 'memberships', label: 'Memberships', labelBn: 'মেম্বারশিপ', icon: Crown, path: '/admin/memberships', requiredRoles: ['super_admin', 'admin', 'manager'] },
-  { id: 'gate-logs', label: 'Gate Logs', labelBn: 'গেট লগ', icon: Video, path: '/admin/gate-logs', requiredRoles: ['super_admin', 'admin', 'manager'] },
-  { id: 'food', label: 'Food Sales', labelBn: 'খাবার বিক্রয়', icon: UtensilsCrossed, path: '/admin/food', requiredRoles: ['super_admin', 'admin', 'manager', 'staff'] },
-  { id: 'expenses', label: 'Expenses', labelBn: 'খরচ', icon: Receipt, path: '/admin/expenses', requiredRoles: ['super_admin', 'admin', 'manager'] },
-  { id: 'employees', label: 'Employees', labelBn: 'কর্মী', icon: Users, path: '/admin/employees', requiredRoles: ['super_admin', 'admin'] },
-  { id: 'roster', label: 'Roster', labelBn: 'রোস্টার', icon: Clock, path: '/admin/roster', requiredRoles: ['super_admin', 'admin', 'manager'] },
-  { id: 'bookings', label: 'Bookings', labelBn: 'বুকিং', icon: CalendarDays, path: '/admin/bookings', requiredRoles: ['super_admin', 'admin', 'manager', 'staff'] },
-  { id: 'events', label: 'Events', labelBn: 'ইভেন্ট', icon: PartyPopper, path: '/admin/events', requiredRoles: ['super_admin', 'admin', 'manager'] },
-  { id: 'rides', label: 'Rides', labelBn: 'রাইড', icon: FerrisWheel, path: '/admin/rides', requiredRoles: ['super_admin', 'admin'] },
-  { id: 'ride-reviews', label: 'Ride Reviews', labelBn: 'রাইড রিভিউ', icon: Star, path: '/admin/ride-reviews', requiredRoles: ['super_admin', 'admin', 'manager'] },
-  { id: 'reports', label: 'Reports', labelBn: 'রিপোর্ট', icon: FileBarChart, path: '/admin/reports', requiredRoles: ['super_admin', 'admin', 'manager'] },
-  { id: 'profit', label: 'Profit & Loss', labelBn: 'লাভ-ক্ষতি', icon: TrendingUp, path: '/admin/profit', requiredRoles: ['super_admin', 'admin', 'manager'] },
-  { id: 'notifications', label: 'Notifications', labelBn: 'নোটিফিকেশন', icon: MessageSquare, path: '/admin/notifications', requiredRoles: ['super_admin', 'admin', 'manager'] },
-  { id: 'homepage', label: 'Homepage', labelBn: 'হোমপেইজ', icon: Home, path: '/admin/homepage', requiredRoles: ['super_admin', 'admin'] },
-  { id: 'users', label: 'Users', labelBn: 'ইউজার', icon: Shield, path: '/admin/users', requiredRoles: ['super_admin'] },
-  { id: 'settings', label: 'Settings', labelBn: 'সেটিংস', icon: Settings, path: '/admin/settings', requiredRoles: ['super_admin', 'admin'] },
+  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
+  { id: 'ticketing', label: 'Ticketing', icon: Ticket, path: '/admin/ticketing', requiredRoles: ['super_admin', 'admin', 'manager', 'staff'] },
+  { id: 'memberships', label: 'Memberships', icon: Crown, path: '/admin/memberships', requiredRoles: ['super_admin', 'admin', 'manager'] },
+  { id: 'gate-logs', label: 'Gate Logs', icon: Video, path: '/admin/gate-logs', requiredRoles: ['super_admin', 'admin', 'manager'] },
+  { id: 'food', label: 'Food Sales', icon: UtensilsCrossed, path: '/admin/food', requiredRoles: ['super_admin', 'admin', 'manager', 'staff'] },
+  { id: 'expenses', label: 'Expenses', icon: Receipt, path: '/admin/expenses', requiredRoles: ['super_admin', 'admin', 'manager'] },
+  { id: 'employees', label: 'Employees', icon: Users, path: '/admin/employees', requiredRoles: ['super_admin', 'admin'] },
+  { id: 'roster', label: 'Roster', icon: Clock, path: '/admin/roster', requiredRoles: ['super_admin', 'admin', 'manager'] },
+  { id: 'bookings', label: 'Bookings', icon: CalendarDays, path: '/admin/bookings', requiredRoles: ['super_admin', 'admin', 'manager', 'staff'] },
+  { id: 'events', label: 'Events', icon: PartyPopper, path: '/admin/events', requiredRoles: ['super_admin', 'admin', 'manager'] },
+  { id: 'rides', label: 'Rides', icon: FerrisWheel, path: '/admin/rides', requiredRoles: ['super_admin', 'admin'] },
+  { id: 'ride-reviews', label: 'Ride Reviews', icon: Star, path: '/admin/ride-reviews', requiredRoles: ['super_admin', 'admin', 'manager'] },
+  { id: 'reports', label: 'Reports', icon: FileBarChart, path: '/admin/reports', requiredRoles: ['super_admin', 'admin', 'manager'] },
+  { id: 'profit', label: 'Profit & Loss', icon: TrendingUp, path: '/admin/profit', requiredRoles: ['super_admin', 'admin', 'manager'] },
+  { id: 'notifications', label: 'Notifications', icon: MessageSquare, path: '/admin/notifications', requiredRoles: ['super_admin', 'admin', 'manager'] },
+  { id: 'homepage', label: 'Homepage', icon: Home, path: '/admin/homepage', requiredRoles: ['super_admin', 'admin'] },
+  { id: 'users', label: 'Users', icon: Shield, path: '/admin/users', requiredRoles: ['super_admin'] },
+  { id: 'settings', label: 'Settings', icon: Settings, path: '/admin/settings', requiredRoles: ['super_admin', 'admin'] },
 ];
 
 interface AdminSidebarProps {

@@ -79,10 +79,10 @@ interface EventBooking {
 }
 
 const eventPackages = [
-  { id: 'basic', name: 'Basic', nameBn: 'বেসিক', price: 5000, guests: 10 },
-  { id: 'standard', name: 'Standard', nameBn: 'স্ট্যান্ডার্ড', price: 8000, guests: 20 },
-  { id: 'premium', name: 'Premium', nameBn: 'প্রিমিয়াম', price: 12000, guests: 30 },
-  { id: 'deluxe', name: 'Deluxe', nameBn: 'ডিলাক্স', price: 18000, guests: 50 },
+  { id: 'basic', name: 'Basic', price: 5000, guests: 10 },
+  { id: 'standard', name: 'Standard', price: 8000, guests: 20 },
+  { id: 'premium', name: 'Premium', price: 12000, guests: 30 },
+  { id: 'deluxe', name: 'Deluxe', price: 18000, guests: 50 },
 ];
 
 const timeSlots = [

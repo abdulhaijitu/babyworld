@@ -55,25 +55,21 @@ const templateInfo = {
   ticket_payment: {
     icon: Ticket,
     label: 'Ticket Payment',
-    labelBn: 'টিকিট পেমেন্ট',
     variables: ['{{ticket_number}}', '{{date}}', '{{time_slot}}', '{{total}}', '{{name}}']
   },
   food_order: {
     icon: UtensilsCrossed,
     label: 'Food Order',
-    labelBn: 'ফুড অর্ডার',
     variables: ['{{order_number}}', '{{total}}', '{{name}}']
   },
   booking_payment: {
     icon: CreditCard,
     label: 'Booking Payment',
-    labelBn: 'বুকিং পেমেন্ট',
     variables: ['{{date}}', '{{time_slot}}', '{{total}}', '{{name}}']
   },
   booking_reminder: {
     icon: Bell,
     label: 'Booking Reminder',
-    labelBn: 'বুকিং রিমাইন্ডার',
     variables: ['{{date}}', '{{time_slot}}', '{{name}}']
   }
 };

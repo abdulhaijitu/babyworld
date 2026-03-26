@@ -97,7 +97,7 @@ export function MobileBottomNav() {
                       isActive ? "text-primary" : "text-muted-foreground"
                     )}
                   >
-                    {label}
+                    {item.label}
                   </span>
                 </Link>
               );

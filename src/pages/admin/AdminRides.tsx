@@ -429,23 +429,13 @@ export default function AdminRides() {
           </DialogHeader>
           
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>{'Name (English)'}</Label>
-                <Input
-                  value={formData.name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                  placeholder="Ferris Wheel"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>{'Name (Bengali)'}</Label>
-                <Input
-                  value={formData.name_bn}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name_bn: e.target.value }))}
-                  placeholder="ফেরিস হুইল"
-                />
-              </div>
+            <div className="space-y-2">
+              <Label>{'Name'}</Label>
+              <Input
+                value={formData.name}
+                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                placeholder="Ferris Wheel"
+              />
             </div>
             
             <div className="grid grid-cols-2 gap-4">
