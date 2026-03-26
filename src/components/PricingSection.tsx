@@ -5,6 +5,7 @@ import { ScrollFadeIn, ScaleIn } from "./ScrollAnimations";
 import { t } from "@/lib/translations";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useSettings } from "@/hooks/useSettings";
 
 export function PricingSection() {
   // Fetch rides for ride zone pricing
