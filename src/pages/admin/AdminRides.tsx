@@ -69,10 +69,10 @@ interface Ride {
   created_at: string;
 }
 
-const CATEGORY_INFO: Record<RideCategory, { label: string; label_bn: string; icon: typeof Baby; color: string }> = {
-  kids: { label: 'Kids', label_bn: 'কিডস', icon: Baby, color: 'bg-green-500/10 text-green-600 border-green-200' },
-  family: { label: 'Family', label_bn: 'ফ্যামিলি', icon: Users, color: 'bg-blue-500/10 text-blue-600 border-blue-200' },
-  thrill: { label: 'Thrill', label_bn: 'থ্রিল', icon: Zap, color: 'bg-orange-500/10 text-orange-600 border-orange-200' }
+const CATEGORY_INFO: Record<RideCategory, { label: string; icon: typeof Baby; color: string }> = {
+  kids: { label: 'Kids', icon: Baby, color: 'bg-green-500/10 text-green-600 border-green-200' },
+  family: { label: 'Family', icon: Users, color: 'bg-blue-500/10 text-blue-600 border-blue-200' },
+  thrill: { label: 'Thrill', icon: Zap, color: 'bg-orange-500/10 text-orange-600 border-orange-200' }
 };
 
 const defaultFormData = {
@@ -366,12 +366,7 @@ export default function AdminRides() {
                           )}
                         </TableCell>
                         <TableCell>
-                          <div>
-                            <p className="font-medium">{ride.name}</p>
-                            {ride.name_bn && (
-                              <p className="text-sm text-muted-foreground">{ride.name_bn}</p>
-                            )}
-                          </div>
+                          <p className="font-medium">{ride.name}</p>
                         </TableCell>
                         <TableCell>
                           <Badge variant="outline" className={cn("text-xs", catInfo.color)}>
@@ -434,23 +429,13 @@ export default function AdminRides() {
           </DialogHeader>
           
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>{'Name (English)'}</Label>
-                <Input
-                  value={formData.name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                  placeholder="Ferris Wheel"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>{'Name (Bengali)'}</Label>
-                <Input
-                  value={formData.name_bn}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name_bn: e.target.value }))}
-                  placeholder="ফেরিস হুইল"
-                />
-              </div>
+            <div className="space-y-2">
+              <Label>{'Name'}</Label>
+              <Input
+                value={formData.name}
+                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                placeholder="Ferris Wheel"
+              />
             </div>
             
             <div className="grid grid-cols-2 gap-4">
@@ -558,21 +543,12 @@ export default function AdminRides() {
           </DialogHeader>
           
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>{'Name (English)'}</Label>
-                <Input
-                  value={formData.name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>{'Name (Bengali)'}</Label>
-                <Input
-                  value={formData.name_bn}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name_bn: e.target.value }))}
-                />
-              </div>
+            <div className="space-y-2">
+              <Label>{'Name'}</Label>
+              <Input
+                value={formData.name}
+                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+              />
             </div>
             
             <div className="grid grid-cols-2 gap-4">

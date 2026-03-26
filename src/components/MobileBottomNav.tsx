@@ -6,16 +6,15 @@ import { cn } from "@/lib/utils";
 
 interface NavItem {
   icon: typeof Home;
-  labelEn: string;
-  labelBn: string;
+  label: string;
   href: string;
 }
 
 const navItems: NavItem[] = [
-  { icon: Home, labelEn: "Home", labelBn: "হোম", href: "/" },
-  { icon: CalendarDays, labelEn: "Booking", labelBn: "বুকিং", href: "/play-booking" },
-  { icon: PartyPopper, labelEn: "Events", labelBn: "ইভেন্ট", href: "/birthday-events" },
-  { icon: Phone, labelEn: "Contact", labelBn: "যোগাযোগ", href: "/contact" },
+  { icon: Home, label: "Home", href: "/" },
+  { icon: CalendarDays, label: "Booking", href: "/play-booking" },
+  { icon: PartyPopper, label: "Events", href: "/birthday-events" },
+  { icon: Phone, label: "Contact", href: "/contact" },
 ];
 
 export function MobileBottomNav() {
@@ -59,7 +58,6 @@ export function MobileBottomNav() {
             {navItems.map((item) => {
               const isActive = location.pathname === item.href;
               const Icon = item.icon;
-              const label = item.labelEn;
 
               return (
                 <Link
@@ -99,7 +97,7 @@ export function MobileBottomNav() {
                       isActive ? "text-primary" : "text-muted-foreground"
                     )}
                   >
-                    {label}
+                    {item.label}
                   </span>
                 </Link>
               );

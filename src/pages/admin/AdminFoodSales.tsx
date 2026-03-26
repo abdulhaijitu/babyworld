@@ -447,17 +447,10 @@ export default function AdminFoodSales() {
                     
                     <div className="space-y-4 py-4">
                       <div className="space-y-2">
-                        <Label>{'Name (English)'}</Label>
+                        <Label>{'Name'}</Label>
                         <Input
                           value={newItem.name}
                           onChange={(e) => setNewItem({...newItem, name: e.target.value})}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label>{'Name (Bangla)'}</Label>
-                        <Input
-                          value={newItem.name_bn}
-                          onChange={(e) => setNewItem({...newItem, name_bn: e.target.value})}
                         />
                       </div>
                       <div className="grid grid-cols-2 gap-4">
