@@ -279,6 +279,14 @@ export function useSettings() {
           standard: pricing.events.standard,
           premium: pricing.events.premium,
           deluxe: pricing.events.deluxe
+        }, 'pricing'),
+        saveSetting('package_pricing', {
+          familyRegular: packagePricing.familyRegular,
+          familyOffer: packagePricing.familyOffer,
+          fullBoard: packagePricing.fullBoard,
+          extraGuardian: packagePricing.extraGuardian,
+          rideZoneRegular: packagePricing.rideZoneRegular,
+          rideZoneOffer: packagePricing.rideZoneOffer
         }, 'pricing')
       ]);
       return true;
