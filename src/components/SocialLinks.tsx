@@ -43,24 +43,20 @@ export function SocialLinks({ variant = "footer", className, showLabels = false 
       ariaLabel: "Visit our YouTube channel",
       active: true,
     },
-    // Instagram - লিংক যোগ করলে active: true করুন
-    // {
-    //   name: "Instagram",
-    //   nameBn: "ইনস্টাগ্রাম",
-    //   href: SOCIAL_LINKS.instagram,
-    //   icon: Instagram,
-    //   ariaLabel: "Visit our Instagram profile",
-    //   active: false,
-    // },
-    // TikTok - লিংক যোগ করলে active: true করুন
-    // {
-    //   name: "TikTok",
-    //   nameBn: "টিকটক",
-    //   href: SOCIAL_LINKS.tiktok,
-    //   icon: TikTokIcon,
-    //   ariaLabel: "Visit our TikTok profile",
-    //   active: false,
-    // },
+    {
+      name: "Instagram",
+      href: SOCIAL_LINKS.instagram,
+      icon: Instagram,
+      ariaLabel: "Visit our Instagram profile",
+      active: true,
+    },
+    {
+      name: "TikTok",
+      href: SOCIAL_LINKS.tiktok,
+      icon: TikTokIcon,
+      ariaLabel: "Visit our TikTok profile",
+      active: true,
+    },
   ].filter(link => link.active);
 
   const isHeader = variant === "header";
