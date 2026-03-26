@@ -46,8 +46,8 @@ interface MenuItem {
 const allMenuItems: MenuItem[] = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
   { id: 'ticketing', label: 'Ticketing', icon: Ticket, path: '/admin/ticketing', requiredRoles: ['super_admin', 'admin', 'manager', 'staff'], children: [
-    { id: 'ticketing-create', label: 'Create Ticket', icon: Plus, path: '/admin/ticketing?tab=create' },
-    { id: 'ticketing-list', label: 'Ticket List', icon: List, path: '/admin/ticketing?tab=list' },
+    { id: 'ticketing-create', label: 'Create Ticket', icon: Plus, path: '/admin/ticketing/create' },
+    { id: 'ticketing-list', label: 'Ticket List', icon: List, path: '/admin/ticketing' },
   ] },
   { id: 'memberships', label: 'Memberships', icon: Crown, path: '/admin/memberships', requiredRoles: ['super_admin', 'admin', 'manager'] },
   { id: 'gate-logs', label: 'Gate Logs', icon: Video, path: '/admin/gate-logs', requiredRoles: ['super_admin', 'admin', 'manager'] },

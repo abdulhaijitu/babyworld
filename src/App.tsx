@@ -20,6 +20,7 @@ import NotFound from "./pages/NotFound";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminDashboardContent from "./pages/admin/AdminDashboardContent";
 import AdminTicketing from "./pages/admin/AdminTicketing";
+import AdminCreateTicket from "./pages/admin/AdminCreateTicket";
 import AdminGateLogs from "./pages/admin/AdminGateLogs";
 import AdminFoodSales from "./pages/admin/AdminFoodSales";
 import AdminEmployees from "./pages/admin/AdminEmployees";
