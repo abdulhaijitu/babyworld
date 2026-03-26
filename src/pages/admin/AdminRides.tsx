@@ -176,6 +176,7 @@ export default function AdminRides() {
       name: ride.name,
       description: (ride as any).description || '',
       price: ride.price,
+      offer_price: ride.offer_price || 0,
       category: ride.category,
       is_active: ride.is_active,
       image_url: ride.image_url || '',
