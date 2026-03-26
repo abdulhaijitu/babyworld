@@ -44,7 +44,7 @@ export default function AdminSettings() {
     notifications,
     setNotifications,
     savePricing,
-    saveTimeSlots,
+    
     saveBusinessInfo,
     saveNotifications,
     loadSettings
