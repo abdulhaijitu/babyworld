@@ -50,6 +50,7 @@ const defaultFormData = {
   name: '',
   description: '',
   price: 0,
+  offer_price: 0,
   category: 'kids' as string,
   is_active: true,
   image_url: '' as string,
