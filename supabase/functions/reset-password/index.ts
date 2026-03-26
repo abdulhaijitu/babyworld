@@ -9,29 +9,40 @@ serve(async (req) => {
 
   try {
     const supabase = createAdminClient();
-    const { email, password } = await req.json();
+    const { email, user_id, password } = await req.json();
 
-    if (!email || !password) {
+    if (!password) {
       return new Response(
-        JSON.stringify({ error: 'Email and password are required' }),
+        JSON.stringify({ error: 'Password is required' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Find user by email
-    const { data: { users }, error: listError } = await supabase.auth.admin.listUsers();
-    if (listError) throw listError;
-
-    const user = users.find(u => u.email === email);
-    if (!user) {
+    if (!email && !user_id) {
       return new Response(
-        JSON.stringify({ error: 'User not found' }),
-        { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: 'Email or user_id is required' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
+    let targetUserId = user_id;
+
+    // If email provided, find user by email
+    if (!targetUserId && email) {
+      const { data: { users }, error: listError } = await supabase.auth.admin.listUsers();
+      if (listError) throw listError;
+      const user = users.find(u => u.email === email);
+      if (!user) {
+        return new Response(
+          JSON.stringify({ error: 'User not found' }),
+          { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      targetUserId = user.id;
+    }
+
     // Update password
-    const { error: updateError } = await supabase.auth.admin.updateUserById(user.id, { password });
+    const { error: updateError } = await supabase.auth.admin.updateUserById(targetUserId, { password });
     if (updateError) throw updateError;
 
     return new Response(

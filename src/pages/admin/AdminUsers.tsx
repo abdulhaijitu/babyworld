@@ -54,7 +54,8 @@ import {
   Search,
   Briefcase,
   HardHat,
-  Crown
+  Crown,
+  KeyRound
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format, parseISO } from 'date-fns';
@@ -79,6 +80,8 @@ export default function AdminUsers() {
   const queryClient = useQueryClient();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [resetPasswordUserId, setResetPasswordUserId] = useState<string | null>(null);
+  const [resetNewPassword, setResetNewPassword] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState<string>('all');
   
@@ -147,6 +150,27 @@ export default function AdminUsers() {
     }
   });
 
+  // Reset password mutation
+  const resetPasswordMutation = useMutation({
+    mutationFn: async ({ userId, password }: { userId: string; password: string }) => {
+      // We need the email - but we only have user_id. Call the edge function with user_id approach.
+      const { data, error } = await supabase.functions.invoke('reset-password', {
+        body: { user_id: userId, password }
+      });
+      if (error) throw error;
+      if (data.error) throw new Error(data.error);
+      return data;
+    },
+    onSuccess: () => {
+      toast.success('Password reset successfully');
+      setResetPasswordUserId(null);
+      setResetNewPassword('');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to reset password');
+    }
+  });
+
   const handleCreateUser = () => {
     if (!newUserEmail || !newUserPassword) {
       toast.error('Please fill all fields');
@@ -157,6 +181,16 @@ export default function AdminUsers() {
       return;
     }
     createUserMutation.mutate({ email: newUserEmail, password: newUserPassword, role: newUserRole });
+  };
+
+  const handleResetPassword = () => {
+    if (!resetNewPassword || resetNewPassword.length < 6) {
+      toast.error('Password must be at least 6 characters');
+      return;
+    }
+    if (resetPasswordUserId) {
+      resetPasswordMutation.mutate({ userId: resetPasswordUserId, password: resetNewPassword });
+    }
   };
 
   // Filter users based on search and role
@@ -445,14 +479,28 @@ export default function AdminUsers() {
                       {format(parseISO(user.created_at), 'MMM d, yyyy')}
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                        onClick={() => setDeleteConfirmId(user.id)}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                      <div className="flex items-center justify-end gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-muted-foreground hover:text-foreground"
+                          onClick={() => {
+                            setResetPasswordUserId(user.user_id);
+                            setResetNewPassword('');
+                          }}
+                          title="Reset Password"
+                        >
+                          <KeyRound className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                          onClick={() => setDeleteConfirmId(user.id)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -490,6 +538,47 @@ export default function AdminUsers() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Reset Password Dialog */}
+      <Dialog open={!!resetPasswordUserId} onOpenChange={(open) => { if (!open) { setResetPasswordUserId(null); setResetNewPassword(''); } }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <KeyRound className="w-5 h-5" />
+              {'Reset Password'}
+            </DialogTitle>
+            <DialogDescription>
+              {'Set a new password for this user'}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label>{'User ID'}</Label>
+              <Input value={resetPasswordUserId?.slice(0, 16) + '...'} disabled />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="reset-password">{'New Password'}</Label>
+              <Input
+                id="reset-password"
+                type="password"
+                placeholder="••••••••"
+                value={resetNewPassword}
+                onChange={(e) => setResetNewPassword(e.target.value)}
+              />
+              <p className="text-xs text-muted-foreground">{'At least 6 characters'}</p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setResetPasswordUserId(null); setResetNewPassword(''); }}>
+              {'Cancel'}
+            </Button>
+            <Button onClick={handleResetPassword} disabled={resetPasswordMutation.isPending}>
+              {resetPasswordMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              {'Reset Password'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
