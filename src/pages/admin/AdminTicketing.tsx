@@ -748,7 +748,6 @@ export default function AdminTicketing() {
             </CardContent>
           </Card>
         </div>
-      </div>
 
       {/* Print Dialog */}
       <Dialog open={printOpen} onOpenChange={setPrintOpen}>
