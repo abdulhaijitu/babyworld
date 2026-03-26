@@ -45,12 +45,12 @@ interface Ride {
 
 const defaultFormData = {
   name: '',
+  description: '',
   price: 0,
   category: 'kids' as string,
   is_active: true,
   image_url: '' as string,
-  duration_minutes: 0,
-  max_riders: 0,
+  duration_hours: 0,
   ride_type: 'Paid' as string,
 };
 
