@@ -179,6 +179,7 @@ export default function AdminHeroCards() {
       cta_link: card.cta_link,
       date_text: card.date_text,
       image_url: card.image_url,
+      expires_at: card.expires_at,
       is_active: card.is_active,
       sort_order: card.sort_order,
     });
