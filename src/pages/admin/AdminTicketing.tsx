@@ -376,20 +376,15 @@ export default function AdminTicketing() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Ticket className="w-6 h-6" />
-            {activeView === 'create' ? 'Create Ticket' : 'Ticket List'}
+            Ticket List
           </h1>
-          <p className="text-muted-foreground">
-            {activeView === 'create' ? 'Create a new ticket' : 'Manage tickets'}
-          </p>
+          <p className="text-muted-foreground">Manage tickets</p>
         </div>
         <div className="flex items-center gap-2">
           <QRScannerDialog />
         </div>
       </div>
 
-      {activeView === 'create' ? (
-        <CounterTicketForm onSuccess={handleTicketCreated} />
-      ) : (
         <div className="space-y-6">
           {/* Stats Cards - 4 columns */}
           {loading ? (
