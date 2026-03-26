@@ -449,6 +449,27 @@ export default function AdminHeroCards() {
               </div>
             )}
 
+            {/* Expiry Date */}
+            <div className="space-y-2">
+              <Label>Expiry Date (optional — card auto-hides after this date)</Label>
+              <Input
+                type="datetime-local"
+                value={form.expires_at ? form.expires_at.slice(0, 16) : ""}
+                onChange={(e) => setForm({ ...form, expires_at: e.target.value ? new Date(e.target.value).toISOString() : null })}
+              />
+              {form.expires_at && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="text-xs text-muted-foreground"
+                  onClick={() => setForm({ ...form, expires_at: null })}
+                >
+                  Clear expiry date
+                </Button>
+              )}
+            </div>
+
             <div className="flex items-center gap-2">
               <Switch
                 checked={form.is_active}
