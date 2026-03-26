@@ -14,12 +14,12 @@ export function QRScannerDialog() {
       <DialogTrigger asChild>
         <Button variant="outline" size="sm" className="gap-2">
           <QrCode className="w-4 h-4" />
-          {language === 'bn' ? 'স্ক্যান' : 'Scan QR'}
+          {'Scan QR'}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-md p-0">
         <DialogHeader className="sr-only">
-          <DialogTitle>{language === 'bn' ? 'QR স্ক্যানার' : 'QR Scanner'}</DialogTitle>
+          <DialogTitle>{'QR Scanner'}</DialogTitle>
         </DialogHeader>
         <QRScanner />
       </DialogContent>

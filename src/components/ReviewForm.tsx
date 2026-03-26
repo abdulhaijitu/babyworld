@@ -68,7 +68,7 @@ export function ReviewForm() {
               <CheckCircle className="w-8 h-8 sm:w-10 sm:h-10 text-success" />
             </div>
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground">
-              {language === "bn" ? "ধন্যবাদ!" : "Thank You!"}
+              {"Thank You!"}
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground max-w-md mx-auto">
               {language === "bn" 
@@ -76,7 +76,7 @@ export function ReviewForm() {
                 : "Thank you for your valuable feedback. We are always working to improve."}
             </p>
             <Button size="lg" onClick={handleNewReview} className="touch-target">
-              {language === "bn" ? "আরেকটি রিভিউ দিন" : "Write Another Review"}
+              {"Write Another Review"}
             </Button>
           </motion.div>
         </div>
@@ -92,11 +92,11 @@ export function ReviewForm() {
           <div className="flex items-center justify-center gap-2 sm:gap-3 mb-3 sm:mb-4">
             <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
             <span className="text-xs sm:text-sm font-semibold text-primary uppercase tracking-wider">
-              {language === "bn" ? "আপনার মতামত" : "Your Feedback"}
+              {"Your Feedback"}
             </span>
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
-            {language === "bn" ? "আপনার অভিজ্ঞতা শেয়ার করুন" : "Share Your Experience"}
+            {"Share Your Experience"}
           </h2>
           <p className="text-sm sm:text-base lg:text-lg text-muted-foreground">
             {language === "bn" 
@@ -114,7 +114,7 @@ export function ReviewForm() {
             {/* Rating */}
             <div className="space-y-2 sm:space-y-3">
               <label className="block text-sm font-medium text-foreground">
-                {language === "bn" ? "আপনার রেটিং" : "Your Rating"} *
+                {"Your Rating"} *
               </label>
               <div className="flex gap-1 sm:gap-2 justify-center">
                 {[1, 2, 3, 4, 5].map((star) => (
@@ -145,12 +145,12 @@ export function ReviewForm() {
             {/* Name */}
             <div className="space-y-2">
               <label className="block text-sm font-medium text-foreground">
-                {language === "bn" ? "আপনার নাম" : "Your Name"} *
+                {"Your Name"} *
               </label>
               <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder={language === "bn" ? "নাম লিখুন" : "Enter your name"}
+                placeholder={"Enter your name"}
                 className={cn("h-11 sm:h-12", errors.name && "border-destructive")}
                 maxLength={100}
               />
@@ -162,7 +162,7 @@ export function ReviewForm() {
             {/* Review */}
             <div className="space-y-2">
               <label className="block text-sm font-medium text-foreground">
-                {language === "bn" ? "আপনার অভিজ্ঞতা" : "Your Experience"} *
+                {"Your Experience"} *
               </label>
               <Textarea
                 value={review}
@@ -193,7 +193,7 @@ export function ReviewForm() {
               disabled={!name || !review || !rating}
             >
               <Send className="w-4 h-4" />
-              {language === "bn" ? "জমা দিন" : "Submit Review"}
+              {"Submit Review"}
             </Button>
 
             {/* Note */}

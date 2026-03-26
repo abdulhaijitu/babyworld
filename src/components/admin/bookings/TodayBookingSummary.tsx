@@ -52,10 +52,10 @@ export function TodayBookingSummary({ bookings }: TodayBookingSummaryProps) {
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg">
           <Calendar className="w-5 h-5 text-primary" />
-          {language === 'bn' ? 'আজকের বুকিং সামারি' : "Today's Booking Summary"}
+          {"Today's Booking Summary"}
         </CardTitle>
         <p className="text-sm text-muted-foreground">
-          {format(new Date(), 'EEEE, dd MMMM yyyy', { locale: language === 'bn' ? bn : undefined })}
+          {format(new Date(), 'EEEE, dd MMMM yyyy', { locale: undefined })}
         </p>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -65,28 +65,28 @@ export function TodayBookingSummary({ bookings }: TodayBookingSummaryProps) {
             <div className="text-2xl font-bold">{todayBookings.length}</div>
             <div className="text-xs text-muted-foreground flex items-center justify-center gap-1">
               <Users className="w-3 h-3" />
-              {language === 'bn' ? 'মোট' : 'Total'}
+              {'Total'}
             </div>
           </div>
           <div className="text-center p-3 bg-card rounded-lg border border-green-500/20">
             <div className="text-2xl font-bold text-green-600">{confirmed}</div>
             <div className="text-xs text-muted-foreground flex items-center justify-center gap-1">
               <CheckCircle className="w-3 h-3 text-green-600" />
-              {language === 'bn' ? 'নিশ্চিত' : 'Confirmed'}
+              {'Confirmed'}
             </div>
           </div>
           <div className="text-center p-3 bg-card rounded-lg border border-yellow-500/20">
             <div className="text-2xl font-bold text-yellow-600">{pending}</div>
             <div className="text-xs text-muted-foreground flex items-center justify-center gap-1">
               <Clock className="w-3 h-3 text-yellow-600" />
-              {language === 'bn' ? 'অপেক্ষমাণ' : 'Pending'}
+              {'Pending'}
             </div>
           </div>
           <div className="text-center p-3 bg-card rounded-lg border border-blue-500/20">
             <div className="text-2xl font-bold text-blue-600">{paid}</div>
             <div className="text-xs text-muted-foreground flex items-center justify-center gap-1">
               <TrendingUp className="w-3 h-3 text-blue-600" />
-              {language === 'bn' ? 'পেইড' : 'Paid'}
+              {'Paid'}
             </div>
           </div>
         </div>
@@ -95,7 +95,7 @@ export function TodayBookingSummary({ bookings }: TodayBookingSummaryProps) {
         {sortedSlots.length > 0 && (
           <div className="space-y-2">
             <p className="text-sm font-medium text-muted-foreground">
-              {language === 'bn' ? 'টাইম স্লট অনুযায়ী' : 'By Time Slot'}
+              {'By Time Slot'}
             </p>
             <div className="flex flex-wrap gap-2">
               {sortedSlots.map(([slot, count]) => (
@@ -111,7 +111,7 @@ export function TodayBookingSummary({ bookings }: TodayBookingSummaryProps) {
         {todayBookings.length === 0 && (
           <div className="text-center py-4 text-muted-foreground">
             <Calendar className="w-8 h-8 mx-auto mb-2 opacity-50" />
-            <p>{language === 'bn' ? 'আজকে কোনো বুকিং নেই' : 'No bookings for today'}</p>
+            <p>{'No bookings for today'}</p>
           </div>
         )}
       </CardContent>

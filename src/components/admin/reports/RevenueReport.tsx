@@ -21,14 +21,14 @@ export function RevenueReport({ data, isLoading }: RevenueReportProps) {
 
   const revenueBreakdown = [
     {
-      label: language === 'bn' ? 'টিকেট আয়' : 'Ticket Revenue',
+      label: 'Ticket Revenue',
       value: data?.revenue.totalTicketRevenue || 0,
       icon: Ticket,
       color: 'text-primary',
       bgColor: 'bg-primary/10',
     },
     {
-      label: language === 'bn' ? 'খাবার আয়' : 'Food Revenue',
+      label: 'Food Revenue',
       value: data?.revenue.totalFoodRevenue || 0,
       icon: UtensilsCrossed,
       color: 'text-chart-2',
@@ -38,7 +38,7 @@ export function RevenueReport({ data, isLoading }: RevenueReportProps) {
 
   const chartData = data?.dailyBreakdown?.map(day => ({
     date: day.date,
-    displayDate: format(parseISO(day.date), 'd', { locale: language === 'bn' ? bn : undefined }),
+    displayDate: format(parseISO(day.date), 'd', { locale: undefined }),
     tickets: day.ticketRevenue,
     food: day.foodRevenue,
     total: day.totalRevenue,
@@ -64,7 +64,7 @@ export function RevenueReport({ data, isLoading }: RevenueReportProps) {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">
-                  {language === 'bn' ? 'মোট আয়' : 'Total Revenue'}
+                  {'Total Revenue'}
                 </p>
                 <p className="text-4xl font-bold">
                   ৳{(data?.revenue.combinedRevenue || 0).toLocaleString()}
@@ -99,10 +99,10 @@ export function RevenueReport({ data, isLoading }: RevenueReportProps) {
             </div>
             <div>
               <p className="font-medium">
-                {language === 'bn' ? 'সর্বোচ্চ আয়ের দিন' : 'Peak Revenue Day'}
+                {'Peak Revenue Day'}
               </p>
               <p className="text-sm text-muted-foreground">
-                {format(parseISO(data.peakDay.date), 'PPP', { locale: language === 'bn' ? bn : undefined })} - 
+                {format(parseISO(data.peakDay.date), 'PPP', { locale: undefined })} - 
                 <span className="font-bold text-foreground ml-1">
                   ৳{data.peakDay.totalRevenue.toLocaleString()}
                 </span>
@@ -115,9 +115,9 @@ export function RevenueReport({ data, isLoading }: RevenueReportProps) {
       {/* Revenue Trend Chart */}
       <Card>
         <CardHeader>
-          <CardTitle>{language === 'bn' ? 'আয়ের ট্রেন্ড' : 'Revenue Trend'}</CardTitle>
+          <CardTitle>{'Revenue Trend'}</CardTitle>
           <CardDescription>
-            {language === 'bn' ? 'দৈনিক আয়ের গ্রাফ' : 'Daily revenue breakdown'}
+            {'Daily revenue breakdown'}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -136,14 +136,14 @@ export function RevenueReport({ data, isLoading }: RevenueReportProps) {
                 <Tooltip 
                   formatter={(value: number, name: string) => [
                     `৳${value.toLocaleString()}`, 
-                    name === 'total' ? (language === 'bn' ? 'মোট' : 'Total') :
-                    name === 'tickets' ? (language === 'bn' ? 'টিকেট' : 'Tickets') :
-                    (language === 'bn' ? 'খাবার' : 'Food')
+                    name === 'total' ? ('Total') :
+                    name === 'tickets' ? ('Tickets') :
+                    ('Food')
                   ]}
                   labelFormatter={(label, payload) => {
                     if (payload?.[0]?.payload?.date) {
                       return format(parseISO(payload[0].payload.date), 'PPP', { 
-                        locale: language === 'bn' ? bn : undefined 
+                        locale: undefined 
                       });
                     }
                     return label;
@@ -165,7 +165,7 @@ export function RevenueReport({ data, isLoading }: RevenueReportProps) {
             </ResponsiveContainer>
           ) : (
             <div className="h-[350px] flex items-center justify-center text-muted-foreground">
-              {language === 'bn' ? 'কোনো ডাটা নেই' : 'No data available'}
+              {'No data available'}
             </div>
           )}
         </CardContent>
@@ -174,9 +174,9 @@ export function RevenueReport({ data, isLoading }: RevenueReportProps) {
       {/* Comparison Chart */}
       <Card>
         <CardHeader>
-          <CardTitle>{language === 'bn' ? 'তুলনামূলক বিশ্লেষণ' : 'Comparative Analysis'}</CardTitle>
+          <CardTitle>{'Comparative Analysis'}</CardTitle>
           <CardDescription>
-            {language === 'bn' ? 'টিকেট বনাম খাবার আয়' : 'Ticket vs Food revenue'}
+            {'Ticket vs Food revenue'}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -189,8 +189,8 @@ export function RevenueReport({ data, isLoading }: RevenueReportProps) {
                 <Tooltip 
                   formatter={(value: number, name: string) => [
                     `৳${value.toLocaleString()}`, 
-                    name === 'tickets' ? (language === 'bn' ? 'টিকেট' : 'Tickets') :
-                    (language === 'bn' ? 'খাবার' : 'Food')
+                    name === 'tickets' ? ('Tickets') :
+                    ('Food')
                   ]}
                   contentStyle={{ 
                     backgroundColor: 'hsl(var(--background))', 
@@ -199,8 +199,8 @@ export function RevenueReport({ data, isLoading }: RevenueReportProps) {
                 />
                 <Legend 
                   formatter={(value) => 
-                    value === 'tickets' ? (language === 'bn' ? 'টিকেট' : 'Tickets') :
-                    (language === 'bn' ? 'খাবার' : 'Food')
+                    value === 'tickets' ? ('Tickets') :
+                    ('Food')
                   }
                 />
                 <Bar dataKey="tickets" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
@@ -209,7 +209,7 @@ export function RevenueReport({ data, isLoading }: RevenueReportProps) {
             </ResponsiveContainer>
           ) : (
             <div className="h-[300px] flex items-center justify-center text-muted-foreground">
-              {language === 'bn' ? 'কোনো ডাটা নেই' : 'No data available'}
+              {'No data available'}
             </div>
           )}
         </CardContent>
@@ -219,17 +219,17 @@ export function RevenueReport({ data, isLoading }: RevenueReportProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>{language === 'bn' ? 'পেমেন্ট মেথড' : 'Payment Methods'}</CardTitle>
+            <CardTitle>{'Payment Methods'}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 rounded-lg bg-green-50 dark:bg-green-950/30">
                 <div>
                   <p className="font-medium text-green-700 dark:text-green-400">
-                    {language === 'bn' ? 'নগদ পেমেন্ট' : 'Cash Payments'}
+                    {'Cash Payments'}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {data?.revenue.cashPayments || 0} {language === 'bn' ? 'টি লেনদেন' : 'transactions'}
+                    {data?.revenue.cashPayments || 0} {'transactions'}
                   </p>
                 </div>
                 <p className="text-2xl font-bold text-green-700 dark:text-green-400">
@@ -239,10 +239,10 @@ export function RevenueReport({ data, isLoading }: RevenueReportProps) {
               <div className="flex items-center justify-between p-4 rounded-lg bg-blue-50 dark:bg-blue-950/30">
                 <div>
                   <p className="font-medium text-blue-700 dark:text-blue-400">
-                    {language === 'bn' ? 'অনলাইন পেমেন্ট' : 'Online Payments'}
+                    {'Online Payments'}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {data?.revenue.onlinePayments || 0} {language === 'bn' ? 'টি লেনদেন' : 'transactions'}
+                    {data?.revenue.onlinePayments || 0} {'transactions'}
                   </p>
                 </div>
                 <p className="text-2xl font-bold text-blue-700 dark:text-blue-400">
@@ -255,32 +255,32 @@ export function RevenueReport({ data, isLoading }: RevenueReportProps) {
 
         <Card>
           <CardHeader>
-            <CardTitle>{language === 'bn' ? 'বুকিং সারাংশ' : 'Booking Summary'}</CardTitle>
+            <CardTitle>{'Booking Summary'}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 rounded-lg bg-muted/50 text-center">
                 <p className="text-2xl font-bold">{data?.bookings.total || 0}</p>
                 <p className="text-sm text-muted-foreground">
-                  {language === 'bn' ? 'মোট বুকিং' : 'Total'}
+                  {'Total'}
                 </p>
               </div>
               <div className="p-4 rounded-lg bg-muted/50 text-center">
                 <p className="text-2xl font-bold">{data?.bookings.confirmed || 0}</p>
                 <p className="text-sm text-muted-foreground">
-                  {language === 'bn' ? 'কনফার্মড' : 'Confirmed'}
+                  {'Confirmed'}
                 </p>
               </div>
               <div className="p-4 rounded-lg bg-muted/50 text-center">
                 <p className="text-2xl font-bold">{data?.bookings.hourlyPlay || 0}</p>
                 <p className="text-sm text-muted-foreground">
-                  {language === 'bn' ? 'আওয়ারলি' : 'Hourly'}
+                  {'Hourly'}
                 </p>
               </div>
               <div className="p-4 rounded-lg bg-muted/50 text-center">
                 <p className="text-2xl font-bold">{data?.bookings.events || 0}</p>
                 <p className="text-sm text-muted-foreground">
-                  {language === 'bn' ? 'ইভেন্ট' : 'Events'}
+                  {'Events'}
                 </p>
               </div>
             </div>

@@ -171,7 +171,7 @@ export default function AdminTicketing() {
 
   const handleCreateTicket = async () => {
     if (!newTicket.guardian_name || !newTicket.guardian_phone) {
-      toast.error(language === 'bn' ? 'অভিভাবকের তথ্য দিন' : 'Guardian info required');
+      toast.error('Guardian info required');
       return;
     }
 
@@ -196,7 +196,7 @@ export default function AdminTicketing() {
 
       if (insertError) throw insertError;
 
-      toast.success(language === 'bn' ? 'টিকেট তৈরি হয়েছে' : 'Ticket created');
+      toast.success('Ticket created');
       setCreateOpen(false);
       setNewTicket({
         ticket_type: 'hourly_play',
@@ -210,7 +210,7 @@ export default function AdminTicketing() {
       fetchTickets();
     } catch (err: any) {
       console.error('[Ticketing] Create error:', err);
-      toast.error(language === 'bn' ? 'টিকেট তৈরি ব্যর্থ' : 'Failed to create ticket');
+      toast.error('Failed to create ticket');
     } finally {
       setCreating(false);
     }
@@ -225,12 +225,12 @@ export default function AdminTicketing() {
 
       if (updateError) throw updateError;
 
-      toast.success(language === 'bn' ? 'টিকেট ব্যবহৃত হয়েছে' : 'Ticket marked as used');
+      toast.success('Ticket marked as used');
       setTickets(prev => prev.map(t => 
         t.id === ticketId ? { ...t, status: 'used' as const, used_at: new Date().toISOString() } : t
       ));
     } catch (err) {
-      toast.error(language === 'bn' ? 'আপডেট ব্যর্থ' : 'Update failed');
+      toast.error('Update failed');
     }
   };
 
@@ -243,12 +243,12 @@ export default function AdminTicketing() {
 
       if (updateError) throw updateError;
 
-      toast.success(language === 'bn' ? 'টিকেট বাতিল হয়েছে' : 'Ticket cancelled');
+      toast.success('Ticket cancelled');
       setTickets(prev => prev.map(t => 
         t.id === ticketId ? { ...t, status: 'cancelled' as const } : t
       ));
     } catch (err) {
-      toast.error(language === 'bn' ? 'বাতিল ব্যর্থ' : 'Cancel failed');
+      toast.error('Cancel failed');
     }
   };
 
@@ -273,13 +273,13 @@ export default function AdminTicketing() {
       if (error) throw error;
 
       if (data.success) {
-        toast.success(language === 'bn' ? 'SMS পাঠানো হয়েছে' : 'SMS sent successfully');
+        toast.success('SMS sent successfully');
       } else {
-        toast.warning(language === 'bn' ? 'SMS পাঠানো যায়নি (credentials সেট করা নেই)' : 'SMS could not be sent (credentials not configured)');
+        toast.warning('SMS could not be sent (credentials not configured)');
       }
     } catch (err) {
       console.error('SMS error:', err);
-      toast.error(language === 'bn' ? 'SMS পাঠাতে সমস্যা হয়েছে' : 'Failed to send SMS');
+      toast.error('Failed to send SMS');
     } finally {
       setSendingSMS(null);
     }
@@ -301,13 +301,13 @@ export default function AdminTicketing() {
       if (error) throw error;
       if (!data.success) throw new Error(data.error);
 
-      toast.success(language === 'bn' ? 'এন্ট্রি রেকর্ড হয়েছে' : 'Entry logged successfully');
+      toast.success('Entry logged successfully');
       setTickets(prev => prev.map(t => 
         t.id === ticket.id ? { ...t, inside_venue: true, status: 'used' as const, used_at: new Date().toISOString() } : t
       ));
     } catch (err: unknown) {
       const error = err as { message?: string };
-      toast.error(error.message || (language === 'bn' ? 'এন্ট্রি ব্যর্থ' : 'Entry failed'));
+      toast.error(error.message || ('Entry failed'));
     } finally {
       setGateActionLoading(null);
     }
@@ -328,13 +328,13 @@ export default function AdminTicketing() {
       if (error) throw error;
       if (!data.success) throw new Error(data.error);
 
-      toast.success(language === 'bn' ? 'এক্সিট রেকর্ড হয়েছে' : 'Exit logged successfully');
+      toast.success('Exit logged successfully');
       setTickets(prev => prev.map(t => 
         t.id === ticket.id ? { ...t, inside_venue: false } : t
       ));
     } catch (err: unknown) {
       const error = err as { message?: string };
-      toast.error(error.message || (language === 'bn' ? 'এক্সিট ব্যর্থ' : 'Exit failed'));
+      toast.error(error.message || ('Exit failed'));
     } finally {
       setGateActionLoading(null);
     }
@@ -360,11 +360,11 @@ export default function AdminTicketing() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'active':
-        return <Badge className="bg-green-500/10 text-green-600"><CheckCircle className="w-3 h-3 mr-1" /> {language === 'bn' ? 'সক্রিয়' : 'Active'}</Badge>;
+        return <Badge className="bg-green-500/10 text-green-600"><CheckCircle className="w-3 h-3 mr-1" /> {'Active'}</Badge>;
       case 'used':
-        return <Badge variant="secondary"><Clock className="w-3 h-3 mr-1" /> {language === 'bn' ? 'ব্যবহৃত' : 'Used'}</Badge>;
+        return <Badge variant="secondary"><Clock className="w-3 h-3 mr-1" /> {'Used'}</Badge>;
       case 'cancelled':
-        return <Badge variant="destructive"><XCircle className="w-3 h-3 mr-1" /> {language === 'bn' ? 'বাতিল' : 'Cancelled'}</Badge>;
+        return <Badge variant="destructive"><XCircle className="w-3 h-3 mr-1" /> {'Cancelled'}</Badge>;
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
@@ -397,10 +397,10 @@ export default function AdminTicketing() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Ticket className="w-6 h-6" />
-            {language === 'bn' ? 'টিকেটিং' : 'Ticketing'}
+            {'Ticketing'}
           </h1>
           <p className="text-muted-foreground">
-            {language === 'bn' ? 'টিকেট ম্যানেজমেন্ট' : 'Manage tickets'}
+            {'Manage tickets'}
           </p>
         </div>
 
@@ -413,11 +413,11 @@ export default function AdminTicketing() {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full max-w-md grid-cols-2">
           <TabsTrigger value="list">
-            {language === 'bn' ? 'টিকেট তালিকা' : 'Ticket List'}
+            {'Ticket List'}
           </TabsTrigger>
           <TabsTrigger value="create">
             <Plus className="w-4 h-4 mr-2" />
-            {language === 'bn' ? 'নতুন টিকেট' : 'Create Ticket'}
+            {'Create Ticket'}
           </TabsTrigger>
         </TabsList>
 
@@ -431,19 +431,19 @@ export default function AdminTicketing() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'সক্রিয় টিকেট' : 'Active Tickets'}</CardDescription>
+            <CardDescription>{'Active Tickets'}</CardDescription>
             <CardTitle className="text-2xl text-green-600">{activeCount}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'আজকের টিকেট' : "Today's Tickets"}</CardDescription>
+            <CardDescription>{"Today's Tickets"}</CardDescription>
             <CardTitle className="text-2xl">{todayCount}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'ব্যবহৃত' : 'Used'}</CardDescription>
+            <CardDescription>{'Used'}</CardDescription>
             <CardTitle className="text-2xl text-muted-foreground">{usedCount}</CardTitle>
           </CardHeader>
         </Card>
@@ -453,10 +453,10 @@ export default function AdminTicketing() {
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <CardTitle>{language === 'bn' ? 'টিকেট তালিকা' : 'Ticket List'}</CardTitle>
+            <CardTitle>{'Ticket List'}</CardTitle>
             <Button variant="outline" size="sm" onClick={fetchTickets} disabled={loading}>
               <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-              {language === 'bn' ? 'রিফ্রেশ' : 'Refresh'}
+              {'Refresh'}
             </Button>
           </div>
           
@@ -465,7 +465,7 @@ export default function AdminTicketing() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
-                placeholder={language === 'bn' ? 'টিকেট নং, নাম বা ফোন...' : 'Ticket #, name or phone...'}
+                placeholder={'Ticket #, name or phone...'}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-9"
@@ -477,10 +477,10 @@ export default function AdminTicketing() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{language === 'bn' ? 'সব' : 'All'}</SelectItem>
-                <SelectItem value="active">{language === 'bn' ? 'সক্রিয়' : 'Active'}</SelectItem>
-                <SelectItem value="used">{language === 'bn' ? 'ব্যবহৃত' : 'Used'}</SelectItem>
-                <SelectItem value="cancelled">{language === 'bn' ? 'বাতিল' : 'Cancelled'}</SelectItem>
+                <SelectItem value="all">{'All'}</SelectItem>
+                <SelectItem value="active">{'Active'}</SelectItem>
+                <SelectItem value="used">{'Used'}</SelectItem>
+                <SelectItem value="cancelled">{'Cancelled'}</SelectItem>
               </SelectContent>
             </Select>
 
@@ -488,7 +488,7 @@ export default function AdminTicketing() {
               <PopoverTrigger asChild>
                 <Button variant="outline" className="w-full md:w-auto">
                   <CalendarDays className="w-4 h-4 mr-2" />
-                  {dateFilter ? format(dateFilter, 'dd MMM') : (language === 'bn' ? 'তারিখ' : 'Date')}
+                  {dateFilter ? format(dateFilter, 'dd MMM') : ('Date')}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0">
@@ -509,17 +509,17 @@ export default function AdminTicketing() {
               <AlertCircle className="w-12 h-12 mx-auto mb-4 text-destructive" />
               <p className="text-destructive">{error}</p>
               <Button onClick={fetchTickets} className="mt-4" size="sm">
-                {language === 'bn' ? 'আবার চেষ্টা করুন' : 'Try Again'}
+                {'Try Again'}
               </Button>
             </div>
           ) : loading ? (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>{language === 'bn' ? 'টিকেট নং' : 'Ticket #'}</TableHead>
-                  <TableHead>{language === 'bn' ? 'অভিভাবক' : 'Guardian'}</TableHead>
-                  <TableHead>{language === 'bn' ? 'তারিখ' : 'Date'}</TableHead>
-                  <TableHead>{language === 'bn' ? 'স্ট্যাটাস' : 'Status'}</TableHead>
+                  <TableHead>{'Ticket #'}</TableHead>
+                  <TableHead>{'Guardian'}</TableHead>
+                  <TableHead>{'Date'}</TableHead>
+                  <TableHead>{'Status'}</TableHead>
                   <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
@@ -530,22 +530,22 @@ export default function AdminTicketing() {
           ) : filteredTickets.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <Ticket className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>{language === 'bn' ? 'কোনো টিকেট নেই' : 'No tickets found'}</p>
+              <p>{'No tickets found'}</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{language === 'bn' ? 'টিকেট নং' : 'Ticket #'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'অভিভাবক' : 'Guardian'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'তারিখ' : 'Date'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'মূল্য' : 'Price'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'ডিসকাউন্ট' : 'Discount'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'উৎস' : 'Source'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'অবস্থান' : 'Location'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'স্ট্যাটাস' : 'Status'}</TableHead>
-                    <TableHead className="text-right">{language === 'bn' ? 'অ্যাকশন' : 'Actions'}</TableHead>
+                    <TableHead>{'Ticket #'}</TableHead>
+                    <TableHead>{'Guardian'}</TableHead>
+                    <TableHead>{'Date'}</TableHead>
+                    <TableHead>{'Price'}</TableHead>
+                    <TableHead>{'Discount'}</TableHead>
+                    <TableHead>{'Source'}</TableHead>
+                    <TableHead>{'Location'}</TableHead>
+                    <TableHead>{'Status'}</TableHead>
+                    <TableHead className="text-right">{'Actions'}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -558,7 +558,7 @@ export default function AdminTicketing() {
                       </TableCell>
                       <TableCell>
                         {format(parseISO(ticket.slot_date), 'dd MMM yyyy', { 
-                          locale: language === 'bn' ? bn : undefined 
+                          locale: undefined 
                         })}
                       </TableCell>
                       <TableCell>
@@ -585,12 +585,12 @@ export default function AdminTicketing() {
                         {ticket.inside_venue ? (
                           <Badge className="bg-primary/10 text-primary">
                             <DoorOpen className="w-3 h-3 mr-1" />
-                            {language === 'bn' ? 'ভিতরে' : 'Inside'}
+                            {'Inside'}
                           </Badge>
                         ) : ticket.status === 'used' ? (
                           <Badge variant="secondary">
                             <DoorClosed className="w-3 h-3 mr-1" />
-                            {language === 'bn' ? 'বাইরে' : 'Exited'}
+                            {'Exited'}
                           </Badge>
                         ) : (
                           <span className="text-muted-foreground text-sm">-</span>
@@ -608,7 +608,7 @@ export default function AdminTicketing() {
                                   variant="default"
                                   onClick={() => handleGateEntry(ticket)}
                                   disabled={gateActionLoading === ticket.id}
-                                  title={language === 'bn' ? 'এন্ট্রি' : 'Gate Entry'}
+                                  title={'Gate Entry'}
                                   className="bg-green-600 hover:bg-green-700"
                                 >
                                   {gateActionLoading === ticket.id ? (
@@ -616,7 +616,7 @@ export default function AdminTicketing() {
                                   ) : (
                                     <>
                                       <DoorOpen className="w-3 h-3 mr-1" />
-                                      {language === 'bn' ? 'এন্ট্রি' : 'Entry'}
+                                      {'Entry'}
                                     </>
                                   )}
                                 </Button>
@@ -627,7 +627,7 @@ export default function AdminTicketing() {
                                   variant="default"
                                   onClick={() => handleGateExit(ticket)}
                                   disabled={gateActionLoading === ticket.id}
-                                  title={language === 'bn' ? 'এক্সিট' : 'Gate Exit'}
+                                  title={'Gate Exit'}
                                   className="bg-orange-600 hover:bg-orange-700"
                                 >
                                   {gateActionLoading === ticket.id ? (
@@ -635,7 +635,7 @@ export default function AdminTicketing() {
                                   ) : (
                                     <>
                                       <DoorClosed className="w-3 h-3 mr-1" />
-                                      {language === 'bn' ? 'এক্সিট' : 'Exit'}
+                                      {'Exit'}
                                     </>
                                   )}
                                 </Button>
@@ -644,7 +644,7 @@ export default function AdminTicketing() {
                           )}
 
                           {/* Print button */}
-                          <Button size="sm" variant="ghost" onClick={() => handlePrintTicket(ticket)} title={language === 'bn' ? 'প্রিন্ট' : 'Print'}>
+                          <Button size="sm" variant="ghost" onClick={() => handlePrintTicket(ticket)} title={'Print'}>
                             <Printer className="w-3 h-3" />
                           </Button>
                           
@@ -654,7 +654,7 @@ export default function AdminTicketing() {
                             variant="ghost" 
                             onClick={() => handleSendSMS(ticket)}
                             disabled={sendingSMS === ticket.id}
-                            title={language === 'bn' ? 'SMS পাঠান' : 'Send SMS'}
+                            title={'Send SMS'}
                           >
                             {sendingSMS === ticket.id ? (
                               <Loader2 className="w-3 h-3 animate-spin" />
@@ -687,7 +687,7 @@ export default function AdminTicketing() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Printer className="w-5 h-5" />
-              {language === 'bn' ? 'টিকেট প্রিন্ট' : 'Print Ticket'}
+              {'Print Ticket'}
             </DialogTitle>
           </DialogHeader>
           {selectedTicket && (

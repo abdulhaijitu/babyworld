@@ -90,7 +90,7 @@ export function ActivityLogCard() {
       delete: { en: 'Deleted', bn: 'মুছে ফেলা' },
       view: { en: 'Viewed', bn: 'দেখা' }
     };
-    return labels[action]?.[language === 'bn' ? 'bn' : 'en'] || action;
+    return labels[action]?.['en'] || action;
   };
 
   const getEntityLabel = (entityType: string) => {
@@ -103,7 +103,7 @@ export function ActivityLogCard() {
       food_order: { en: 'Food Order', bn: 'ফুড অর্ডার' },
       employee: { en: 'Employee', bn: 'কর্মী' }
     };
-    return labels[entityType]?.[language === 'bn' ? 'bn' : 'en'] || entityType;
+    return labels[entityType]?.['en'] || entityType;
   };
 
   return (
@@ -111,10 +111,10 @@ export function ActivityLogCard() {
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg">
           <Activity className="w-5 h-5 text-primary" />
-          {language === 'bn' ? 'সাম্প্রতিক অ্যাক্টিভিটি' : 'Recent Activity'}
+          {'Recent Activity'}
         </CardTitle>
         <CardDescription>
-          {language === 'bn' ? 'অ্যাডমিন অ্যাকশন লগ' : 'Admin action log'}
+          {'Admin action log'}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -158,7 +158,7 @@ export function ActivityLogCard() {
                     <p className="text-xs text-muted-foreground mt-1">
                       {formatDistanceToNow(parseISO(log.created_at), {
                         addSuffix: true,
-                        locale: language === 'bn' ? bn : undefined
+                        locale: undefined
                       })}
                     </p>
                   </div>
@@ -170,7 +170,7 @@ export function ActivityLogCard() {
           <div className="text-center py-8 text-muted-foreground">
             <Activity className="w-8 h-8 mx-auto mb-2 opacity-50" />
             <p className="text-sm">
-              {language === 'bn' ? 'কোনো অ্যাক্টিভিটি নেই' : 'No activity yet'}
+              {'No activity yet'}
             </p>
           </div>
         )}

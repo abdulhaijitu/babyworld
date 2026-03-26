@@ -140,7 +140,7 @@ export function PrintableTicket({ ticket, onClose }: PrintableTicketProps) {
       child_guardian: { en: 'Child + Guardian', bn: 'শিশু + অভিভাবক' },
       child_only: { en: 'Child Only', bn: 'শুধু শিশু' }
     };
-    return labels[type]?.[language === 'bn' ? 'bn' : 'en'] || type;
+    return labels[type]?.['en'] || type;
   };
 
   return (
@@ -153,7 +153,7 @@ export function PrintableTicket({ ticket, onClose }: PrintableTicketProps) {
             <img src={babyWorldLogo} alt="Baby World" className="h-12 mx-auto mb-2" />
             <h1 className="text-lg font-bold">Baby World Indoor Playground</h1>
             <p className="text-xs text-muted-foreground">
-              {language === 'bn' ? 'বেবি ওয়ার্ল্ড ইনডোর প্লেগ্রাউন্ড' : 'Safe Fun for Kids!'}
+              {'Safe Fun for Kids!'}
             </p>
           </div>
 
@@ -172,7 +172,7 @@ export function PrintableTicket({ ticket, onClose }: PrintableTicketProps) {
           {/* Ticket Number */}
           <div className="text-center">
             <p className="text-xs text-muted-foreground uppercase tracking-wide">
-              {language === 'bn' ? 'টিকেট নম্বর' : 'Ticket Number'}
+              {'Ticket Number'}
             </p>
             <p className="text-2xl font-bold text-primary tracking-widest">
               {ticket.ticketNumber}
@@ -186,7 +186,7 @@ export function PrintableTicket({ ticket, onClose }: PrintableTicketProps) {
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-2 text-muted-foreground">
                 <User className="w-4 h-4" />
-                {language === 'bn' ? 'অভিভাবক' : 'Guardian'}
+                {'Guardian'}
               </span>
               <span className="font-medium">{ticket.guardianName}</span>
             </div>
@@ -195,7 +195,7 @@ export function PrintableTicket({ ticket, onClose }: PrintableTicketProps) {
               <div className="flex items-center justify-between">
                 <span className="flex items-center gap-2 text-muted-foreground">
                   <Baby className="w-4 h-4" />
-                  {language === 'bn' ? 'শিশু' : 'Child'}
+                  {'Child'}
                 </span>
                 <span className="font-medium">{ticket.childName}</span>
               </div>
@@ -204,7 +204,7 @@ export function PrintableTicket({ ticket, onClose }: PrintableTicketProps) {
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-2 text-muted-foreground">
                 <Phone className="w-4 h-4" />
-                {language === 'bn' ? 'ফোন' : 'Phone'}
+                {'Phone'}
               </span>
               <span className="font-medium">{ticket.guardianPhone}</span>
             </div>
@@ -214,11 +214,11 @@ export function PrintableTicket({ ticket, onClose }: PrintableTicketProps) {
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-2 text-muted-foreground">
                 <Calendar className="w-4 h-4" />
-                {language === 'bn' ? 'তারিখ' : 'Date'}
+                {'Date'}
               </span>
               <span className="font-medium">
                 {format(parseISO(ticket.slotDate), 'dd MMM yyyy', { 
-                  locale: language === 'bn' ? bn : undefined 
+                  locale: undefined 
                 })}
               </span>
             </div>
@@ -226,7 +226,7 @@ export function PrintableTicket({ ticket, onClose }: PrintableTicketProps) {
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-2 text-muted-foreground">
                 <Clock className="w-4 h-4" />
-                {language === 'bn' ? 'সময়' : 'Time'}
+                {'Time'}
               </span>
               <span className="font-medium">{ticket.timeSlot}</span>
             </div>
@@ -234,7 +234,7 @@ export function PrintableTicket({ ticket, onClose }: PrintableTicketProps) {
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-2 text-muted-foreground">
                 <TicketIcon className="w-4 h-4" />
-                {language === 'bn' ? 'টাইপ' : 'Type'}
+                {'Type'}
               </span>
               <span className="font-medium">{getTicketTypeLabel(ticket.ticketType)}</span>
             </div>
@@ -246,40 +246,40 @@ export function PrintableTicket({ ticket, onClose }: PrintableTicketProps) {
               <Separator className="my-4" style={{ borderStyle: 'dashed' }} />
               <div className="space-y-2 text-sm">
                 <p className="font-semibold text-center mb-2">
-                  {language === 'bn' ? 'মূল্য বিবরণ' : 'Price Details'}
+                  {'Price Details'}
                 </p>
                 
                 {ticket.guardianCount && ticket.childCount && (
                   <div className="flex items-center justify-between text-muted-foreground">
-                    <span>{language === 'bn' ? 'অভিভাবক + শিশু' : 'Guardian + Child'}</span>
+                    <span>{'Guardian + Child'}</span>
                     <span>{ticket.guardianCount} + {ticket.childCount}</span>
                   </div>
                 )}
                 
                 {ticket.entryPrice !== undefined && ticket.entryPrice > 0 && (
                   <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">{language === 'bn' ? 'এন্ট্রি' : 'Entry'}</span>
+                    <span className="text-muted-foreground">{'Entry'}</span>
                     <span>৳{ticket.entryPrice}</span>
                   </div>
                 )}
                 
                 {ticket.socksCount !== undefined && ticket.socksCount > 0 && (
                   <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">{language === 'bn' ? 'মোজা' : 'Socks'} ({ticket.socksCount})</span>
+                    <span className="text-muted-foreground">{'Socks'} ({ticket.socksCount})</span>
                     <span>৳{ticket.socksPrice || 0}</span>
                   </div>
                 )}
                 
                 {ticket.addonsPrice !== undefined && ticket.addonsPrice > 0 && (
                   <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">{language === 'bn' ? 'রাইড' : 'Rides'}</span>
+                    <span className="text-muted-foreground">{'Rides'}</span>
                     <span>৳{ticket.addonsPrice}</span>
                   </div>
                 )}
                 
                 {ticket.discountApplied !== undefined && ticket.discountApplied > 0 && (
                   <div className="flex items-center justify-between text-green-600">
-                    <span>{language === 'bn' ? 'মেম্বারশিপ ছাড়' : 'Member Discount'}</span>
+                    <span>{'Member Discount'}</span>
                     <span>-৳{ticket.discountApplied}</span>
                   </div>
                 )}
@@ -287,7 +287,7 @@ export function PrintableTicket({ ticket, onClose }: PrintableTicketProps) {
                 <Separator className="my-2" />
                 
                 <div className="flex items-center justify-between font-bold text-lg">
-                  <span>{language === 'bn' ? 'মোট' : 'Total'}</span>
+                  <span>{'Total'}</span>
                   <span className="text-primary">৳{ticket.totalPrice}</span>
                 </div>
               </div>
@@ -319,11 +319,11 @@ export function PrintableTicket({ ticket, onClose }: PrintableTicketProps) {
       <div className="flex gap-3 justify-center no-print">
         <Button onClick={handlePrint}>
           <Printer className="w-4 h-4 mr-2" />
-          {language === 'bn' ? 'প্রিন্ট করুন' : 'Print'}
+          {'Print'}
         </Button>
         {onClose && (
           <Button variant="outline" onClick={onClose}>
-            {language === 'bn' ? 'বন্ধ করুন' : 'Close'}
+            {'Close'}
           </Button>
         )}
       </div>

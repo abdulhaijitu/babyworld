@@ -49,8 +49,8 @@ export function ComparisonCharts() {
         thisWeek: thisWeek.data,
         lastWeek: lastWeek.data,
         labels: {
-          current: language === 'bn' ? 'এই সপ্তাহ' : 'This Week',
-          previous: language === 'bn' ? 'গত সপ্তাহ' : 'Last Week'
+          current: 'This Week',
+          previous: 'Last Week'
         }
       };
     },
@@ -105,7 +105,7 @@ export function ComparisonCharts() {
   // Weekly comparison cards
   const weeklyComparisons: ComparisonData[] = weeklyData ? [
     {
-      label: language === 'bn' ? 'মোট আয়' : 'Total Revenue',
+      label: 'Total Revenue',
       current: weeklyData.thisWeek?.revenue?.combinedRevenue || 0,
       previous: weeklyData.lastWeek?.revenue?.combinedRevenue || 0,
       change: calculateChange(
@@ -114,7 +114,7 @@ export function ComparisonCharts() {
       )
     },
     {
-      label: language === 'bn' ? 'টিকেট বিক্রয়' : 'Tickets Sold',
+      label: 'Tickets Sold',
       current: weeklyData.thisWeek?.tickets?.total || 0,
       previous: weeklyData.lastWeek?.tickets?.total || 0,
       change: calculateChange(
@@ -123,7 +123,7 @@ export function ComparisonCharts() {
       )
     },
     {
-      label: language === 'bn' ? 'খাবার অর্ডার' : 'Food Orders',
+      label: 'Food Orders',
       current: weeklyData.thisWeek?.food?.completedOrders || 0,
       previous: weeklyData.lastWeek?.food?.completedOrders || 0,
       change: calculateChange(
@@ -136,17 +136,17 @@ export function ComparisonCharts() {
   // Weekly bar chart data
   const weeklyChartData = weeklyData ? [
     {
-      name: language === 'bn' ? 'আয়' : 'Revenue',
+      name: 'Revenue',
       [weeklyData.labels.current]: weeklyData.thisWeek?.revenue?.combinedRevenue || 0,
       [weeklyData.labels.previous]: weeklyData.lastWeek?.revenue?.combinedRevenue || 0,
     },
     {
-      name: language === 'bn' ? 'টিকেট আয়' : 'Ticket Revenue',
+      name: 'Ticket Revenue',
       [weeklyData.labels.current]: weeklyData.thisWeek?.revenue?.totalTicketRevenue || 0,
       [weeklyData.labels.previous]: weeklyData.lastWeek?.revenue?.totalTicketRevenue || 0,
     },
     {
-      name: language === 'bn' ? 'খাবার আয়' : 'Food Revenue',
+      name: 'Food Revenue',
       [weeklyData.labels.current]: weeklyData.thisWeek?.food?.totalRevenue || 0,
       [weeklyData.labels.previous]: weeklyData.lastWeek?.food?.totalRevenue || 0,
     }
@@ -178,7 +178,7 @@ export function ComparisonCharts() {
       <div>
         <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
           <Calendar className="w-5 h-5" />
-          {language === 'bn' ? 'সাপ্তাহিক তুলনা' : 'Weekly Comparison'}
+          {'Weekly Comparison'}
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {weeklyComparisons.map((item, index) => {
@@ -195,7 +195,7 @@ export function ComparisonCharts() {
                           : item.current}
                       </p>
                       <p className="text-xs text-muted-foreground mt-1">
-                        {language === 'bn' ? 'গত সপ্তাহ: ' : 'Last week: '}
+                        {'Last week: '}
                         {item.label.includes('আয়') || item.label.includes('Revenue') 
                           ? formatBDT(item.previous) 
                           : item.previous}
@@ -220,10 +220,10 @@ export function ComparisonCharts() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <BarChart3 className="w-5 h-5" />
-              {language === 'bn' ? 'সাপ্তাহিক আয় তুলনা' : 'Weekly Revenue Comparison'}
+              {'Weekly Revenue Comparison'}
             </CardTitle>
             <CardDescription>
-              {language === 'bn' ? 'এই সপ্তাহ বনাম গত সপ্তাহ' : 'This week vs last week'}
+              {'This week vs last week'}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -257,7 +257,7 @@ export function ComparisonCharts() {
               </ResponsiveContainer>
             ) : (
               <div className="h-[260px] flex items-center justify-center text-muted-foreground">
-                {language === 'bn' ? 'কোনো ডাটা নেই' : 'No data available'}
+                {'No data available'}
               </div>
             )}
           </CardContent>
@@ -266,9 +266,9 @@ export function ComparisonCharts() {
         {/* Monthly Trend Line Chart */}
         <Card>
           <CardHeader>
-            <CardTitle>{language === 'bn' ? 'মাসিক আয় প্রবণতা' : 'Monthly Revenue Trend'}</CardTitle>
+            <CardTitle>{'Monthly Revenue Trend'}</CardTitle>
             <CardDescription>
-              {language === 'bn' ? 'গত ৬ মাসের তুলনা' : 'Last 6 months comparison'}
+              {'Last 6 months comparison'}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -280,7 +280,7 @@ export function ComparisonCharts() {
                   <YAxis tickFormatter={(v) => `৳${(v/1000).toFixed(0)}k`} className="text-xs" />
                   <Tooltip 
                     formatter={(value: number, name: string) => {
-                      if (name === 'revenue') return [formatBDT(value), language === 'bn' ? 'আয়' : 'Revenue'];
+                      if (name === 'revenue') return [formatBDT(value), 'Revenue'];
                       return [value, name];
                     }}
                     contentStyle={{ 
@@ -292,7 +292,7 @@ export function ComparisonCharts() {
                   <Line 
                     type="monotone" 
                     dataKey="revenue" 
-                    name={language === 'bn' ? 'মোট আয়' : 'Total Revenue'}
+                    name={'Total Revenue'}
                     stroke="hsl(var(--primary))" 
                     strokeWidth={2}
                     dot={{ fill: 'hsl(var(--primary))' }}
@@ -301,7 +301,7 @@ export function ComparisonCharts() {
               </ResponsiveContainer>
             ) : (
               <div className="h-[260px] flex items-center justify-center text-muted-foreground">
-                {language === 'bn' ? 'কোনো ডাটা নেই' : 'No data available'}
+                {'No data available'}
               </div>
             )}
           </CardContent>
@@ -311,9 +311,9 @@ export function ComparisonCharts() {
       {/* Monthly Stats Bar Chart */}
       <Card>
         <CardHeader>
-          <CardTitle>{language === 'bn' ? 'মাসিক কার্যক্রম' : 'Monthly Activity'}</CardTitle>
+          <CardTitle>{'Monthly Activity'}</CardTitle>
           <CardDescription>
-            {language === 'bn' ? 'টিকেট ও খাবার অর্ডারের তুলনা' : 'Tickets and food orders comparison'}
+            {'Tickets and food orders comparison'}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -332,13 +332,13 @@ export function ComparisonCharts() {
                 <Legend />
                 <Bar 
                   dataKey="tickets" 
-                  name={language === 'bn' ? 'টিকেট' : 'Tickets'}
+                  name={'Tickets'}
                   fill="hsl(var(--primary))" 
                   radius={[4, 4, 0, 0]}
                 />
                 <Bar 
                   dataKey="foodOrders" 
-                  name={language === 'bn' ? 'খাবার অর্ডার' : 'Food Orders'}
+                  name={'Food Orders'}
                   fill="hsl(var(--chart-2))" 
                   radius={[4, 4, 0, 0]}
                 />
@@ -346,7 +346,7 @@ export function ComparisonCharts() {
             </ResponsiveContainer>
           ) : (
             <div className="h-[280px] flex items-center justify-center text-muted-foreground">
-              {language === 'bn' ? 'কোনো ডাটা নেই' : 'No data available'}
+              {'No data available'}
             </div>
           )}
         </CardContent>

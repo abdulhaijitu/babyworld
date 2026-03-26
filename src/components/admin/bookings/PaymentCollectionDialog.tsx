@@ -98,7 +98,7 @@ export function PaymentCollectionDialog({
         }
       });
 
-      toast.success(language === 'bn' ? 'পেমেন্ট কালেক্ট করা হয়েছে' : 'Payment collected successfully');
+      toast.success('Payment collected successfully');
       onSuccess();
       onOpenChange(false);
 
@@ -108,7 +108,7 @@ export function PaymentCollectionDialog({
       setNotes('');
     } catch (err: any) {
       console.error('Payment collection error:', err);
-      toast.error(language === 'bn' ? 'পেমেন্ট কালেকশন ব্যর্থ' : 'Payment collection failed');
+      toast.error('Payment collection failed');
     } finally {
       setProcessing(false);
     }
@@ -122,11 +122,11 @@ export function PaymentCollectionDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <CreditCard className="w-5 h-5" />
-            {language === 'bn' ? 'পেমেন্ট কালেকশন' : 'Collect Payment'}
+            {'Collect Payment'}
           </DialogTitle>
           <DialogDescription>
             {booking.parent_name} - {format(parseISO(booking.slot_date), 'dd MMM yyyy', { 
-              locale: language === 'bn' ? bn : undefined 
+              locale: undefined 
             })} ({booking.time_slot})
           </DialogDescription>
         </DialogHeader>
@@ -134,7 +134,7 @@ export function PaymentCollectionDialog({
         <div className="space-y-4 py-4">
           {/* Payment Method */}
           <div className="space-y-2">
-            <Label>{language === 'bn' ? 'পেমেন্ট মেথড' : 'Payment Method'}</Label>
+            <Label>{'Payment Method'}</Label>
             <RadioGroup 
               value={paymentMethod} 
               onValueChange={(v) => setPaymentMethod(v as 'cash' | 'online')}
@@ -144,14 +144,14 @@ export function PaymentCollectionDialog({
                 <RadioGroupItem value="cash" id="cash" />
                 <Label htmlFor="cash" className="flex items-center gap-2 cursor-pointer">
                   <Banknote className="w-4 h-4 text-green-600" />
-                  {language === 'bn' ? 'ক্যাশ' : 'Cash'}
+                  {'Cash'}
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="online" id="online" />
                 <Label htmlFor="online" className="flex items-center gap-2 cursor-pointer">
                   <Smartphone className="w-4 h-4 text-blue-600" />
-                  {language === 'bn' ? 'অনলাইন' : 'Online/bKash'}
+                  {'Online/bKash'}
                 </Label>
               </div>
             </RadioGroup>
@@ -159,7 +159,7 @@ export function PaymentCollectionDialog({
 
           {/* Amount */}
           <div className="space-y-2">
-            <Label>{language === 'bn' ? 'পরিমাণ (৳)' : 'Amount (৳)'}</Label>
+            <Label>{'Amount (৳)'}</Label>
             <Input
               type="number"
               value={amount}
@@ -170,11 +170,11 @@ export function PaymentCollectionDialog({
 
           {/* Notes */}
           <div className="space-y-2">
-            <Label>{language === 'bn' ? 'নোট (ঐচ্ছিক)' : 'Notes (optional)'}</Label>
+            <Label>{'Notes (optional)'}</Label>
             <Textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder={language === 'bn' ? 'যেমন: bKash ট্রান্সেকশন আইডি...' : 'e.g., bKash transaction ID...'}
+              placeholder={'e.g., bKash transaction ID...'}
               rows={2}
             />
           </div>
@@ -182,7 +182,7 @@ export function PaymentCollectionDialog({
           {/* Summary */}
           <div className="p-4 bg-muted rounded-lg">
             <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">{language === 'bn' ? 'মোট' : 'Total'}</span>
+              <span className="text-muted-foreground">{'Total'}</span>
               <span className="text-2xl font-bold text-primary">৳{amount || 0}</span>
             </div>
           </div>
@@ -190,11 +190,11 @@ export function PaymentCollectionDialog({
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            {language === 'bn' ? 'বাতিল' : 'Cancel'}
+            {'Cancel'}
           </Button>
           <Button onClick={handleCollectPayment} disabled={processing || !amount}>
             {processing && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-            {language === 'bn' ? 'পেমেন্ট নিশ্চিত করুন' : 'Confirm Payment'}
+            {'Confirm Payment'}
           </Button>
         </DialogFooter>
       </DialogContent>

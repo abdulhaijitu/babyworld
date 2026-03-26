@@ -119,8 +119,8 @@ export default function AdminProfitReports() {
   }));
 
   const revenueVsExpenseData = [
-    { name: language === 'bn' ? 'রেভিনিউ' : 'Revenue', value: summary.totalRevenue, fill: '#22c55e' },
-    { name: language === 'bn' ? 'খরচ' : 'Expenses', value: summary.totalExpenses, fill: '#ef4444' }
+    { name: 'Revenue', value: summary.totalRevenue, fill: '#22c55e' },
+    { name: 'Expenses', value: summary.totalExpenses, fill: '#ef4444' }
   ];
 
   const expensePieData = expenseBreakdown.map((e: { category: string; amount: number }) => ({
@@ -180,10 +180,10 @@ export default function AdminProfitReports() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <BarChart3 className="w-6 h-6 print:hidden" />
-            {language === 'bn' ? 'লাভ-ক্ষতি রিপোর্ট' : 'Profit & Loss Report'}
+            {'Profit & Loss Report'}
           </h1>
           <p className="text-muted-foreground">
-            {language === 'bn' ? 'আয়, ব্যয় এবং নিট লাভ বিশ্লেষণ' : 'Revenue, expenses and net profit analysis'}
+            {'Revenue, expenses and net profit analysis'}
           </p>
           <p className="text-sm text-muted-foreground print:block hidden">
             {format(startDate, 'dd MMM yyyy')} - {format(endDate, 'dd MMM yyyy')}
@@ -193,13 +193,13 @@ export default function AdminProfitReports() {
         {/* Date Range & Export Controls */}
         <div className="flex flex-wrap items-center gap-2 print:hidden">
           <Button variant="outline" size="sm" onClick={setThisWeek}>
-            {language === 'bn' ? 'এই সপ্তাহ' : 'This Week'}
+            {'This Week'}
           </Button>
           <Button variant="outline" size="sm" onClick={setThisMonth}>
-            {language === 'bn' ? 'এই মাস' : 'This Month'}
+            {'This Month'}
           </Button>
           <Button variant="outline" size="sm" onClick={setLastMonth}>
-            {language === 'bn' ? 'গত মাস' : 'Last Month'}
+            {'Last Month'}
           </Button>
           <Popover>
             <PopoverTrigger asChild>
@@ -229,7 +229,7 @@ export default function AdminProfitReports() {
             </Button>
             <Button variant="outline" size="sm" onClick={handlePrint}>
               <Printer className="w-4 h-4 mr-1" />
-              {language === 'bn' ? 'প্রিন্ট' : 'Print'}
+              {'Print'}
             </Button>
           </div>
         </div>
@@ -248,7 +248,7 @@ export default function AdminProfitReports() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
-                {language === 'bn' ? 'মোট আয়' : 'Total Revenue'}
+                {'Total Revenue'}
               </CardTitle>
               <DollarSign className="w-4 h-4 text-primary" />
             </CardHeader>
@@ -265,7 +265,7 @@ export default function AdminProfitReports() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
-                {language === 'bn' ? 'মোট খরচ' : 'Total Expenses'}
+                {'Total Expenses'}
               </CardTitle>
               <Receipt className="w-4 h-4 text-destructive" />
             </CardHeader>
@@ -274,7 +274,7 @@ export default function AdminProfitReports() {
               <div className="text-xs text-muted-foreground mt-2">
                 {expenseBreakdown[0] && (
                   <span>
-                    {language === 'bn' ? 'সর্বোচ্চ:' : 'Top:'} {language === 'bn' ? EXPENSE_CATEGORY_LABELS[expenseBreakdown[0].category]?.bn : EXPENSE_CATEGORY_LABELS[expenseBreakdown[0].category]?.en}
+                    {'Top:'} {language === 'bn' ? EXPENSE_CATEGORY_LABELS[expenseBreakdown[0].category]?.bn : EXPENSE_CATEGORY_LABELS[expenseBreakdown[0].category]?.en}
                   </span>
                 )}
               </div>
@@ -285,7 +285,7 @@ export default function AdminProfitReports() {
           <Card className={summary.isProfit ? 'border-green-200 bg-green-50/50 dark:bg-green-950/20' : 'border-red-200 bg-red-50/50 dark:bg-red-950/20'}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
-                {language === 'bn' ? 'নিট লাভ/ক্ষতি' : 'Net Profit/Loss'}
+                {'Net Profit/Loss'}
               </CardTitle>
               {summary.isProfit ? (
                 <TrendingUp className="w-4 h-4 text-green-600" />
@@ -304,7 +304,7 @@ export default function AdminProfitReports() {
                   <ArrowDownRight className="w-3 h-3 text-red-600" />
                 )}
                 <span className={summary.isProfit ? 'text-green-600' : 'text-red-600'}>
-                  {summary.profitMargin}% {language === 'bn' ? 'মার্জিন' : 'margin'}
+                  {summary.profitMargin}% {'margin'}
                 </span>
               </div>
             </CardContent>
@@ -314,14 +314,14 @@ export default function AdminProfitReports() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
-                {language === 'bn' ? 'লাভের অনুপাত' : 'Profit Ratio'}
+                {'Profit Ratio'}
               </CardTitle>
               <PieChart className="w-4 h-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span>{language === 'bn' ? 'আয়' : 'Revenue'}</span>
+                  <span>{'Revenue'}</span>
                   <span className="text-primary font-medium">৳{summary.totalRevenue.toLocaleString()}</span>
                 </div>
                 <Progress 
@@ -329,7 +329,7 @@ export default function AdminProfitReports() {
                   className="h-2"
                 />
                 <div className="flex justify-between text-sm">
-                  <span>{language === 'bn' ? 'খরচ' : 'Expenses'}</span>
+                  <span>{'Expenses'}</span>
                   <span className="text-destructive font-medium">৳{summary.totalExpenses.toLocaleString()}</span>
                 </div>
                 <Progress 
@@ -345,9 +345,9 @@ export default function AdminProfitReports() {
       {/* Tabs for Different Views */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
-          <TabsTrigger value="overview">{language === 'bn' ? 'সারসংক্ষেপ' : 'Overview'}</TabsTrigger>
-          <TabsTrigger value="trend">{language === 'bn' ? 'ট্রেন্ড' : 'Trend'}</TabsTrigger>
-          <TabsTrigger value="expenses">{language === 'bn' ? 'খরচ বিশ্লেষণ' : 'Expense Analysis'}</TabsTrigger>
+          <TabsTrigger value="overview">{'Overview'}</TabsTrigger>
+          <TabsTrigger value="trend">{'Trend'}</TabsTrigger>
+          <TabsTrigger value="expenses">{'Expense Analysis'}</TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
@@ -356,7 +356,7 @@ export default function AdminProfitReports() {
             {/* Revenue vs Expense Bar Chart */}
             <Card>
               <CardHeader>
-                <CardTitle>{language === 'bn' ? 'আয় বনাম খরচ' : 'Revenue vs Expenses'}</CardTitle>
+                <CardTitle>{'Revenue vs Expenses'}</CardTitle>
               </CardHeader>
               <CardContent>
                 {isLoading ? (
@@ -385,14 +385,14 @@ export default function AdminProfitReports() {
             {/* Expense Breakdown Pie Chart */}
             <Card>
               <CardHeader>
-                <CardTitle>{language === 'bn' ? 'খরচের ক্যাটাগরি' : 'Expense Categories'}</CardTitle>
+                <CardTitle>{'Expense Categories'}</CardTitle>
               </CardHeader>
               <CardContent>
                 {isLoading ? (
                   <Skeleton className="h-[300px]" />
                 ) : expensePieData.length === 0 ? (
                   <div className="h-[300px] flex items-center justify-center text-muted-foreground">
-                    {language === 'bn' ? 'কোনো খরচ নেই' : 'No expenses recorded'}
+                    {'No expenses recorded'}
                   </div>
                 ) : (
                   <ResponsiveContainer width="100%" height={300}>
@@ -425,14 +425,14 @@ export default function AdminProfitReports() {
         <TabsContent value="trend">
           <Card>
             <CardHeader>
-              <CardTitle>{language === 'bn' ? 'দৈনিক লাভ ট্রেন্ড' : 'Daily Profit Trend'}</CardTitle>
+              <CardTitle>{'Daily Profit Trend'}</CardTitle>
             </CardHeader>
             <CardContent>
               {isLoading ? (
                 <Skeleton className="h-[400px]" />
               ) : profitTrendData.length === 0 ? (
                 <div className="h-[400px] flex items-center justify-center text-muted-foreground">
-                  {language === 'bn' ? 'কোনো ডেটা নেই' : 'No data available'}
+                  {'No data available'}
                 </div>
               ) : (
                 <ResponsiveContainer width="100%" height={400}>
@@ -443,9 +443,9 @@ export default function AdminProfitReports() {
                     <Tooltip 
                       formatter={(value: number, name: string) => [
                         `৳${value.toLocaleString()}`, 
-                        name === 'revenue' ? (language === 'bn' ? 'আয়' : 'Revenue') :
-                        name === 'expenses' ? (language === 'bn' ? 'খরচ' : 'Expenses') :
-                        (language === 'bn' ? 'লাভ' : 'Profit')
+                        name === 'revenue' ? ('Revenue') :
+                        name === 'expenses' ? ('Expenses') :
+                        ('Profit')
                       ]}
                       contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }}
                     />
@@ -457,7 +457,7 @@ export default function AdminProfitReports() {
                       stroke="#22c55e" 
                       fill="#22c55e" 
                       fillOpacity={0.3}
-                      name={language === 'bn' ? 'আয়' : 'Revenue'}
+                      name={'Revenue'}
                     />
                     <Area 
                       type="monotone" 
@@ -466,7 +466,7 @@ export default function AdminProfitReports() {
                       stroke="#ef4444" 
                       fill="#ef4444" 
                       fillOpacity={0.3}
-                      name={language === 'bn' ? 'খরচ' : 'Expenses'}
+                      name={'Expenses'}
                     />
                     <Area 
                       type="monotone" 
@@ -474,7 +474,7 @@ export default function AdminProfitReports() {
                       stroke="#3b82f6" 
                       fill="#3b82f6" 
                       fillOpacity={0.5}
-                      name={language === 'bn' ? 'লাভ' : 'Profit'}
+                      name={'Profit'}
                     />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -487,7 +487,7 @@ export default function AdminProfitReports() {
         <TabsContent value="expenses" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>{language === 'bn' ? 'খরচের বিস্তারিত বিশ্লেষণ' : 'Detailed Expense Analysis'}</CardTitle>
+              <CardTitle>{'Detailed Expense Analysis'}</CardTitle>
             </CardHeader>
             <CardContent>
               {isLoading ? (
@@ -499,7 +499,7 @@ export default function AdminProfitReports() {
               ) : expenseBreakdown.length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground">
                   <Receipt className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                  <p>{language === 'bn' ? 'কোনো খরচ রেকর্ড নেই' : 'No expense records'}</p>
+                  <p>{'No expense records'}</p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -535,7 +535,7 @@ export default function AdminProfitReports() {
 
                   {/* Total */}
                   <div className="pt-4 border-t flex justify-between items-center font-bold">
-                    <span>{language === 'bn' ? 'মোট খরচ' : 'Total Expenses'}</span>
+                    <span>{'Total Expenses'}</span>
                     <span className="text-destructive text-lg">৳{summary.totalExpenses.toLocaleString()}</span>
                   </div>
                 </div>
@@ -546,7 +546,7 @@ export default function AdminProfitReports() {
           {/* Daily Expense Breakdown */}
           <Card>
             <CardHeader>
-              <CardTitle>{language === 'bn' ? 'দৈনিক আয়-ব্যয়' : 'Daily Revenue & Expenses'}</CardTitle>
+              <CardTitle>{'Daily Revenue & Expenses'}</CardTitle>
             </CardHeader>
             <CardContent>
               {isLoading ? (
@@ -565,13 +565,13 @@ export default function AdminProfitReports() {
                     <Bar 
                       dataKey="revenue" 
                       fill="#22c55e" 
-                      name={language === 'bn' ? 'আয়' : 'Revenue'}
+                      name={'Revenue'}
                       radius={[4, 4, 0, 0]}
                     />
                     <Bar 
                       dataKey="expenses" 
                       fill="#ef4444" 
-                      name={language === 'bn' ? 'খরচ' : 'Expenses'}
+                      name={'Expenses'}
                       radius={[4, 4, 0, 0]}
                     />
                   </BarChart>

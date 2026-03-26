@@ -32,28 +32,28 @@ const Gallery = () => {
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
 
   const photos = [
-    { src: playgroundKids, alt: language === "bn" ? "প্লেগ্রাউন্ডে খেলছে শিশুরা" : "Children playing in playground" },
-    { src: arcadeGames, alt: language === "bn" ? "আর্কেড গেমস এরিয়া" : "Arcade games area" },
-    { src: carouselRides, alt: language === "bn" ? "ক্যারোসেল রাইড" : "Carousel rides" },
-    { src: clawMachine, alt: language === "bn" ? "ক্ল মেশিন গেমস" : "Claw machine games" },
-    { src: birthdayParty, alt: language === "bn" ? "জন্মদিনের পার্টি" : "Birthday party celebration" },
-    { src: newYearEvent, alt: language === "bn" ? "নতুন বছরের অনুষ্ঠান" : "New Year celebration event" },
-    { src: mascotKids, alt: language === "bn" ? "মাসকটের সাথে শিশুরা" : "Kids with mascot" },
-    { src: mascotClaw, alt: language === "bn" ? "মাসকট ক্ল মেশিনে" : "Mascot at claw machine" },
-    { src: tomMascot, alt: language === "bn" ? "টম মাসকট শিশুদের সাথে" : "Tom mascot with children" },
+    { src: playgroundKids, alt: "Children playing in playground" },
+    { src: arcadeGames, alt: "Arcade games area" },
+    { src: carouselRides, alt: "Carousel rides" },
+    { src: clawMachine, alt: "Claw machine games" },
+    { src: birthdayParty, alt: "Birthday party celebration" },
+    { src: newYearEvent, alt: "New Year celebration event" },
+    { src: mascotKids, alt: "Kids with mascot" },
+    { src: mascotClaw, alt: "Mascot at claw machine" },
+    { src: tomMascot, alt: "Tom mascot with children" },
   ];
 
   const videos = [
     {
       id: "1",
       thumbnail: playgroundKids,
-      title: language === "bn" ? "প্লেগ্রাউন্ড ট্যুর" : "Playground Tour",
+      title: "Playground Tour",
       youtubeId: "dQw4w9WgXcQ", // Placeholder - replace with actual video
     },
     {
       id: "2",
       thumbnail: birthdayParty,
-      title: language === "bn" ? "জন্মদিনের পার্টি" : "Birthday Party",
+      title: "Birthday Party",
       youtubeId: "dQw4w9WgXcQ", // Placeholder - replace with actual video
     },
   ];
@@ -93,11 +93,11 @@ const Gallery = () => {
               <div className="flex items-center justify-center gap-3 mb-4">
                 <Camera className="w-5 h-5 text-primary" />
                 <span className="text-sm font-semibold text-primary uppercase tracking-wider">
-                  {language === "bn" ? "গ্যালারি" : "Gallery"}
+                  {"Gallery"}
                 </span>
               </div>
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
-                {language === "bn" ? "ফটো ও ভিডিও গ্যালারি" : "Photo & Video Gallery"}
+                {"Photo & Video Gallery"}
               </h1>
               <p className="text-lg text-muted-foreground">
                 {language === "bn" 
@@ -112,11 +112,11 @@ const Gallery = () => {
                 <TabsList className="bg-muted/50">
                   <TabsTrigger value="photos" className="gap-2">
                     <Camera className="w-4 h-4" />
-                    {language === "bn" ? "ফটো" : "Photos"}
+                    {"Photos"}
                   </TabsTrigger>
                   <TabsTrigger value="videos" className="gap-2">
                     <Play className="w-4 h-4" />
-                    {language === "bn" ? "ভিডিও" : "Videos"}
+                    {"Videos"}
                   </TabsTrigger>
                 </TabsList>
               </div>
@@ -181,7 +181,7 @@ const Gallery = () => {
                   >
                     <Button variant="outline" size="lg" className="gap-2">
                       <Play className="w-4 h-4" />
-                      {language === "bn" ? "আমাদের YouTube চ্যানেল দেখুন" : "Visit our YouTube Channel"}
+                      {"Visit our YouTube Channel"}
                     </Button>
                   </a>
                 </ScrollFadeIn>

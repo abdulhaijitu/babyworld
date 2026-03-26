@@ -169,9 +169,9 @@ export default function AdminBookings() {
 
       if (updateError) throw updateError;
       setBookings(prev => prev.map(b => b.id === bookingId ? { ...b, status } : b));
-      toast.success(language === 'bn' ? 'স্ট্যাটাস আপডেট হয়েছে' : 'Status updated');
+      toast.success('Status updated');
     } catch (err) {
-      toast.error(language === 'bn' ? 'আপডেট ব্যর্থ' : 'Update failed');
+      toast.error('Update failed');
     }
   };
 
@@ -205,10 +205,10 @@ export default function AdminBookings() {
       setBookings(prev => prev.map(b => 
         b.id === selectedBooking.id ? { ...b, ...updates } : b
       ));
-      toast.success(language === 'bn' ? 'বুকিং বাতিল হয়েছে' : 'Booking cancelled');
+      toast.success('Booking cancelled');
       setCancelOpen(false);
     } catch (err) {
-      toast.error(language === 'bn' ? 'বাতিল ব্যর্থ' : 'Cancel failed');
+      toast.error('Cancel failed');
     } finally {
       setCancelling(false);
     }
@@ -285,11 +285,11 @@ export default function AdminBookings() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'confirmed':
-        return <Badge className="bg-green-500/10 text-green-600 border-green-500/20"><CheckCircle className="w-3 h-3 mr-1" /> {language === 'bn' ? 'নিশ্চিত' : 'Confirmed'}</Badge>;
+        return <Badge className="bg-green-500/10 text-green-600 border-green-500/20"><CheckCircle className="w-3 h-3 mr-1" /> {'Confirmed'}</Badge>;
       case 'pending':
-        return <Badge variant="outline" className="text-yellow-600 border-yellow-500/20"><Clock className="w-3 h-3 mr-1" /> {language === 'bn' ? 'অপেক্ষমাণ' : 'Pending'}</Badge>;
+        return <Badge variant="outline" className="text-yellow-600 border-yellow-500/20"><Clock className="w-3 h-3 mr-1" /> {'Pending'}</Badge>;
       case 'cancelled':
-        return <Badge variant="destructive"><XCircle className="w-3 h-3 mr-1" /> {language === 'bn' ? 'বাতিল' : 'Cancelled'}</Badge>;
+        return <Badge variant="destructive"><XCircle className="w-3 h-3 mr-1" /> {'Cancelled'}</Badge>;
       default:
         return <Badge variant="secondary">{status}</Badge>;
     }
@@ -298,26 +298,26 @@ export default function AdminBookings() {
   const getPaymentBadge = (status: string) => {
     switch (status) {
       case 'paid':
-        return <Badge className="bg-green-500/10 text-green-600 border-green-500/20"><CreditCard className="w-3 h-3 mr-1" /> {language === 'bn' ? 'পরিশোধিত' : 'Paid'}</Badge>;
+        return <Badge className="bg-green-500/10 text-green-600 border-green-500/20"><CreditCard className="w-3 h-3 mr-1" /> {'Paid'}</Badge>;
       case 'pending':
-        return <Badge variant="outline" className="text-yellow-600"><CreditCard className="w-3 h-3 mr-1" /> {language === 'bn' ? 'অপেক্ষমাণ' : 'Pending'}</Badge>;
+        return <Badge variant="outline" className="text-yellow-600"><CreditCard className="w-3 h-3 mr-1" /> {'Pending'}</Badge>;
       case 'failed':
-        return <Badge variant="destructive"><CreditCard className="w-3 h-3 mr-1" /> {language === 'bn' ? 'ব্যর্থ' : 'Failed'}</Badge>;
+        return <Badge variant="destructive"><CreditCard className="w-3 h-3 mr-1" /> {'Failed'}</Badge>;
       case 'refunded':
-        return <Badge variant="outline" className="text-blue-600"><Undo2 className="w-3 h-3 mr-1" /> {language === 'bn' ? 'রিফান্ড' : 'Refunded'}</Badge>;
+        return <Badge variant="outline" className="text-blue-600"><Undo2 className="w-3 h-3 mr-1" /> {'Refunded'}</Badge>;
       default:
-        return <Badge variant="secondary"><CreditCard className="w-3 h-3 mr-1" /> {language === 'bn' ? 'অপরিশোধিত' : 'Unpaid'}</Badge>;
+        return <Badge variant="secondary"><CreditCard className="w-3 h-3 mr-1" /> {'Unpaid'}</Badge>;
     }
   };
 
   const getTicketTypeBadge = (type: string) => {
     switch (type) {
       case 'child_guardian':
-        return <Badge variant="outline">{language === 'bn' ? 'শিশু + অভিভাবক' : 'Child + Guardian'}</Badge>;
+        return <Badge variant="outline">{'Child + Guardian'}</Badge>;
       case 'child_only':
-        return <Badge variant="outline">{language === 'bn' ? 'শুধু শিশু' : 'Child Only'}</Badge>;
+        return <Badge variant="outline">{'Child Only'}</Badge>;
       case 'group':
-        return <Badge variant="outline">{language === 'bn' ? 'গ্রুপ' : 'Group'}</Badge>;
+        return <Badge variant="outline">{'Group'}</Badge>;
       default:
         return <Badge variant="outline">{type}</Badge>;
     }
@@ -348,10 +348,10 @@ export default function AdminBookings() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <CalendarDays className="w-6 h-6" />
-            {language === 'bn' ? 'বুকিং ম্যানেজমেন্ট' : 'Bookings'}
+            {'Bookings'}
           </h1>
           <p className="text-muted-foreground">
-            {language === 'bn' ? 'সকল বুকিং দেখুন ও পরিচালনা করুন' : 'View and manage all bookings'}
+            {'View and manage all bookings'}
           </p>
         </div>
 
@@ -361,23 +361,23 @@ export default function AdminBookings() {
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="list" className="gap-1">
                 <List className="w-4 h-4" />
-                {language === 'bn' ? 'তালিকা' : 'List'}
+                {'List'}
               </TabsTrigger>
               <TabsTrigger value="calendar" className="gap-1">
                 <CalendarIcon className="w-4 h-4" />
-                {language === 'bn' ? 'ক্যালেন্ডার' : 'Calendar'}
+                {'Calendar'}
               </TabsTrigger>
             </TabsList>
           </Tabs>
           
           <Button onClick={() => setManualBookingOpen(true)}>
             <Plus className="w-4 h-4 mr-2" />
-            {language === 'bn' ? 'নতুন বুকিং' : 'New Booking'}
+            {'New Booking'}
           </Button>
           <BookingExport bookings={filteredBookings} />
           <Button variant="outline" size="sm" onClick={fetchBookings} disabled={loading}>
             <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-            {language === 'bn' ? 'রিফ্রেশ' : 'Refresh'}
+            {'Refresh'}
           </Button>
         </div>
       </div>
@@ -386,40 +386,40 @@ export default function AdminBookings() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'আজকের আয়' : "Today's Revenue"}</CardDescription>
+            <CardDescription>{"Today's Revenue"}</CardDescription>
             <CardTitle className="text-2xl">৳{todayRevenue.toLocaleString()}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center text-muted-foreground text-sm">
               <Banknote className="w-4 h-4 mr-1" />
-              {todayBookings.filter(b => b.payment_status === 'paid').length} {language === 'bn' ? 'টি পেমেন্ট' : 'payments'}
+              {todayBookings.filter(b => b.payment_status === 'paid').length} {'payments'}
             </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'মোট বুকিং' : 'Total Bookings'}</CardDescription>
+            <CardDescription>{'Total Bookings'}</CardDescription>
             <CardTitle className="text-2xl">{bookings.length}</CardTitle>
           </CardHeader>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'আজকের বুকিং' : "Today's Bookings"}</CardDescription>
+            <CardDescription>{"Today's Bookings"}</CardDescription>
             <CardTitle className="text-2xl">{todayBookings.length}</CardTitle>
           </CardHeader>
         </Card>
 
         <Card className="bg-gradient-to-br from-green-500/10 to-green-500/5 border-green-500/20">
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'মোট আয়' : 'Total Revenue'}</CardDescription>
+            <CardDescription>{'Total Revenue'}</CardDescription>
             <CardTitle className="text-2xl">৳{totalRevenue.toLocaleString()}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center text-muted-foreground text-sm">
               <TrendingUp className="w-4 h-4 mr-1" />
-              {paidBookings.length} {language === 'bn' ? 'টি পেমেন্ট' : 'paid'}
+              {paidBookings.length} {'paid'}
             </div>
           </CardContent>
         </Card>
@@ -441,9 +441,9 @@ export default function AdminBookings() {
         <Card>
           <CardHeader>
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <CardTitle>{language === 'bn' ? 'বুকিং তালিকা' : 'Booking List'}</CardTitle>
+              <CardTitle>{'Booking List'}</CardTitle>
               <p className="text-sm text-muted-foreground">
-                {filteredBookings.length} {language === 'bn' ? 'টি বুকিং' : 'bookings'}
+                {filteredBookings.length} {'bookings'}
               </p>
             </div>
             
@@ -452,7 +452,7 @@ export default function AdminBookings() {
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
-                  placeholder={language === 'bn' ? 'নাম বা ফোন...' : 'Name or phone...'}
+                  placeholder={'Name or phone...'}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-9"
@@ -464,10 +464,10 @@ export default function AdminBookings() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{language === 'bn' ? 'সব সময়' : 'All Time'}</SelectItem>
-                  <SelectItem value="today">{language === 'bn' ? 'আজ' : 'Today'}</SelectItem>
-                  <SelectItem value="week">{language === 'bn' ? 'এই সপ্তাহ' : 'This Week'}</SelectItem>
-                  <SelectItem value="month">{language === 'bn' ? 'এই মাস' : 'This Month'}</SelectItem>
+                  <SelectItem value="all">{'All Time'}</SelectItem>
+                  <SelectItem value="today">{'Today'}</SelectItem>
+                  <SelectItem value="week">{'This Week'}</SelectItem>
+                  <SelectItem value="month">{'This Month'}</SelectItem>
                 </SelectContent>
               </Select>
               
@@ -476,10 +476,10 @@ export default function AdminBookings() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{language === 'bn' ? 'সব' : 'All'}</SelectItem>
-                  <SelectItem value="confirmed">{language === 'bn' ? 'নিশ্চিত' : 'Confirmed'}</SelectItem>
-                  <SelectItem value="pending">{language === 'bn' ? 'অপেক্ষমাণ' : 'Pending'}</SelectItem>
-                  <SelectItem value="cancelled">{language === 'bn' ? 'বাতিল' : 'Cancelled'}</SelectItem>
+                  <SelectItem value="all">{'All'}</SelectItem>
+                  <SelectItem value="confirmed">{'Confirmed'}</SelectItem>
+                  <SelectItem value="pending">{'Pending'}</SelectItem>
+                  <SelectItem value="cancelled">{'Cancelled'}</SelectItem>
                 </SelectContent>
               </Select>
 
@@ -488,10 +488,10 @@ export default function AdminBookings() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{language === 'bn' ? 'পেমেন্ট' : 'Payment'}</SelectItem>
-                  <SelectItem value="paid">{language === 'bn' ? 'পেইড' : 'Paid'}</SelectItem>
-                  <SelectItem value="unpaid">{language === 'bn' ? 'আনপেইড' : 'Unpaid'}</SelectItem>
-                  <SelectItem value="refunded">{language === 'bn' ? 'রিফান্ড' : 'Refunded'}</SelectItem>
+                  <SelectItem value="all">{'Payment'}</SelectItem>
+                  <SelectItem value="paid">{'Paid'}</SelectItem>
+                  <SelectItem value="unpaid">{'Unpaid'}</SelectItem>
+                  <SelectItem value="refunded">{'Refunded'}</SelectItem>
                 </SelectContent>
               </Select>
 
@@ -499,7 +499,7 @@ export default function AdminBookings() {
                 <PopoverTrigger asChild>
                   <Button variant="outline" className="w-full md:w-auto">
                     <CalendarDays className="w-4 h-4 mr-2" />
-                    {dateFilter ? format(dateFilter, 'dd MMM') : (language === 'bn' ? 'তারিখ' : 'Date')}
+                    {dateFilter ? format(dateFilter, 'dd MMM') : ('Date')}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
@@ -520,17 +520,17 @@ export default function AdminBookings() {
                 <AlertCircle className="w-12 h-12 mx-auto mb-4 text-destructive" />
                 <p className="text-destructive">{error}</p>
                 <Button onClick={fetchBookings} className="mt-4" size="sm">
-                  {language === 'bn' ? 'আবার চেষ্টা করুন' : 'Try Again'}
+                  {'Try Again'}
                 </Button>
               </div>
             ) : loading ? (
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{language === 'bn' ? 'তারিখ' : 'Date'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'অভিভাবক' : 'Parent'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'স্ট্যাটাস' : 'Status'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'পেমেন্ট' : 'Payment'}</TableHead>
+                    <TableHead>{'Date'}</TableHead>
+                    <TableHead>{'Parent'}</TableHead>
+                    <TableHead>{'Status'}</TableHead>
+                    <TableHead>{'Payment'}</TableHead>
                     <TableHead></TableHead>
                   </TableRow>
                 </TableHeader>
@@ -541,10 +541,10 @@ export default function AdminBookings() {
             ) : filteredBookings.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
                 <Ticket className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>{language === 'bn' ? 'কোনো বুকিং নেই' : 'No bookings found'}</p>
+                <p>{'No bookings found'}</p>
                 {hasActiveFilters && (
                   <Button variant="link" onClick={clearFilters} className="mt-2">
-                    {language === 'bn' ? 'ফিল্টার মুছুন' : 'Clear filters'}
+                    {'Clear filters'}
                   </Button>
                 )}
               </div>
@@ -553,11 +553,11 @@ export default function AdminBookings() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>{language === 'bn' ? 'তারিখ ও সময়' : 'Date & Time'}</TableHead>
-                      <TableHead>{language === 'bn' ? 'অভিভাবক' : 'Parent'}</TableHead>
-                      <TableHead>{language === 'bn' ? 'টিকেট' : 'Ticket'}</TableHead>
-                      <TableHead>{language === 'bn' ? 'স্ট্যাটাস' : 'Status'}</TableHead>
-                      <TableHead>{language === 'bn' ? 'পেমেন্ট' : 'Payment'}</TableHead>
+                      <TableHead>{'Date & Time'}</TableHead>
+                      <TableHead>{'Parent'}</TableHead>
+                      <TableHead>{'Ticket'}</TableHead>
+                      <TableHead>{'Status'}</TableHead>
+                      <TableHead>{'Payment'}</TableHead>
                       <TableHead className="text-right"></TableHead>
                     </TableRow>
                   </TableHeader>
@@ -567,7 +567,7 @@ export default function AdminBookings() {
                         <TableCell>
                           <div className="font-medium">
                             {format(parseISO(booking.slot_date), 'dd MMM yyyy', { 
-                              locale: language === 'bn' ? bn : undefined 
+                              locale: undefined 
                             })}
                           </div>
                           <div className="text-sm text-muted-foreground">{booking.time_slot}</div>
@@ -592,25 +592,25 @@ export default function AdminBookings() {
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem onClick={() => openDetailDialog(booking)}>
                                 <Eye className="w-4 h-4 mr-2" />
-                                {language === 'bn' ? 'বিস্তারিত' : 'View Details'}
+                                {'View Details'}
                               </DropdownMenuItem>
                               <DropdownMenuItem onClick={() => openPrintDialog(booking)}>
                                 <Printer className="w-4 h-4 mr-2" />
-                                {language === 'bn' ? 'প্রিন্ট' : 'Print Ticket'}
+                                {'Print Ticket'}
                               </DropdownMenuItem>
                               <DropdownMenuItem 
                                 onClick={() => handleSendSMS(booking)}
                                 disabled={sendingSMS || booking.status === 'cancelled'}
                               >
                                 <MessageSquare className="w-4 h-4 mr-2" />
-                                {language === 'bn' ? 'SMS পাঠান' : 'Send SMS'}
+                                {'Send SMS'}
                               </DropdownMenuItem>
                               <DropdownMenuItem 
                                 onClick={() => handleWhatsApp(booking)}
                                 disabled={booking.status === 'cancelled'}
                               >
                                 <Phone className="w-4 h-4 mr-2" />
-                                {language === 'bn' ? 'WhatsApp' : 'WhatsApp'}
+                                {'WhatsApp'}
                               </DropdownMenuItem>
                               <DropdownMenuItem 
                                 onClick={() => {
@@ -620,7 +620,7 @@ export default function AdminBookings() {
                                 disabled={booking.payment_status === 'paid' || booking.status === 'cancelled'}
                               >
                                 <Wallet className="w-4 h-4 mr-2" />
-                                {language === 'bn' ? 'পেমেন্ট নিন' : 'Collect Payment'}
+                                {'Collect Payment'}
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem 
@@ -628,7 +628,7 @@ export default function AdminBookings() {
                                 disabled={booking.status === 'confirmed' || booking.status === 'cancelled'}
                               >
                                 <CheckCircle className="w-4 h-4 mr-2 text-green-600" />
-                                {language === 'bn' ? 'নিশ্চিত করুন' : 'Confirm'}
+                                {'Confirm'}
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem 
@@ -637,7 +637,7 @@ export default function AdminBookings() {
                                 className="text-destructive"
                               >
                                 <Ban className="w-4 h-4 mr-2" />
-                                {language === 'bn' ? 'বাতিল করুন' : 'Cancel'}
+                                {'Cancel'}
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -656,9 +656,9 @@ export default function AdminBookings() {
       <Dialog open={detailOpen} onOpenChange={setDetailOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{language === 'bn' ? 'বুকিং বিস্তারিত' : 'Booking Details'}</DialogTitle>
+            <DialogTitle>{'Booking Details'}</DialogTitle>
             <DialogDescription>
-              {selectedBooking && format(parseISO(selectedBooking.slot_date), 'EEEE, dd MMMM yyyy', { locale: language === 'bn' ? bn : undefined })}
+              {selectedBooking && format(parseISO(selectedBooking.slot_date), 'EEEE, dd MMMM yyyy', { locale: undefined })}
             </DialogDescription>
           </DialogHeader>
           
@@ -671,27 +671,27 @@ export default function AdminBookings() {
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-muted-foreground">{language === 'bn' ? 'অভিভাবক' : 'Parent'}</Label>
+                  <Label className="text-muted-foreground">{'Parent'}</Label>
                   <p className="font-medium">{selectedBooking.parent_name}</p>
                 </div>
                 <div>
-                  <Label className="text-muted-foreground">{language === 'bn' ? 'ফোন' : 'Phone'}</Label>
+                  <Label className="text-muted-foreground">{'Phone'}</Label>
                   <p className="font-medium">{selectedBooking.parent_phone}</p>
                 </div>
                 <div>
-                  <Label className="text-muted-foreground">{language === 'bn' ? 'সময়' : 'Time Slot'}</Label>
+                  <Label className="text-muted-foreground">{'Time Slot'}</Label>
                   <p className="font-medium">{selectedBooking.time_slot}</p>
                 </div>
                 <div>
-                  <Label className="text-muted-foreground">{language === 'bn' ? 'টিকেট টাইপ' : 'Ticket Type'}</Label>
+                  <Label className="text-muted-foreground">{'Ticket Type'}</Label>
                   <div className="mt-1">{getTicketTypeBadge(selectedBooking.ticket_type)}</div>
                 </div>
                 <div>
-                  <Label className="text-muted-foreground">{language === 'bn' ? 'বুকিং টাইপ' : 'Booking Type'}</Label>
+                  <Label className="text-muted-foreground">{'Booking Type'}</Label>
                   <Badge variant="outline" className="mt-1 capitalize">{selectedBooking.booking_type.replace('_', ' ')}</Badge>
                 </div>
                 <div>
-                  <Label className="text-muted-foreground">{language === 'bn' ? 'বুক করা হয়েছে' : 'Booked On'}</Label>
+                  <Label className="text-muted-foreground">{'Booked On'}</Label>
                   <p className="font-medium text-sm">
                     {format(parseISO(selectedBooking.created_at), 'dd MMM yyyy, hh:mm a')}
                   </p>
@@ -700,7 +700,7 @@ export default function AdminBookings() {
               
               {selectedBooking.notes && (
                 <div>
-                  <Label className="text-muted-foreground">{language === 'bn' ? 'নোট' : 'Notes'}</Label>
+                  <Label className="text-muted-foreground">{'Notes'}</Label>
                   <p className="text-sm mt-1 whitespace-pre-wrap">{selectedBooking.notes}</p>
                 </div>
               )}
@@ -709,7 +709,7 @@ export default function AdminBookings() {
           
           <DialogFooter>
             <Button variant="outline" onClick={() => setDetailOpen(false)}>
-              {language === 'bn' ? 'বন্ধ করুন' : 'Close'}
+              {'Close'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -721,7 +721,7 @@ export default function AdminBookings() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-destructive">
               <Ban className="w-5 h-5" />
-              {language === 'bn' ? 'বুকিং বাতিল করুন' : 'Cancel Booking'}
+              {'Cancel Booking'}
             </DialogTitle>
             <DialogDescription>
               {selectedBooking?.parent_name} - {selectedBooking?.slot_date}
@@ -730,9 +730,9 @@ export default function AdminBookings() {
           
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label>{language === 'bn' ? 'কারণ' : 'Reason'}</Label>
+              <Label>{'Reason'}</Label>
               <Textarea
-                placeholder={language === 'bn' ? 'কারণ লিখুন (ঐচ্ছিক)' : 'Enter reason (optional)'}
+                placeholder={'Enter reason (optional)'}
                 value={cancelReason}
                 onChange={(e) => setCancelReason(e.target.value)}
               />
@@ -747,7 +747,7 @@ export default function AdminBookings() {
                 />
                 <Label htmlFor="refund" className="flex items-center gap-2 cursor-pointer">
                   <Undo2 className="w-4 h-4" />
-                  {language === 'bn' ? 'রিফান্ড করুন' : 'Process Refund'}
+                  {'Process Refund'}
                 </Label>
               </div>
             )}
@@ -755,11 +755,11 @@ export default function AdminBookings() {
           
           <DialogFooter>
             <Button variant="outline" onClick={() => setCancelOpen(false)}>
-              {language === 'bn' ? 'না' : 'No'}
+              {'No'}
             </Button>
             <Button variant="destructive" onClick={handleCancelBooking} disabled={cancelling}>
               {cancelling && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              {language === 'bn' ? 'বাতিল করুন' : 'Confirm Cancel'}
+              {'Confirm Cancel'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -771,10 +771,10 @@ export default function AdminBookings() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Plus className="w-5 h-5" />
-              {language === 'bn' ? 'ম্যানুয়াল বুকিং' : 'Manual Booking'}
+              {'Manual Booking'}
             </DialogTitle>
             <DialogDescription>
-              {language === 'bn' ? 'কাউন্টার থেকে নতুন বুকিং তৈরি করুন' : 'Create a new booking from the counter'}
+              {'Create a new booking from the counter'}
             </DialogDescription>
           </DialogHeader>
           <ManualBookingForm 
@@ -793,7 +793,7 @@ export default function AdminBookings() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Printer className="w-5 h-5" />
-              {language === 'bn' ? 'টিকেট প্রিন্ট করুন' : 'Print Ticket'}
+              {'Print Ticket'}
             </DialogTitle>
           </DialogHeader>
           {printBooking && (

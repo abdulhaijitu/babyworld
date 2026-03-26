@@ -17,12 +17,12 @@ export function TicketSalesReport({ data, isLoading }: TicketSalesReportProps) {
 
   const ticketTypeData = [
     { 
-      name: language === 'bn' ? 'অনলাইন' : 'Online', 
+      name: 'Online', 
       value: data?.tickets.online || 0,
       color: 'hsl(var(--primary))'
     },
     { 
-      name: language === 'bn' ? 'ফিজিক্যাল' : 'Physical', 
+      name: 'Physical', 
       value: data?.tickets.physical || 0,
       color: 'hsl(var(--chart-2))'
     },
@@ -30,19 +30,19 @@ export function TicketSalesReport({ data, isLoading }: TicketSalesReportProps) {
 
   const statusData = [
     { 
-      label: language === 'bn' ? 'ব্যবহৃত' : 'Used',
+      label: 'Used',
       value: data?.tickets.used || 0,
       icon: CheckCircle,
       color: 'text-green-600'
     },
     { 
-      label: language === 'bn' ? 'সক্রিয়' : 'Active',
+      label: 'Active',
       value: data?.tickets.active || 0,
       icon: Clock,
       color: 'text-blue-600'
     },
     { 
-      label: language === 'bn' ? 'বাতিল' : 'Cancelled',
+      label: 'Cancelled',
       value: data?.tickets.cancelled || 0,
       icon: XCircle,
       color: 'text-red-600'
@@ -71,7 +71,7 @@ export function TicketSalesReport({ data, isLoading }: TicketSalesReportProps) {
             <Ticket className="w-8 h-8 mx-auto mb-2 text-primary" />
             <p className="text-2xl font-bold">{data?.tickets.total || 0}</p>
             <p className="text-sm text-muted-foreground">
-              {language === 'bn' ? 'মোট টিকেট' : 'Total Tickets'}
+              {'Total Tickets'}
             </p>
           </CardContent>
         </Card>
@@ -80,7 +80,7 @@ export function TicketSalesReport({ data, isLoading }: TicketSalesReportProps) {
             <Globe className="w-8 h-8 mx-auto mb-2 text-chart-2" />
             <p className="text-2xl font-bold">{data?.tickets.online || 0}</p>
             <p className="text-sm text-muted-foreground">
-              {language === 'bn' ? 'অনলাইন' : 'Online'}
+              {'Online'}
             </p>
           </CardContent>
         </Card>
@@ -89,7 +89,7 @@ export function TicketSalesReport({ data, isLoading }: TicketSalesReportProps) {
             <Store className="w-8 h-8 mx-auto mb-2 text-chart-3" />
             <p className="text-2xl font-bold">{data?.tickets.physical || 0}</p>
             <p className="text-sm text-muted-foreground">
-              {language === 'bn' ? 'ফিজিক্যাল' : 'Physical'}
+              {'Physical'}
             </p>
           </CardContent>
         </Card>
@@ -98,7 +98,7 @@ export function TicketSalesReport({ data, isLoading }: TicketSalesReportProps) {
             <CheckCircle className="w-8 h-8 mx-auto mb-2 text-green-600" />
             <p className="text-2xl font-bold">{usedPercentage}%</p>
             <p className="text-sm text-muted-foreground">
-              {language === 'bn' ? 'ব্যবহার হার' : 'Usage Rate'}
+              {'Usage Rate'}
             </p>
           </CardContent>
         </Card>
@@ -108,9 +108,9 @@ export function TicketSalesReport({ data, isLoading }: TicketSalesReportProps) {
         {/* Ticket Status Breakdown */}
         <Card>
           <CardHeader>
-            <CardTitle>{language === 'bn' ? 'টিকেট স্ট্যাটাস' : 'Ticket Status'}</CardTitle>
+            <CardTitle>{'Ticket Status'}</CardTitle>
             <CardDescription>
-              {language === 'bn' ? 'স্ট্যাটাস অনুযায়ী বিভাজন' : 'Breakdown by status'}
+              {'Breakdown by status'}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -141,9 +141,9 @@ export function TicketSalesReport({ data, isLoading }: TicketSalesReportProps) {
         {/* Daily Ticket Sales Chart */}
         <Card>
           <CardHeader>
-            <CardTitle>{language === 'bn' ? 'দৈনিক বিক্রয়' : 'Daily Sales'}</CardTitle>
+            <CardTitle>{'Daily Sales'}</CardTitle>
             <CardDescription>
-              {language === 'bn' ? 'প্রতিদিনের টিকেট বিক্রয়' : 'Ticket sales per day'}
+              {'Ticket sales per day'}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -158,8 +158,8 @@ export function TicketSalesReport({ data, isLoading }: TicketSalesReportProps) {
                   />
                   <YAxis className="text-xs" allowDecimals={false} />
                   <Tooltip 
-                    formatter={(value: number) => [value, language === 'bn' ? 'টিকেট' : 'Tickets']}
-                    labelFormatter={(label) => `${language === 'bn' ? 'তারিখ' : 'Date'}: ${label}`}
+                    formatter={(value: number) => [value, 'Tickets']}
+                    labelFormatter={(label) => `${'Date'}: ${label}`}
                     contentStyle={{ 
                       backgroundColor: 'hsl(var(--background))', 
                       border: '1px solid hsl(var(--border))' 
@@ -170,7 +170,7 @@ export function TicketSalesReport({ data, isLoading }: TicketSalesReportProps) {
               </ResponsiveContainer>
             ) : (
               <div className="h-[220px] flex items-center justify-center text-muted-foreground">
-                {language === 'bn' ? 'কোনো ডাটা নেই' : 'No data available'}
+                {'No data available'}
               </div>
             )}
           </CardContent>
@@ -180,9 +180,9 @@ export function TicketSalesReport({ data, isLoading }: TicketSalesReportProps) {
       {/* Popular Time Slots */}
       <Card>
         <CardHeader>
-          <CardTitle>{language === 'bn' ? 'জনপ্রিয় সময়' : 'Popular Time Slots'}</CardTitle>
+          <CardTitle>{'Popular Time Slots'}</CardTitle>
           <CardDescription>
-            {language === 'bn' ? 'সবচেয়ে বেশি বুক করা সময়' : 'Most booked time slots'}
+            {'Most booked time slots'}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -199,7 +199,7 @@ export function TicketSalesReport({ data, isLoading }: TicketSalesReportProps) {
               ))
             ) : (
               <p className="text-muted-foreground">
-                {language === 'bn' ? 'কোনো ডাটা নেই' : 'No data available'}
+                {'No data available'}
               </p>
             )}
           </div>

@@ -26,7 +26,7 @@ export function FoodSalesReport({ data, isLoading }: FoodSalesReportProps) {
   };
 
   const categoryData = data?.food.categoryBreakdown.map((cat, index) => ({
-    name: categoryLabels[cat.category]?.[language === 'bn' ? 'bn' : 'en'] || cat.category,
+    name: categoryLabels[cat.category]?.['en'] || cat.category,
     value: cat.revenue,
     count: cat.count,
   })) || [];
@@ -49,7 +49,7 @@ export function FoodSalesReport({ data, isLoading }: FoodSalesReportProps) {
             <UtensilsCrossed className="w-8 h-8 mx-auto mb-2 text-primary" />
             <p className="text-2xl font-bold">৳{(data?.food.totalRevenue || 0).toLocaleString()}</p>
             <p className="text-sm text-muted-foreground">
-              {language === 'bn' ? 'মোট আয়' : 'Total Revenue'}
+              {'Total Revenue'}
             </p>
           </CardContent>
         </Card>
@@ -58,7 +58,7 @@ export function FoodSalesReport({ data, isLoading }: FoodSalesReportProps) {
             <TrendingUp className="w-8 h-8 mx-auto mb-2 text-chart-2" />
             <p className="text-2xl font-bold">{data?.food.completedOrders || 0}</p>
             <p className="text-sm text-muted-foreground">
-              {language === 'bn' ? 'সম্পন্ন অর্ডার' : 'Orders'}
+              {'Orders'}
             </p>
           </CardContent>
         </Card>
@@ -67,7 +67,7 @@ export function FoodSalesReport({ data, isLoading }: FoodSalesReportProps) {
             <Wallet className="w-8 h-8 mx-auto mb-2 text-green-600" />
             <p className="text-2xl font-bold">৳{(data?.food.cashRevenue || 0).toLocaleString()}</p>
             <p className="text-sm text-muted-foreground">
-              {language === 'bn' ? 'নগদ' : 'Cash'}
+              {'Cash'}
             </p>
           </CardContent>
         </Card>
@@ -76,7 +76,7 @@ export function FoodSalesReport({ data, isLoading }: FoodSalesReportProps) {
             <CreditCard className="w-8 h-8 mx-auto mb-2 text-chart-4" />
             <p className="text-2xl font-bold">৳{(data?.food.onlineRevenue || 0).toLocaleString()}</p>
             <p className="text-sm text-muted-foreground">
-              {language === 'bn' ? 'অনলাইন' : 'Online'}
+              {'Online'}
             </p>
           </CardContent>
         </Card>
@@ -86,9 +86,9 @@ export function FoodSalesReport({ data, isLoading }: FoodSalesReportProps) {
         {/* Category Breakdown */}
         <Card>
           <CardHeader>
-            <CardTitle>{language === 'bn' ? 'ক্যাটাগরি অনুযায়ী' : 'By Category'}</CardTitle>
+            <CardTitle>{'By Category'}</CardTitle>
             <CardDescription>
-              {language === 'bn' ? 'খাবারের ধরন অনুযায়ী বিক্রয়' : 'Sales by food category'}
+              {'Sales by food category'}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -110,7 +110,7 @@ export function FoodSalesReport({ data, isLoading }: FoodSalesReportProps) {
                     ))}
                   </Pie>
                   <Tooltip 
-                    formatter={(value: number) => [`৳${value.toLocaleString()}`, language === 'bn' ? 'আয়' : 'Revenue']}
+                    formatter={(value: number) => [`৳${value.toLocaleString()}`, 'Revenue']}
                     contentStyle={{ 
                       backgroundColor: 'hsl(var(--background))', 
                       border: '1px solid hsl(var(--border))' 
@@ -120,7 +120,7 @@ export function FoodSalesReport({ data, isLoading }: FoodSalesReportProps) {
               </ResponsiveContainer>
             ) : (
               <div className="h-[250px] flex items-center justify-center text-muted-foreground">
-                {language === 'bn' ? 'কোনো ডাটা নেই' : 'No data available'}
+                {'No data available'}
               </div>
             )}
           </CardContent>
@@ -129,9 +129,9 @@ export function FoodSalesReport({ data, isLoading }: FoodSalesReportProps) {
         {/* Top Selling Items */}
         <Card>
           <CardHeader>
-            <CardTitle>{language === 'bn' ? 'সেরা বিক্রিত' : 'Top Selling'}</CardTitle>
+            <CardTitle>{'Top Selling'}</CardTitle>
             <CardDescription>
-              {language === 'bn' ? 'সবচেয়ে বেশি বিক্রিত আইটেম' : 'Best selling items'}
+              {'Best selling items'}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -151,7 +151,7 @@ export function FoodSalesReport({ data, isLoading }: FoodSalesReportProps) {
                           {language === 'bn' ? item.name_bn : item.name}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          {item.count} {language === 'bn' ? 'টি বিক্রি' : 'sold'}
+                          {item.count} {'sold'}
                         </p>
                       </div>
                     </div>
@@ -161,7 +161,7 @@ export function FoodSalesReport({ data, isLoading }: FoodSalesReportProps) {
               </div>
             ) : (
               <div className="h-[250px] flex items-center justify-center text-muted-foreground">
-                {language === 'bn' ? 'কোনো ডাটা নেই' : 'No data available'}
+                {'No data available'}
               </div>
             )}
           </CardContent>
@@ -172,19 +172,19 @@ export function FoodSalesReport({ data, isLoading }: FoodSalesReportProps) {
       {data?.food.topItems && data.food.topItems.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>{language === 'bn' ? 'সকল আইটেম' : 'All Items'}</CardTitle>
+            <CardTitle>{'All Items'}</CardTitle>
             <CardDescription>
-              {language === 'bn' ? 'বিস্তারিত আইটেম বিক্রয়' : 'Detailed item sales'}
+              {'Detailed item sales'}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>{language === 'bn' ? 'আইটেম' : 'Item'}</TableHead>
-                  <TableHead>{language === 'bn' ? 'ক্যাটাগরি' : 'Category'}</TableHead>
-                  <TableHead className="text-center">{language === 'bn' ? 'বিক্রয়' : 'Sold'}</TableHead>
-                  <TableHead className="text-right">{language === 'bn' ? 'আয়' : 'Revenue'}</TableHead>
+                  <TableHead>{'Item'}</TableHead>
+                  <TableHead>{'Category'}</TableHead>
+                  <TableHead className="text-center">{'Sold'}</TableHead>
+                  <TableHead className="text-right">{'Revenue'}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -195,7 +195,7 @@ export function FoodSalesReport({ data, isLoading }: FoodSalesReportProps) {
                     </TableCell>
                     <TableCell>
                       <Badge variant="outline">
-                        {categoryLabels[item.category]?.[language === 'bn' ? 'bn' : 'en'] || item.category}
+                        {categoryLabels[item.category]?.['en'] || item.category}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-center">{item.count}</TableCell>

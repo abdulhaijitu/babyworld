@@ -53,7 +53,7 @@ export function BookingSection() {
 
   const handleBookingSubmit = async () => {
     if (!selectedDate || !selectedSlot || !parentName || !parentPhone) {
-      toast.error(language === "bn" ? "সব তথ্য পূরণ করুন" : "Please fill all fields");
+      toast.error("Please fill all fields");
       return;
     }
 
@@ -102,11 +102,11 @@ export function BookingSection() {
         ? "আসসালামু আলাইকুম, Baby World!" 
         : "Hello, Baby World!";
       
-      const bookingLabel = language === "bn" ? "প্লে সেশন বুকিং অনুরোধ" : "Play Session Booking Request";
-      const dateLabel = language === "bn" ? "তারিখ" : "Date";
-      const timeLabel = language === "bn" ? "সময়" : "Time";
-      const childrenLabel = language === "bn" ? "শিশু সংখ্যা" : "Number of Children";
-      const guardiansLabel = language === "bn" ? "অভিভাবক সংখ্যা" : "Number of Guardians";
+      const bookingLabel = "Play Session Booking Request";
+      const dateLabel = "Date";
+      const timeLabel = "Time";
+      const childrenLabel = "Number of Children";
+      const guardiansLabel = "Number of Guardians";
       
       let message = `${greeting}\n\n`;
       message += `📋 ${bookingLabel}\n\n`;
@@ -270,7 +270,7 @@ export function BookingSection() {
                 <div className="flex flex-col items-center justify-center py-12 text-center">
                   <Loader2 className="w-8 h-8 text-primary animate-spin mb-4" />
                   <p className="text-muted-foreground">
-                    {language === "bn" ? "স্লট লোড হচ্ছে..." : "Loading slots..."}
+                    {"Loading slots..."}
                   </p>
                 </div>
               ) : slotsError ? (
@@ -278,7 +278,7 @@ export function BookingSection() {
                   <AlertCircle className="w-8 h-8 text-destructive mb-4" />
                   <p className="text-destructive mb-4">{slotsError}</p>
                   <Button variant="outline" onClick={refetch}>
-                    {language === "bn" ? "আবার চেষ্টা করুন" : "Try Again"}
+                    {"Try Again"}
                   </Button>
                 </div>
               ) : (
@@ -380,18 +380,18 @@ export function BookingSection() {
                   <div className="space-y-4 pt-4 border-t border-border">
                     <div className="space-y-2">
                       <Label htmlFor="parentName">
-                        {language === "bn" ? "অভিভাবকের নাম" : "Parent Name"}
+                        {"Parent Name"}
                       </Label>
                       <Input
                         id="parentName"
                         value={parentName}
                         onChange={(e) => setParentName(e.target.value)}
-                        placeholder={language === "bn" ? "আপনার নাম লিখুন" : "Enter your name"}
+                        placeholder={"Enter your name"}
                       />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="parentPhone">
-                        {language === "bn" ? "মোবাইল নম্বর" : "Phone Number"}
+                        {"Phone Number"}
                       </Label>
                       <Input
                         id="parentPhone"
@@ -424,7 +424,7 @@ export function BookingSection() {
                       onClick={() => setShowBookingForm(true)}
                     >
                       {isComplete 
-                        ? (language === "bn" ? "বুকিং ফর্ম পূরণ করুন" : "Fill Booking Form")
+                        ? ("Fill Booking Form")
                         : t("booking.selectDateTime")
                       }
                     </Button>
@@ -451,12 +451,12 @@ export function BookingSection() {
                       {bookingLoading || paymentLoading ? (
                         <>
                           <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          {language === "bn" ? "প্রসেসিং..." : "Processing..."}
+                          {"Processing..."}
                         </>
                       ) : (
                         <>
                           <CreditCard className="w-4 h-4 mr-2" />
-                          {language === "bn" ? `৳${totalAmount} পেমেন্ট করুন` : `Pay ৳${totalAmount}`}
+                          {`Pay ৳${totalAmount}`}
                         </>
                       )}
                     </Button>
@@ -466,7 +466,7 @@ export function BookingSection() {
                       className="w-full"
                       onClick={() => setShowBookingForm(false)}
                     >
-                      {language === "bn" ? "বাতিল" : "Cancel"}
+                      {"Cancel"}
                     </Button>
                   </div>
                 )}
@@ -484,7 +484,7 @@ export function BookingSection() {
                   <div className="flex items-start gap-2 p-3 bg-green-500/10 rounded-xl">
                     <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
                     <p className="text-xs text-green-600">
-                      {language === "bn" ? "বুকিং সফল হয়েছে!" : "Booking confirmed!"}
+                      {"Booking confirmed!"}
                     </p>
                   </div>
                 )}
@@ -517,24 +517,24 @@ export function BookingSection() {
           <div className="lg:hidden fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-end">
             <div className="w-full bg-card rounded-t-3xl p-6 animate-slide-in-right">
               <h3 className="font-semibold text-foreground mb-4">
-                {language === "bn" ? "বুকিং তথ্য" : "Booking Details"}
+                {"Booking Details"}
               </h3>
               
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="mobileParentName">
-                    {language === "bn" ? "অভিভাবকের নাম" : "Parent Name"}
+                    {"Parent Name"}
                   </Label>
                   <Input
                     id="mobileParentName"
                     value={parentName}
                     onChange={(e) => setParentName(e.target.value)}
-                    placeholder={language === "bn" ? "আপনার নাম লিখুন" : "Enter your name"}
+                    placeholder={"Enter your name"}
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="mobileParentPhone">
-                    {language === "bn" ? "মোবাইল নম্বর" : "Phone Number"}
+                    {"Phone Number"}
                   </Label>
                   <Input
                     id="mobileParentPhone"
@@ -557,7 +557,7 @@ export function BookingSection() {
                     className="flex-1"
                     onClick={() => setShowBookingForm(false)}
                   >
-                    {language === "bn" ? "বাতিল" : "Cancel"}
+                    {"Cancel"}
                   </Button>
                   <Button
                     className="flex-1"
@@ -629,7 +629,7 @@ function BookingSummaryMobile({ selectedDate, selectedSlot, childCount, onBookin
           disabled={!isComplete}
           onClick={onBookingClick}
         >
-          {language === "bn" ? "বুকিং" : "Book"}
+          {"Book"}
         </Button>
       </div>
     </div>

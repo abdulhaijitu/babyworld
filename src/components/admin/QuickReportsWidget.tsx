@@ -23,14 +23,14 @@ export function QuickReportsWidget() {
 
   const stats = [
     {
-      label: language === 'bn' ? 'টিকেট' : 'Tickets',
+      label: 'Tickets',
       value: data?.today.tickets || 0,
-      subtext: `${data?.today.ticketsUsed || 0} ${language === 'bn' ? 'ব্যবহৃত' : 'used'}`,
+      subtext: `${data?.today.ticketsUsed || 0} ${'used'}`,
       icon: Ticket,
       color: 'text-primary',
     },
     {
-      label: language === 'bn' ? 'খাবার' : 'Food',
+      label: 'Food',
       value: data?.today.foodOrders || 0,
       subtext: `৳${(data?.today.foodRevenue || 0).toLocaleString()}`,
       icon: UtensilsCrossed,
@@ -60,15 +60,15 @@ export function QuickReportsWidget() {
           <div>
             <CardTitle className="text-base flex items-center gap-2">
               <TrendingUp className="w-4 h-4" />
-              {language === 'bn' ? 'আজকের সারাংশ' : "Today's Summary"}
+              {"Today's Summary"}
             </CardTitle>
             <CardDescription className="flex items-center gap-1 mt-1">
               <Clock className="w-3 h-3" />
-              {format(new Date(), 'PPP', { locale: language === 'bn' ? bn : undefined })}
+              {format(new Date(), 'PPP', { locale: undefined })}
             </CardDescription>
           </div>
           <Badge variant="secondary" className="text-xs">
-            {language === 'bn' ? 'লাইভ' : 'Live'}
+            {'Live'}
           </Badge>
         </div>
       </CardHeader>
@@ -81,7 +81,7 @@ export function QuickReportsWidget() {
           <div>
             <p className="text-2xl font-bold">৳{todayRevenue.toLocaleString()}</p>
             <p className="text-xs text-muted-foreground">
-              {language === 'bn' ? 'আজকের আয়' : "Today's Revenue"}
+              {"Today's Revenue"}
             </p>
           </div>
         </div>
@@ -108,7 +108,7 @@ export function QuickReportsWidget() {
           className="w-full" 
           onClick={() => navigate('/admin/reports')}
         >
-          {language === 'bn' ? 'বিস্তারিত রিপোর্ট দেখুন' : 'View Full Reports'}
+          {'View Full Reports'}
           <ArrowRight className="w-4 h-4 ml-2" />
         </Button>
       </CardContent>

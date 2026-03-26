@@ -126,12 +126,12 @@ export default function AdminRides() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-rides'] });
       queryClient.invalidateQueries({ queryKey: ['rides'] });
-      toast.success(language === 'bn' ? 'রাইড যোগ হয়েছে!' : 'Ride added successfully!');
+      toast.success('Ride added successfully!');
       setCreateOpen(false);
       resetForm();
     },
     onError: (error: any) => {
-      toast.error(error.message || (language === 'bn' ? 'রাইড যোগ ব্যর্থ' : 'Failed to add ride'));
+      toast.error(error.message || ('Failed to add ride'));
     }
   });
 
@@ -151,12 +151,12 @@ export default function AdminRides() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-rides'] });
       queryClient.invalidateQueries({ queryKey: ['rides'] });
-      toast.success(language === 'bn' ? 'রাইড আপডেট হয়েছে!' : 'Ride updated successfully!');
+      toast.success('Ride updated successfully!');
       setEditOpen(false);
       resetForm();
     },
     onError: (error: any) => {
-      toast.error(error.message || (language === 'bn' ? 'আপডেট ব্যর্থ' : 'Update failed'));
+      toast.error(error.message || ('Update failed'));
     }
   });
 
@@ -169,12 +169,12 @@ export default function AdminRides() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-rides'] });
       queryClient.invalidateQueries({ queryKey: ['rides'] });
-      toast.success(language === 'bn' ? 'রাইড মুছে ফেলা হয়েছে!' : 'Ride deleted successfully!');
+      toast.success('Ride deleted successfully!');
       setDeleteOpen(false);
       setSelectedRide(null);
     },
     onError: (error: any) => {
-      toast.error(error.message || (language === 'bn' ? 'মুছে ফেলা ব্যর্থ' : 'Delete failed'));
+      toast.error(error.message || ('Delete failed'));
     }
   });
 
@@ -202,13 +202,13 @@ export default function AdminRides() {
 
     // Validate file type
     if (!file.type.startsWith('image/')) {
-      toast.error(language === 'bn' ? 'শুধু ইমেজ ফাইল আপলোড করুন' : 'Please upload an image file');
+      toast.error('Please upload an image file');
       return;
     }
 
     // Validate file size (max 2MB)
     if (file.size > 2 * 1024 * 1024) {
-      toast.error(language === 'bn' ? 'ইমেজ ২MB এর বেশি হতে পারবে না' : 'Image must be less than 2MB');
+      toast.error('Image must be less than 2MB');
       return;
     }
 
@@ -228,10 +228,10 @@ export default function AdminRides() {
         .getPublicUrl(fileName);
 
       setFormData(prev => ({ ...prev, image_url: publicUrl }));
-      toast.success(language === 'bn' ? 'ইমেজ আপলোড হয়েছে!' : 'Image uploaded!');
+      toast.success('Image uploaded!');
     } catch (error: any) {
       console.error('Upload error:', error);
-      toast.error(error.message || (language === 'bn' ? 'আপলোড ব্যর্থ' : 'Upload failed'));
+      toast.error(error.message || ('Upload failed'));
     } finally {
       setUploading(false);
     }
@@ -280,16 +280,16 @@ export default function AdminRides() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <FerrisWheel className="w-6 h-6" />
-            {language === 'bn' ? 'রাইড ম্যানেজমেন্ট' : 'Ride Management'}
+            {'Ride Management'}
           </h1>
           <p className="text-muted-foreground">
-            {language === 'bn' ? 'সব রাইড পরিচালনা করুন' : 'Manage all rides'}
+            {'Manage all rides'}
           </p>
         </div>
 
         <Button onClick={() => { resetForm(); setCreateOpen(true); }}>
           <Plus className="w-4 h-4 mr-2" />
-          {language === 'bn' ? 'নতুন রাইড' : 'Add Ride'}
+          {'Add Ride'}
         </Button>
       </div>
 
@@ -297,25 +297,25 @@ export default function AdminRides() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'মোট রাইড' : 'Total Rides'}</CardDescription>
+            <CardDescription>{'Total Rides'}</CardDescription>
             <CardTitle className="text-2xl">{totalRides}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'সক্রিয়' : 'Active'}</CardDescription>
+            <CardDescription>{'Active'}</CardDescription>
             <CardTitle className="text-2xl text-green-600">{activeRides}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'কিডস' : 'Kids'}</CardDescription>
+            <CardDescription>{'Kids'}</CardDescription>
             <CardTitle className="text-2xl">{categoryStats.kids}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{language === 'bn' ? 'ফ্যামিলি/থ্রিল' : 'Family/Thrill'}</CardDescription>
+            <CardDescription>{'Family/Thrill'}</CardDescription>
             <CardTitle className="text-2xl">{categoryStats.family + categoryStats.thrill}</CardTitle>
           </CardHeader>
         </Card>
@@ -324,7 +324,7 @@ export default function AdminRides() {
       {/* Rides Table */}
       <Card>
         <CardHeader>
-          <CardTitle>{language === 'bn' ? 'রাইড তালিকা' : 'Ride List'}</CardTitle>
+          <CardTitle>{'Ride List'}</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (
@@ -334,7 +334,7 @@ export default function AdminRides() {
           ) : rides.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
               <FerrisWheel className="w-12 h-12 mx-auto mb-2 opacity-50" />
-              <p>{language === 'bn' ? 'কোনো রাইড নেই' : 'No rides found'}</p>
+              <p>{'No rides found'}</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -342,11 +342,11 @@ export default function AdminRides() {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[60px]"></TableHead>
-                    <TableHead>{language === 'bn' ? 'নাম' : 'Name'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'ক্যাটাগরি' : 'Category'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'মূল্য' : 'Price'}</TableHead>
-                    <TableHead>{language === 'bn' ? 'স্ট্যাটাস' : 'Status'}</TableHead>
-                    <TableHead className="text-right">{language === 'bn' ? 'অ্যাকশন' : 'Actions'}</TableHead>
+                    <TableHead>{'Name'}</TableHead>
+                    <TableHead>{'Category'}</TableHead>
+                    <TableHead>{'Price'}</TableHead>
+                    <TableHead>{'Status'}</TableHead>
+                    <TableHead className="text-right">{'Actions'}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -428,17 +428,17 @@ export default function AdminRides() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {language === 'bn' ? 'নতুন রাইড যোগ করুন' : 'Add New Ride'}
+              {'Add New Ride'}
             </DialogTitle>
             <DialogDescription>
-              {language === 'bn' ? 'রাইডের তথ্য দিন' : 'Enter ride details'}
+              {'Enter ride details'}
             </DialogDescription>
           </DialogHeader>
           
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>{language === 'bn' ? 'নাম (ইংরেজি)' : 'Name (English)'}</Label>
+                <Label>{'Name (English)'}</Label>
                 <Input
                   value={formData.name}
                   onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
@@ -446,7 +446,7 @@ export default function AdminRides() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>{language === 'bn' ? 'নাম (বাংলা)' : 'Name (Bengali)'}</Label>
+                <Label>{'Name (Bengali)'}</Label>
                 <Input
                   value={formData.name_bn}
                   onChange={(e) => setFormData(prev => ({ ...prev, name_bn: e.target.value }))}
@@ -457,7 +457,7 @@ export default function AdminRides() {
             
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>{language === 'bn' ? 'মূল্য (৳)' : 'Price (৳)'}</Label>
+                <Label>{'Price (৳)'}</Label>
                 <Input
                   type="number"
                   value={formData.price}
@@ -466,7 +466,7 @@ export default function AdminRides() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>{language === 'bn' ? 'ক্যাটাগরি' : 'Category'}</Label>
+                <Label>{'Category'}</Label>
                 <Select
                   value={formData.category}
                   onValueChange={(value: RideCategory) => setFormData(prev => ({ ...prev, category: value }))}
@@ -475,9 +475,9 @@ export default function AdminRides() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="kids">{language === 'bn' ? 'কিডস' : 'Kids'}</SelectItem>
-                    <SelectItem value="family">{language === 'bn' ? 'ফ্যামিলি' : 'Family'}</SelectItem>
-                    <SelectItem value="thrill">{language === 'bn' ? 'থ্রিল' : 'Thrill'}</SelectItem>
+                    <SelectItem value="kids">{'Kids'}</SelectItem>
+                    <SelectItem value="family">{'Family'}</SelectItem>
+                    <SelectItem value="thrill">{'Thrill'}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -488,12 +488,12 @@ export default function AdminRides() {
                 checked={formData.is_active}
                 onCheckedChange={(checked) => setFormData(prev => ({ ...prev, is_active: checked }))}
               />
-              <Label>{language === 'bn' ? 'সক্রিয়' : 'Active'}</Label>
+              <Label>{'Active'}</Label>
             </div>
 
             {/* Image Upload */}
             <div className="space-y-2">
-              <Label>{language === 'bn' ? 'রাইড ছবি' : 'Ride Image'}</Label>
+              <Label>{'Ride Image'}</Label>
               {formData.image_url ? (
                 <div className="relative w-full h-32 rounded-lg overflow-hidden border">
                   <img 
@@ -519,7 +519,7 @@ export default function AdminRides() {
                     <>
                       <Upload className="h-8 w-8 text-muted-foreground mb-2" />
                       <span className="text-sm text-muted-foreground">
-                        {language === 'bn' ? 'ছবি আপলোড করুন' : 'Upload image'}
+                        {'Upload image'}
                       </span>
                     </>
                   )}
@@ -537,14 +537,14 @@ export default function AdminRides() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setCreateOpen(false)}>
-              {language === 'bn' ? 'বাতিল' : 'Cancel'}
+              {'Cancel'}
             </Button>
             <Button 
               onClick={() => createMutation.mutate(formData)}
               disabled={!formData.name || formData.price <= 0 || createMutation.isPending}
             >
               {createMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              {language === 'bn' ? 'যোগ করুন' : 'Add Ride'}
+              {'Add Ride'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -555,21 +555,21 @@ export default function AdminRides() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {language === 'bn' ? 'রাইড সম্পাদনা' : 'Edit Ride'}
+              {'Edit Ride'}
             </DialogTitle>
           </DialogHeader>
           
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>{language === 'bn' ? 'নাম (ইংরেজি)' : 'Name (English)'}</Label>
+                <Label>{'Name (English)'}</Label>
                 <Input
                   value={formData.name}
                   onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                 />
               </div>
               <div className="space-y-2">
-                <Label>{language === 'bn' ? 'নাম (বাংলা)' : 'Name (Bengali)'}</Label>
+                <Label>{'Name (Bengali)'}</Label>
                 <Input
                   value={formData.name_bn}
                   onChange={(e) => setFormData(prev => ({ ...prev, name_bn: e.target.value }))}
@@ -579,7 +579,7 @@ export default function AdminRides() {
             
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>{language === 'bn' ? 'মূল্য (৳)' : 'Price (৳)'}</Label>
+                <Label>{'Price (৳)'}</Label>
                 <Input
                   type="number"
                   value={formData.price}
@@ -588,7 +588,7 @@ export default function AdminRides() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>{language === 'bn' ? 'ক্যাটাগরি' : 'Category'}</Label>
+                <Label>{'Category'}</Label>
                 <Select
                   value={formData.category}
                   onValueChange={(value: RideCategory) => setFormData(prev => ({ ...prev, category: value }))}
@@ -597,9 +597,9 @@ export default function AdminRides() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="kids">{language === 'bn' ? 'কিডস' : 'Kids'}</SelectItem>
-                    <SelectItem value="family">{language === 'bn' ? 'ফ্যামিলি' : 'Family'}</SelectItem>
-                    <SelectItem value="thrill">{language === 'bn' ? 'থ্রিল' : 'Thrill'}</SelectItem>
+                    <SelectItem value="kids">{'Kids'}</SelectItem>
+                    <SelectItem value="family">{'Family'}</SelectItem>
+                    <SelectItem value="thrill">{'Thrill'}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -610,12 +610,12 @@ export default function AdminRides() {
                 checked={formData.is_active}
                 onCheckedChange={(checked) => setFormData(prev => ({ ...prev, is_active: checked }))}
               />
-              <Label>{language === 'bn' ? 'সক্রিয়' : 'Active'}</Label>
+              <Label>{'Active'}</Label>
             </div>
 
             {/* Image Upload */}
             <div className="space-y-2">
-              <Label>{language === 'bn' ? 'রাইড ছবি' : 'Ride Image'}</Label>
+              <Label>{'Ride Image'}</Label>
               {formData.image_url ? (
                 <div className="relative w-full h-32 rounded-lg overflow-hidden border">
                   <img 
@@ -641,7 +641,7 @@ export default function AdminRides() {
                     <>
                       <Upload className="h-8 w-8 text-muted-foreground mb-2" />
                       <span className="text-sm text-muted-foreground">
-                        {language === 'bn' ? 'ছবি আপলোড করুন' : 'Upload image'}
+                        {'Upload image'}
                       </span>
                     </>
                   )}
@@ -659,14 +659,14 @@ export default function AdminRides() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditOpen(false)}>
-              {language === 'bn' ? 'বাতিল' : 'Cancel'}
+              {'Cancel'}
             </Button>
             <Button 
               onClick={() => selectedRide && updateMutation.mutate({ id: selectedRide.id, data: formData })}
               disabled={!formData.name || formData.price <= 0 || updateMutation.isPending}
             >
               {updateMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              {language === 'bn' ? 'সংরক্ষণ করুন' : 'Save Changes'}
+              {'Save Changes'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -677,7 +677,7 @@ export default function AdminRides() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {language === 'bn' ? 'রাইড মুছে ফেলবেন?' : 'Delete Ride?'}
+              {'Delete Ride?'}
             </AlertDialogTitle>
             <AlertDialogDescription>
               {language === 'bn' 
@@ -687,13 +687,13 @@ export default function AdminRides() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>{language === 'bn' ? 'বাতিল' : 'Cancel'}</AlertDialogCancel>
+            <AlertDialogCancel>{'Cancel'}</AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={() => selectedRide && deleteMutation.mutate(selectedRide.id)}
             >
               {deleteMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              {language === 'bn' ? 'মুছে ফেলুন' : 'Delete'}
+              {'Delete'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

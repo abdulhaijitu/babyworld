@@ -22,7 +22,7 @@ export default function PaymentCancel() {
           </div>
           
           <CardTitle className="text-2xl text-destructive">
-            {language === 'bn' ? 'পেমেন্ট বাতিল হয়েছে' : 'Payment Cancelled'}
+            {'Payment Cancelled'}
           </CardTitle>
         </CardHeader>
         
@@ -36,11 +36,11 @@ export default function PaymentCancel() {
           <div className="flex flex-col gap-3">
             <Button onClick={() => navigate('/play-booking')} className="w-full">
               <RefreshCw className="w-4 h-4 mr-2" />
-              {language === 'bn' ? 'আবার চেষ্টা করুন' : 'Try Again'}
+              {'Try Again'}
             </Button>
             <Button variant="outline" onClick={() => navigate('/')}>
               <Home className="w-4 h-4 mr-2" />
-              {language === 'bn' ? 'হোমপেজে ফিরে যান' : 'Back to Home'}
+              {'Back to Home'}
             </Button>
           </div>
         </CardContent>

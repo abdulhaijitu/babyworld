@@ -121,17 +121,17 @@ export function BookingCalendarView({ bookings, onBookingSelect }: BookingCalend
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2">
               <CalendarIcon className="w-5 h-5" />
-              {language === 'bn' ? 'বুকিং ক্যালেন্ডার' : 'Booking Calendar'}
+              {'Booking Calendar'}
             </CardTitle>
             <div className="flex items-center gap-2">
               <Button variant="outline" size="sm" onClick={goToToday}>
-                {language === 'bn' ? 'আজ' : 'Today'}
+                {'Today'}
               </Button>
               <Button variant="outline" size="icon" onClick={goToPreviousMonth}>
                 <ChevronLeft className="w-4 h-4" />
               </Button>
               <span className="font-medium min-w-[140px] text-center">
-                {format(currentMonth, 'MMMM yyyy', { locale: language === 'bn' ? bn : undefined })}
+                {format(currentMonth, 'MMMM yyyy', { locale: undefined })}
               </span>
               <Button variant="outline" size="icon" onClick={goToNextMonth}>
                 <ChevronRight className="w-4 h-4" />
@@ -193,7 +193,7 @@ export function BookingCalendarView({ bookings, onBookingSelect }: BookingCalend
                       )}
                       {dayBookings.length > 2 && (
                         <div className="text-xs text-muted-foreground">
-                          +{dayBookings.length - 2} {language === 'bn' ? 'আরও' : 'more'}
+                          +{dayBookings.length - 2} {'more'}
                         </div>
                       )}
                     </div>
@@ -207,15 +207,15 @@ export function BookingCalendarView({ bookings, onBookingSelect }: BookingCalend
           <div className="flex items-center gap-4 mt-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-1">
               <div className="w-3 h-3 rounded-full bg-green-500"></div>
-              {language === 'bn' ? 'নিশ্চিত' : 'Confirmed'}
+              {'Confirmed'}
             </div>
             <div className="flex items-center gap-1">
               <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-              {language === 'bn' ? 'অপেক্ষমাণ' : 'Pending'}
+              {'Pending'}
             </div>
             <div className="flex items-center gap-1">
               <div className="w-3 h-3 rounded-full bg-red-500"></div>
-              {language === 'bn' ? 'বাতিল' : 'Cancelled'}
+              {'Cancelled'}
             </div>
           </div>
         </CardContent>
@@ -227,7 +227,7 @@ export function BookingCalendarView({ bookings, onBookingSelect }: BookingCalend
           <DialogHeader>
             <DialogTitle>
               {selectedDate && format(selectedDate, 'EEEE, dd MMMM yyyy', { 
-                locale: language === 'bn' ? bn : undefined 
+                locale: undefined 
               })}
             </DialogTitle>
           </DialogHeader>
@@ -252,8 +252,8 @@ export function BookingCalendarView({ bookings, onBookingSelect }: BookingCalend
                       className={booking.status === 'confirmed' ? 'bg-green-500/10 text-green-600' : ''}
                     >
                       {booking.status === 'confirmed' 
-                        ? (language === 'bn' ? 'নিশ্চিত' : 'Confirmed') 
-                        : (language === 'bn' ? 'অপেক্ষমাণ' : 'Pending')
+                        ? ('Confirmed') 
+                        : ('Pending')
                       }
                     </Badge>
                   </div>

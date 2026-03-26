@@ -46,10 +46,10 @@ export default function AdminReports() {
   );
 
   const dateRangeOptions = [
-    { value: 'today', label: language === 'bn' ? 'আজ' : 'Today' },
-    { value: 'week', label: language === 'bn' ? 'এই সপ্তাহ' : 'This Week' },
-    { value: 'month', label: language === 'bn' ? 'এই মাস' : 'This Month' },
-    { value: 'custom', label: language === 'bn' ? 'কাস্টম' : 'Custom' },
+    { value: 'today', label: 'Today' },
+    { value: 'week', label: 'This Week' },
+    { value: 'month', label: 'This Month' },
+    { value: 'custom', label: 'Custom' },
   ];
 
   const exportToCSV = (type: 'tickets' | 'food' | 'revenue' | 'summary') => {
@@ -103,10 +103,10 @@ export default function AdminReports() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <FileBarChart className="w-6 h-6" />
-            {language === 'bn' ? 'সেলস ও রেভিনিউ রিপোর্ট' : 'Sales & Revenue Reports'}
+            {'Sales & Revenue Reports'}
           </h1>
           <p className="text-muted-foreground">
-            {language === 'bn' ? 'বিস্তারিত বিশ্লেষণ ও সারাংশ' : 'Detailed analytics and summaries'}
+            {'Detailed analytics and summaries'}
           </p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
@@ -127,8 +127,8 @@ export default function AdminReports() {
               <Popover>
                 <PopoverTrigger asChild>
                   <Button variant="outline" size="sm" className={cn(!customStart && "text-muted-foreground")}>
-                    {customStart ? format(customStart, 'PP', { locale: language === 'bn' ? bn : undefined }) : 
-                      (language === 'bn' ? 'শুরু' : 'Start')}
+                    {customStart ? format(customStart, 'PP', { locale: undefined }) : 
+                      ('Start')}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
@@ -138,8 +138,8 @@ export default function AdminReports() {
               <Popover>
                 <PopoverTrigger asChild>
                   <Button variant="outline" size="sm" className={cn(!customEnd && "text-muted-foreground")}>
-                    {customEnd ? format(customEnd, 'PP', { locale: language === 'bn' ? bn : undefined }) : 
-                      (language === 'bn' ? 'শেষ' : 'End')}
+                    {customEnd ? format(customEnd, 'PP', { locale: undefined }) : 
+                      ('End')}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
@@ -169,23 +169,23 @@ export default function AdminReports() {
           <TabsList className="grid w-full sm:w-auto grid-cols-5">
             <TabsTrigger value="overview" className="gap-2">
               <TrendingUp className="w-4 h-4 hidden sm:inline" />
-              {language === 'bn' ? 'সারাংশ' : 'Overview'}
+              {'Overview'}
             </TabsTrigger>
             <TabsTrigger value="comparison" className="gap-2">
               <BarChart3 className="w-4 h-4 hidden sm:inline" />
-              {language === 'bn' ? 'তুলনা' : 'Compare'}
+              {'Compare'}
             </TabsTrigger>
             <TabsTrigger value="tickets" className="gap-2">
               <Ticket className="w-4 h-4 hidden sm:inline" />
-              {language === 'bn' ? 'টিকেট' : 'Tickets'}
+              {'Tickets'}
             </TabsTrigger>
             <TabsTrigger value="food" className="gap-2">
               <UtensilsCrossed className="w-4 h-4 hidden sm:inline" />
-              {language === 'bn' ? 'খাবার' : 'Food'}
+              {'Food'}
             </TabsTrigger>
             <TabsTrigger value="revenue" className="gap-2">
               <FileBarChart className="w-4 h-4 hidden sm:inline" />
-              {language === 'bn' ? 'আয়' : 'Revenue'}
+              {'Revenue'}
             </TabsTrigger>
           </TabsList>
 
@@ -197,7 +197,7 @@ export default function AdminReports() {
               disabled={!data}
             >
               <Printer className="w-4 h-4 mr-2" />
-              {language === 'bn' ? 'প্রিন্ট' : 'Print'}
+              {'Print'}
             </Button>
             <Button 
               variant="outline" 
@@ -206,7 +206,7 @@ export default function AdminReports() {
               disabled={!data}
             >
               <Download className="w-4 h-4 mr-2" />
-              {language === 'bn' ? 'এক্সপোর্ট' : 'Export'}
+              {'Export'}
             </Button>
           </div>
         </div>
@@ -276,7 +276,7 @@ export default function AdminReports() {
           <CardContent className="py-12 text-center">
             <FileBarChart className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
             <h3 className="text-lg font-medium mb-2">
-              {language === 'bn' ? 'কোনো ডাটা নেই' : 'No Data Yet'}
+              {'No Data Yet'}
             </h3>
             <p className="text-muted-foreground max-w-md mx-auto">
               {language === 'bn' 

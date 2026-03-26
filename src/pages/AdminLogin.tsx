@@ -110,7 +110,7 @@ export default function AdminLogin() {
         console.error('[AdminLogin] Sign in error:', error.message);
       } else {
         setAuthStatus('success');
-        toast.success(language === 'bn' ? 'সফলভাবে লগইন হয়েছে' : 'Logged in successfully');
+        toast.success('Logged in successfully');
         // Navigation will happen via the useEffect above
       }
     } catch (err: any) {
@@ -151,7 +151,7 @@ export default function AdminLogin() {
           <div className="space-y-2">
             <CardTitle className="text-2xl font-bold flex items-center justify-center gap-2">
               <ShieldCheck className="w-6 h-6 text-primary" />
-              {language === 'bn' ? 'অ্যাডমিন লগইন' : 'Admin Login'}
+              {'Admin Login'}
             </CardTitle>
             <CardDescription>
               {language === 'bn' 
@@ -182,7 +182,7 @@ export default function AdminLogin() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">
-                {language === 'bn' ? 'ইমেইল' : 'Email'}
+                {'Email'}
               </Label>
               <Input
                 id="email"
@@ -199,7 +199,7 @@ export default function AdminLogin() {
             
             <div className="space-y-2">
               <Label htmlFor="password">
-                {language === 'bn' ? 'পাসওয়ার্ড' : 'Password'}
+                {'Password'}
               </Label>
               <div className="relative">
                 <Input
@@ -232,15 +232,15 @@ export default function AdminLogin() {
               {isSubmitting ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  {language === 'bn' ? 'লগইন হচ্ছে...' : 'Signing in...'}
+                  {'Signing in...'}
                 </>
               ) : authStatus === 'success' ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  {language === 'bn' ? 'রিডাইরেক্ট হচ্ছে...' : 'Redirecting...'}
+                  {'Redirecting...'}
                 </>
               ) : (
-                language === 'bn' ? 'লগইন করুন' : 'Sign In'
+                'Sign In'
               )}
             </Button>
           </form>
@@ -252,7 +252,7 @@ export default function AdminLogin() {
               className="text-muted-foreground"
               disabled={isSubmitting}
             >
-              {language === 'bn' ? '← হোমপেজে ফিরে যান' : '← Back to Homepage'}
+              {'← Back to Homepage'}
             </Button>
           </div>
         </CardContent>

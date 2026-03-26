@@ -248,7 +248,7 @@ export function TicketSuccessDialog({ open, onClose, ticket, rideNames = {} }: T
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Check className="h-5 w-5 text-green-600" />
-            {language === 'bn' ? 'টিকেট তৈরি সফল!' : 'Ticket Created Successfully!'}
+            {'Ticket Created Successfully!'}
           </DialogTitle>
         </DialogHeader>
 
@@ -284,7 +284,7 @@ export function TicketSuccessDialog({ open, onClose, ticket, rideNames = {} }: T
               />
             </div>
             <p className="scan-text text-xs text-muted-foreground mt-2">
-              {language === 'bn' ? 'গেটে স্ক্যান করুন' : 'Scan at gate'}
+              {'Scan at gate'}
             </p>
           </div>
 
@@ -293,21 +293,21 @@ export function TicketSuccessDialog({ open, onClose, ticket, rideNames = {} }: T
             <div className="info-row flex justify-between">
               <span className="label text-muted-foreground flex items-center gap-1">
                 <User className="h-3 w-3" />
-                {language === 'bn' ? 'অভিভাবক' : 'Guardian'}
+                {'Guardian'}
               </span>
               <span className="value font-medium">{ticket.guardian_name}</span>
             </div>
             <div className="info-row flex justify-between">
               <span className="label text-muted-foreground flex items-center gap-1">
                 <Phone className="h-3 w-3" />
-                {language === 'bn' ? 'ফোন' : 'Phone'}
+                {'Phone'}
               </span>
               <span className="value font-medium">{ticket.guardian_phone}</span>
             </div>
             <div className="info-row flex justify-between">
               <span className="label text-muted-foreground flex items-center gap-1">
                 <Calendar className="h-3 w-3" />
-                {language === 'bn' ? 'তারিখ' : 'Date'}
+                {'Date'}
               </span>
               <span className="value font-medium">{ticket.slot_date}</span>
             </div>
@@ -319,12 +319,12 @@ export function TicketSuccessDialog({ open, onClose, ticket, rideNames = {} }: T
           <div className="time-box p-3 rounded-lg bg-muted/50">
             <div className="flex justify-between items-center">
               <div className="text-center flex-1">
-                <p className="text-xs text-muted-foreground">{language === 'bn' ? 'প্রবেশ' : 'IN'}</p>
+                <p className="text-xs text-muted-foreground">{'IN'}</p>
                 <p className="text-lg font-bold">{format(inTime, 'hh:mm a')}</p>
               </div>
               <Clock className="h-6 w-6 text-muted-foreground mx-4" />
               <div className="text-center flex-1">
-                <p className="text-xs text-muted-foreground">{language === 'bn' ? 'বের' : 'OUT'}</p>
+                <p className="text-xs text-muted-foreground">{'OUT'}</p>
                 <p className="text-lg font-bold">{format(outTime, 'hh:mm a')}</p>
               </div>
             </div>
@@ -333,17 +333,17 @@ export function TicketSuccessDialog({ open, onClose, ticket, rideNames = {} }: T
           {/* Entry Details */}
           <div className="space-y-1 text-sm">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">{language === 'bn' ? 'অভিভাবক' : 'Guardians'}</span>
+              <span className="text-muted-foreground">{'Guardians'}</span>
               <span>{ticket.guardian_count}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">{language === 'bn' ? 'শিশু' : 'Children'}</span>
+              <span className="text-muted-foreground">{'Children'}</span>
               <span>{ticket.child_count}</span>
             </div>
             {ticket.socks_count > 0 && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">{language === 'bn' ? 'মোজা' : 'Socks'}</span>
-                <span>{ticket.socks_count} {language === 'bn' ? 'জোড়া' : 'pairs'}</span>
+                <span className="text-muted-foreground">{'Socks'}</span>
+                <span>{ticket.socks_count} {'pairs'}</span>
               </div>
             )}
           </div>
@@ -354,7 +354,7 @@ export function TicketSuccessDialog({ open, onClose, ticket, rideNames = {} }: T
               <Separator className="separator" />
               <div className="space-y-1 text-sm">
                 <p className="font-medium text-muted-foreground mb-2">
-                  {language === 'bn' ? 'রাইড সমূহ' : 'Rides'}
+                  {'Rides'}
                 </p>
                 {ticket.rides!.map((ride, index) => (
                   <div key={index} className="flex justify-between">
@@ -372,18 +372,18 @@ export function TicketSuccessDialog({ open, onClose, ticket, rideNames = {} }: T
 
           {/* Price */}
           <div className="total text-center">
-            <p className="text-sm text-muted-foreground mb-1">{language === 'bn' ? 'মোট মূল্য' : 'Total Amount'}</p>
+            <p className="text-sm text-muted-foreground mb-1">{'Total Amount'}</p>
             <p className="text-2xl font-bold text-primary">৳{ticket.total_price}</p>
             <Badge variant={ticket.payment_status === 'paid' ? 'default' : 'secondary'} className="mt-2">
-              {ticket.payment_type === 'cash' ? (language === 'bn' ? 'নগদ' : 'Cash') : (language === 'bn' ? 'অনলাইন' : 'Online')}
+              {ticket.payment_type === 'cash' ? ('Cash') : ('Online')}
               {' • '}
-              {ticket.payment_status === 'paid' ? (language === 'bn' ? 'পরিশোধিত' : 'Paid') : (language === 'bn' ? 'বাকি' : 'Pending')}
+              {ticket.payment_status === 'paid' ? ('Paid') : ('Pending')}
             </Badge>
           </div>
 
           {/* Footer */}
           <div className="footer text-center text-xs text-muted-foreground pt-4 border-t">
-            <p>{language === 'bn' ? 'ধন্যবাদ! আবার আসবেন।' : 'Thank you! Visit again.'}</p>
+            <p>{'Thank you! Visit again.'}</p>
             <p className="mt-1">Baby World Indoor Playground</p>
           </div>
         </div>
@@ -392,11 +392,11 @@ export function TicketSuccessDialog({ open, onClose, ticket, rideNames = {} }: T
         <div className="flex gap-3 mt-4">
           <Button variant="outline" onClick={onClose} className="flex-1">
             <X className="h-4 w-4 mr-2" />
-            {language === 'bn' ? 'বন্ধ করুন' : 'Close'}
+            {'Close'}
           </Button>
           <Button onClick={handlePrint} className="flex-1">
             <Printer className="h-4 w-4 mr-2" />
-            {language === 'bn' ? 'প্রিন্ট করুন' : 'Print'}
+            {'Print'}
           </Button>
         </div>
       </DialogContent>
