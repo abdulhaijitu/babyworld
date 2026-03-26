@@ -68,15 +68,32 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
   const [rideSearch, setRideSearch] = useState('');
   const [discount, setDiscount] = useState(0);
 
-  // Generate entry number
-  const entryNo = useMemo(() => {
+  const [previousCustomer, setPreviousCustomer] = useState(false);
+
+  // Generate sequential entry number
+  const [entryNo, setEntryNo] = useState('');
+  const generateEntryNo = useCallback(async () => {
     const now = new Date();
     const yy = String(now.getFullYear()).slice(-2);
     const mm = String(now.getMonth() + 1).padStart(2, '0');
     const dd = String(now.getDate()).padStart(2, '0');
-    const rand = String(Math.floor(Math.random() * 1000)).padStart(3, '0');
-    return `${yy}${mm}${dd}-${rand}`;
+    const prefix = `${yy}${mm}${dd}`;
+    const today = format(now, 'yyyy-MM-dd');
+    try {
+      const { count } = await supabase
+        .from('tickets')
+        .select('id', { count: 'exact', head: true })
+        .eq('slot_date', today);
+      const seq = String((count || 0) + 1).padStart(3, '0');
+      setEntryNo(`${prefix}-${seq}`);
+    } catch {
+      setEntryNo(`${prefix}-001`);
+    }
   }, []);
+
+  useEffect(() => {
+    generateEntryNo();
+  }, [generateEntryNo]);
 
   const { data: rides = [] } = useQuery<Ride[]>({
     queryKey: ['rides'],
