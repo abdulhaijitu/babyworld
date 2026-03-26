@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Gift, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import { useHeroCards } from "@/hooks/useHeroCards";
+import { useHeroSlides } from "@/hooks/useHeroSlides";
 import {
   Carousel,
   CarouselContent,
@@ -16,7 +17,7 @@ import mascotKids from "@/assets/mascot-kids.jpg";
 import carouselRides from "@/assets/carousel-rides.jpg";
 import arcadeGames from "@/assets/arcade-games.jpg";
 
-const slides = [
+const defaultSlides = [
   { src: playgroundKids, alt: "Children playing at Baby World", label: "Adventure Zone" },
   { src: mascotKids, alt: "Kids with Mario mascot", label: "Fun Characters" },
   { src: carouselRides, alt: "Carousel and rides", label: "Exciting Rides" },
@@ -46,9 +47,15 @@ export function HeroSection() {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const { data: heroCards } = useHeroCards();
+  const { data: dbSlides } = useHeroSlides();
 
   const offerCard = heroCards?.find((c) => c.type === "offer") ?? fallbackOffer;
   const eventCard = heroCards?.find((c) => c.type === "event") ?? fallbackEvent;
+
+  // Use DB slides if available, otherwise fall back to defaults
+  const slides = dbSlides && dbSlides.length > 0
+    ? dbSlides.map((s) => ({ src: s.image_url, alt: s.alt_text, label: s.label }))
+    : defaultSlides;
 
   useEffect(() => {
     if (!api) return;
@@ -91,11 +98,13 @@ export function HeroSection() {
                         loading={i === 0 ? "eager" : "lazy"}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-                      <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6">
-                        <span className="inline-block px-3 py-1.5 bg-white/20 backdrop-blur-md text-white text-sm font-semibold rounded-full border border-white/20">
-                          {slide.label}
-                        </span>
-                      </div>
+                      {slide.label && (
+                        <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6">
+                          <span className="inline-block px-3 py-1.5 bg-white/20 backdrop-blur-md text-white text-sm font-semibold rounded-full border border-white/20">
+                            {slide.label}
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </CarouselItem>
                 ))}
@@ -140,20 +149,14 @@ export function HeroSection() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="relative rounded-2xl overflow-hidden text-primary-foreground p-5 sm:p-6 flex flex-col justify-between shadow-card-hover group hover:shadow-lg transition-shadow"
             >
-              {/* Background: image or gradient */}
               {offerCard.image_url ? (
                 <>
-                  <img
-                    src={offerCard.image_url}
-                    alt=""
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
+                  <img src={offerCard.image_url} alt="" className="absolute inset-0 w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-primary/60 to-secondary/70" />
                 </>
               ) : (
                 <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/90 to-secondary" />
               )}
-              {/* Decorative circles */}
               <div className="absolute -top-8 -right-8 w-28 h-28 bg-white/10 rounded-full blur-xl" />
               <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-white/10 rounded-full blur-lg" />
 
@@ -171,11 +174,7 @@ export function HeroSection() {
               </div>
 
               <div className="relative z-10 mt-4">
-                <Button
-                  size="sm"
-                  className="bg-white text-primary hover:bg-white/90 font-semibold w-full sm:w-auto"
-                  asChild
-                >
+                <Button size="sm" className="bg-white text-primary hover:bg-white/90 font-semibold w-full sm:w-auto" asChild>
                   <Link to={offerCard.cta_link}>{offerCard.cta_text}</Link>
                 </Button>
               </div>
@@ -188,14 +187,9 @@ export function HeroSection() {
               transition={{ duration: 0.6, delay: 0.35 }}
               className="relative rounded-2xl overflow-hidden bg-card border border-border p-5 sm:p-6 flex flex-col justify-between shadow-card hover:shadow-card-hover transition-shadow group"
             >
-              {/* Background image if set */}
               {eventCard.image_url && (
                 <>
-                  <img
-                    src={eventCard.image_url}
-                    alt=""
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
+                  <img src={eventCard.image_url} alt="" className="absolute inset-0 w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-card/85 backdrop-blur-[2px]" />
                 </>
               )}
@@ -220,12 +214,7 @@ export function HeroSection() {
               </div>
 
               <div className="relative z-10 mt-4">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-semibold w-full sm:w-auto"
-                  asChild
-                >
+                <Button size="sm" variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-semibold w-full sm:w-auto" asChild>
                   <Link to={eventCard.cta_link}>{eventCard.cta_text}</Link>
                 </Button>
               </div>
