@@ -482,6 +482,7 @@ export type Database = {
           id: string
           is_active: boolean
           max_children: number
+          max_guardians: number
           membership_type: Database["public"]["Enums"]["membership_type"]
           name: string
           name_bn: string | null
@@ -497,6 +498,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           max_children?: number
+          max_guardians?: number
           membership_type: Database["public"]["Enums"]["membership_type"]
           name: string
           name_bn?: string | null
@@ -512,6 +514,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           max_children?: number
+          max_guardians?: number
           membership_type?: Database["public"]["Enums"]["membership_type"]
           name?: string
           name_bn?: string | null
