@@ -50,7 +50,7 @@ const emptyCard: CardForm = {
   sort_order: 0,
 };
 
-export default function AdminHeroCards() {
+export default function AdminHeroCards({ embedded = false }: { embedded?: boolean }) {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<HeroCard | null>(null);
