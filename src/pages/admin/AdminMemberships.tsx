@@ -147,6 +147,29 @@ export default function AdminMemberships() {
     return matchesSearch && matchesStatus;
   }) || [];
 
+  const paymentStats = {
+    totalCollected: paymentLogs.reduce((sum, log) => {
+      const details = log.details as any;
+      if (details?.payment_type !== 'pending') return sum + (details?.payment_amount || 0);
+      return sum;
+    }, 0),
+    pendingAmount: paymentLogs.reduce((sum, log) => {
+      const details = log.details as any;
+      if (details?.payment_type === 'pending') return sum + (details?.payment_amount || 0);
+      return sum;
+    }, 0),
+    cashTotal: paymentLogs.reduce((sum, log) => {
+      const details = log.details as any;
+      if (details?.payment_type === 'cash') return sum + (details?.payment_amount || 0);
+      return sum;
+    }, 0),
+    onlineTotal: paymentLogs.reduce((sum, log) => {
+      const details = log.details as any;
+      if (details?.payment_type === 'online') return sum + (details?.payment_amount || 0);
+      return sum;
+    }, 0),
+  };
+
   const stats = {
     total: memberships?.length || 0,
     active: memberships?.filter(m => m.status === 'active').length || 0,
