@@ -80,6 +80,21 @@ export default function AdminMembershipPackages() {
     onError: (err: any) => toast.error(err.message),
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from('membership_packages')
+        .delete()
+        .eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['membership-packages'] });
+      toast.success('Package deleted successfully');
+    },
+    onError: (err: any) => toast.error(err.message),
+  });
+
   const createMutation = useMutation({
     mutationFn: async () => {
       const { error } = await supabase
