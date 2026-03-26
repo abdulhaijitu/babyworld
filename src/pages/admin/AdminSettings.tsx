@@ -61,14 +61,6 @@ export default function AdminSettings() {
     }
   };
 
-  const handleSaveTimeSlots = async () => {
-    try {
-      await saveTimeSlots();
-      toast.success('Time slots saved');
-    } catch (error) {
-      toast.error('Failed to save');
-    }
-  };
 
   const handleSaveBusinessInfo = async () => {
     try {
