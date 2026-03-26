@@ -1,38 +1,34 @@
 
 
-## Plan: Create Ticket ও Ticket List আলাদা পেজে বিভক্ত করা
+## Plan: Ticketing রাউট পুনর্গঠন
 
 ### পরিবর্তন
 
-#### 1. নতুন পেজ: `src/pages/admin/AdminCreateTicket.tsx`
-- `AdminTicketing.tsx` থেকে Create Ticket সংক্রান্ত কোড আলাদা করা
-- শুধু হেডার ("Create Ticket") + `<CounterTicketForm />` + `<TicketSuccessDialog />` থাকবে
-- টিকেট তৈরি সফল হলে `navigate('/admin/ticketing')` দিয়ে Ticket List পেজে যাবে
+#### 1. `src/App.tsx` — রাউট আপডেট
+- `ticketing` ও `ticketing/create` রাউট সরিয়ে দুটি আলাদা রাউট:
+  ```tsx
+  <Route path="create-ticket" element={<AdminCreateTicket />} />
+  <Route path="ticket-list" element={<AdminTicketing />} />
+  ```
 
-#### 2. `src/pages/admin/AdminTicketing.tsx` আপডেট
-- `searchParams` / `activeView` লজিক সরানো — সবসময় শুধু Ticket List দেখাবে
-- হেডার সবসময় "Ticket List"
-- Create Ticket সংক্রান্ত conditional rendering রিমুভ
+#### 2. `src/components/admin/AdminSidebar.tsx` — মেনু আপডেট
+- `ticketing` parent মেনু আইটেম সরিয়ে দুটি আলাদা top-level মেনু আইটেম:
+  ```tsx
+  { id: 'create-ticket', label: 'Create Ticket', icon: Plus, path: '/admin/create-ticket' },
+  { id: 'ticket-list', label: 'Ticket List', icon: List, path: '/admin/ticket-list' },
+  ```
+- children/collapsible লজিক লাগবে না
 
-#### 3. `src/App.tsx` — নতুন route যোগ
-```tsx
-<Route path="ticketing" element={<AdminTicketing />} />
-<Route path="ticketing/create" element={<AdminCreateTicket />} />
-```
+#### 3. `src/pages/admin/AdminCreateTicket.tsx` — navigate path আপডেট
+- Success এ `navigate('/admin/ticket-list')` এ রিডাইরেক্ট
 
-#### 4. `src/components/admin/AdminSidebar.tsx` — path আপডেট
-```tsx
-children: [
-  { id: 'ticketing-create', label: 'Create Ticket', icon: Plus, path: '/admin/ticketing/create' },
-  { id: 'ticketing-list', label: 'Ticket List', icon: List, path: '/admin/ticketing' },
-]
-```
+#### 4. `src/pages/admin/AdminTicketing.tsx` — "Create Ticket" বাটনের path আপডেট
+- `navigate('/admin/create-ticket')`
 
-### ফাইল সারাংশ
 | ফাইল | পরিবর্তন |
 |---|---|
-| `src/pages/admin/AdminCreateTicket.tsx` | নতুন পেজ — Create Ticket ফর্ম |
-| `src/pages/admin/AdminTicketing.tsx` | শুধু Ticket List রাখা, conditional লজিক সরানো |
-| `src/App.tsx` | `ticketing/create` route যোগ |
-| `src/components/admin/AdminSidebar.tsx` | সাবমেনু path আপডেট |
+| `src/App.tsx` | রাউট পরিবর্তন |
+| `src/components/admin/AdminSidebar.tsx` | দুটি আলাদা মেনু আইটেম |
+| `src/pages/admin/AdminCreateTicket.tsx` | navigate path |
+| `src/pages/admin/AdminTicketing.tsx` | navigate path |
 
