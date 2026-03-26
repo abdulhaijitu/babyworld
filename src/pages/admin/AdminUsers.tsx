@@ -115,9 +115,7 @@ export default function AdminUsers() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['all-user-roles'] });
       toast.success(
-        language === 'bn' 
-          ? `${roleConfig[newUserRole].labelBn} তৈরি হয়েছে` 
-          : `${roleConfig[newUserRole].label} created successfully`
+        `${roleConfig[newUserRole].label} created successfully`
       );
       setIsAddDialogOpen(false);
       setNewUserEmail('');
@@ -179,7 +177,7 @@ export default function AdminUsers() {
     return (
       <Badge className={config.color}>
         <Icon className="w-3 h-3 mr-1" />
-        {language === 'bn' ? config.labelBn : config.label}
+        {config.label}
       </Badge>
     );
   };
@@ -449,9 +447,7 @@ export default function AdminUsers() {
               {'Remove Role?'}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              {language === 'bn' 
-                ? 'এই ইউজারের রোল সরিয়ে দেওয়া হবে। এই কাজ পূর্বাবস্থায় ফেরানো যাবে না।'
-                : 'This will remove the role from this user. This action cannot be undone.'}
+              {'This will remove the role from this user. This action cannot be undone.'}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

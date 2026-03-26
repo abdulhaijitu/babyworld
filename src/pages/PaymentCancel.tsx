@@ -28,9 +28,7 @@ export default function PaymentCancel() {
         
         <CardContent className="space-y-6">
           <p className="text-muted-foreground">
-            {language === 'bn' 
-              ? 'আপনার পেমেন্ট সম্পন্ন হয়নি। আপনি চাইলে আবার চেষ্টা করতে পারেন।'
-              : 'Your payment was not completed. You can try again if you wish.'}
+            {'Your payment was not completed. You can try again if you wish.'}
           </p>
 
           <div className="flex flex-col gap-3">

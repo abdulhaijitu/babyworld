@@ -34,9 +34,7 @@ export function ContactForm() {
   };
 
   const generateWhatsAppMessage = () => {
-    const greeting = language === "bn" 
-      ? "আসসালামু আলাইকুম, Baby World!" 
-      : "Hello, Baby World!";
+    const greeting = "Hello, Baby World!";
     
     const nameLabel = "Name";
     const phoneLabel = "Phone";

@@ -148,7 +148,7 @@ export function FoodSalesReport({ data, isLoading }: FoodSalesReportProps) {
                       </Badge>
                       <div>
                         <p className="font-medium">
-                          {language === 'bn' ? item.name_bn : item.name}
+                          {item.name}
                         </p>
                         <p className="text-xs text-muted-foreground">
                           {item.count} {'sold'}
@@ -191,7 +191,7 @@ export function FoodSalesReport({ data, isLoading }: FoodSalesReportProps) {
                 {data.food.topItems.map((item) => (
                   <TableRow key={item.id}>
                     <TableCell className="font-medium">
-                      {language === 'bn' ? item.name_bn : item.name}
+                      {item.name}
                     </TableCell>
                     <TableCell>
                       <Badge variant="outline">

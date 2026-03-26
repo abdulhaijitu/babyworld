@@ -70,9 +70,7 @@ export default function AdminLogin() {
       if (mountedRef.current && authStatus === 'loading') {
         setAuthStatus('error');
         setErrorMessage(
-          language === 'bn' 
-            ? 'সংযোগ করতে সময় লাগছে। অনুগ্রহ করে আবার চেষ্টা করুন।' 
-            : 'Connection is taking too long. Please try again.'
+          'Connection is taking too long. Please try again.'
         );
       }
     }, AUTH_TIMEOUT);
@@ -93,17 +91,11 @@ export default function AdminLogin() {
         // Map common error messages to user-friendly text
         let friendlyMessage = error.message;
         if (error.message?.includes('Invalid login credentials')) {
-          friendlyMessage = language === 'bn' 
-            ? 'ইমেইল বা পাসওয়ার্ড ভুল' 
-            : 'Invalid email or password';
+          friendlyMessage = 'Invalid email or password';
         } else if (error.message?.includes('Email not confirmed')) {
-          friendlyMessage = language === 'bn' 
-            ? 'ইমেইল যাচাই করা হয়নি' 
-            : 'Email not confirmed';
+          friendlyMessage = 'Email not confirmed';
         } else if (error.message?.includes('Too many requests')) {
-          friendlyMessage = language === 'bn' 
-            ? 'অনেক চেষ্টা হয়েছে। কিছুক্ষণ পর আবার চেষ্টা করুন।' 
-            : 'Too many attempts. Please try again later.';
+          friendlyMessage = 'Too many attempts. Please try again later.';
         }
         
         setErrorMessage(friendlyMessage);
@@ -122,9 +114,7 @@ export default function AdminLogin() {
       
       setAuthStatus('error');
       setErrorMessage(
-        language === 'bn' 
-          ? 'একটি অপ্রত্যাশিত ত্রুটি হয়েছে' 
-          : 'An unexpected error occurred'
+        'An unexpected error occurred'
       );
       console.error('[AdminLogin] Unexpected error:', err);
     }
@@ -154,9 +144,7 @@ export default function AdminLogin() {
               {'Admin Login'}
             </CardTitle>
             <CardDescription>
-              {language === 'bn' 
-                ? 'আপনার অ্যাডমিন অ্যাকাউন্টে প্রবেশ করুন'
-                : 'Sign in to your admin account'}
+              {'Sign in to your admin account'}
             </CardDescription>
           </div>
         </CardHeader>

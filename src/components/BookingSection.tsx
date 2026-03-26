@@ -80,9 +80,7 @@ export function BookingSection() {
         window.location.href = paymentResult.payment_url;
       } else {
         toast.success(
-          language === "bn" 
-            ? "বুকিং সফল! পেমেন্ট পরে করতে পারবেন।" 
-            : "Booking confirmed! You can pay later."
+          "Booking confirmed! You can pay later."
         );
         // Reset form
         setShowBookingForm(false);
@@ -98,9 +96,7 @@ export function BookingSection() {
 
   const handleWhatsAppBooking = () => {
     if (selectedDate && selectedSlot) {
-      const greeting = language === "bn" 
-        ? "আসসালামু আলাইকুম, Baby World!" 
-        : "Hello, Baby World!";
+      const greeting = "Hello, Baby World!";
       
       const bookingLabel = "Play Session Booking Request";
       const dateLabel = "Date";
@@ -114,9 +110,7 @@ export function BookingSection() {
       message += `⏰ ${timeLabel}: ${selectedSlot.time_slot}\n`;
       message += `👶 ${childrenLabel}: ${childCount}\n`;
       message += `👨‍👩‍👧 ${guardiansLabel}: ${childCount}\n\n`;
-      message += language === "bn" 
-        ? "অনুগ্রহ করে এই স্লট নিশ্চিত করুন।" 
-        : "Please confirm this slot for me.";
+      message += "Please confirm this slot for me.";
       
       const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
       window.open(whatsappUrl, "_blank");

@@ -71,9 +71,7 @@ export function ReviewForm() {
               {"Thank You!"}
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground max-w-md mx-auto">
-              {language === "bn" 
-                ? "আপনার মূল্যবান মতামতের জন্য ধন্যবাদ। আমরা সবসময় উন্নতির জন্য কাজ করছি।" 
-                : "Thank you for your valuable feedback. We are always working to improve."}
+              {"Thank you for your valuable feedback. We are always working to improve."}
             </p>
             <Button size="lg" onClick={handleNewReview} className="touch-target">
               {"Write Another Review"}
@@ -99,9 +97,7 @@ export function ReviewForm() {
             {"Share Your Experience"}
           </h2>
           <p className="text-sm sm:text-base lg:text-lg text-muted-foreground">
-            {language === "bn" 
-              ? "আপনার সন্তান কি মজা পেয়েছে? আমাদের জানান!" 
-              : "Did your child have fun? Let us know!"}
+            {"Did your child have fun? Let us know!"}
           </p>
         </ScrollFadeIn>
 
@@ -167,9 +163,7 @@ export function ReviewForm() {
               <Textarea
                 value={review}
                 onChange={(e) => setReview(e.target.value)}
-                placeholder={language === "bn" 
-                  ? "আপনার অভিজ্ঞতা সম্পর্কে লিখুন..." 
-                  : "Write about your experience..."}
+                placeholder={"Write about your experience..."}
                 className={cn("min-h-[120px] resize-none", errors.review && "border-destructive")}
                 maxLength={500}
               />
@@ -198,9 +192,7 @@ export function ReviewForm() {
 
             {/* Note */}
             <p className="text-xs text-center text-muted-foreground">
-              {language === "bn" 
-                ? "আপনার রিভিউ অন্যান্য অভিভাবকদের সাহায্য করবে।" 
-                : "Your review will help other parents."}
+              {"Your review will help other parents."}
             </p>
           </form>
         </ScrollFadeIn>

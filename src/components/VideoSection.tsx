@@ -26,9 +26,7 @@ export function VideoSection() {
             {"See Our Playground"}
           </h2>
           <p className="text-sm sm:text-base lg:text-lg text-muted-foreground">
-            {language === "bn" 
-              ? "আমাদের নিরাপদ ও মজার প্লে এরিয়া দেখুন যেখানে আপনার সন্তান খেলতে পারবে" 
-              : "Take a look at our safe and fun play areas where your child can explore"}
+            {"Take a look at our safe and fun play areas where your child can explore"}
           </p>
         </ScrollFadeIn>
 

@@ -417,9 +417,7 @@ export default function AdminDashboard() {
               <div>
                 <CardTitle>{'All Bookings'}</CardTitle>
                 <CardDescription>
-                  {language === 'bn' 
-                    ? `${filteredBookings.length}টি বুকিং দেখাচ্ছে`
-                    : `Showing ${filteredBookings.length} bookings`}
+                  {`Showing ${filteredBookings.length} bookings`}
                 </CardDescription>
               </div>
               <Button variant="outline" size="sm" onClick={handleRetry} disabled={bookingsLoading || retrying}>
@@ -684,9 +682,7 @@ export default function AdminDashboard() {
                     {'Process Refund'}
                   </Label>
                   <p className="text-xs text-muted-foreground">
-                    {language === 'bn' 
-                      ? 'পেমেন্ট গেটওয়ে থেকে ম্যানুয়াল রিফান্ড করতে হবে'
-                      : 'Manual refund required via payment gateway'}
+                    {'Manual refund required via payment gateway'}
                   </p>
                 </div>
               </div>

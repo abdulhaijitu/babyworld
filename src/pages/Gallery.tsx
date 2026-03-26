@@ -100,9 +100,7 @@ const Gallery = () => {
                 {"Photo & Video Gallery"}
               </h1>
               <p className="text-lg text-muted-foreground">
-                {language === "bn" 
-                  ? "বেবি ওয়ার্ল্ডে শিশুদের আনন্দময় মুহূর্তগুলো দেখুন"
-                  : "See the joyful moments of children at Baby World"}
+                {"See the joyful moments of children at Baby World"}
               </p>
             </ScrollFadeIn>
 

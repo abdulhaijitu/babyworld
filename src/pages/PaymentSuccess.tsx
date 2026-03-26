@@ -59,9 +59,7 @@ export default function PaymentSuccess() {
           {!loading && (
             <>
               <p className="text-muted-foreground">
-                {language === 'bn' 
-                  ? 'আপনার বুকিং সম্পূর্ণ হয়েছে। আমরা আপনাকে স্বাগত জানাতে অপেক্ষা করছি!'
-                  : 'Your booking is complete. We look forward to seeing you!'}
+                {'Your booking is complete. We look forward to seeing you!'}
               </p>
 
               {paymentData && (

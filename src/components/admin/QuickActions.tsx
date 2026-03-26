@@ -99,9 +99,7 @@ export function QuickActions({ onAction }: QuickActionsProps) {
       queryClient.invalidateQueries({ queryKey: ['tickets'] });
       queryClient.invalidateQueries({ queryKey: ['activity-logs'] });
       toast.success(
-        language === 'bn' 
-          ? `টিকেট তৈরি হয়েছে: ${data.ticket_number}` 
-          : `Ticket created: ${data.ticket_number}`
+        `Ticket created: ${data.ticket_number}`
       );
       setTicketDialogOpen(false);
       setTicketForm({ guardianName: '', guardianPhone: '', childName: '', ticketType: 'hourly_play' });
@@ -263,9 +261,7 @@ export function QuickActions({ onAction }: QuickActionsProps) {
               <UtensilsCrossed className="w-8 h-8 text-chart-2" />
             </div>
             <p className="text-muted-foreground mb-4">
-              {language === 'bn' 
-                ? 'সম্পূর্ণ অর্ডার ফিচারের জন্য ফুড সেলস পেজে যান'
-                : 'For full order features, go to Food Sales page'}
+              {'For full order features, go to Food Sales page'}
             </p>
             <Button onClick={() => {
               setFoodDialogOpen(false);

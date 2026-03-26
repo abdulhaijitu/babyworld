@@ -379,7 +379,7 @@ export default function AdminRides() {
                           <Badge variant="outline" className={cn("text-xs", catInfo.color)}>
                             {getCategoryIcon(ride.category)}
                             <span className="ml-1">
-                              {language === 'bn' ? catInfo.label_bn : catInfo.label}
+                              {catInfo.label}
                             </span>
                           </Badge>
                         </TableCell>
@@ -680,9 +680,7 @@ export default function AdminRides() {
               {'Delete Ride?'}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              {language === 'bn' 
-                ? `"${selectedRide?.name}" রাইডটি মুছে ফেলা হবে। এই কাজটি পূর্বাবস্থায় ফেরানো যাবে না।`
-                : `"${selectedRide?.name}" will be permanently deleted. This action cannot be undone.`
+              {`"${selectedRide?.name}" will be permanently deleted. This action cannot be undone.`
               }
             </AlertDialogDescription>
           </AlertDialogHeader>

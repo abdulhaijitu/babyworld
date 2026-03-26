@@ -672,9 +672,7 @@ export default function AdminEmployees() {
               {'Delete Employee?'}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              {language === 'bn' 
-                ? `"${selectedEmployee?.name}" কে মুছে ফেলতে চান? এটি পূর্বাবস্থায় ফেরানো যাবে না।`
-                : `Are you sure you want to delete "${selectedEmployee?.name}"? This cannot be undone.`
+              {`Are you sure you want to delete "${selectedEmployee?.name}"? This cannot be undone.`
               }
             </AlertDialogDescription>
           </AlertDialogHeader>

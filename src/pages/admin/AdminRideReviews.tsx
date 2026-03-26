@@ -267,7 +267,7 @@ export default function AdminRideReviews() {
                 <SelectItem value="all">{'All Rides'}</SelectItem>
                 {rides.map(ride => (
                   <SelectItem key={ride.id} value={ride.id}>
-                    {language === 'bn' ? ride.name_bn || ride.name : ride.name}
+                    {ride.name}
                   </SelectItem>
                 ))}
               </SelectContent>

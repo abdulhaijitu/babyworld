@@ -175,7 +175,7 @@ export function PrintableReport({ data, onClose }: PrintableReportProps) {
                   <tbody>
                     {data.food.topItems.slice(0, 5).map((item) => (
                       <tr key={item.id} className="border-b last:border-0">
-                        <td className="py-2">{language === 'bn' ? item.name_bn : item.name}</td>
+                        <td className="py-2">{item.name}</td>
                         <td className="py-2 text-center">{item.count}</td>
                         <td className="py-2 text-right">৳{item.revenue.toLocaleString()}</td>
                       </tr>

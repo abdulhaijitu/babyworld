@@ -262,9 +262,7 @@ export default function AdminTicketing() {
   const handleSendSMS = async (ticket: TicketType) => {
     setSendingSMS(ticket.id);
     try {
-      const message = language === 'bn'
-        ? `Baby World টিকেট: ${ticket.ticket_number}\nতারিখ: ${ticket.slot_date}\nসময়: ${ticket.time_slot || 'যেকোনো'}\nধন্যবাদ!`
-        : `Baby World Ticket: ${ticket.ticket_number}\nDate: ${ticket.slot_date}\nTime: ${ticket.time_slot || 'Any'}\nThank you!`;
+      const message = `Baby World Ticket: ${ticket.ticket_number}\nDate: ${ticket.slot_date}\nTime: ${ticket.time_slot || 'Any'}\nThank you!`;
 
       const { data, error } = await supabase.functions.invoke('send-sms', {
         body: { phone: ticket.guardian_phone, message }

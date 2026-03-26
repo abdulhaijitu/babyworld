@@ -279,9 +279,7 @@ export default function AdminReports() {
               {'No Data Yet'}
             </h3>
             <p className="text-muted-foreground max-w-md mx-auto">
-              {language === 'bn' 
-                ? 'এই সময়ের জন্য কোনো বিক্রয় ডাটা পাওয়া যায়নি।'
-                : 'No sales data found for this period.'}
+              {'No sales data found for this period.'}
             </p>
           </CardContent>
         </Card>

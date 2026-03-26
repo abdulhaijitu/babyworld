@@ -307,9 +307,7 @@ export function PrintableTicket({ ticket, onClose }: PrintableTicketProps) {
               +880 1234-567890
             </p>
             <p className="mt-2 italic">
-              {language === 'bn' 
-                ? 'এই টিকেটটি প্রবেশের সময় দেখান' 
-                : 'Please show this ticket at entry'}
+              {'Please show this ticket at entry'}
             </p>
           </div>
         </div>

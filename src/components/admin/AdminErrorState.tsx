@@ -20,9 +20,7 @@ export function AdminErrorState({ type, message, onRetry, retrying }: AdminError
         return {
           icon: <LogIn className="w-12 h-12 text-muted-foreground" />,
           title: 'Login Required',
-          description: language === 'bn' 
-            ? 'অ্যাডমিন ড্যাশবোর্ড অ্যাক্সেস করতে লগইন করুন' 
-            : 'Please login to access the admin dashboard',
+          description: 'Please login to access the admin dashboard',
           action: (
             <Link to="/admin/login">
               <Button>
@@ -36,9 +34,7 @@ export function AdminErrorState({ type, message, onRetry, retrying }: AdminError
         return {
           icon: <AlertCircle className="w-12 h-12 text-destructive" />,
           title: 'Access Denied',
-          description: language === 'bn' 
-            ? 'আপনার অ্যাডমিন অনুমতি নেই' 
-            : 'You do not have admin permissions',
+          description: 'You do not have admin permissions',
           action: (
             <Link to="/">
               <Button variant="outline">
@@ -53,9 +49,7 @@ export function AdminErrorState({ type, message, onRetry, retrying }: AdminError
         return {
           icon: <AlertCircle className="w-12 h-12 text-destructive" />,
           title: 'Failed to Load Data',
-          description: message || (language === 'bn' 
-            ? 'বুকিং ডেটা লোড করতে সমস্যা হয়েছে' 
-            : 'There was a problem loading booking data'),
+          description: message || ('There was a problem loading booking data'),
           action: onRetry && (
             <Button onClick={onRetry} disabled={retrying}>
               <RefreshCw className={`w-4 h-4 mr-2 ${retrying ? 'animate-spin' : ''}`} />

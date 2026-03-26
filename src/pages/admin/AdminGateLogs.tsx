@@ -374,9 +374,7 @@ export default function AdminGateLogs() {
               {totalPages > 1 && (
                 <div className="flex items-center justify-between mt-4">
                   <p className="text-sm text-muted-foreground">
-                    {language === 'bn' 
-                      ? `মোট ${total} টি লগের মধ্যে ${(page - 1) * limit + 1}-${Math.min(page * limit, total)} দেখাচ্ছে`
-                      : `Showing ${(page - 1) * limit + 1}-${Math.min(page * limit, total)} of ${total} logs`}
+                    {`Showing ${(page - 1) * limit + 1}-${Math.min(page * limit, total)} of ${total} logs`}
                   </p>
                   <div className="flex gap-2">
                     <Button 

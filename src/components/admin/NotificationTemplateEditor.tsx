@@ -193,9 +193,7 @@ export default function NotificationTemplateEditor() {
           {'Notification Templates'}
         </CardTitle>
         <CardDescription>
-          {language === 'bn' 
-            ? 'SMS ও WhatsApp মেসেজ কাস্টমাইজ করুন। ভেরিয়েবল ব্যবহার করতে {{variable}} ফরম্যাট ব্যবহার করুন।'
-            : 'Customize SMS & WhatsApp messages. Use {{variable}} format for dynamic content.'}
+          {'Customize SMS & WhatsApp messages. Use {{variable}} format for dynamic content.'}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -207,7 +205,7 @@ export default function NotificationTemplateEditor() {
                 <TabsTrigger key={key} value={key} className="gap-2">
                   <TabIcon className="w-4 h-4 hidden sm:inline" />
                   <span className="text-xs sm:text-sm">
-                    {language === 'bn' ? info.labelBn : info.label}
+                    {info.label}
                   </span>
                 </TabsTrigger>
               );

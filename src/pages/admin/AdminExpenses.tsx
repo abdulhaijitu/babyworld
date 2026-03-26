@@ -290,7 +290,7 @@ export default function AdminExpenses() {
                       <SelectItem key={cat.value} value={cat.value}>
                         <div className="flex items-center gap-2">
                           <cat.icon className="w-4 h-4" />
-                          {language === 'bn' ? cat.labelBn : cat.label}
+                          {cat.label}
                         </div>
                       </SelectItem>
                     ))}
@@ -332,7 +332,7 @@ export default function AdminExpenses() {
                       <SelectItem key={pm.value} value={pm.value}>
                         <div className="flex items-center gap-2">
                           <pm.icon className="w-4 h-4" />
-                          {language === 'bn' ? pm.labelBn : pm.label}
+                          {pm.label}
                         </div>
                       </SelectItem>
                     ))}
@@ -422,7 +422,7 @@ export default function AdminExpenses() {
                 <SelectItem value="all">{'All Categories'}</SelectItem>
                 {EXPENSE_CATEGORIES.map(cat => (
                   <SelectItem key={cat.value} value={cat.value}>
-                    {language === 'bn' ? cat.labelBn : cat.label}
+                    {cat.label}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -474,7 +474,7 @@ export default function AdminExpenses() {
                         <TableCell>
                           <Badge className={catInfo.color}>
                             <CatIcon className="w-3 h-3 mr-1" />
-                            {language === 'bn' ? catInfo.labelBn : catInfo.label}
+                            {catInfo.label}
                           </Badge>
                         </TableCell>
                         <TableCell>
@@ -489,7 +489,7 @@ export default function AdminExpenses() {
                         <TableCell>
                           <div className="flex items-center gap-1 text-sm">
                             <PmIcon className="w-3 h-3" />
-                            {language === 'bn' ? pmInfo.labelBn : pmInfo.label}
+                            {pmInfo.label}
                           </div>
                         </TableCell>
                         <TableCell className="text-sm text-muted-foreground">
@@ -511,9 +511,7 @@ export default function AdminExpenses() {
                                   <AlertDialogHeader>
                                     <AlertDialogTitle>{'Delete Expense?'}</AlertDialogTitle>
                                     <AlertDialogDescription>
-                                      {language === 'bn' 
-                                        ? 'এই খরচটি স্থায়ীভাবে মুছে ফেলা হবে। এই কাজটি পূর্বাবস্থায় ফেরানো যাবে না।'
-                                        : 'This expense will be permanently deleted. This action cannot be undone.'}
+                                      {'This expense will be permanently deleted. This action cannot be undone.'}
                                     </AlertDialogDescription>
                                   </AlertDialogHeader>
                                   <AlertDialogFooter>
@@ -577,7 +575,7 @@ export default function AdminExpenses() {
                 <SelectContent>
                   {EXPENSE_CATEGORIES.map(cat => (
                     <SelectItem key={cat.value} value={cat.value}>
-                      {language === 'bn' ? cat.labelBn : cat.label}
+                      {cat.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -611,7 +609,7 @@ export default function AdminExpenses() {
                 <SelectContent>
                   {PAYMENT_METHODS.map(pm => (
                     <SelectItem key={pm.value} value={pm.value}>
-                      {language === 'bn' ? pm.labelBn : pm.label}
+                      {pm.label}
                     </SelectItem>
                   ))}
                 </SelectContent>

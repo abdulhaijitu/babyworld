@@ -157,11 +157,11 @@ function SidebarContent({
                   : "text-muted-foreground hover:bg-muted hover:text-foreground",
                 collapsed && "justify-center px-2"
               )}
-              title={collapsed ? (language === 'bn' ? item.labelBn : item.label) : undefined}
+              title={collapsed ? (item.label) : undefined}
             >
               <Icon className="h-5 w-5 shrink-0" />
               {!collapsed && (
-                <span>{language === 'bn' ? item.labelBn : item.label}</span>
+                <span>{item.label}</span>
               )}
             </button>
           );

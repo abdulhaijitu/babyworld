@@ -355,7 +355,7 @@ export default function AdminEvents() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {eventPackages.map(pkg => (
               <div key={pkg.id} className="p-3 border rounded-lg text-center">
-                <p className="font-semibold">{language === 'bn' ? pkg.nameBn : pkg.name}</p>
+                <p className="font-semibold">{pkg.name}</p>
                 <p className="text-lg font-bold text-primary">৳{pkg.price.toLocaleString()}</p>
                 <p className="text-xs text-muted-foreground flex items-center justify-center gap-1">
                   <Users className="w-3 h-3" /> {pkg.guests} {'guests'}
@@ -579,7 +579,7 @@ export default function AdminEvents() {
                 <SelectContent>
                   {eventPackages.map(pkg => (
                     <SelectItem key={pkg.id} value={pkg.id}>
-                      {language === 'bn' ? pkg.nameBn : pkg.name} - ৳{pkg.price.toLocaleString()} ({pkg.guests} {'guests'})
+                      {pkg.name} - ৳{pkg.price.toLocaleString()} ({pkg.guests} {'guests'})
                     </SelectItem>
                   ))}
                 </SelectContent>

@@ -79,7 +79,7 @@ export function ComparisonCharts() {
       );
 
       return results.map((r, i) => ({
-        period: format(months[i].month, 'MMM', { locale: language === 'bn' ? bnLocale : undefined }),
+        period: format(months[i].month, 'MMM', { locale: undefined }),
         revenue: r.data?.revenue?.combinedRevenue || 0,
         tickets: r.data?.tickets?.total || 0,
         foodOrders: r.data?.food?.completedOrders || 0

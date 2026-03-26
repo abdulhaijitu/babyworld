@@ -541,7 +541,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                       <div key={category}>
                         <div className="flex items-center gap-2 mb-2">
                           <Badge variant="outline" className={cn("text-xs", catInfo.color)}>
-                            {language === 'bn' ? catInfo.label_bn : catInfo.label}
+                            {catInfo.label}
                           </Badge>
                           <span className="text-xs text-muted-foreground">
                             ({categoryRides.length} {'rides'})
@@ -591,7 +591,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
 
                                 {/* Ride Info */}
                                 <p className="font-medium text-sm line-clamp-1">
-                                  {language === 'bn' ? ride.name_bn || ride.name : ride.name}
+                                  {ride.name}
                                 </p>
 
                                 {/* Rating */}
