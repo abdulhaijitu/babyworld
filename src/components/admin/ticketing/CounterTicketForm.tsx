@@ -1,36 +1,31 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { format } from 'date-fns';
-import { CalendarIcon, Plus, Minus, Ticket, Users, Baby, Footprints, Loader2, CheckCircle, Crown, Star, ImageIcon } from 'lucide-react';
+import { Plus, Minus, Ticket, Loader2, CheckCircle, Crown, Search, Footprints } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
 const formSchema = z.object({
-  date: z.date({ required_error: 'Date is required' }),
   guardian_name: z.string().optional(),
-  phone: z.string().min(11, 'Phone number must be at least 11 digits').regex(/^(\+?880|0)?1[3-9]\d{8}$/, 'Invalid Bangladesh phone number'),
+  phone: z.string().min(11, 'Phone number must be at least 11 digits').regex(/^(\+?880|0)?1[3-9]\d{8}$/, 'Invalid phone'),
   notes: z.string().optional(),
   payment_type: z.enum(['cash', 'online']),
 });
 
 type FormValues = z.infer<typeof formSchema>;
-
 type RideCategory = 'kids' | 'family' | 'thrill';
 
 interface Ride {
@@ -45,10 +40,10 @@ interface Ride {
   review_count: number | null;
 }
 
-const CATEGORY_INFO: Record<RideCategory, { label: string; label_bn: string; color: string }> = {
-  kids: { label: 'Kids', label_bn: 'কিডস', color: 'bg-green-500/10 text-green-600 border-green-200' },
-  family: { label: 'Family', label_bn: 'ফ্যামিলি', color: 'bg-blue-500/10 text-blue-600 border-blue-200' },
-  thrill: { label: 'Thrill', label_bn: 'থ্রিল', color: 'bg-orange-500/10 text-orange-600 border-orange-200' }
+const CATEGORY_COLORS: Record<RideCategory, string> = {
+  kids: 'bg-green-500',
+  family: 'bg-blue-500',
+  thrill: 'bg-orange-500',
 };
 
 interface MembershipInfo {
@@ -63,7 +58,6 @@ interface CounterTicketFormProps {
 }
 
 export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
-  
   const [guardianCount, setGuardianCount] = useState(1);
   const [childCount, setChildCount] = useState(1);
   const [socksCount, setSocksCount] = useState(1);
@@ -71,8 +65,19 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [membershipInfo, setMembershipInfo] = useState<MembershipInfo | null>(null);
   const [isCheckingMembership, setIsCheckingMembership] = useState(false);
+  const [rideSearch, setRideSearch] = useState('');
+  const [discount, setDiscount] = useState(0);
 
-  // Fetch rides
+  // Generate entry number
+  const entryNo = useMemo(() => {
+    const now = new Date();
+    const yy = String(now.getFullYear()).slice(-2);
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    const rand = String(Math.floor(Math.random() * 1000)).padStart(3, '0');
+    return `${yy}${mm}${dd}-${rand}`;
+  }, []);
+
   const { data: rides = [] } = useQuery<Ride[]>({
     queryKey: ['rides'],
     queryFn: async () => {
@@ -86,7 +91,6 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
     },
   });
 
-  // Fetch ticket pricing from settings
   const { data: ticketPricing } = useQuery({
     queryKey: ['ticket-pricing-settings'],
     queryFn: async () => {
@@ -99,18 +103,16 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
     },
   });
 
-  // Get pricing from settings
   const pricing = ticketPricing || {
     entry_price: 500,
     extra_guardian_price: 100,
     extra_child_price: 200,
-    socks_price: 50
+    socks_price: 50,
   };
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      date: new Date(),
       guardian_name: '',
       phone: '',
       notes: '',
@@ -120,13 +122,11 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
 
   const phone = form.watch('phone');
 
-  // Check membership when phone changes
   useEffect(() => {
     const checkMembership = async () => {
       if (phone && phone.length >= 11) {
         setIsCheckingMembership(true);
         try {
-          // Check membership by phone using direct query (edge function may not be deployed)
           const today = new Date().toISOString().split('T')[0];
           const { data: membership } = await supabase
             .from('memberships')
@@ -136,7 +136,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
             .gte('valid_till', today)
             .lte('valid_from', today)
             .maybeSingle();
-          
+
           if (membership) {
             setMembershipInfo({
               id: membership.id,
@@ -147,8 +147,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
           } else {
             setMembershipInfo(null);
           }
-        } catch (error) {
-          console.error('Membership check error:', error);
+        } catch {
           setMembershipInfo(null);
         } finally {
           setIsCheckingMembership(false);
@@ -157,41 +156,32 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
         setMembershipInfo(null);
       }
     };
-
     const debounce = setTimeout(checkMembership, 500);
     return () => clearTimeout(debounce);
   }, [phone]);
 
-  // Calculate prices
+  // Filter rides by search
+  const filteredRides = useMemo(() => {
+    if (!rideSearch.trim()) return rides;
+    const q = rideSearch.toLowerCase();
+    return rides.filter(r => r.name.toLowerCase().includes(q) || r.name_bn?.toLowerCase().includes(q));
+  }, [rides, rideSearch]);
+
   const calculatePrices = () => {
     let entryPrice = pricing.entry_price;
-    
-    // Extra guardians
-    if (guardianCount > 1) {
-      entryPrice += (guardianCount - 1) * pricing.extra_guardian_price;
-    }
-    
-    // Extra children
-    if (childCount > 1) {
-      entryPrice += (childCount - 1) * pricing.extra_child_price;
-    }
-
+    if (guardianCount > 1) entryPrice += (guardianCount - 1) * pricing.extra_guardian_price;
+    if (childCount > 1) entryPrice += (childCount - 1) * pricing.extra_child_price;
     const socksPrice = socksCount * pricing.socks_price;
-
-    // Rides price
     let ridesPrice = 0;
     Object.entries(selectedRides).forEach(([rideId, quantity]) => {
       const ride = rides.find(r => r.id === rideId);
-      if (ride && quantity > 0) {
-        ridesPrice += ride.price * quantity;
-      }
+      if (ride && quantity > 0) ridesPrice += ride.price * quantity;
     });
-
     const subtotal = entryPrice + socksPrice + ridesPrice;
-    const discountAmount = membershipInfo ? (entryPrice * membershipInfo.discount_percent / 100) : 0;
-    const total = subtotal - discountAmount;
-
-    return { entryPrice, socksPrice, ridesPrice, subtotal, discountAmount, total };
+    const memberDiscount = membershipInfo ? (entryPrice * membershipInfo.discount_percent / 100) : 0;
+    const totalDiscount = memberDiscount + discount;
+    const total = Math.max(0, subtotal - totalDiscount);
+    return { entryPrice, socksPrice, ridesPrice, subtotal, memberDiscount, totalDiscount, total };
   };
 
   const prices = calculatePrices();
@@ -227,7 +217,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
 
       const { data, error } = await supabase.functions.invoke('create-manual-ticket', {
         body: {
-          date: format(values.date, 'yyyy-MM-dd'),
+          date: format(new Date(), 'yyyy-MM-dd'),
           guardian_count: guardianCount,
           child_count: childCount,
           socks_count: socksCount,
@@ -243,8 +233,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
       if (data?.error) throw new Error(data.error);
 
       toast.success('Ticket created successfully!');
-      
-      // Send payment notification for paid tickets (non-blocking)
+
       if (values.payment_type === 'cash' && data.ticket) {
         supabase.functions.invoke('ticket-payment-notify', {
           body: {
@@ -252,129 +241,170 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
             ticket_number: data.ticket.ticket_number,
             guardian_name: values.guardian_name || 'Guest',
             guardian_phone: values.phone,
-            slot_date: format(values.date, 'yyyy-MM-dd'),
+            slot_date: format(new Date(), 'yyyy-MM-dd'),
             time_slot: null,
             total_price: prices.total,
-            payment_type: 'cash'
-          }
-        }).catch(err => console.log('Notification sent in background'));
+            payment_type: 'cash',
+          },
+        }).catch(() => {});
       }
-      
-      // Reset form
+
       form.reset();
       setGuardianCount(1);
       setChildCount(1);
       setSocksCount(1);
       setSelectedRides({});
       setMembershipInfo(null);
-
+      setDiscount(0);
       onSuccess?.(data.ticket);
     } catch (error: any) {
-      toast.error(error.message || ('Failed to create ticket'));
+      toast.error(error.message || 'Failed to create ticket');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const CounterButton = ({ value, onIncrement, onDecrement, min = 0 }: { 
-    value: number; 
-    onIncrement: () => void; 
-    onDecrement: () => void;
-    min?: number;
+  const InlineCounter = ({ value, onInc, onDec, min = 0 }: {
+    value: number; onInc: () => void; onDec: () => void; min?: number;
   }) => (
-    <div className="flex items-center gap-2">
-      <Button
-        type="button"
-        variant="outline"
-        size="icon"
-        className="h-8 w-8"
-        onClick={onDecrement}
-        disabled={value <= min}
-      >
-        <Minus className="h-4 w-4" />
+    <div className="flex items-center gap-1">
+      <Button type="button" variant="outline" size="icon" className="h-7 w-7" onClick={onDec} disabled={value <= min}>
+        <Minus className="h-3 w-3" />
       </Button>
-      <span className="w-8 text-center font-bold">{value}</span>
-      <Button
-        type="button"
-        variant="outline"
-        size="icon"
-        className="h-8 w-8"
-        onClick={onIncrement}
-      >
-        <Plus className="h-4 w-4" />
+      <span className="w-6 text-center text-sm font-semibold">{value}</span>
+      <Button type="button" variant="outline" size="icon" className="h-7 w-7" onClick={onInc}>
+        <Plus className="h-3 w-3" />
       </Button>
     </div>
   );
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column - Main Form */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Date & Customer Info */}
-            <Card>
-              <CardHeader className="pb-4">
-                <CardTitle className="flex items-center gap-2">
-                  <Ticket className="h-5 w-5" />
-                  {'Ticket Information'}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {/* Date Picker */}
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {/* LEFT COLUMN — Rides & Socks */}
+          <div className="border rounded-lg bg-card overflow-hidden flex flex-col" style={{ maxHeight: '75vh' }}>
+            <div className="p-3 border-b space-y-2">
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-sm flex items-center gap-2">
+                  <Ticket className="h-4 w-4" /> Rides & Add-ons
+                </h3>
+                <div className="flex gap-1">
+                  <Button type="button" variant="ghost" size="sm" className="h-7 text-xs"
+                    onClick={() => { const all: Record<string, number> = {}; rides.forEach(r => { all[r.id] = 1; }); setSelectedRides(all); }}>
+                    Select All
+                  </Button>
+                  {Object.keys(selectedRides).length > 0 && (
+                    <Button type="button" variant="ghost" size="sm" className="h-7 text-xs" onClick={() => setSelectedRides({})}>
+                      Clear
+                    </Button>
+                  )}
+                </div>
+              </div>
+              <div className="relative">
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                <Input
+                  placeholder="Search rides..."
+                  value={rideSearch}
+                  onChange={(e) => setRideSearch(e.target.value)}
+                  className="h-8 pl-8 text-sm"
+                />
+              </div>
+            </div>
+
+            <ScrollArea className="flex-1">
+              <div className="p-2 space-y-0.5">
+                {/* Socks row */}
+                <div className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-muted/50 transition-colors">
+                  <div className="w-1 h-6 rounded-full bg-purple-500 shrink-0" />
+                  <Footprints className="h-4 w-4 text-muted-foreground shrink-0" />
+                  <span className="text-sm font-medium flex-1">Socks (pair)</span>
+                  <Badge variant="secondary" className="text-xs shrink-0">৳{pricing.socks_price}</Badge>
+                  <InlineCounter value={socksCount} onInc={() => setSocksCount(v => v + 1)} onDec={() => setSocksCount(v => Math.max(0, v - 1))} />
+                </div>
+
+                <Separator className="my-1" />
+
+                {/* Rides */}
+                {filteredRides.map((ride) => {
+                  const isSelected = selectedRides[ride.id] > 0;
+                  const catColor = CATEGORY_COLORS[ride.category];
+                  return (
+                    <div
+                      key={ride.id}
+                      className={cn(
+                        'flex items-center gap-2 px-2 py-1.5 rounded-md transition-colors cursor-pointer',
+                        isSelected ? 'bg-primary/5 ring-1 ring-primary/20' : 'hover:bg-muted/50'
+                      )}
+                      onClick={() => toggleRide(ride.id)}
+                    >
+                      <div className={cn('w-1 h-6 rounded-full shrink-0', catColor)} />
+                      <Checkbox
+                        checked={isSelected}
+                        onCheckedChange={() => toggleRide(ride.id)}
+                        onClick={(e) => e.stopPropagation()}
+                        className="shrink-0"
+                      />
+                      <span className="text-sm flex-1 truncate">{ride.name}</span>
+                      <Badge variant="secondary" className="text-xs shrink-0">৳{ride.price}</Badge>
+                      {isSelected && (
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <InlineCounter
+                            value={selectedRides[ride.id] || 1}
+                            onInc={() => updateRideQuantity(ride.id, 1)}
+                            onDec={() => updateRideQuantity(ride.id, -1)}
+                            min={1}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+
+                {filteredRides.length === 0 && (
+                  <p className="text-sm text-muted-foreground text-center py-4">No rides found</p>
+                )}
+              </div>
+            </ScrollArea>
+          </div>
+
+          {/* RIGHT COLUMN — Form & Pricing */}
+          <div className="border rounded-lg bg-card overflow-hidden flex flex-col" style={{ maxHeight: '75vh' }}>
+            <ScrollArea className="flex-1">
+              <div className="p-4 space-y-4">
+                {/* Entry No & Customer Name */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <Label className="text-xs">Entry No</Label>
+                    <Input value={entryNo} readOnly className="h-8 text-sm bg-muted/50" />
+                  </div>
                   <FormField
                     control={form.control}
-                    name="date"
+                    name="guardian_name"
                     render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{'Date'}</FormLabel>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant="outline"
-                                className={cn(
-                                  'w-full pl-3 text-left font-normal',
-                                  !field.value && 'text-muted-foreground'
-                                )}
-                              >
-                                {field.value ? (
-                                  format(field.value, 'PPP', { locale: undefined })
-                                ) : (
-                                  <span>{'Pick a date'}</span>
-                                )}
-                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={field.value}
-                              onSelect={field.onChange}
-                              disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
-                              initialFocus
-                            />
-                          </PopoverContent>
-                        </Popover>
-                        <FormMessage />
+                      <FormItem className="space-y-1">
+                        <FormLabel className="text-xs">Customer Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Name" {...field} className="h-8 text-sm" />
+                        </FormControl>
                       </FormItem>
                     )}
                   />
+                </div>
 
-                  {/* Phone */}
+                {/* Phone */}
+                <div className="grid grid-cols-2 gap-3">
                   <FormField
                     control={form.control}
                     name="phone"
                     render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{'Phone Number *'}</FormLabel>
+                      <FormItem className="space-y-1">
+                        <FormLabel className="text-xs">Phone *</FormLabel>
                         <FormControl>
                           <div className="relative">
-                            <Input placeholder="01XXXXXXXXX" {...field} />
+                            <Input placeholder="01XXXXXXXXX" {...field} className="h-8 text-sm" />
                             {isCheckingMembership && (
-                              <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin text-muted-foreground" />
+                              <Loader2 className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 animate-spin text-muted-foreground" />
                             )}
                           </div>
                         </FormControl>
@@ -382,396 +412,136 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                       </FormItem>
                     )}
                   />
+                  <FormField
+                    control={form.control}
+                    name="notes"
+                    render={({ field }) => (
+                      <FormItem className="space-y-1">
+                        <FormLabel className="text-xs">Address</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Address (optional)" {...field} className="h-8 text-sm" />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
                 </div>
 
-                {/* Membership Badge */}
+                {/* Membership badge */}
                 {membershipInfo && (
-                  <div className="p-3 rounded-lg bg-primary/10 border border-primary/20 flex items-center gap-3">
-                    <Crown className="h-5 w-5 text-primary" />
-                    <div className="flex-1">
-                      <p className="font-medium text-primary">
-                        {'Membership Active!'}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {membershipInfo.member_name} • {membershipInfo.discount_percent}% {'discount'}
-                      </p>
-                    </div>
-                    <Badge variant="secondary">
-                      {'Valid till:'} {membershipInfo.valid_till}
-                    </Badge>
+                  <div className="p-2 rounded-md bg-primary/10 border border-primary/20 flex items-center gap-2 text-xs">
+                    <Crown className="h-4 w-4 text-primary shrink-0" />
+                    <span className="font-medium text-primary">{membershipInfo.member_name}</span>
+                    <Badge variant="secondary" className="text-[10px] ml-auto">{membershipInfo.discount_percent}% off</Badge>
                   </div>
                 )}
 
-                {/* Guardian Name */}
-                <FormField
-                  control={form.control}
-                  name="guardian_name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{'Guardian Name'}</FormLabel>
-                      <FormControl>
-                        <Input placeholder={'Enter name'} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
-
-            {/* Entry Details */}
-            <Card>
-              <CardHeader className="pb-4">
-                <CardTitle className="flex items-center gap-2">
-                  <Users className="h-5 w-5" />
-                  {'Entry Details'}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {/* Guardian Count */}
-                  <div className="space-y-2">
-                    <Label className="flex items-center gap-2">
-                      <Users className="h-4 w-4" />
-                      {'Guardian Count'}
-                    </Label>
-                    <CounterButton
-                      value={guardianCount}
-                      onIncrement={() => setGuardianCount(v => v + 1)}
-                      onDecrement={() => setGuardianCount(v => Math.max(1, v - 1))}
-                      min={1}
-                    />
-                    {guardianCount > 1 && (
-                      <p className="text-xs text-muted-foreground">
-                        +৳{(guardianCount - 1) * pricing.extra_guardian_price} {'extra'}
-                      </p>
-                    )}
+                {/* Guardian & Children */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <Label className="text-xs">Guardians</Label>
+                    <InlineCounter value={guardianCount} onInc={() => setGuardianCount(v => v + 1)} onDec={() => setGuardianCount(v => Math.max(1, v - 1))} min={1} />
                   </div>
-
-                  {/* Child Count */}
-                  <div className="space-y-2">
-                    <Label className="flex items-center gap-2">
-                      <Baby className="h-4 w-4" />
-                      {'Child Count'}
-                    </Label>
-                    <CounterButton
-                      value={childCount}
-                      onIncrement={() => setChildCount(v => v + 1)}
-                      onDecrement={() => setChildCount(v => Math.max(1, v - 1))}
-                      min={1}
-                    />
-                    {childCount > 1 && (
-                      <p className="text-xs text-muted-foreground">
-                        +৳{(childCount - 1) * pricing.extra_child_price} {'extra'}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Socks Count */}
-                  <div className="space-y-2">
-                    <Label className="flex items-center gap-2">
-                      <Footprints className="h-4 w-4" />
-                      {'Socks (pairs)'}
-                    </Label>
-                    <CounterButton
-                      value={socksCount}
-                      onIncrement={() => setSocksCount(v => v + 1)}
-                      onDecrement={() => setSocksCount(v => Math.max(0, v - 1))}
-                      min={0}
-                    />
-                    {socksCount > 0 && (
-                      <p className="text-xs text-muted-foreground">
-                        ৳{socksCount * pricing.socks_price}
-                      </p>
-                    )}
+                  <div className="space-y-1">
+                    <Label className="text-xs">Children</Label>
+                    <InlineCounter value={childCount} onInc={() => setChildCount(v => v + 1)} onDec={() => setChildCount(v => Math.max(1, v - 1))} min={1} />
                   </div>
                 </div>
-              </CardContent>
-            </Card>
 
-            {/* Rides Selection */}
-            {rides.length > 0 && (
-              <Card>
-                <CardHeader className="pb-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle>{'Add Rides (Optional)'}</CardTitle>
-                      <CardDescription>
-                        {'Select additional rides'}
-                      </CardDescription>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          const allRides: Record<string, number> = {};
-                          rides.forEach(ride => {
-                            allRides[ride.id] = 1;
-                          });
-                          setSelectedRides(allRides);
-                        }}
-                      >
-                        {'Select All'}
-                      </Button>
-                      {Object.keys(selectedRides).length > 0 && (
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setSelectedRides({})}
-                        >
-                          {'Clear'}
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {(['kids', 'family', 'thrill'] as RideCategory[]).map((category) => {
-                    const categoryRides = rides.filter(r => r.category === category);
-                    if (categoryRides.length === 0) return null;
-                    const catInfo = CATEGORY_INFO[category];
-                    
-                    return (
-                      <div key={category}>
-                        <div className="flex items-center gap-2 mb-2">
-                          <Badge variant="outline" className={cn("text-xs", catInfo.color)}>
-                            {catInfo.label}
-                          </Badge>
-                          <span className="text-xs text-muted-foreground">
-                            ({categoryRides.length} {'rides'})
-                          </span>
-                        </div>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                          {categoryRides.map((ride) => {
-                            const isSelected = selectedRides[ride.id] > 0;
-                            return (
-                              <div
-                                key={ride.id}
-                                className={cn(
-                                  'p-3 rounded-lg border cursor-pointer transition-all overflow-hidden',
-                                  isSelected ? 'border-primary bg-primary/5 ring-2 ring-primary/20' : 'hover:border-primary/50 hover:shadow-md'
-                                )}
-                                onClick={() => toggleRide(ride.id)}
-                              >
-                                {/* Ride Image */}
-                                <div className="relative w-full h-20 mb-2 rounded-md overflow-hidden bg-muted">
-                                  {ride.image_url ? (
-                                    <img 
-                                      src={ride.image_url} 
-                                      alt={ride.name}
-                                      className="w-full h-full object-cover"
-                                    />
-                                  ) : (
-                                    <div className="w-full h-full flex items-center justify-center">
-                                      <ImageIcon className="h-8 w-8 text-muted-foreground/50" />
-                                    </div>
-                                  )}
-                                  {/* Checkbox overlay */}
-                                  <div className="absolute top-1 left-1">
-                                    <Checkbox 
-                                      checked={isSelected} 
-                                      onCheckedChange={() => toggleRide(ride.id)}
-                                      onClick={(e) => e.stopPropagation()}
-                                      className="bg-background/80 backdrop-blur-sm"
-                                    />
-                                  </div>
-                                  {/* Price badge overlay */}
-                                  <div className="absolute top-1 right-1">
-                                    <Badge variant="secondary" className="text-xs bg-background/80 backdrop-blur-sm">
-                                      ৳{ride.price}
-                                    </Badge>
-                                  </div>
-                                </div>
+                <Separator />
 
-                                {/* Ride Info */}
-                                <p className="font-medium text-sm line-clamp-1">
-                                  {ride.name}
-                                </p>
-
-                                {/* Rating */}
-                                {ride.avg_rating && ride.avg_rating > 0 && (
-                                  <div className="flex items-center gap-1 mt-1">
-                                    <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-                                    <span className="text-xs text-muted-foreground">
-                                      {Number(ride.avg_rating).toFixed(1)}
-                                      {ride.review_count && ride.review_count > 0 && (
-                                        <span className="ml-1">({ride.review_count})</span>
-                                      )}
-                                    </span>
-                                  </div>
-                                )}
-
-                                {isSelected && (
-                                  <div className="mt-2" onClick={(e) => e.stopPropagation()}>
-                                    <CounterButton
-                                      value={selectedRides[ride.id] || 1}
-                                      onIncrement={() => updateRideQuantity(ride.id, 1)}
-                                      onDecrement={() => updateRideQuantity(ride.id, -1)}
-                                      min={1}
-                                    />
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Notes & Payment */}
-            <Card>
-              <CardHeader className="pb-4">
-                <CardTitle>{'Additional Information'}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="notes"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{'Notes'}</FormLabel>
-                      <FormControl>
-                        <Textarea 
-                          placeholder={'Special instructions...'} 
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="payment_type"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{'Payment Method'}</FormLabel>
-                      <FormControl>
-                        <RadioGroup
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                          className="flex gap-4"
-                        >
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="cash" id="cash" />
-                            <Label htmlFor="cash">{'Cash'}</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="online" id="online" />
-                            <Label htmlFor="online">{'Online'}</Label>
-                          </div>
-                        </RadioGroup>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Right Column - Price Summary */}
-          <div className="lg:col-span-1">
-            <Card className="sticky top-4">
-              <CardHeader className="pb-4">
-                <CardTitle>{'Price Summary'}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2 text-sm">
+                {/* Price Summary */}
+                <div className="space-y-1.5 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">
-                      {'Entry Fee'}
-                    </span>
+                    <span className="text-muted-foreground">Entry Fee</span>
                     <span>৳{prices.entryPrice}</span>
                   </div>
-                  
                   {prices.socksPrice > 0 && (
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">
-                        {'Socks'} ({socksCount})
-                      </span>
+                      <span className="text-muted-foreground">Socks ({socksCount})</span>
                       <span>৳{prices.socksPrice}</span>
                     </div>
                   )}
-
                   {prices.ridesPrice > 0 && (
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">
-                        {'Rides'}
-                      </span>
+                      <span className="text-muted-foreground">Rides</span>
                       <span>৳{prices.ridesPrice}</span>
                     </div>
                   )}
-
                   <Separator />
-
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">
-                      {'Subtotal'}
-                    </span>
+                  <div className="flex justify-between font-medium">
+                    <span>Total Amount</span>
                     <span>৳{prices.subtotal}</span>
                   </div>
 
-                  {membershipInfo && prices.discountAmount > 0 && (
-                    <div className="flex justify-between text-green-600">
-                      <span>
-                        {'Membership Discount'} ({membershipInfo.discount_percent}%)
-                      </span>
-                      <span>-৳{prices.discountAmount}</span>
+                  {/* Discount */}
+                  <div className="flex items-center gap-2">
+                    <span className="text-muted-foreground text-xs whitespace-nowrap">Discount ৳</span>
+                    <Input
+                      type="number"
+                      value={discount || ''}
+                      onChange={(e) => setDiscount(Number(e.target.value) || 0)}
+                      className="h-7 text-sm w-24"
+                      placeholder="0"
+                    />
+                  </div>
+                  {membershipInfo && prices.memberDiscount > 0 && (
+                    <div className="flex justify-between text-green-600 text-xs">
+                      <span>Membership ({membershipInfo.discount_percent}%)</span>
+                      <span>-৳{prices.memberDiscount}</span>
                     </div>
                   )}
 
                   <Separator />
-
-                  <div className="flex justify-between text-lg font-bold">
-                    <span>{'Total'}</span>
+                  <div className="flex justify-between text-base font-bold">
+                    <span>Grand Total</span>
                     <span className="text-primary">৳{prices.total}</span>
                   </div>
                 </div>
 
-                {/* Time Info */}
-                <div className="p-3 rounded-lg bg-muted/50 space-y-1 text-sm">
+                {/* Valid Until */}
+                <div className="p-2 rounded-md bg-muted/50 text-xs space-y-0.5">
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">{'In Time'}</span>
+                    <span className="text-muted-foreground">In Time</span>
                     <span className="font-medium">{format(new Date(), 'hh:mm a')}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">{'Out Time'}</span>
+                    <span className="text-muted-foreground">Valid Until</span>
                     <span className="font-medium">{format(new Date(Date.now() + 60 * 60 * 1000), 'hh:mm a')}</span>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    {'Valid for 1 hour'}
-                  </p>
                 </div>
 
-                <Button 
-                  type="submit" 
-                  className="w-full" 
-                  size="lg"
-                  disabled={isSubmitting}
-                >
+                {/* Payment Method */}
+                <FormField
+                  control={form.control}
+                  name="payment_type"
+                  render={({ field }) => (
+                    <FormItem className="space-y-1">
+                      <FormLabel className="text-xs">Payment Method</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="h-8 text-sm">
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="cash">Cash</SelectItem>
+                          <SelectItem value="online">Online</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+
+                {/* Submit */}
+                <Button type="submit" className="w-full" size="default" disabled={isSubmitting}>
                   {isSubmitting ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      {'Creating...'}
-                    </>
+                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating...</>
                   ) : (
-                    <>
-                      <CheckCircle className="mr-2 h-4 w-4" />
-                      {'Create Ticket'}
-                    </>
+                    <><CheckCircle className="mr-2 h-4 w-4" /> Create Ticket</>
                   )}
                 </Button>
-              </CardContent>
-            </Card>
+              </div>
+            </ScrollArea>
           </div>
         </div>
       </form>
