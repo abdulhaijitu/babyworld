@@ -146,7 +146,7 @@ export default function AdminMembershipPackages() {
           </h1>
           <p className="text-sm text-muted-foreground">Manage membership plans and pricing</p>
         </div>
-        <Button className="gap-2">
+        <Button className="gap-2" onClick={() => setCreateOpen(true)}>
           <Plus className="h-4 w-4" /> Create Package
         </Button>
       </div>
