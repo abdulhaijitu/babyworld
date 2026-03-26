@@ -97,7 +97,7 @@ export function PricingSection() {
                   <p className="text-sm text-muted-foreground">Soft Zone + Ride Zone</p>
                 </div>
                 <div className="flex items-baseline gap-3">
-                  <span className="text-3xl font-bold text-foreground">৳800</span>
+                  <span className="text-3xl font-bold text-foreground">৳{packagePricing.fullBoard}</span>
                 </div>
                 <div className="text-sm text-muted-foreground pt-2 border-t border-border">
                   Includes all soft play + all rides
