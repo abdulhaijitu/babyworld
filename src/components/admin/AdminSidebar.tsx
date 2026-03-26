@@ -153,6 +153,45 @@ function SidebarContent({
           const Icon = item.icon;
           const active = isActive(item.path);
           
+          if (item.children && item.children.length > 0 && !collapsed) {
+            const childActive = item.children.some(c => location.pathname + location.search === c.path || location.pathname.startsWith(item.path.split('?')[0]));
+            return (
+              <Collapsible key={item.id} defaultOpen={childActive}>
+                <CollapsibleTrigger className={cn(
+                  "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                  childActive
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                )}>
+                  <Icon className="h-5 w-5 shrink-0" />
+                  <span className="flex-1 text-left">{item.label}</span>
+                  <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200 [&[data-state=open]]:rotate-180" />
+                </CollapsibleTrigger>
+                <CollapsibleContent className="pl-4 mt-1 space-y-1">
+                  {item.children.map((child) => {
+                    const ChildIcon = child.icon;
+                    const childItemActive = location.pathname + location.search === child.path;
+                    return (
+                      <button
+                        key={child.id}
+                        onClick={() => handleNavigate(child.path)}
+                        className={cn(
+                          "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
+                          childItemActive
+                            ? "bg-primary text-primary-foreground font-medium"
+                            : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                        )}
+                      >
+                        <ChildIcon className="h-4 w-4 shrink-0" />
+                        <span>{child.label}</span>
+                      </button>
+                    );
+                  })}
+                </CollapsibleContent>
+              </Collapsible>
+            );
+          }
+
           return (
             <button
               key={item.id}
