@@ -120,16 +120,36 @@ export default function AdminMemberships() {
     },
   });
 
+  const selectedPackage = packages.find((p: any) => p.id === formData.selected_package_id);
+
   const handleCreate = async () => {
     if (!formData.member_name || !formData.phone) {
       toast.error('Name and phone are required');
+      return;
+    }
+    if (!validatePhone(formData.phone)) {
+      toast.error('সঠিক ফোন নম্বর দিন');
+      return;
+    }
+    if (!selectedPackage) {
+      toast.error('Please select a package');
       return;
     }
 
     setIsCreating(true);
     try {
       const { data, error } = await supabase.functions.invoke('manage-membership?action=create', {
-        body: formData,
+        body: {
+          member_name: formData.member_name,
+          phone: formData.phone,
+          child_count: formData.child_count,
+          membership_type: selectedPackage.membership_type,
+          discount_percent: selectedPackage.discount_percent,
+          notes: formData.notes,
+          payment_type: formData.payment_type,
+          payment_amount: formData.payment_amount,
+          valid_from: formData.valid_from,
+        },
       });
 
       if (error) throw error;
@@ -141,12 +161,14 @@ export default function AdminMemberships() {
         member_name: '',
         phone: '',
         child_count: 1,
-        membership_type: 'monthly',
-        discount_percent: 100,
+        guardian_count: 1,
+        selected_package_id: '',
         notes: '',
         payment_type: 'cash',
         payment_amount: 0,
+        valid_from: format(new Date(), 'yyyy-MM-dd'),
       });
+      setPhoneError('');
       queryClient.invalidateQueries({ queryKey: ['memberships'] });
     } catch (error: any) {
       toast.error(error.message || ('Creation failed'));
