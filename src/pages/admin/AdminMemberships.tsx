@@ -232,19 +232,40 @@ export default function AdminMemberships() {
                 <Label>{'Plan'}</Label>
                 <Select
                   value={formData.membership_type}
-                  onValueChange={(value: 'monthly' | 'quarterly' | 'yearly') => 
-                    setFormData({ ...formData, membership_type: value })
-                  }
+                  onValueChange={(value: 'monthly' | 'quarterly' | 'yearly') => {
+                    const pkg = packages.find((p: any) => p.membership_type === value);
+                    setFormData({
+                      ...formData,
+                      membership_type: value,
+                      discount_percent: pkg ? pkg.discount_percent : formData.discount_percent,
+                      child_count: pkg ? pkg.max_children : formData.child_count,
+                    });
+                  }}
                 >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="monthly">{'Monthly'}</SelectItem>
-                    <SelectItem value="quarterly">{'Quarterly'}</SelectItem>
-                    <SelectItem value="yearly">{'Yearly'}</SelectItem>
+                    {packages.length > 0 ? packages.map((pkg: any) => (
+                      <SelectItem key={pkg.id} value={pkg.membership_type}>
+                        {pkg.name} — ৳{pkg.price}
+                      </SelectItem>
+                    )) : (
+                      <>
+                        <SelectItem value="monthly">Monthly</SelectItem>
+                        <SelectItem value="quarterly">Quarterly</SelectItem>
+                        <SelectItem value="yearly">Yearly</SelectItem>
+                      </>
+                    )}
                   </SelectContent>
                 </Select>
+                {packages.find((p: any) => p.membership_type === formData.membership_type) && (
+                  <p className="text-xs text-muted-foreground">
+                    Price: ৳{packages.find((p: any) => p.membership_type === formData.membership_type)?.price} | 
+                    Max Guardian: {(packages.find((p: any) => p.membership_type === formData.membership_type) as any)?.max_guardians ?? 2} | 
+                    Max Kids: {packages.find((p: any) => p.membership_type === formData.membership_type)?.max_children}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label>{'Notes'}</Label>
