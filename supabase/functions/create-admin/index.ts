@@ -5,7 +5,7 @@ import { createAdminClient } from '../_shared/supabase-admin.ts';
 interface CreateUserRequest {
   email: string;
   password: string;
-  role: 'admin' | 'manager' | 'staff';
+  role: 'super_admin' | 'admin' | 'manager' | 'staff';
 }
 
 serve(async (req) => {
