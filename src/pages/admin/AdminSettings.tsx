@@ -284,6 +284,24 @@ export default function AdminSettings() {
             </CardContent>
           </Card>
 
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Banknote className="w-5 h-5" />
+                {'Package Pricing'}
+              </CardTitle>
+              <CardDescription>
+                {'Family, Full Board & Ride Zone package prices (managed in Settings → Database)'}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">
+                Package pricing is stored under <code className="text-xs bg-muted px-1 py-0.5 rounded">package_pricing</code> key in settings. 
+                Family Regular: ৳500, Eid Special: ৳350, Full Board: ৳800, Extra Guardian: ৳150, Ride Zone Regular: ৳1350, Ride Zone Offer: ৳500.
+              </p>
+            </CardContent>
+          </Card>
+
           <div className="flex justify-end">
             <Button onClick={handleSavePricing} disabled={saving}>
               {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
