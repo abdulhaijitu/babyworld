@@ -1,27 +1,43 @@
 
 
-## Plan: Entry No ইউনিক + ফোন নাম্বার দিয়ে তথ্য সিঙ্ক
+## Plan: Sidebar-তে TICKETING-এর নিচে Sub-menu যোগ করা
 
-### পরিবর্তন ১: Entry No ইউনিক করা
+### সমস্যা
+বর্তমানে TICKETING একটি একক লিংক। ইউজার চায় এটি expandable হবে এবং নিচে "Create Ticket" ও "Ticket List" সাব-আইটেম থাকবে।
 
-বর্তমানে `useMemo` দিয়ে `YYMMDD-XXX` ফরম্যাটে random generate হয় — collision হতে পারে। পরিবর্তন:
-- Component mount-এ DB থেকে আজকের সর্বশেষ ticket number fetch করে sequential number বানাবে
-- Format: `YYMMDD-001`, `YYMMDD-002`, ...
-- আজকের tickets count query করে next number নির্ধারণ
+### পদ্ধতি
 
-### পরিবর্তন ২: ফোন নাম্বার দিয়ে তথ্য সিঙ্ক
+**1. নতুন রাউট তৈরি করা (App.tsx)**
+- `/admin/ticketing` → Ticket List (ডিফল্ট)
+- `/admin/ticketing/create` → Create Ticket
 
-বর্তমানে শুধু membership check হয়। এখন phone enter করলে:
-- `tickets` টেবিল থেকে সর্বশেষ ticket fetch করবে (same phone)
-- `guardian_name` ও `notes` (address) auto-fill করবে
-- User দেখবে "Previous customer found" badge
-- Membership check-ও আগের মতো থাকবে
+বর্তমানে `AdminTicketing.tsx` ফাইলে Tabs দিয়ে দুটো ভিউ আছে। এগুলোকে আলাদা রাউটে ভাগ করতে হবে অথবা URL query/param দিয়ে ট্যাব কন্ট্রোল করতে হবে।
 
-### ফাইল
+**সহজতম পদ্ধতি**: রাউট আলাদা না করে, sidebar থেকে navigate করার সময় URL query parameter (`?tab=create` / `?tab=list`) পাঠানো এবং `AdminTicketing`-এ সেই param অনুযায়ী ট্যাব সিলেক্ট করা।
 
+**2. Sidebar Menu Structure আপডেট (AdminSidebar.tsx)**
+- `MenuItem` interface-এ optional `children` ফিল্ড যোগ করা
+- TICKETING আইটেমকে parent বানানো, দুটো child সহ:
+  - Create Ticket → `/admin/ticketing?tab=create`
+  - Ticket List → `/admin/ticketing?tab=list`
+- Parent আইটেমে ক্লিক করলে expand/collapse হবে (Collapsible ব্যবহার করে)
+- ChevronDown/ChevronUp আইকন দিয়ে expand state ইনডিকেট করা
+- Active route হলে parent auto-expand থাকবে
+
+**3. AdminTicketing.tsx আপডেট**
+- URL search params (`useSearchParams`) থেকে `tab` value পড়া
+- সেই অনুযায়ী Tabs component-এর `value` সেট করা
+- Tab পরিবর্তন হলে URL param ও আপডেট করা
+
+### ফাইল পরিবর্তন
 | ফাইল | পরিবর্তন |
-|------|----------|
-| `src/components/admin/ticketing/CounterTicketForm.tsx` | Entry No sequential generate + phone lookup auto-fill |
+|---|---|
+| `src/components/admin/AdminSidebar.tsx` | MenuItem interface-এ `children` যোগ, collapsible sub-menu রেন্ডারিং |
+| `src/pages/admin/AdminTicketing.tsx` | URL search param থেকে active tab কন্ট্রোল |
 
-No DB migration needed.
+### Technical Details
+- `Collapsible`, `CollapsibleTrigger`, `CollapsibleContent` from `@/components/ui/collapsible` ব্যবহার করা হবে
+- `useSearchParams` from `react-router-dom` ব্যবহার করা হবে AdminTicketing-এ
+- Collapsed sidebar-এ শুধু parent icon দেখাবে, sub-items hide থাকবে
+- Mobile sheet-এও একই expandable behavior কাজ করবে
 
