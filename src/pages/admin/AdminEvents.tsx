@@ -61,9 +61,7 @@ import {
   Banknote
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { format, parseISO } from 'date-fns';
-import { bn } from 'date-fns/locale';
 import { TableRowSkeleton } from '@/components/admin/AdminSkeleton';
 
 interface EventBooking {
@@ -94,7 +92,6 @@ const timeSlots = [
 ];
 
 export default function AdminEvents() {
-  const { language } = useLanguage();
   const [events, setEvents] = useState<EventBooking[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

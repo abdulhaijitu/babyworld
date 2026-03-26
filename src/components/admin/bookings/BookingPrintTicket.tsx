@@ -12,8 +12,6 @@ import {
   Ticket as TicketIcon
 } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
-import { bn } from 'date-fns/locale';
-import { useLanguage } from '@/contexts/LanguageContext';
 import babyWorldLogo from '@/assets/baby-world-logo.png';
 
 interface BookingData {
@@ -34,7 +32,6 @@ interface BookingPrintTicketProps {
 }
 
 export function BookingPrintTicket({ booking, onClose }: BookingPrintTicketProps) {
-  const { language } = useLanguage();
   const printRef = useRef<HTMLDivElement>(null);
 
   // Generate a booking reference number

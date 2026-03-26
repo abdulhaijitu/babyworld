@@ -16,7 +16,7 @@ const celebrationImages = [
 ];
 
 export function EventsSection() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
 
   const packages = [
     {

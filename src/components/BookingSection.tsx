@@ -30,7 +30,7 @@ export function BookingSection() {
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [parentName, setParentName] = useState("");
   const [parentPhone, setParentPhone] = useState("");
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
 
   const { slots, loading: slotsLoading, error: slotsError, refetch } = useAvailableSlots(selectedDate);
   const { createBooking, loading: bookingLoading, error: bookingError, success: bookingSuccess, reset: resetBooking } = useCreateBooking();
@@ -590,7 +590,7 @@ interface MobileSummaryProps {
 
 function BookingSummaryMobile({ selectedDate, selectedSlot, childCount, onBookingClick, onWhatsAppClick }: MobileSummaryProps) {
   const isComplete = selectedDate && selectedSlot;
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
 
   return (
     <div className="flex items-center gap-4">

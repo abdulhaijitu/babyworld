@@ -59,9 +59,7 @@ import {
   Ticket
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { format, parseISO, startOfMonth, endOfMonth, isWithinInterval, startOfWeek, endOfWeek } from 'date-fns';
-import { bn } from 'date-fns/locale';
 import { useState, useCallback } from 'react';
 import { TableRowSkeleton } from '@/components/admin/AdminSkeleton';
 import { QuickActions } from '@/components/admin/QuickActions';
@@ -73,7 +71,6 @@ const PRICE_PER_TICKET = 300;
 
 export default function AdminDashboardContent() {
   const { bookings, loading: bookingsLoading, error: bookingsError, refetch, updateBookingStatus, cancelBooking } = useAdminBookings();
-  const { language } = useLanguage();
   
   // Cancel dialog state
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);

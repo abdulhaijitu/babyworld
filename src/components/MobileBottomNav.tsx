@@ -3,7 +3,6 @@ import { Link, useLocation } from "react-router-dom";
 import { Home, CalendarDays, PartyPopper, Phone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 interface NavItem {
   icon: typeof Home;
@@ -21,7 +20,6 @@ const navItems: NavItem[] = [
 
 export function MobileBottomNav() {
   const location = useLocation();
-  const { language } = useLanguage();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 

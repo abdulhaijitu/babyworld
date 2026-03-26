@@ -15,9 +15,7 @@ import {
 } from '@/components/ui/dialog';
 import { Loader2, CreditCard, Banknote, Smartphone } from 'lucide-react';
 import { toast } from 'sonner';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { format, parseISO } from 'date-fns';
-import { bn } from 'date-fns/locale';
 
 interface Booking {
   id: string;
@@ -43,7 +41,6 @@ export function PaymentCollectionDialog({
   onOpenChange, 
   onSuccess 
 }: PaymentCollectionDialogProps) {
-  const { language } = useLanguage();
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'online'>('cash');
   const [amount, setAmount] = useState(PRICE_PER_TICKET.toString());
   const [notes, setNotes] = useState('');

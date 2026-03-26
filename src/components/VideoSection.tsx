@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { Play, X } from "lucide-react";
 import { ScrollFadeIn } from "./ScrollAnimations";
-import { useLanguage } from "@/contexts/LanguageContext";
 import { motion, AnimatePresence } from "framer-motion";
 import playgroundKids from "@/assets/playground-kids.jpg";
 import mascotKids from "@/assets/mascot-kids.jpg";
 import carouselRides from "@/assets/carousel-rides.jpg";
 
 export function VideoSection() {
-  const { language } = useLanguage();
   const [isPlaying, setIsPlaying] = useState(false);
 
   // Baby World playground video

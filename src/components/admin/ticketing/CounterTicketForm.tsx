@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { format } from 'date-fns';
-import { bn } from 'date-fns/locale';
 import { CalendarIcon, Plus, Minus, Ticket, Users, Baby, Footprints, Loader2, CheckCircle, Crown, Star, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,7 +16,6 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -65,7 +63,6 @@ interface CounterTicketFormProps {
 }
 
 export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
-  const { language } = useLanguage();
   
   const [guardianCount, setGuardianCount] = useState(1);
   const [childCount, setChildCount] = useState(1);

@@ -31,7 +31,6 @@ import {
   Clock
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { format } from 'date-fns';
 
 interface QuickActionsProps {
@@ -39,7 +38,6 @@ interface QuickActionsProps {
 }
 
 export function QuickActions({ onAction }: QuickActionsProps) {
-  const { language } = useLanguage();
   const queryClient = useQueryClient();
   const [ticketDialogOpen, setTicketDialogOpen] = useState(false);
   const [foodDialogOpen, setFoodDialogOpen] = useState(false);

@@ -19,7 +19,6 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { useLanguage } from '@/contexts/LanguageContext';
 
 interface ScanResult {
   success: boolean;
@@ -41,7 +40,6 @@ interface GateCamera {
 }
 
 export function QRScanner() {
-  const { language } = useLanguage();
   const [isScanning, setIsScanning] = useState(false);
   const [scanMode, setScanMode] = useState<'entry' | 'exit'>('entry');
   const [selectedGate, setSelectedGate] = useState('main_gate');

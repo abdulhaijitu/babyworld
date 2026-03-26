@@ -68,9 +68,7 @@ import {
   Wallet
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { format, parseISO, startOfMonth, endOfMonth, isWithinInterval, startOfWeek, endOfWeek } from 'date-fns';
-import { bn } from 'date-fns/locale';
 import { TableRowSkeleton } from '@/components/admin/AdminSkeleton';
 import { ManualBookingForm } from '@/components/admin/bookings/ManualBookingForm';
 import { BookingPrintTicket } from '@/components/admin/bookings/BookingPrintTicket';
@@ -97,7 +95,6 @@ interface Booking {
 const PRICE_PER_TICKET = 300;
 
 export default function AdminBookings() {
-  const { language } = useLanguage();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

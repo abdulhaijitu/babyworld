@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { usePayment } from '@/hooks/usePayment';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, Loader2, Home, CalendarCheck } from 'lucide-react';
@@ -10,7 +9,6 @@ import babyWorldLogo from '@/assets/baby-world-logo.png';
 export default function PaymentSuccess() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { language } = useLanguage();
   const { verifyPayment, loading } = usePayment();
   const [verified, setVerified] = useState(false);
   const [paymentData, setPaymentData] = useState<any>(null);

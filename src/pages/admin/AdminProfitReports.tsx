@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, subMonths } from 'date-fns';
-import { bn } from 'date-fns/locale';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -58,7 +56,6 @@ const EXPENSE_CATEGORY_LABELS: Record<string, { en: string; bn: string; color: s
 const CHART_COLORS = ['#22c55e', '#3b82f6', '#f97316', '#8b5cf6', '#ec4899', '#eab308', '#6b7280', '#64748b'];
 
 export default function AdminProfitReports() {
-  const { language } = useLanguage();
   
   // Date range state
   const [startDate, setStartDate] = useState<Date>(startOfMonth(new Date()));

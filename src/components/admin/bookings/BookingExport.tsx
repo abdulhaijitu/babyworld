@@ -7,7 +7,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Download, FileSpreadsheet, FileText } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { toast } from 'sonner';
 
 interface Booking {
@@ -29,7 +28,6 @@ interface BookingExportProps {
 }
 
 export function BookingExport({ bookings }: BookingExportProps) {
-  const { language } = useLanguage();
 
   const getTicketTypeLabel = (type: string) => {
     const labels: Record<string, string> = {

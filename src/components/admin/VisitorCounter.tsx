@@ -12,13 +12,11 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { format } from 'date-fns';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { cn } from '@/lib/utils';
 
 const MAX_CAPACITY = 50; // Maximum playground capacity
 
 export function VisitorCounter() {
-  const { language } = useLanguage();
   const today = format(new Date(), 'yyyy-MM-dd');
 
   // Fetch active tickets (checked in but not checked out)

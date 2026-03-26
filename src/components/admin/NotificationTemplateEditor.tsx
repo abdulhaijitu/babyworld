@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -80,7 +79,6 @@ const templateInfo = {
 };
 
 export default function NotificationTemplateEditor() {
-  const { language } = useLanguage();
   const [templates, setTemplates] = useState<NotificationTemplates>(defaultTemplates);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);

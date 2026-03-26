@@ -3,7 +3,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Ticket, Globe, Store, CheckCircle, XCircle, Clock } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import type { ReportsSummary } from '@/hooks/useReportsSummary';
 
@@ -13,7 +12,6 @@ interface TicketSalesReportProps {
 }
 
 export function TicketSalesReport({ data, isLoading }: TicketSalesReportProps) {
-  const { language } = useLanguage();
 
   const ticketTypeData = [
     { 

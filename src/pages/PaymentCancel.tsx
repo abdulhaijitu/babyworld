@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { XCircle, Home, RefreshCw } from 'lucide-react';
@@ -7,7 +6,6 @@ import babyWorldLogo from '@/assets/baby-world-logo.png';
 
 export default function PaymentCancel() {
   const navigate = useNavigate();
-  const { language } = useLanguage();
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-destructive/5 via-background to-muted p-4">

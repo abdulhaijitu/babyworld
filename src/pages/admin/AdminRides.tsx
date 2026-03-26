@@ -54,7 +54,6 @@ import {
   Image as ImageIcon
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { cn } from '@/lib/utils';
 
 type RideCategory = 'kids' | 'family' | 'thrill';
@@ -86,7 +85,6 @@ const defaultFormData = {
 };
 
 export default function AdminRides() {
-  const { language } = useLanguage();
   const queryClient = useQueryClient();
   
   const [createOpen, setCreateOpen] = useState(false);

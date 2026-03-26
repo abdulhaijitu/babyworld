@@ -20,8 +20,6 @@ import {
   CheckCheck
 } from 'lucide-react';
 import { formatDistanceToNow, parseISO } from 'date-fns';
-import { bn } from 'date-fns/locale';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { cn } from '@/lib/utils';
 
 interface Notification {
@@ -37,7 +35,6 @@ interface Notification {
 }
 
 export function NotificationBell() {
-  const { language } = useLanguage();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
 

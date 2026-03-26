@@ -1,13 +1,11 @@
 import { useRef } from 'react';
 import { format } from 'date-fns';
-import { bn } from 'date-fns/locale';
 import { QRCodeSVG } from 'qrcode.react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Printer, X, Check, Clock, User, Phone, Calendar, Ticket } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
 import babyWorldLogo from '@/assets/baby-world-logo.png';
 
 interface TicketSuccessDialogProps {
@@ -42,7 +40,6 @@ interface TicketSuccessDialogProps {
 }
 
 export function TicketSuccessDialog({ open, onClose, ticket, rideNames = {} }: TicketSuccessDialogProps) {
-  const { language } = useLanguage();
   const printRef = useRef<HTMLDivElement>(null);
 
   if (!ticket) return null;

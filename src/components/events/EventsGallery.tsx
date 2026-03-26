@@ -15,7 +15,7 @@ import tomMascot from "@/assets/tom-mascot.jpg";
 import birthdayParty from "@/assets/birthday-party.jpg";
 
 export function EventsGallery() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
 

@@ -56,7 +56,6 @@ import {
   HardHat
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { format, parseISO } from 'date-fns';
 
 type UserRole = 'admin' | 'manager' | 'staff';
@@ -75,7 +74,6 @@ const roleConfig: Record<UserRole, { label: string; labelBn: string; icon: React
 };
 
 export default function AdminUsers() {
-  const { language } = useLanguage();
   const queryClient = useQueryClient();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);

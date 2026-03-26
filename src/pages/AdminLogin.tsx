@@ -8,7 +8,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, Eye, EyeOff, ShieldCheck, AlertCircle, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
-import { useLanguage } from '@/contexts/LanguageContext';
 import babyWorldLogo from '@/assets/baby-world-logo.png';
 
 // Auth states for clear UX
@@ -27,7 +26,6 @@ export default function AdminLogin() {
   const { signIn, user, isAdmin, initialized } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const { language } = useLanguage();
   
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const mountedRef = useRef(true);

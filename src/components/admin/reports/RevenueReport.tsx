@@ -2,14 +2,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { Banknote, Ticket, UtensilsCrossed, TrendingUp, Calendar } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { 
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   BarChart, Bar, Legend
 } from 'recharts';
 import type { ReportsSummary } from '@/hooks/useReportsSummary';
 import { format, parseISO } from 'date-fns';
-import { bn } from 'date-fns/locale';
 
 interface RevenueReportProps {
   data: ReportsSummary | undefined;
@@ -17,7 +15,6 @@ interface RevenueReportProps {
 }
 
 export function RevenueReport({ data, isLoading }: RevenueReportProps) {
-  const { language } = useLanguage();
 
   const revenueBreakdown = [
     {

@@ -10,14 +10,11 @@ import {
   ArrowRight,
   Clock
 } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { useReportsSummary } from '@/hooks/useReportsSummary';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
-import { bn } from 'date-fns/locale';
 
 export function QuickReportsWidget() {
-  const { language } = useLanguage();
   const navigate = useNavigate();
   const { data, isLoading } = useReportsSummary('today');
 
