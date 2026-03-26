@@ -1,79 +1,27 @@
 
 
-## Plan: Ticket Print Preview অডিট ও ফিক্স
+## Plan: Entry No ইউনিক + ফোন নাম্বার দিয়ে তথ্য সিঙ্ক
 
-### সমস্যা চিহ্নিত
+### পরিবর্তন ১: Entry No ইউনিক করা
 
-1. **Print Output ভাঙা** — `TicketSuccessDialog` এর `printRef` innerHTML কপি করে print window-এ দেয়, কিন্তু Tailwind CSS classes (`text-primary`, `text-muted-foreground`, `bg-muted/50`) print window-এ কাজ করে না। ফলে print-এ colors, spacing, badges সব ভাঙা দেখায়।
+বর্তমানে `useMemo` দিয়ে `YYMMDD-XXX` ফরম্যাটে random generate হয় — collision হতে পারে। পরিবর্তন:
+- Component mount-এ DB থেকে আজকের সর্বশেষ ticket number fetch করে sequential number বানাবে
+- Format: `YYMMDD-001`, `YYMMDD-002`, ...
+- আজকের tickets count query করে next number নির্ধারণ
 
-2. **Price Breakdown নেই** — TicketSuccessDialog শুধু `total_price` দেখায়, কিন্তু Entry Fee, Socks, Rides, Discount আলাদাভাবে দেখায় না (যদিও `price_breakdown` ডাটা আসে)।
+### পরিবর্তন ২: ফোন নাম্বার দিয়ে তথ্য সিঙ্ক
 
-3. **Separator/Badge print-এ render হয় না** — React components innerHTML-এ Tailwind ছাড়া ঠিকমতো দেখায় না।
+বর্তমানে শুধু membership check হয়। এখন phone enter করলে:
+- `tickets` টেবিল থেকে সর্বশেষ ticket fetch করবে (same phone)
+- `guardian_name` ও `notes` (address) auto-fill করবে
+- User দেখবে "Previous customer found" badge
+- Membership check-ও আগের মতো থাকবে
 
-4. **দুটি আলাদা print design** — `PrintableTicket` ও `TicketSuccessDialog` আলাদা design ও interface ব্যবহার করে, inconsistent।
-
-### সমাধান
-
-#### `TicketSuccessDialog.tsx` — সম্পূর্ণ রিফ্যাক্টর
-
-**Print approach পরিবর্তন**: innerHTML কপি না করে, `handlePrint` ফাংশনে সরাসরি pure HTML string generate করা হবে। এতে Tailwind dependency থাকবে না।
-
-**Dialog preview ফিক্স:**
-- Price breakdown section যোগ (Entry, Socks, Rides, Discount → Grand Total)
-- Time box styling ঠিক করা
-- Payment badge সঠিকভাবে দেখানো
-
-**Print output ফিক্স:**
-- Pure HTML/CSS দিয়ে print content generate (no innerHTML copy)
-- Logo base64 বা absolute URL ব্যবহার
-- QR code SVG string generate করা
-- Rides list, price breakdown, time box সব print-এ সঠিকভাবে দেখাবে
-
-**Print HTML structure:**
-```text
-┌─── Dashed Border ─────────────────┐
-│     [Logo]                        │
-│  Baby World Indoor Playground     │
-│                                   │
-│     [QR Code 180px]               │
-│     Scan at gate                  │
-│                                   │
-│  Ticket: TK-XXXXXX               │
-│  ─────────────────────────        │
-│  Guardian: Name     Phone: 01XX   │
-│  Date: 26 Mar 2026               │
-│  ─────────────────────────        │
-│  IN: 10:30 AM  →  OUT: 11:30 AM  │
-│  ─────────────────────────        │
-│  Guardians: 1    Children: 1     │
-│  Socks: 2 pairs                   │
-│  ─────────────────────────        │
-│  Rides:                           │
-│    Horse Ride ×2      ৳340       │
-│    Bike Race ×1       ৳230       │
-│  ─────────────────────────        │
-│  Entry Fee            ৳500       │
-│  Socks (2)            ৳100       │
-│  Rides                ৳570       │
-│  Member Discount     -৳50        │
-│  ═══════════════════════          │
-│  TOTAL               ৳1,120      │
-│  Cash • Paid                      │
-│  ─────────────────────────        │
-│  Thank you! Visit again.          │
-└───────────────────────────────────┘
-```
-
-#### `PrintableTicket.tsx` — একই approach
-
-Print HTML direct generate করবে, innerHTML copy নয়। Design consistent থাকবে TicketSuccessDialog-এর সাথে।
-
-### ফাইল পরিবর্তন
+### ফাইল
 
 | ফাইল | পরিবর্তন |
 |------|----------|
-| `src/components/admin/ticketing/TicketSuccessDialog.tsx` | Print function রিফ্যাক্টর (pure HTML generate), price breakdown যোগ, dialog preview ফিক্স |
-| `src/components/admin/PrintableTicket.tsx` | Same pure HTML print approach, consistent design |
+| `src/components/admin/ticketing/CounterTicketForm.tsx` | Entry No sequential generate + phone lookup auto-fill |
 
-DB migration লাগবে না।
+No DB migration needed.
 
