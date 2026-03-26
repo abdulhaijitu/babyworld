@@ -1,22 +1,46 @@
 
 
-## Plan: Time Slots ট্যাব রিমুভ
+## Plan: Package Pricing Editable করা
 
-### পরিবর্তন
+### পরিবর্তন সারসংক্ষেপ
 
-Time Slots ট্যাব সম্পূর্ণ রিমুভ করা হবে। প্লেগ্রাউন্ড slot-based নয় — টিকিট কাটার সময় থেকে নির্ধারিত সময় (১-২ ঘন্টা) গণনা হবে।
+বর্তমানে Package Pricing কার্ড শুধু static text দেখায়। এটিকে editable input fields-এ রূপান্তর করা হবে এবং `useSettings` hook-এ package pricing state ও save logic যোগ হবে।
 
 ### ফাইল পরিবর্তন
 
-**`src/pages/admin/AdminSettings.tsx`:**
-- `TabsTrigger value="timeslots"` রিমুভ (line ~134-136)
-- `TabsContent value="timeslots"` পুরো ব্লক রিমুভ (line ~314-371)
-- `enabledSlotsCount` variable রিমুভ (যদি থাকে)
-- `handleSaveTimeSlots` function রিমুভ
-- `timeSlots`, `toggleTimeSlot`, `saveTimeSlots` imports from `useSettings` রিমুভ
+#### 1. `src/hooks/useSettings.ts`
+- নতুন `PackagePricing` interface যোগ:
+  ```
+  familyRegular, familyOffer, fullBoard, extraGuardian, rideZoneRegular, rideZoneOffer
+  ```
+- Default values সেট (500, 350, 800, 150, 1350, 500)
+- `packagePricing` state যোগ
+- `loadSettings`-এ `package_pricing` key parse করে state-এ সেট
+- `savePackagePricing` function যোগ — `saveSetting('package_pricing', ...)` কল করবে
+- `savePricing`-এর সাথে `savePackagePricing`-ও কল হবে যাতে একটি Save বাটনেই সব সেভ হয়
+- Return object-এ `packagePricing`, `setPackagePricing` expose
 
-**`src/hooks/useSettings.ts`:**
-- `timeSlots`, `setTimeSlots`, `toggleTimeSlot`, `saveTimeSlots`, `defaultTimeSlots` কোড রাখা যাবে (অন্য জায়গায় ব্যবহার হতে পারে) তবে settings UI থেকে সরানো হবে
+#### 2. `src/pages/admin/AdminSettings.tsx`
+- `useSettings` থেকে `packagePricing`, `setPackagePricing` import
+- Package Pricing কার্ডের static text রিপ্লেস করে editable form:
+  - **Family Package** section: Regular (৳), Eid/Offer (৳)
+  - **Full Board** section: Price (৳)
+  - **Extra Guardian** section: Price (৳)
+  - **Ride Zone Package** section: Regular (৳), Eid/Offer (৳)
+- সব ফিল্ড `৳` prefix সহ number input
+- `handleSavePricing` কলে package pricing-ও সেভ হবে
 
-**Note:** `Clock` icon import রাখা হবে কারণ অন্য জায়গায় ব্যবহার হতে পারে।
+### UI Layout
+```text
+┌─ Package Pricing ─────────────────────────┐
+│ Family Package                            │
+│ [Regular ৳500]  [Eid/Offer ৳350]         │
+│                                           │
+│ Full Board      Extra Guardian            │
+│ [৳800]          [৳150]                   │
+│                                           │
+│ Ride Zone Package                         │
+│ [Regular ৳1350] [Eid/Offer ৳500]         │
+└───────────────────────────────────────────┘
+```
 
