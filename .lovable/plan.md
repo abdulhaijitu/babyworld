@@ -1,30 +1,34 @@
 
 
-## পরিকল্পনা: সকল মোডাল ও UI থেকে বাংলা অপশন বাদ দেওয়া
+## পরিকল্পনা: `/admin/rides` পেইজ অডিট ও ফিক্স
 
-### প্রভাবিত ফাইলসমূহ (৮টি)
+### সমস্যা চিহ্নিত
 
-| ফাইল | বাংলা কনটেন্ট |
-|---|---|
-| `AdminSettings.tsx` | `nameBn`, `addressBn` ইনপুট ফিল্ড |
-| `AdminExpenses.tsx` | `labelBn` — categories ও payment methods |
-| `AdminUsers.tsx` | `labelBn` — role config |
-| `AdminRides.tsx` | `name_bn` ইনপুট ফিল্ড ও ডিসপ্লে |
-| `AdminFoodSales.tsx` | `name_bn` ইনপুট ফিল্ড |
-| `AdminEvents.tsx` | `nameBn` — event packages |
-| `NotificationTemplateEditor.tsx` | `labelBn` — template types |
-| `AdminSidebar.tsx` | `labelBn` — menu items |
-| `MobileBottomNav.tsx` | `labelBn` — nav items |
-| `SocialLinks.tsx` | `nameBn` — social link names |
+| # | সমস্যা | তীব্রতা |
+|---|--------|---------|
+| 1 | `name_bn` ফর্মে এখনও আছে (`defaultFormData`, interface, mutations) — আগের ক্লিনআপে UI ফিল্ড বাদ হলেও ডেটা লেয়ারে রয়ে গেছে | Bug |
+| 2 | `avg_rating` ও `review_count` টেবিলে দেখানো হচ্ছে না — রাইডের রেটিং তথ্য মিসিং | UX |
+| 3 | Create ও Edit ডায়ালগে প্রায় একই কোড দুইবার লেখা (DRY violation) — ~140 লাইন ডুপ্লিকেট | Code quality |
+| 4 | Edit ডায়ালগে `DialogDescription` নেই — accessibility warning | Bug |
+| 5 | ক্যাটাগরি ফিল্টার নেই — সব রাইড একসাথে দেখায়, ফিল্টার করার উপায় নেই | UX |
+| 6 | টেবিলে inactive রাইড আলাদা করা যায় না — ভিজুয়ালি পার্থক্য নেই | UX |
+| 7 | Stats cards-এ "Family/Thrill" একত্রে — আলাদা করলে বেশি তথ্যবহুল | UX |
 
-### পরিবর্তন
+### পরিবর্তনসমূহ
 
-প্রতিটি ফাইলে:
-1. **`labelBn` / `nameBn` / `name_bn` / `addressBn` প্রপার্টি মুছুন** — ইন্টারফেস ও ডেটা অবজেক্ট থেকে
-2. **"Name (Bangla)" / "Name (Bengali)" ইনপুট ফিল্ড সম্পূর্ণ রিমুভ** — AdminSettings, AdminRides, AdminFoodSales
-3. **`labelBn` রেফারেন্স রিমুভ** — শুধু `label` ব্যবহার করা হবে
-4. **MobileBottomNav**: `labelBn` বাদ, শুধু `labelEn` → `label` রাখা হবে
-5. **AdminSidebar**: `labelBn` বাদ, শুধু `label` ব্যবহার
+#### ফাইল: `src/pages/admin/AdminRides.tsx`
 
-> **নোট**: ডাটাবেসে `name_bn` কলাম থাকলে সেটা রাখা যাবে (backward compatible), শুধু UI থেকে ইনপুট/ডিসপ্লে বাদ দেওয়া হবে।
+1. **`name_bn` সম্পূর্ণ রিমুভ**: `Ride` interface, `defaultFormData`, `handleEdit`, create/update mutation থেকে `name_bn` বাদ
+2. **Rating/Review কলাম যোগ**: টেবিলে "Rating" কলাম — স্টার আইকন + `avg_rating` ও `review_count` দেখাবে
+3. **ক্যাটাগরি ফিল্টার যোগ**: টেবিল কার্ডের হেডারে Select ড্রপডাউন — All/Kids/Family/Thrill
+4. **Inactive রাইড ভিজুয়াল**: inactive রাইডের row তে `opacity-50` ক্লাস
+5. **Edit dialog-এ `DialogDescription` যোগ**
+6. **DRY ফিক্স**: ফর্ম রেন্ডারিং একটি `renderRideForm()` ফাংশনে extract করা — Create ও Edit উভয় ডায়ালগে ব্যবহার
+7. **Stats cards আপডেট**: 5টি কার্ড — Total, Active, Kids, Family, Thrill (2+3 গ্রিড বা 5-কলাম)
+
+#### ফাইল: `src/pages/admin/AdminRideReviews.tsx`
+- `name_bn` রেফারেন্স রিমুভ (Ride interface থেকে, select query থেকে)
+
+### সারাংশ
+মূলত `name_bn` ক্লিনআপ, রেটিং ডিসপ্লে, ক্যাটাগরি ফিল্টার, ফর্ম DRY ফিক্স, এবং inactive ভিজুয়াল — দুইটি ফাইলে পরিবর্তন।
 
