@@ -27,6 +27,7 @@ interface MembershipPackage {
   price: number;
   discount_percent: number;
   max_children: number;
+  max_guardians: number;
   features: any;
   is_active: boolean;
   sort_order: number;
@@ -46,6 +47,7 @@ export default function AdminMembershipPackages() {
     price: 0,
     discount_percent: 100,
     max_children: 1,
+    max_guardians: 2,
     is_active: true,
   });
 
@@ -90,7 +92,7 @@ export default function AdminMembershipPackages() {
           price: createForm.price,
           discount_percent: createForm.discount_percent,
           max_children: createForm.max_children,
-          is_active: createForm.is_active,
+          max_guardians: createForm.max_guardians,
           sort_order: packages.length,
         } as any);
       if (error) throw error;
@@ -98,7 +100,7 @@ export default function AdminMembershipPackages() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['membership-packages'] });
       setCreateOpen(false);
-      setCreateForm({ name: '', name_bn: '', membership_type: 'monthly', duration_days: 30, price: 0, discount_percent: 100, max_children: 1, is_active: true });
+      setCreateForm({ name: '', name_bn: '', membership_type: 'monthly', duration_days: 30, price: 0, discount_percent: 100, max_children: 1, max_guardians: 2, is_active: true });
       toast.success('Package created successfully');
     },
     onError: (err: any) => toast.error(err.message),
@@ -119,6 +121,7 @@ export default function AdminMembershipPackages() {
       price: editForm.price,
       discount_percent: editForm.discount_percent,
       max_children: editForm.max_children,
+      max_guardians: (editForm as any).max_guardians,
       is_active: editForm.is_active,
     });
   };
@@ -198,7 +201,7 @@ export default function AdminMembershipPackages() {
                   </TableCell>
                   <TableCell>{pkg.duration_days} Days</TableCell>
                   <TableCell>
-                    <span className="text-sm">Guardian: 2, Kids: {pkg.max_children}</span>
+                    <span className="text-sm">Guardian: {(pkg as any).max_guardians ?? 2}, Kids: {pkg.max_children}</span>
                   </TableCell>
                   <TableCell className="font-semibold">৳{pkg.price.toLocaleString()}</TableCell>
                   <TableCell>{pkg.discount_percent}%</TableCell>
@@ -292,6 +295,16 @@ export default function AdminMembershipPackages() {
                 />
               </div>
             </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Max Guardians</Label>
+                <Input
+                  type="number"
+                  value={(editForm as any).max_guardians || 2}
+                  onChange={(e) => setEditForm({ ...editForm, max_guardians: Number(e.target.value) } as any)}
+                />
+              </div>
+            </div>
             <div className="flex items-center gap-2">
               <Switch
                 checked={editForm.is_active ?? true}
@@ -375,6 +388,16 @@ export default function AdminMembershipPackages() {
                   type="number"
                   value={createForm.max_children}
                   onChange={(e) => setCreateForm({ ...createForm, max_children: Number(e.target.value) })}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Max Guardians</Label>
+                <Input
+                  type="number"
+                  value={createForm.max_guardians}
+                  onChange={(e) => setCreateForm({ ...createForm, max_guardians: Number(e.target.value) })}
                 />
               </div>
             </div>

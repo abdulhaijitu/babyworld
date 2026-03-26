@@ -1,0 +1,1 @@
+ALTER TABLE public.membership_packages ADD COLUMN max_guardians integer NOT NULL DEFAULT 2;
