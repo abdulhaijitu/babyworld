@@ -39,17 +39,31 @@ export default function AdminMemberships() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
+  const [phoneError, setPhoneError] = useState('');
+
   // Form state
   const [formData, setFormData] = useState({
     member_name: '',
     phone: '',
     child_count: 1,
-    membership_type: 'monthly' as 'monthly' | 'quarterly' | 'yearly',
-    discount_percent: 100,
+    guardian_count: 1,
+    selected_package_id: '',
     notes: '',
     payment_type: 'cash' as 'cash' | 'online' | 'pending',
     payment_amount: 0,
+    valid_from: format(new Date(), 'yyyy-MM-dd'),
   });
+
+  const selectedPackage = packages.find((p: any) => p.id === formData.selected_package_id);
+
+  const validatePhone = (phone: string) => {
+    const cleaned = phone.replace(/\s/g, '');
+    const regex = /^(\+?880|0)?1[3-9]\d{8}$/;
+    if (!cleaned) { setPhoneError(''); return false; }
+    if (!regex.test(cleaned)) { setPhoneError('সঠিক বাংলাদেশি ফোন নম্বর দিন (01XXXXXXXXX)'); return false; }
+    setPhoneError('');
+    return true;
+  };
 
   const { data: packages = [] } = useQuery({
     queryKey: ['membership-packages-active'],
