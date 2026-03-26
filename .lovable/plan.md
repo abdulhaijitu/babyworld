@@ -1,34 +1,28 @@
 
 
-## Plan: Ticketing রাউট পুনর্গঠন
+## Plan: সাইডবারে TICKETING গ্রুপ তৈরি
 
 ### পরিবর্তন
 
-#### 1. `src/App.tsx` — রাউট আপডেট
-- `ticketing` ও `ticketing/create` রাউট সরিয়ে দুটি আলাদা রাউট:
-  ```tsx
-  <Route path="create-ticket" element={<AdminCreateTicket />} />
-  <Route path="ticket-list" element={<AdminTicketing />} />
-  ```
+**`src/components/admin/AdminSidebar.tsx`** — `allMenuItems` অ্যারেতে `create-ticket` ও `ticket-list` আইটেম দুটি সরিয়ে একটি parent "Ticketing" আইটেম বানানো হবে যার মধ্যে children হিসেবে এ দুটি থাকবে:
 
-#### 2. `src/components/admin/AdminSidebar.tsx` — মেনু আপডেট
-- `ticketing` parent মেনু আইটেম সরিয়ে দুটি আলাদা top-level মেনু আইটেম:
-  ```tsx
-  { id: 'create-ticket', label: 'Create Ticket', icon: Plus, path: '/admin/create-ticket' },
-  { id: 'ticket-list', label: 'Ticket List', icon: List, path: '/admin/ticket-list' },
-  ```
-- children/collapsible লজিক লাগবে না
+```tsx
+{
+  id: 'ticketing',
+  label: 'Ticketing',
+  icon: Ticket,
+  path: '/admin/create-ticket',
+  requiredRoles: ['super_admin', 'admin', 'manager', 'staff'],
+  children: [
+    { id: 'create-ticket', label: 'Create Ticket', icon: Plus, path: '/admin/create-ticket' },
+    { id: 'ticket-list', label: 'Ticket List', icon: List, path: '/admin/ticket-list' },
+  ]
+},
+```
 
-#### 3. `src/pages/admin/AdminCreateTicket.tsx` — navigate path আপডেট
-- Success এ `navigate('/admin/ticket-list')` এ রিডাইরেক্ট
-
-#### 4. `src/pages/admin/AdminTicketing.tsx` — "Create Ticket" বাটনের path আপডেট
-- `navigate('/admin/create-ticket')`
+এটি সাইডবারে ইতোমধ্যে থাকা `Collapsible` লজিক ব্যবহার করে TICKETING হেডারের নিচে দুটি সাবমেনু দেখাবে।
 
 | ফাইল | পরিবর্তন |
 |---|---|
-| `src/App.tsx` | রাউট পরিবর্তন |
-| `src/components/admin/AdminSidebar.tsx` | দুটি আলাদা মেনু আইটেম |
-| `src/pages/admin/AdminCreateTicket.tsx` | navigate path |
-| `src/pages/admin/AdminTicketing.tsx` | navigate path |
+| `src/components/admin/AdminSidebar.tsx` | দুটি আলাদা আইটেম → একটি parent + children |
 
