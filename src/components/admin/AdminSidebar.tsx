@@ -58,7 +58,7 @@ const allMenuItems: MenuItem[] = [
   { id: 'roster', label: 'Roster', icon: Clock, path: '/admin/roster', requiredRoles: ['super_admin', 'admin', 'manager'] },
   { id: 'bookings', label: 'Bookings', icon: CalendarDays, path: '/admin/bookings', requiredRoles: ['super_admin', 'admin', 'manager', 'staff'] },
   { id: 'events', label: 'Events', icon: PartyPopper, path: '/admin/events', requiredRoles: ['super_admin', 'admin', 'manager'] },
-  { id: 'rides', label: 'Rides', icon: FerrisWheel, path: '/admin/rides', requiredRoles: ['super_admin', 'admin'] },
+  
   { id: 'ride-reviews', label: 'Ride Reviews', icon: Star, path: '/admin/ride-reviews', requiredRoles: ['super_admin', 'admin', 'manager'] },
   { id: 'reports', label: 'Reports', icon: FileBarChart, path: '/admin/reports', requiredRoles: ['super_admin', 'admin', 'manager'] },
   { id: 'profit', label: 'Profit & Loss', icon: TrendingUp, path: '/admin/profit', requiredRoles: ['super_admin', 'admin', 'manager'] },
