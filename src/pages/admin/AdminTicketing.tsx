@@ -109,20 +109,7 @@ export default function AdminTicketing() {
   const [sendingSMS, setSendingSMS] = useState<string | null>(null);
   const [gateActionLoading, setGateActionLoading] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState(() => searchParams.get('tab') || 'list');
-
-  // Sync tab with URL params
-  useEffect(() => {
-    const tabParam = searchParams.get('tab');
-    if (tabParam && (tabParam === 'list' || tabParam === 'create')) {
-      setActiveTab(tabParam);
-    }
-  }, [searchParams]);
-
-  const handleTabChange = (value: string) => {
-    setActiveTab(value);
-    setSearchParams({ tab: value }, { replace: true });
-  };
+  const activeView = searchParams.get('tab') || 'list';
   const [createdTicket, setCreatedTicket] = useState<any>(null);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [displayCount, setDisplayCount] = useState(PAGE_SIZE);
