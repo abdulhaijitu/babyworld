@@ -9,7 +9,6 @@ import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { SEOHead } from "@/components/SEOHead";
-import { PromoBanner } from "@/components/PromoBanner";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 
 const Index = () => {
