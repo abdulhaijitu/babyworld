@@ -79,6 +79,8 @@ export default function AdminUsers() {
   const queryClient = useQueryClient();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [resetPasswordUserId, setResetPasswordUserId] = useState<string | null>(null);
+  const [resetNewPassword, setResetNewPassword] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState<string>('all');
   
