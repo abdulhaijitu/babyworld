@@ -146,7 +146,14 @@ export default function AdminMemberships() {
       m.member_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       m.phone.includes(searchQuery);
     const matchesStatus = statusFilter === 'all' || m.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    const matchesPackage = packageFilter === 'all' || m.membership_type === packageFilter;
+    // Payment filter: check from paymentLogs
+    const matchesPayment = paymentFilter === 'all' || (() => {
+      const log = paymentLogs.find(l => (l.details as any)?.membership_id === m.id);
+      const pt = (log?.details as any)?.payment_type || 'unknown';
+      return pt === paymentFilter;
+    })();
+    return matchesSearch && matchesStatus && matchesPackage && matchesPayment;
   }) || [];
 
   const paymentStats = {
