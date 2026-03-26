@@ -707,39 +707,48 @@ export type Database = {
           avg_rating: number | null
           category: Database["public"]["Enums"]["ride_category"]
           created_at: string
+          duration_minutes: number | null
           id: string
           image_url: string | null
           is_active: boolean
+          max_riders: number | null
           name: string
           name_bn: string | null
           price: number
           review_count: number | null
+          ride_type: string | null
           updated_at: string
         }
         Insert: {
           avg_rating?: number | null
           category?: Database["public"]["Enums"]["ride_category"]
           created_at?: string
+          duration_minutes?: number | null
           id?: string
           image_url?: string | null
           is_active?: boolean
+          max_riders?: number | null
           name: string
           name_bn?: string | null
           price?: number
           review_count?: number | null
+          ride_type?: string | null
           updated_at?: string
         }
         Update: {
           avg_rating?: number | null
           category?: Database["public"]["Enums"]["ride_category"]
           created_at?: string
+          duration_minutes?: number | null
           id?: string
           image_url?: string | null
           is_active?: boolean
+          max_riders?: number | null
           name?: string
           name_bn?: string | null
           price?: number
           review_count?: number | null
+          ride_type?: string | null
           updated_at?: string
         }
         Relationships: []
