@@ -27,7 +27,7 @@ serve(async (req) => {
     }
 
     // Validate role
-    const validRoles = ['admin', 'manager', 'staff'];
+    const validRoles = ['super_admin', 'admin', 'manager', 'staff'];
     if (!validRoles.includes(role)) {
       return new Response(
         JSON.stringify({ error: 'Invalid role. Must be admin, manager, or staff' }),

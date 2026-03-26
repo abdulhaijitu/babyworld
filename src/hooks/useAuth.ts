@@ -41,7 +41,7 @@ export function useAuth() {
         return false;
       }
       
-      return roles?.some(r => r.role === 'admin') || false;
+      return roles?.some(r => r.role === 'admin' || r.role === 'super_admin') || false;
     } catch (err) {
       console.error('[Auth] Failed to check admin role:', err);
       return false;

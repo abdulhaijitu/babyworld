@@ -77,7 +77,7 @@ function SidebarContent({
 }: AdminSidebarProps & { isMobile?: boolean; onMobileClose?: () => void }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { roles, isAdmin, loading: rolesLoading } = useUserRoles();
+  const { roles, isAdmin, isSuperAdmin, loading: rolesLoading } = useUserRoles();
 
   // Filter menu items based on user roles
   const menuItems = useMemo(() => {
@@ -86,14 +86,14 @@ function SidebarContent({
       if (!item.requiredRoles || item.requiredRoles.length === 0) {
         return true;
       }
-      // Admin sees everything
-      if (isAdmin) {
+      // Super admin sees everything
+      if (isSuperAdmin) {
         return true;
       }
       // Check if user has any of the required roles
       return item.requiredRoles.some(role => roles.includes(role));
     });
-  }, [roles, isAdmin]);
+  }, [roles, isSuperAdmin]);
 
   const handleNavigate = (path: string) => {
     navigate(path);

@@ -130,6 +130,7 @@ export function useUserRoles() {
     canManageEmployees,
     canManageSettings,
     canManageUsers,
+    canManageAdmins,
     canAccessTicketing,
     canAccessFood,
     canAccessBookings,

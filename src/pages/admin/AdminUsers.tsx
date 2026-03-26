@@ -53,7 +53,8 @@ import {
   UserX,
   Search,
   Briefcase,
-  HardHat
+  HardHat,
+  Crown
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format, parseISO } from 'date-fns';
