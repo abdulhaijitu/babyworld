@@ -140,42 +140,69 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
   const phone = form.watch('phone');
 
   useEffect(() => {
-    const checkMembership = async () => {
+    const checkPhoneData = async () => {
       if (phone && phone.length >= 11) {
         setIsCheckingMembership(true);
         try {
+          // Check membership
           const today = new Date().toISOString().split('T')[0];
-          const { data: membership } = await supabase
-            .from('memberships')
-            .select('*')
-            .eq('phone', phone)
-            .eq('status', 'active')
-            .gte('valid_till', today)
-            .lte('valid_from', today)
-            .maybeSingle();
+          const [membershipRes, ticketRes] = await Promise.all([
+            supabase
+              .from('memberships')
+              .select('*')
+              .eq('phone', phone)
+              .eq('status', 'active')
+              .gte('valid_till', today)
+              .lte('valid_from', today)
+              .maybeSingle(),
+            supabase
+              .from('tickets')
+              .select('guardian_name, notes')
+              .eq('guardian_phone', phone)
+              .order('created_at', { ascending: false })
+              .limit(1)
+              .maybeSingle(),
+          ]);
 
-          if (membership) {
+          if (membershipRes.data) {
             setMembershipInfo({
-              id: membership.id,
-              member_name: membership.member_name,
-              discount_percent: membership.discount_percent,
-              valid_till: membership.valid_till,
+              id: membershipRes.data.id,
+              member_name: membershipRes.data.member_name,
+              discount_percent: membershipRes.data.discount_percent,
+              valid_till: membershipRes.data.valid_till,
             });
           } else {
             setMembershipInfo(null);
           }
+
+          // Auto-fill from previous ticket
+          if (ticketRes.data) {
+            setPreviousCustomer(true);
+            const currentName = form.getValues('guardian_name');
+            const currentNotes = form.getValues('notes');
+            if (!currentName && ticketRes.data.guardian_name) {
+              form.setValue('guardian_name', ticketRes.data.guardian_name);
+            }
+            if (!currentNotes && ticketRes.data.notes) {
+              form.setValue('notes', ticketRes.data.notes);
+            }
+          } else {
+            setPreviousCustomer(false);
+          }
         } catch {
           setMembershipInfo(null);
+          setPreviousCustomer(false);
         } finally {
           setIsCheckingMembership(false);
         }
       } else {
         setMembershipInfo(null);
+        setPreviousCustomer(false);
       }
     };
-    const debounce = setTimeout(checkMembership, 500);
+    const debounce = setTimeout(checkPhoneData, 500);
     return () => clearTimeout(debounce);
-  }, [phone]);
+  }, [phone, form]);
 
   // Filter rides by search
   const filteredRides = useMemo(() => {
