@@ -54,7 +54,7 @@ export default function AdminMemberships() {
     valid_from: format(new Date(), 'yyyy-MM-dd'),
   });
 
-  const selectedPackage = packages.find((p: any) => p.id === formData.selected_package_id);
+  
 
   const validatePhone = (phone: string) => {
     const cleaned = phone.replace(/\s/g, '');
