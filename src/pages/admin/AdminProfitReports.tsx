@@ -274,7 +274,7 @@ export default function AdminProfitReports() {
               <div className="text-xs text-muted-foreground mt-2">
                 {expenseBreakdown[0] && (
                   <span>
-                    {'Top:'} {language === 'bn' ? EXPENSE_CATEGORY_LABELS[expenseBreakdown[0].category]?.bn : EXPENSE_CATEGORY_LABELS[expenseBreakdown[0].category]?.en}
+                    {'Top:'} {EXPENSE_CATEGORY_LABELS[expenseBreakdown[0].category]?.en}
                   </span>
                 )}
               </div>

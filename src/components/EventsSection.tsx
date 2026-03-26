@@ -55,13 +55,7 @@ export function EventsSection() {
     },
   ];
 
-  // Update image alt text based on language
-  const localizedImages = celebrationImages.map((img, i) => ({
-    ...img,
-    alt: language === "bn" 
-      ? ["বাচ্চাদের জন্মদিনের পার্টি উদযাপন", "জন্মদিনের কেক ও মোমবাতি", "উপহার ও পার্টি হ্যাট পরা বাচ্চারা", "জন্মদিনের পার্টি টেবিল সাজানো"][i]
-      : img.alt
-  }));
+  const localizedImages = celebrationImages;
 
   return (
     <section id="events" className="py-24 bg-card">

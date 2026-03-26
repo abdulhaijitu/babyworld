@@ -393,9 +393,7 @@ export default function AdminRideReviews() {
               <div>
                 <Label className="text-muted-foreground">{'Ride'}</Label>
                 <p className="font-medium">
-                  {language === 'bn' 
-                    ? selectedReview.rides?.name_bn || selectedReview.rides?.name 
-                    : selectedReview.rides?.name}
+                  {selectedReview.rides?.name}
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-4">
