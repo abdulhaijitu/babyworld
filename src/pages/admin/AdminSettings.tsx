@@ -152,47 +152,48 @@ export default function AdminSettings() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <Label>{'Child + Guardian'}</Label>
+                  <Label>{'Fee for Guardian'}</Label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">৳</span>
                     <Input
                       type="number"
-                      value={pricing.hourlyPlay.childGuardian}
+                      value={pricing.hourlyPlay.guardianFee}
                       onChange={(e) => setPricing({
                         ...pricing,
-                        hourlyPlay: { ...pricing.hourlyPlay, childGuardian: Number(e.target.value) }
+                        hourlyPlay: { ...pricing.hourlyPlay, guardianFee: Number(e.target.value) }
                       })}
                       className="pl-8"
                     />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label>{'Child Only'}</Label>
+                  <Label>{'Fee for Child'}</Label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">৳</span>
                     <Input
                       type="number"
-                      value={pricing.hourlyPlay.childOnly}
+                      value={pricing.hourlyPlay.childFee}
                       onChange={(e) => setPricing({
                         ...pricing,
-                        hourlyPlay: { ...pricing.hourlyPlay, childOnly: Number(e.target.value) }
+                        hourlyPlay: { ...pricing.hourlyPlay, childFee: Number(e.target.value) }
                       })}
                       className="pl-8"
                     />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label>{'Group Discount (%)'}</Label>
+                  <Label>{'Socks Fee'}</Label>
                   <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">৳</span>
                     <Input
                       type="number"
-                      value={pricing.hourlyPlay.groupDiscount}
+                      value={pricing.hourlyPlay.socksFee}
                       onChange={(e) => setPricing({
                         ...pricing,
-                        hourlyPlay: { ...pricing.hourlyPlay, groupDiscount: Number(e.target.value) }
+                        hourlyPlay: { ...pricing.hourlyPlay, socksFee: Number(e.target.value) }
                       })}
+                      className="pl-8"
                     />
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">%</span>
                   </div>
                 </div>
               </div>

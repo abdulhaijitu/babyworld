@@ -55,14 +55,13 @@ serve(async (req) => {
     const { data: pricingSettings } = await supabase
       .from('settings')
       .select('value')
-      .eq('key', 'ticket_pricing')
+      .eq('key', 'pricing_hourly')
       .single();
 
     const pricing = pricingSettings?.value || {
-      entry_price: 500,
-      extra_guardian_price: 100,
-      extra_child_price: 200,
-      socks_price: 50
+      guardian_fee: 100,
+      child_fee: 200,
+      socks_fee: 50
     };
 
     // Check for active membership
@@ -88,21 +87,11 @@ serve(async (req) => {
     const childCount = Math.max(1, body.child_count || 1);
     const socksCount = body.socks_count || 0;
 
-    // Entry price (1 guardian + 1 child base)
-    let entryPrice = pricing.entry_price;
-    
-    // Extra guardians (beyond first)
-    if (guardianCount > 1) {
-      entryPrice += (guardianCount - 1) * pricing.extra_guardian_price;
-    }
-    
-    // Extra children (beyond first)
-    if (childCount > 1) {
-      entryPrice += (childCount - 1) * pricing.extra_child_price;
-    }
+    // Entry price: per-head fees
+    const entryPrice = (guardianCount * pricing.guardian_fee) + (childCount * pricing.child_fee);
 
     // Socks price
-    const socksPrice = socksCount * pricing.socks_price;
+    const socksPrice = socksCount * pricing.socks_fee;
 
     // Calculate rides price
     let ridesPrice = 0;

@@ -4,9 +4,9 @@ import type { Json } from '@/integrations/supabase/types';
 
 interface PricingSettings {
   hourlyPlay: {
-    childGuardian: number;
-    childOnly: number;
-    groupDiscount: number;
+    guardianFee: number;
+    childFee: number;
+    socksFee: number;
   };
   events: {
     basic: number;
@@ -57,9 +57,9 @@ interface NotificationSettings {
 // Default values
 const defaultPricing: PricingSettings = {
   hourlyPlay: {
-    childGuardian: 300,
-    childOnly: 250,
-    groupDiscount: 10
+    guardianFee: 100,
+    childFee: 200,
+    socksFee: 50,
   },
   events: {
     basic: 5000,
@@ -145,9 +145,9 @@ export function useSettings() {
                 setPricing(prev => ({
                   ...prev,
                   hourlyPlay: {
-                    childGuardian: (value.child_guardian as number) || prev.hourlyPlay.childGuardian,
-                    childOnly: (value.child_only as number) || prev.hourlyPlay.childOnly,
-                    groupDiscount: (value.group_discount as number) || prev.hourlyPlay.groupDiscount
+                    guardianFee: (value.guardian_fee as number) ?? prev.hourlyPlay.guardianFee,
+                    childFee: (value.child_fee as number) ?? prev.hourlyPlay.childFee,
+                    socksFee: (value.socks_fee as number) ?? prev.hourlyPlay.socksFee,
                   }
                 }));
               }
@@ -270,9 +270,9 @@ export function useSettings() {
     try {
       await Promise.all([
         saveSetting('pricing_hourly', {
-          child_guardian: pricing.hourlyPlay.childGuardian,
-          child_only: pricing.hourlyPlay.childOnly,
-          group_discount: pricing.hourlyPlay.groupDiscount
+          guardian_fee: pricing.hourlyPlay.guardianFee,
+          child_fee: pricing.hourlyPlay.childFee,
+          socks_fee: pricing.hourlyPlay.socksFee,
         }, 'pricing'),
         saveSetting('pricing_events', {
           basic: pricing.events.basic,

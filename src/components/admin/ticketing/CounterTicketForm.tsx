@@ -130,17 +130,16 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
       const { data } = await supabase
         .from('settings')
         .select('value')
-        .eq('key', 'ticket_pricing')
+        .eq('key', 'pricing_hourly')
         .single();
-      return data?.value as { entry_price: number; extra_guardian_price: number; extra_child_price: number; socks_price: number } | null;
+      return data?.value as { guardian_fee: number; child_fee: number; socks_fee: number } | null;
     },
   });
 
-  const pricing = ticketPricing || {
-    entry_price: 500,
-    extra_guardian_price: 100,
-    extra_child_price: 200,
-    socks_price: 50,
+  const pricing = {
+    guardian_fee: ticketPricing?.guardian_fee ?? 100,
+    child_fee: ticketPricing?.child_fee ?? 200,
+    socks_fee: ticketPricing?.socks_fee ?? 50,
   };
 
   const form = useForm<FormValues>({
@@ -258,10 +257,8 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
   }, [rides, rideSearch]);
 
   const calculatePrices = () => {
-    let entryPrice = pricing.entry_price;
-    if (guardianCount > 1) entryPrice += (guardianCount - 1) * pricing.extra_guardian_price;
-    if (childCount > 1) entryPrice += (childCount - 1) * pricing.extra_child_price;
-    const socksPrice = socksCount * pricing.socks_price;
+    const entryPrice = (guardianCount * pricing.guardian_fee) + (childCount * pricing.child_fee);
+    const socksPrice = socksCount * pricing.socks_fee;
     let ridesPrice = 0;
     Object.entries(selectedRides).forEach(([rideId, quantity]) => {
       const ride = rides.find(r => r.id === rideId);
@@ -413,7 +410,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                   <div className="w-1 h-6 rounded-full bg-purple-500 shrink-0" />
                   <Footprints className="h-4 w-4 text-muted-foreground shrink-0" />
                   <span className="text-sm font-medium flex-1">Socks (pair)</span>
-                  <Badge variant="secondary" className="text-xs shrink-0">৳{pricing.socks_price}</Badge>
+                  <Badge variant="secondary" className="text-xs shrink-0">৳{pricing.socks_fee}</Badge>
                   <InlineCounter value={socksCount} onInc={() => setSocksCount(v => v + 1)} onDec={() => setSocksCount(v => Math.max(0, v - 1))} />
                 </div>
 
