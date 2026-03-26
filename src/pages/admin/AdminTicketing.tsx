@@ -411,7 +411,7 @@ export default function AdminTicketing() {
       </div>
 
       {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
         <TabsList className="grid w-full max-w-md grid-cols-2">
           <TabsTrigger value="list">Ticket List</TabsTrigger>
           <TabsTrigger value="create">
