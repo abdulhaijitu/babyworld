@@ -339,11 +339,12 @@ export default function AdminTicketing() {
   const clearFilters = () => {
     setSearchQuery('');
     setStatusFilter('all');
-    setDateFilter(undefined);
+    setDateFrom(undefined);
+    setDateTo(undefined);
     setDisplayCount(PAGE_SIZE);
   };
 
-  const hasActiveFilters = searchQuery || statusFilter !== 'all' || dateFilter;
+  const hasActiveFilters = searchQuery || statusFilter !== 'all' || dateFrom || dateTo;
 
   return (
     <div className="p-4 md:p-6 lg:p-8 space-y-6">
