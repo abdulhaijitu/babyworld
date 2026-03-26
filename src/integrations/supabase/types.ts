@@ -437,6 +437,39 @@ export type Database = {
         }
         Relationships: []
       }
+      hero_slides: {
+        Row: {
+          alt_text: string
+          created_at: string
+          id: string
+          image_url: string
+          is_active: boolean
+          label: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          alt_text?: string
+          created_at?: string
+          id?: string
+          image_url: string
+          is_active?: boolean
+          label?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          alt_text?: string
+          created_at?: string
+          id?: string
+          image_url?: string
+          is_active?: boolean
+          label?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       memberships: {
         Row: {
           child_count: number
