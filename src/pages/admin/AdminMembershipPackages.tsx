@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Crown, Plus, Search, MoreHorizontal, Edit2, ToggleLeft } from 'lucide-react';
+import { Crown, Plus, Search, MoreHorizontal, Edit2, ToggleLeft, Trash2 } from 'lucide-react';
 import {
   Table, TableHeader, TableBody, TableRow, TableHead, TableCell,
 } from '@/components/ui/table';
@@ -76,6 +76,21 @@ export default function AdminMembershipPackages() {
       queryClient.invalidateQueries({ queryKey: ['membership-packages'] });
       setEditOpen(false);
       toast.success('Package updated successfully');
+    },
+    onError: (err: any) => toast.error(err.message),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from('membership_packages')
+        .delete()
+        .eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['membership-packages'] });
+      toast.success('Package deleted successfully');
     },
     onError: (err: any) => toast.error(err.message),
   });
@@ -227,6 +242,16 @@ export default function AdminMembershipPackages() {
                         <DropdownMenuItem onClick={() => toggleActive(pkg)}>
                           <ToggleLeft className="h-4 w-4 mr-2" />
                           {pkg.is_active ? 'Deactivate' : 'Activate'}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="text-destructive focus:text-destructive"
+                          onClick={() => {
+                            if (confirm('Are you sure you want to delete this package?')) {
+                              deleteMutation.mutate(pkg.id);
+                            }
+                          }}
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" /> Delete
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
