@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { format, differenceInDays } from 'date-fns';
-import { Plus, Search, Crown, Phone, Calendar, User, MoreVertical, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { Plus, Search, Crown, Phone, Calendar, User, MoreVertical, CheckCircle, XCircle, Loader2, CreditCard, Banknote } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -45,6 +45,8 @@ export default function AdminMemberships() {
     membership_type: 'monthly' as 'monthly' | 'quarterly' | 'yearly',
     discount_percent: 100,
     notes: '',
+    payment_type: 'cash' as 'cash' | 'online' | 'pending',
+    payment_amount: 0,
   });
 
   const { data: packages = [] } = useQuery({
@@ -113,6 +115,8 @@ export default function AdminMemberships() {
         membership_type: 'monthly',
         discount_percent: 100,
         notes: '',
+        payment_type: 'cash',
+        payment_amount: 0,
       });
       queryClient.invalidateQueries({ queryKey: ['memberships'] });
     } catch (error: any) {
@@ -239,6 +243,7 @@ export default function AdminMemberships() {
                       membership_type: value,
                       discount_percent: pkg ? pkg.discount_percent : formData.discount_percent,
                       child_count: pkg ? pkg.max_children : formData.child_count,
+                      payment_amount: pkg ? pkg.price : 0,
                     });
                   }}
                 >
@@ -267,6 +272,52 @@ export default function AdminMemberships() {
                   </p>
                 )}
               </div>
+              {/* Payment Section */}
+              <div className="rounded-lg border border-dashed border-primary/30 bg-primary/5 p-4 space-y-3">
+                <div className="flex items-center gap-2 text-sm font-semibold text-primary">
+                  <CreditCard className="h-4 w-4" />
+                  Payment Information
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Payment Amount (৳)</Label>
+                    <Input
+                      type="number"
+                      min={0}
+                      value={formData.payment_amount}
+                      onChange={(e) => setFormData({ ...formData, payment_amount: Number(e.target.value) })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Payment Method</Label>
+                    <Select
+                      value={formData.payment_type}
+                      onValueChange={(value: 'cash' | 'online' | 'pending') => setFormData({ ...formData, payment_type: value })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="cash">
+                          <span className="flex items-center gap-2"><Banknote className="h-3.5 w-3.5" /> Cash</span>
+                        </SelectItem>
+                        <SelectItem value="online">
+                          <span className="flex items-center gap-2"><CreditCard className="h-3.5 w-3.5" /> Online</span>
+                        </SelectItem>
+                        <SelectItem value="pending">
+                          <span className="flex items-center gap-2">⏳ Pending</span>
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                {formData.payment_amount > 0 && (
+                  <p className="text-xs text-muted-foreground">
+                    Payment of <span className="font-semibold text-foreground">৳{formData.payment_amount.toLocaleString()}</span> will be recorded as <span className="font-semibold text-foreground capitalize">{formData.payment_type}</span>
+                  </p>
+                )}
+              </div>
+
               <div className="space-y-2">
                 <Label>{'Notes'}</Label>
                 <Textarea

@@ -10,6 +10,8 @@ interface CreateMembershipInput {
   discount_percent?: number;
   notes?: string;
   valid_from?: string;
+  payment_type?: 'cash' | 'online' | 'pending';
+  payment_amount?: number;
 }
 
 serve(async (req) => {
@@ -95,6 +97,23 @@ serve(async (req) => {
         .single();
 
       if (membershipError) throw membershipError;
+
+      // Log payment if amount > 0
+      if (body.payment_amount && body.payment_amount > 0) {
+        await supabase.from('activity_logs').insert({
+          entity_type: 'membership_payment',
+          entity_id: membership.id,
+          action: 'membership_payment_received',
+          details: {
+            member_name: body.member_name,
+            phone: body.phone,
+            membership_type: body.membership_type,
+            payment_amount: body.payment_amount,
+            payment_type: body.payment_type || 'cash',
+            payment_status: body.payment_type === 'pending' ? 'pending' : 'paid',
+          },
+        });
+      }
 
       return new Response(
         JSON.stringify({ success: true, membership }),
