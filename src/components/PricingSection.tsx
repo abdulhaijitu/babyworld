@@ -8,6 +8,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSettings } from "@/hooks/useSettings";
 
 export function PricingSection() {
+  const { packagePricing } = useSettings();
+
   // Fetch rides for ride zone pricing
   const { data: rides = [] } = useQuery({
     queryKey: ['public-rides'],
