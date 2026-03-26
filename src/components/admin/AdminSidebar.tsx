@@ -52,7 +52,7 @@ const allMenuItems: MenuItem[] = [
   ]},
   { id: 'membership', label: 'Membership', icon: Crown, path: '/admin/membership-packages', requiredRoles: ['super_admin', 'admin', 'manager'], children: [
     { id: 'membership-packages', label: 'Packages', icon: List, path: '/admin/membership-packages' },
-    { id: 'memberships', label: 'Memberships', icon: Crown, path: '/admin/memberships' },
+    { id: 'memberships', label: 'All Members', icon: Crown, path: '/admin/memberships' },
   ]},
   { id: 'gate-logs', label: 'Gate Logs', icon: Video, path: '/admin/gate-logs', requiredRoles: ['super_admin', 'admin', 'manager'] },
   { id: 'food', label: 'Food Sales', icon: UtensilsCrossed, path: '/admin/food', requiredRoles: ['super_admin', 'admin', 'manager', 'staff'] },
