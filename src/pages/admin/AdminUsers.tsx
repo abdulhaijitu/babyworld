@@ -54,7 +54,8 @@ import {
   Search,
   Briefcase,
   HardHat,
-  Crown
+  Crown,
+  KeyRound
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format, parseISO } from 'date-fns';
