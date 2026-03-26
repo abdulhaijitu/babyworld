@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -307,6 +307,21 @@ export default function AdminTicketing() {
     return true;
   });
 
+  // Customer summary when searching by phone
+  const isPhoneSearch = /^(\+?880|0)?1[3-9]\d{4,8}$/.test(searchQuery.trim());
+  const customerSummary = useMemo(() => {
+    if (!isPhoneSearch || !searchQuery.trim()) return null;
+    const phoneTickets = tickets.filter(t => t.guardian_phone.includes(searchQuery.trim()));
+    if (phoneTickets.length === 0) return null;
+    const totalVisits = phoneTickets.length;
+    const totalSpent = phoneTickets.reduce((sum, t) => sum + (t.total_price || 0), 0);
+    const lastVisit = phoneTickets[0]?.slot_date;
+    const customerName = phoneTickets[0]?.guardian_name || 'Unknown';
+    const activeTickets = phoneTickets.filter(t => t.status === 'active').length;
+    const cancelledTickets = phoneTickets.filter(t => t.status === 'cancelled').length;
+    return { totalVisits, totalSpent, lastVisit, customerName, activeTickets, cancelledTickets, phone: searchQuery.trim() };
+  }, [isPhoneSearch, searchQuery, tickets]);
+
   // Paginated tickets
   const paginatedTickets = filteredTickets.slice(0, displayCount);
   const hasMore = filteredTickets.length > displayCount;
@@ -515,7 +530,35 @@ export default function AdminTicketing() {
                 )}
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
+              {/* Customer Summary */}
+              {customerSummary && (
+                <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Users className="w-4 h-4 text-primary" />
+                    <span className="font-semibold text-sm">{customerSummary.customerName}</span>
+                    <span className="text-xs text-muted-foreground font-mono">{customerSummary.phone}</span>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+                    <div>
+                      <p className="text-muted-foreground text-xs">Total Visits</p>
+                      <p className="font-bold text-lg">{customerSummary.totalVisits}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground text-xs">Total Spent</p>
+                      <p className="font-bold text-lg">৳{customerSummary.totalSpent.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground text-xs">Last Visit</p>
+                      <p className="font-medium">{customerSummary.lastVisit ? format(new Date(customerSummary.lastVisit), 'dd MMM yyyy') : 'N/A'}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground text-xs">Active / Cancelled</p>
+                      <p className="font-medium">{customerSummary.activeTickets} / {customerSummary.cancelledTickets}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
               {error ? (
                 <div className="text-center py-8">
                   <AlertCircle className="w-12 h-12 mx-auto mb-4 text-destructive" />
