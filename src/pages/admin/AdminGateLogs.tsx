@@ -127,7 +127,7 @@ export default function AdminGateLogs() {
     } finally {
       setLoading(false);
     }
-  }, [page, dateFrom, dateTo, gateFilter, entryTypeFilter, language]);
+  }, [page, dateFrom, dateTo, gateFilter, entryTypeFilter]);
 
   useEffect(() => {
     fetchLogs();

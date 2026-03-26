@@ -117,7 +117,7 @@ export default function AdminFoodSales() {
     } finally {
       setItemsLoading(false);
     }
-  }, [language]);
+  }, []);
 
   const fetchOrders = useCallback(async () => {
     setOrdersLoading(true);

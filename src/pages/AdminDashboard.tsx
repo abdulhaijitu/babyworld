@@ -111,7 +111,7 @@ export default function AdminDashboard() {
     if (!authLoading && user && !isAdmin) {
       toast.error('No admin access');
     }
-  }, [isAdmin, authLoading, user, language]);
+  }, [isAdmin, authLoading, user]);
 
   const handleSignOut = async () => {
     await signOut();

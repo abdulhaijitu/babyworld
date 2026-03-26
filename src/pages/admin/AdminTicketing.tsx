@@ -154,7 +154,7 @@ export default function AdminTicketing() {
     } finally {
       setLoading(false);
     }
-  }, [language]);
+  }, []);
 
   useEffect(() => {
     fetchTickets();

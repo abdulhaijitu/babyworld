@@ -60,7 +60,7 @@ const ogImages = {
 };
 
 export function SEOHead({ page }: SEOHeadProps) {
-  const data = seoData[language][page];
+  const data = seoData.en[page];
   const baseUrl = "https://babyworld.lovable.app";
   
   const paths = {
