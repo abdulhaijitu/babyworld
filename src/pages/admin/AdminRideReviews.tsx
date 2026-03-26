@@ -16,7 +16,6 @@ import { format } from 'date-fns';
 interface Ride {
   id: string;
   name: string;
-  name_bn: string | null;
 }
 
 interface Review {
