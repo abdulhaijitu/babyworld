@@ -66,6 +66,7 @@ export default function AdminRides() {
   const [searchQuery, setSearchQuery] = useState('');
   const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+  const [filterCategory, setFilterCategory] = useState<string>('all');
 
   const { data: rides = [], isLoading } = useQuery({
     queryKey: ['admin-rides'],
