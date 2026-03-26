@@ -233,6 +233,9 @@ export default function AdminDashboardContent() {
         </p>
       </div>
 
+      {/* Expiring Hero Cards Alert */}
+      <ExpiringCardsAlert />
+
       {/* Revenue Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
