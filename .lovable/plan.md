@@ -1,15 +1,20 @@
 
 
-## Fix: + New Member মোডাল স্ক্রলিং
+## Plan: ফোন নম্বর দিয়ে পুরনো মেম্বারের তথ্য অটো-ফিল
 
-### সমস্যা
-`DialogContent`-এ `max-h` ও `overflow-y-auto` নেই, তাই ছোট স্ক্রিনে কন্টেন্ট কাটা যায়।
+### কী হবে
+ফোন নম্বর ইনপুট দেওয়ার পর (ভ্যালিড হলে) ডাটাবেসে `memberships` টেবিলে সেই ফোনে কোনো পুরনো/এক্সিসটিং রেকর্ড থাকলে `member_name`, `child_count`, `notes` অটোমেটিক ফিলআপ হবে এবং একটি ইনফো ব্যানার দেখাবে (যেমন "পুরনো মেম্বার পাওয়া গেছে — তথ্য অটো-ফিল করা হয়েছে")।
 
-### সমাধান — `src/pages/admin/AdminMemberships.tsx`
-Line 272-এ `DialogContent` ক্লাস আপডেট:
-```
-<DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
-```
+### পরিবর্তন — `src/pages/admin/AdminMemberships.tsx`
 
-একটি লাইন পরিবর্তন, একটি ফাইল।
+1. **Phone onChange-এ লুকআপ লজিক**: ফোন নম্বর ভ্যালিড হলে `memberships` টেবিলে `.eq('phone', phone).order('created_at', { ascending: false }).limit(1)` দিয়ে সর্বশেষ রেকর্ড খুঁজবে
+2. **Debounce**: টাইপিং শেষ হওয়ার পর (~500ms) লুকআপ চালাবে — প্রতিটি কীস্ট্রোকে নয়
+3. **অটো-ফিল**: পুরনো মেম্বার পাওয়া গেলে `member_name`, `child_count`, `notes` ফিল্ডগুলো সেট করবে
+4. **UI ইন্ডিকেটর**: ফোন ফিল্ডের নিচে ছোট ব্যানার — "🔄 পুরনো মেম্বার: [নাম] — তথ্য লোড করা হয়েছে" বা "লোড হচ্ছে..." স্পিনার
+5. **ইউজার ওভাররাইড**: অটো-ফিল হওয়ার পরও ইউজার যেকোনো ফিল্ড ম্যানুয়ালি পরিবর্তন করতে পারবে
+
+### টেকনিক্যাল ডিটেইলস
+- নতুন স্টেট: `lookupLoading`, `foundMember` (পুরনো মেম্বারের ডেটা)
+- `useEffect` বা `useCallback` + `setTimeout` দিয়ে debounced lookup
+- শুধু `AdminMemberships.tsx` ফাইল পরিবর্তন, DB/Edge Function চেঞ্জ নেই
 
