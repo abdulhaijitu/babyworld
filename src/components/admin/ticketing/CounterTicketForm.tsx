@@ -232,7 +232,25 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
     return () => clearTimeout(debounce);
   }, [phone, form]);
 
-  // Filter rides by search
+  const openVisitDetail = useCallback(async (ticketId: string) => {
+    setSelectedVisit(ticketId);
+    setLoadingDetail(true);
+    try {
+      const [ticketRes, ridesRes] = await Promise.all([
+        supabase.from('tickets').select('*').eq('id', ticketId).single(),
+        supabase.from('ticket_rides').select('*, rides(name, name_bn)').eq('ticket_id', ticketId),
+      ]);
+      setVisitDetail({
+        ...ticketRes.data,
+        rides: ridesRes.data || [],
+      });
+    } catch {
+      setVisitDetail(null);
+    } finally {
+      setLoadingDetail(false);
+    }
+  }, []);
+
   const filteredRides = useMemo(() => {
     if (!rideSearch.trim()) return rides;
     const q = rideSearch.toLowerCase();
