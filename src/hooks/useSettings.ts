@@ -69,6 +69,15 @@ const defaultPricing: PricingSettings = {
   }
 };
 
+const defaultPackagePricing: PackagePricing = {
+  familyRegular: 500,
+  familyOffer: 350,
+  fullBoard: 800,
+  extraGuardian: 150,
+  rideZoneRegular: 1350,
+  rideZoneOffer: 500
+};
+
 const defaultTimeSlots: TimeSlot[] = [
   { id: '1', label: '10:00 AM - 11:00 AM', start: '10:00', end: '11:00', enabled: true },
   { id: '2', label: '11:00 AM - 12:00 PM', start: '11:00', end: '12:00', enabled: true },
