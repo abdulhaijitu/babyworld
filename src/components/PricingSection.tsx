@@ -119,12 +119,12 @@ export function PricingSection() {
                   <p className="text-sm text-muted-foreground">All ride zone rides included</p>
                 </div>
                 <div className="flex items-baseline gap-3">
-                  <span className="text-3xl font-bold text-foreground">৳1350</span>
+                  <span className="text-3xl font-bold text-foreground">৳{packagePricing.rideZoneRegular}</span>
                   <Badge variant="secondary" className="text-xs">Regular</Badge>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Sparkles className="w-4 h-4 text-orange-500" />
-                  <span>Eid Offer: <strong className="text-orange-600">৳500</strong></span>
+                  <span>Eid Offer: <strong className="text-orange-600">৳{packagePricing.rideZoneOffer}</strong></span>
                 </div>
               </div>
             </div>
