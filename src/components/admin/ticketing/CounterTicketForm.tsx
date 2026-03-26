@@ -3,7 +3,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { format } from 'date-fns';
-import { Plus, Minus, Ticket, Loader2, CheckCircle, Crown, Search, Footprints, UserCheck, History, ChevronDown, ChevronUp } from 'lucide-react';
+import { Plus, Minus, Ticket, Loader2, CheckCircle, Crown, Search, Footprints, UserCheck, History, ChevronDown, ChevronUp, Eye } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -82,6 +83,9 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
   const [previousCustomer, setPreviousCustomer] = useState(false);
   const [visitHistory, setVisitHistory] = useState<VisitRecord[]>([]);
   const [showHistory, setShowHistory] = useState(false);
+  const [selectedVisit, setSelectedVisit] = useState<string | null>(null);
+  const [visitDetail, setVisitDetail] = useState<any>(null);
+  const [loadingDetail, setLoadingDetail] = useState(false);
   // Generate sequential entry number
   const [entryNo, setEntryNo] = useState('');
   const generateEntryNo = useCallback(async () => {
@@ -228,7 +232,25 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
     return () => clearTimeout(debounce);
   }, [phone, form]);
 
-  // Filter rides by search
+  const openVisitDetail = useCallback(async (ticketId: string) => {
+    setSelectedVisit(ticketId);
+    setLoadingDetail(true);
+    try {
+      const [ticketRes, ridesRes] = await Promise.all([
+        supabase.from('tickets').select('*').eq('id', ticketId).single(),
+        supabase.from('ticket_rides').select('*, rides(name, name_bn)').eq('ticket_id', ticketId),
+      ]);
+      setVisitDetail({
+        ...ticketRes.data,
+        rides: ridesRes.data || [],
+      });
+    } catch {
+      setVisitDetail(null);
+    } finally {
+      setLoadingDetail(false);
+    }
+  }, []);
+
   const filteredRides = useMemo(() => {
     if (!rideSearch.trim()) return rides;
     const q = rideSearch.toLowerCase();
@@ -350,6 +372,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
   );
 
   return (
+    <>
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -541,7 +564,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                           </thead>
                           <tbody>
                             {visitHistory.map((v) => (
-                              <tr key={v.id} className="border-t border-muted/30">
+                              <tr key={v.id} className="border-t border-muted/30 cursor-pointer hover:bg-muted/40 transition-colors" onClick={() => openVisitDetail(v.id)}>
                                 <td className="px-2 py-1">{format(new Date(v.slot_date), 'dd MMM yy')}</td>
                                 <td className="px-2 py-1 font-mono">{v.ticket_number}</td>
                                 <td className="px-2 py-1 text-center">{v.child_count || 1}/{v.guardian_count || 1}</td>
@@ -671,5 +694,138 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
         </div>
       </form>
     </Form>
+
+      {/* Visit Detail Modal */}
+      <Dialog open={!!selectedVisit} onOpenChange={(open) => { if (!open) { setSelectedVisit(null); setVisitDetail(null); } }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-base">
+              <Ticket className="h-4 w-4" />
+              Ticket Details
+            </DialogTitle>
+          </DialogHeader>
+          {loadingDetail ? (
+            <div className="flex justify-center py-8">
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            </div>
+          ) : visitDetail ? (
+            <div className="space-y-3 text-sm">
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <span className="text-muted-foreground text-xs">Entry No</span>
+                  <p className="font-mono font-semibold">{visitDetail.ticket_number}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground text-xs">Date</span>
+                  <p>{format(new Date(visitDetail.slot_date), 'dd MMM yyyy')}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground text-xs">Guardian</span>
+                  <p>{visitDetail.guardian_name}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground text-xs">Phone</span>
+                  <p className="font-mono">{visitDetail.guardian_phone}</p>
+                </div>
+                {visitDetail.child_name && (
+                  <div>
+                    <span className="text-muted-foreground text-xs">Child Name</span>
+                    <p>{visitDetail.child_name}</p>
+                  </div>
+                )}
+                <div>
+                  <span className="text-muted-foreground text-xs">Children / Guardians</span>
+                  <p>{visitDetail.child_count || 1} / {visitDetail.guardian_count || 1}</p>
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <span className="text-muted-foreground text-xs">Entry Fee</span>
+                  <p>৳{visitDetail.entry_price || 0}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground text-xs">Socks ({visitDetail.socks_count || 0})</span>
+                  <p>৳{visitDetail.socks_price || 0}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground text-xs">Addons/Rides</span>
+                  <p>৳{visitDetail.addons_price || 0}</p>
+                </div>
+                {(visitDetail.discount_applied || 0) > 0 && (
+                  <div>
+                    <span className="text-muted-foreground text-xs">Discount</span>
+                    <p className="text-green-600">-৳{visitDetail.discount_applied}</p>
+                  </div>
+                )}
+                <div>
+                  <span className="text-muted-foreground text-xs">Total</span>
+                  <p className="font-bold text-base">৳{visitDetail.total_price || 0}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground text-xs">Payment</span>
+                  <p className="capitalize">{visitDetail.payment_type || 'N/A'} / {visitDetail.payment_status || 'N/A'}</p>
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <span className="text-muted-foreground text-xs">Status</span>
+                  <div>
+                    <Badge variant={visitDetail.status === 'used' ? 'secondary' : visitDetail.status === 'cancelled' ? 'destructive' : 'default'}>
+                      {visitDetail.status}
+                    </Badge>
+                  </div>
+                </div>
+                {visitDetail.in_time && (
+                  <div>
+                    <span className="text-muted-foreground text-xs">In Time</span>
+                    <p>{format(new Date(visitDetail.in_time), 'hh:mm a')}</p>
+                  </div>
+                )}
+                {visitDetail.out_time && (
+                  <div>
+                    <span className="text-muted-foreground text-xs">Out Time</span>
+                    <p>{format(new Date(visitDetail.out_time), 'hh:mm a')}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Rides */}
+              {visitDetail.rides && visitDetail.rides.length > 0 && (
+                <>
+                  <Separator />
+                  <div>
+                    <span className="text-muted-foreground text-xs font-medium">Rides / Items</span>
+                    <div className="mt-1 space-y-1">
+                      {visitDetail.rides.map((r: any) => (
+                        <div key={r.id} className="flex justify-between items-center text-xs bg-muted/30 rounded px-2 py-1">
+                          <span>{r.rides?.name || 'Unknown'} × {r.quantity}</span>
+                          <span className="font-mono">৳{r.total_price}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {visitDetail.notes && (
+                <>
+                  <Separator />
+                  <div>
+                    <span className="text-muted-foreground text-xs">Notes</span>
+                    <p className="text-xs mt-0.5">{visitDetail.notes}</p>
+                  </div>
+                </>
+              )}
+            </div>
+          ) : null}
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
