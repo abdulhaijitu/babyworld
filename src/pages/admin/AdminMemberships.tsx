@@ -272,6 +272,52 @@ export default function AdminMemberships() {
                   </p>
                 )}
               </div>
+              {/* Payment Section */}
+              <div className="rounded-lg border border-dashed border-primary/30 bg-primary/5 p-4 space-y-3">
+                <div className="flex items-center gap-2 text-sm font-semibold text-primary">
+                  <CreditCard className="h-4 w-4" />
+                  Payment Information
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Payment Amount (৳)</Label>
+                    <Input
+                      type="number"
+                      min={0}
+                      value={formData.payment_amount}
+                      onChange={(e) => setFormData({ ...formData, payment_amount: Number(e.target.value) })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Payment Method</Label>
+                    <Select
+                      value={formData.payment_type}
+                      onValueChange={(value: 'cash' | 'online' | 'pending') => setFormData({ ...formData, payment_type: value })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="cash">
+                          <span className="flex items-center gap-2"><Banknote className="h-3.5 w-3.5" /> Cash</span>
+                        </SelectItem>
+                        <SelectItem value="online">
+                          <span className="flex items-center gap-2"><CreditCard className="h-3.5 w-3.5" /> Online</span>
+                        </SelectItem>
+                        <SelectItem value="pending">
+                          <span className="flex items-center gap-2">⏳ Pending</span>
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                {formData.payment_amount > 0 && (
+                  <p className="text-xs text-muted-foreground">
+                    Payment of <span className="font-semibold text-foreground">৳{formData.payment_amount.toLocaleString()}</span> will be recorded as <span className="font-semibold text-foreground capitalize">{formData.payment_type}</span>
+                  </p>
+                )}
+              </div>
+
               <div className="space-y-2">
                 <Label>{'Notes'}</Label>
                 <Textarea
