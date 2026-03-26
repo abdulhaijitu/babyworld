@@ -99,7 +99,8 @@ export default function AdminTicketing() {
   // Filters
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [dateFilter, setDateFilter] = useState<Date | undefined>(undefined);
+  const [dateFrom, setDateFrom] = useState<Date | undefined>(undefined);
+  const [dateTo, setDateTo] = useState<Date | undefined>(undefined);
   
   // Print dialog
   const [printOpen, setPrintOpen] = useState(false);
@@ -279,8 +280,11 @@ export default function AdminTicketing() {
       }
     }
     if (statusFilter !== 'all' && ticket.status !== statusFilter) return false;
-    if (dateFilter) {
-      if (ticket.slot_date !== format(dateFilter, 'yyyy-MM-dd')) return false;
+    if (dateFrom) {
+      if (ticket.slot_date < format(dateFrom, 'yyyy-MM-dd')) return false;
+    }
+    if (dateTo) {
+      if (ticket.slot_date > format(dateTo, 'yyyy-MM-dd')) return false;
     }
     return true;
   });
@@ -335,11 +339,12 @@ export default function AdminTicketing() {
   const clearFilters = () => {
     setSearchQuery('');
     setStatusFilter('all');
-    setDateFilter(undefined);
+    setDateFrom(undefined);
+    setDateTo(undefined);
     setDisplayCount(PAGE_SIZE);
   };
 
-  const hasActiveFilters = searchQuery || statusFilter !== 'all' || dateFilter;
+  const hasActiveFilters = searchQuery || statusFilter !== 'all' || dateFrom || dateTo;
 
   return (
     <div className="p-4 md:p-6 lg:p-8 space-y-6">
@@ -454,11 +459,34 @@ export default function AdminTicketing() {
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="w-full md:w-auto">
                       <CalendarDays className="w-4 h-4 mr-2" />
-                      {dateFilter ? format(dateFilter, 'dd MMM') : 'Date'}
+                      {dateFrom ? format(dateFrom, 'dd MMM') : 'From'}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar mode="single" selected={dateFilter} onSelect={setDateFilter} />
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar 
+                      mode="single" 
+                      selected={dateFrom} 
+                      onSelect={setDateFrom}
+                      className="p-3 pointer-events-auto"
+                    />
+                  </PopoverContent>
+                </Popover>
+
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className="w-full md:w-auto">
+                      <CalendarDays className="w-4 h-4 mr-2" />
+                      {dateTo ? format(dateTo, 'dd MMM') : 'To'}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar 
+                      mode="single" 
+                      selected={dateTo} 
+                      onSelect={setDateTo}
+                      disabled={(date) => dateFrom ? date < dateFrom : false}
+                      className="p-3 pointer-events-auto"
+                    />
                   </PopoverContent>
                 </Popover>
                 
