@@ -48,6 +48,7 @@ export default function AdminMembershipPackages() {
     discount_percent: 100,
     max_children: 1,
     max_guardians: 2,
+    is_active: true,
   });
 
   const { data: packages = [], isLoading } = useQuery({
