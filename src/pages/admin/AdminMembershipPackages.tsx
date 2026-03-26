@@ -27,6 +27,7 @@ interface MembershipPackage {
   price: number;
   discount_percent: number;
   max_children: number;
+  max_guardians: number;
   features: any;
   is_active: boolean;
   sort_order: number;
