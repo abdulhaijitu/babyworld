@@ -131,10 +131,6 @@ export default function AdminSettings() {
             <Banknote className="w-4 h-4 hidden sm:inline" />
             {'Pricing'}
           </TabsTrigger>
-          <TabsTrigger value="timeslots" className="gap-2">
-            <Clock className="w-4 h-4 hidden sm:inline" />
-            {'Time Slots'}
-          </TabsTrigger>
           <TabsTrigger value="business" className="gap-2">
             <Building className="w-4 h-4 hidden sm:inline" />
             {'Business'}
