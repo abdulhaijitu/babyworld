@@ -243,6 +243,7 @@ export default function AdminMemberships() {
                       membership_type: value,
                       discount_percent: pkg ? pkg.discount_percent : formData.discount_percent,
                       child_count: pkg ? pkg.max_children : formData.child_count,
+                      payment_amount: pkg ? pkg.price : 0,
                     });
                   }}
                 >
