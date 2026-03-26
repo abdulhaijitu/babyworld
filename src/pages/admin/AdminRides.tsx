@@ -108,7 +108,7 @@ export default function AdminRides() {
       const { error } = await supabase.from('rides').update({
         name: data.name,
         price: data.price,
-        category: data.category,
+        category: data.category as 'kids' | 'family' | 'thrill',
         is_active: data.is_active,
         image_url: data.image_url || null,
         duration_minutes: data.duration_minutes || 0,
