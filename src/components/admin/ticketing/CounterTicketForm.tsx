@@ -372,6 +372,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
   );
 
   return (
+    <>
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
