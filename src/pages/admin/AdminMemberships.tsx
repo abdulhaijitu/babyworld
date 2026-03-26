@@ -269,7 +269,7 @@ export default function AdminMemberships() {
               {'New Member'}
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-md">
+          <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{'Create New Membership'}</DialogTitle>
               <DialogDescription>
