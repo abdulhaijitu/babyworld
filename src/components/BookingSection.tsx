@@ -364,7 +364,7 @@ export function BookingSection() {
                   <div>
                     <p className="text-xs text-muted-foreground">{t("booking.ticket")}</p>
                     <p className="font-medium text-foreground">
-                      {childCount} {language === "bn" ? "শিশু" : childCount === 1 ? "Child" : "Children"} + {childCount} {language === "bn" ? "অভিভাবক" : childCount === 1 ? "Guardian" : "Guardians"}
+                      {childCount} {childCount === 1 ? "Child" : "Children"} + {childCount} {childCount === 1 ? "Guardian" : "Guardians"}
                     </p>
                   </div>
                 </div>
@@ -601,7 +601,7 @@ function BookingSummaryMobile({ selectedDate, selectedSlot, childCount, onBookin
               {format(selectedDate!, "dd MMM")} • {selectedSlot?.time_slot}
             </p>
             <p className="text-xs text-muted-foreground">
-              {childCount} {language === "bn" ? "শিশু" : childCount === 1 ? "Child" : "Children"} + {childCount} {language === "bn" ? "অভিভাবক" : childCount === 1 ? "Guardian" : "Guardians"}
+              {childCount} {childCount === 1 ? "Child" : "Children"} + {childCount} {childCount === 1 ? "Guardian" : "Guardians"}
             </p>
           </div>
         ) : (

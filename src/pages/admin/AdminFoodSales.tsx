@@ -543,7 +543,7 @@ export default function AdminFoodSales() {
                     {foodItems.map((item) => (
                       <TableRow key={item.id}>
                         <TableCell>
-                          <div className="font-medium">{language === 'bn' && item.name_bn ? item.name_bn : item.name}</div>
+                          <div className="font-medium">{item.name}</div>
                         </TableCell>
                         <TableCell>
                           <Badge variant="outline" className="gap-1">
@@ -617,7 +617,7 @@ export default function AdminFoodSales() {
                               onClick={() => addItemToOrder(item.id)}
                             >
                               <Plus className="w-3 h-3 mr-1" />
-                              {language === 'bn' && item.name_bn ? item.name_bn : item.name} - ৳{item.price}
+                              {item.name} - ৳{item.price}
                             </Button>
                           ))}
                         </div>

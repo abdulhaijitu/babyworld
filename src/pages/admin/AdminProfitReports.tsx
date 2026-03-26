@@ -124,7 +124,7 @@ export default function AdminProfitReports() {
   ];
 
   const expensePieData = expenseBreakdown.map((e: { category: string; amount: number }) => ({
-    name: language === 'bn' ? EXPENSE_CATEGORY_LABELS[e.category]?.bn : EXPENSE_CATEGORY_LABELS[e.category]?.en || e.category,
+    name: EXPENSE_CATEGORY_LABELS[e.category]?.en || e.category,
     value: e.amount,
     fill: EXPENSE_CATEGORY_LABELS[e.category]?.color || '#64748b'
   }));
@@ -514,7 +514,7 @@ export default function AdminProfitReports() {
                               style={{ backgroundColor: catInfo?.color || '#64748b' }}
                             />
                             <span className="font-medium">
-                              {language === 'bn' ? catInfo?.bn : catInfo?.en || expense.category}
+                              {catInfo?.en || expense.category}
                             </span>
                           </div>
                           <div className="text-right">

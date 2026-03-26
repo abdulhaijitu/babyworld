@@ -107,9 +107,7 @@ export function BookingCalendarView({ bookings, onBookingSelect }: BookingCalend
     }
   };
 
-  const weekDays = language === 'bn' 
-    ? ['রবি', 'সোম', 'মঙ্গল', 'বুধ', 'বৃহঃ', 'শুক্র', 'শনি']
-    : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
   const selectedDateKey = selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '';
   const selectedDayBookings = selectedDateKey ? bookingsByDate[selectedDateKey] || [] : [];

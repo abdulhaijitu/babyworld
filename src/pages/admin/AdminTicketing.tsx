@@ -146,7 +146,7 @@ export default function AdminTicketing() {
       if (ridesResult.data) {
         const names: Record<string, string> = {};
         ridesResult.data.forEach((ride: any) => {
-          names[ride.id] = language === 'bn' ? (ride.name_bn || ride.name) : ride.name;
+          names[ride.id] = ride.name;
         });
         setRideNames(names);
       }
