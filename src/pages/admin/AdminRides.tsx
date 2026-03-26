@@ -366,12 +366,7 @@ export default function AdminRides() {
                           )}
                         </TableCell>
                         <TableCell>
-                          <div>
-                            <p className="font-medium">{ride.name}</p>
-                            {ride.name_bn && (
-                              <p className="text-sm text-muted-foreground">{ride.name_bn}</p>
-                            )}
-                          </div>
+                          <p className="font-medium">{ride.name}</p>
                         </TableCell>
                         <TableCell>
                           <Badge variant="outline" className={cn("text-xs", catInfo.color)}>
