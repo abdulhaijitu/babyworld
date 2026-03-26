@@ -154,7 +154,7 @@ function SidebarContent({
           const active = isActive(item.path);
           
           if (item.children && item.children.length > 0 && !collapsed) {
-            const childActive = item.children.some(c => location.pathname + location.search === c.path || location.pathname.startsWith(item.path.split('?')[0]));
+            const childActive = item.children.some(c => location.pathname === c.path || location.pathname.startsWith(item.path));
             return (
               <Collapsible key={item.id} defaultOpen={childActive}>
                 <CollapsibleTrigger className={cn(
