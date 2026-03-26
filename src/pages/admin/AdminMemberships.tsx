@@ -38,7 +38,8 @@ export default function AdminMemberships() {
   const [paymentFilter, setPaymentFilter] = useState<string>('all');
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 15;
   const [phoneError, setPhoneError] = useState('');
 
   // Form state
