@@ -118,7 +118,7 @@ export default function AdminTicketing() {
     setCreatedTicket(ticket);
     setShowSuccessDialog(true);
     fetchTickets();
-    handleTabChange('list');
+    setSearchParams({ tab: 'list' }, { replace: true });
   };
 
   const fetchTickets = useCallback(async () => {
