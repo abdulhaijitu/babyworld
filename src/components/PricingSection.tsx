@@ -69,15 +69,15 @@ export function PricingSection() {
                   <p className="text-sm text-muted-foreground">Soft Play Zone access</p>
                 </div>
                 <div className="flex items-baseline gap-3">
-                  <span className="text-3xl font-bold text-foreground">৳500</span>
+                  <span className="text-3xl font-bold text-foreground">৳{packagePricing.familyRegular}</span>
                   <Badge variant="secondary" className="text-xs">Regular</Badge>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Sparkles className="w-4 h-4 text-orange-500" />
-                  <span>Eid Special: <strong className="text-orange-600">৳350</strong></span>
+                  <span>Eid Special: <strong className="text-orange-600">৳{packagePricing.familyOffer}</strong></span>
                 </div>
                 <div className="text-sm text-muted-foreground pt-2 border-t border-border">
-                  Extra Guardian: ৳150/-
+                  Extra Guardian: ৳{packagePricing.extraGuardian}/-
                 </div>
               </div>
             </div>
