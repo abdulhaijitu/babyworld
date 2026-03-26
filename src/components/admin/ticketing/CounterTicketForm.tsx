@@ -207,15 +207,21 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
           } else {
             setPreviousCustomer(false);
           }
+
+          // Visit history
+          setVisitHistory((historyRes.data as VisitRecord[]) || []);
+          setShowHistory(false);
         } catch {
           setMembershipInfo(null);
           setPreviousCustomer(false);
+          setVisitHistory([]);
         } finally {
           setIsCheckingMembership(false);
         }
       } else {
         setMembershipInfo(null);
         setPreviousCustomer(false);
+        setVisitHistory([]);
       }
     };
     const debounce = setTimeout(checkPhoneData, 500);
