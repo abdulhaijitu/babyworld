@@ -514,6 +514,51 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                   </div>
                 )}
 
+                {/* Visit History */}
+                {visitHistory.length > 0 && (
+                  <div className="border rounded-md overflow-hidden">
+                    <button
+                      type="button"
+                      className="w-full flex items-center gap-2 p-2 text-xs font-medium hover:bg-muted/50 transition-colors"
+                      onClick={() => setShowHistory(v => !v)}
+                    >
+                      <History className="h-3.5 w-3.5 text-muted-foreground" />
+                      <span>Visit History ({visitHistory.length})</span>
+                      {showHistory ? <ChevronUp className="h-3.5 w-3.5 ml-auto" /> : <ChevronDown className="h-3.5 w-3.5 ml-auto" />}
+                    </button>
+                    {showHistory && (
+                      <div className="border-t max-h-36 overflow-y-auto">
+                        <table className="w-full text-[11px]">
+                          <thead className="bg-muted/50 sticky top-0">
+                            <tr>
+                              <th className="text-left px-2 py-1 font-medium text-muted-foreground">Date</th>
+                              <th className="text-left px-2 py-1 font-medium text-muted-foreground">Ticket</th>
+                              <th className="text-center px-2 py-1 font-medium text-muted-foreground">C/G</th>
+                              <th className="text-right px-2 py-1 font-medium text-muted-foreground">Total</th>
+                              <th className="text-center px-2 py-1 font-medium text-muted-foreground">Status</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {visitHistory.map((v) => (
+                              <tr key={v.id} className="border-t border-muted/30">
+                                <td className="px-2 py-1">{format(new Date(v.slot_date), 'dd MMM yy')}</td>
+                                <td className="px-2 py-1 font-mono">{v.ticket_number}</td>
+                                <td className="px-2 py-1 text-center">{v.child_count || 1}/{v.guardian_count || 1}</td>
+                                <td className="px-2 py-1 text-right">৳{v.total_price || 0}</td>
+                                <td className="px-2 py-1 text-center">
+                                  <Badge variant={v.status === 'used' ? 'secondary' : v.status === 'cancelled' ? 'destructive' : 'default'} className="text-[9px] px-1 py-0">
+                                    {v.status}
+                                  </Badge>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                )
+
                 {/* Guardian & Children */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
