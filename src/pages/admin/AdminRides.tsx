@@ -90,6 +90,7 @@ export default function AdminRides() {
         name: data.name,
         description: data.description || '',
         price: data.price,
+        offer_price: data.offer_price,
         category: data.category as 'kids' | 'family' | 'thrill',
         is_active: data.is_active,
         image_url: data.image_url || null,
