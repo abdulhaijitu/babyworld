@@ -259,6 +259,41 @@ export function PrintableTicket({ ticket, onClose }: PrintableTicketProps) {
           </div>
         </div>
 
+        {/* Time Box */}
+        {(ticket.inTime || ticket.outTime) && (
+          <div className="flex items-center justify-around p-3 rounded-xl bg-pink-50 border border-pink-100 my-3">
+            <div className="text-center">
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">IN</p>
+              <p className="text-base font-bold text-pink-700">
+                {ticket.inTime ? format(new Date(ticket.inTime), 'hh:mm a') : '-'}
+              </p>
+            </div>
+            <Clock className="h-4 w-4 text-pink-400" />
+            <div className="text-center">
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">OUT</p>
+              <p className="text-base font-bold text-pink-700">
+                {ticket.outTime ? format(new Date(ticket.outTime), 'hh:mm a') : '-'}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Rides */}
+        {ticket.rides && ticket.rides.length > 0 && (
+          <>
+            <Separator className="my-2" />
+            <div className="space-y-1">
+              <p className="text-xs font-semibold text-muted-foreground">🎠 Rides</p>
+              {ticket.rides.map((r, i) => (
+                <div key={i} className="flex justify-between text-xs">
+                  <span className="text-muted-foreground">{r.name} ×{r.quantity}</span>
+                  <span className="font-medium">৳{r.total_price}</span>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
         {/* Price Breakdown */}
         {hasPricing && (
           <>
@@ -299,6 +334,11 @@ export function PrintableTicket({ ticket, onClose }: PrintableTicketProps) {
               <div className="text-center p-3 rounded-xl bg-gradient-to-br from-pink-500 to-pink-700 text-white">
                 <p className="text-[10px] opacity-80">Total</p>
                 <p className="text-xl font-bold">৳{ticket.totalPrice}</p>
+                {ticket.paymentType && (
+                  <span className="inline-block mt-1 text-[10px] bg-white/20 px-3 py-0.5 rounded-full">
+                    {ticket.paymentType === 'cash' ? 'Cash' : 'Online'} • {ticket.paymentStatus === 'paid' ? 'Paid' : 'Unpaid'}
+                  </span>
+                )}
               </div>
             </div>
           </>
