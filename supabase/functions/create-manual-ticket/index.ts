@@ -55,14 +55,13 @@ serve(async (req) => {
     const { data: pricingSettings } = await supabase
       .from('settings')
       .select('value')
-      .eq('key', 'ticket_pricing')
+      .eq('key', 'pricing_hourly')
       .single();
 
     const pricing = pricingSettings?.value || {
-      entry_price: 500,
-      extra_guardian_price: 100,
-      extra_child_price: 200,
-      socks_price: 50
+      guardian_fee: 100,
+      child_fee: 200,
+      socks_fee: 50
     };
 
     // Check for active membership
