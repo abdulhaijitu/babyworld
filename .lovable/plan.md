@@ -1,33 +1,51 @@
 
 
-## Plan: Reset password for admin@babyworld.com
+## Plan: Add Super Admin Role
 
-The auth logs show repeated "Invalid login credentials" errors. The user wants the password set to `admin@babyworld.com`.
+### Overview
+Add a `super_admin` role with elevated privileges above regular admin, specifically the ability to manage other admin users. Regular admins will lose access to user management — only super admins can create/delete users and manage roles.
 
-Since we can't call `auth.admin.updateUserById` from psql, the best approach is to update the `create-admin` edge function to also support password reset, then call it.
+### Changes
 
-### Approach
+#### 1. Database Migration
+- Add `super_admin` to the `app_role` enum: `ALTER TYPE app_role ADD VALUE 'super_admin'`
+- Update RLS policies on `user_roles` to allow super_admins full CRUD (currently no INSERT/UPDATE/DELETE for anyone via client)
+- Add INSERT, UPDATE, DELETE policies on `user_roles` for super_admins
 
-1. **Create a new edge function `reset-password`** that uses the Supabase admin client to:
-   - Look up the user by email via `supabase.auth.admin.listUsers()`
-   - Call `supabase.auth.admin.updateUserById(userId, { password })` to reset the password
+#### 2. Update `admin@babyworld.com` role
+- Use the insert tool to update their role from `admin` to `super_admin` in `user_roles`
 
-2. **Call the edge function** to reset the password for `admin@babyworld.com` to `admin@babyworld.com`
+#### 3. Update `useUserRoles.ts`
+- Add `super_admin` to the `AppRole` type
+- Add `isSuperAdmin` boolean derived from roles
+- Super admin inherits all admin/manager/staff permissions
+- Add `canManageAdmins` permission (super_admin only)
 
-3. **Optionally add a "Reset Password" button** in AdminUsers page for future use
+#### 4. Update `useAuth.ts`
+- Update `checkAdminRole` to also recognize `super_admin` as admin-level access so the layout gate still works
 
-### Files to create/edit
-- **Create**: `supabase/functions/reset-password/index.ts` — edge function that accepts `{ email, password }` and resets via admin API
-- **Edit**: `src/pages/admin/AdminUsers.tsx` — add a reset password action button (optional, can skip for now)
+#### 5. Update `AdminSidebar.tsx`
+- Add `super_admin` to `requiredRoles` arrays where `admin` appears
+- Make "Users" menu item require `super_admin` only
+- Add super_admin to `roleConfig` display
 
-### Edge function logic
-```typescript
-// Look up user by email
-const { data: { users } } = await supabase.auth.admin.listUsers();
-const user = users.find(u => u.email === email);
-// Update password
-await supabase.auth.admin.updateUserById(user.id, { password });
-```
+#### 6. Update `AdminUsers.tsx`
+- Add `super_admin` role option in the create user form
+- Add super_admin badge styling and config
+- Only super_admins can access this page (enforced by sidebar + role check)
 
-After deploying the function, I'll invoke it to set the password immediately.
+#### 7. Update `AdminLayout.tsx`
+- Change `isAdmin` check to also accept users with any staff-level role (since `useUserRoles` handles granular permissions, the layout should allow any role-holder in)
+- Or: update `checkAdminRole` in `useAuth` to return true for any role (`admin`, `manager`, `staff`, `super_admin`)
+
+#### 8. Update `create-admin` edge function
+- Add `super_admin` to the valid roles list
+
+### Files to modify
+- **New migration** — add `super_admin` enum value + RLS policies
+- `src/hooks/useUserRoles.ts` — add super_admin support
+- `src/hooks/useAuth.ts` — recognize super_admin as admin
+- `src/components/admin/AdminSidebar.tsx` — update menu visibility
+- `src/pages/admin/AdminUsers.tsx` — add super_admin role option + restrict access
+- `supabase/functions/create-admin/index.ts` — accept super_admin role
 
