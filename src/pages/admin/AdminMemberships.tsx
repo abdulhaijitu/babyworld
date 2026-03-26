@@ -74,6 +74,19 @@ export default function AdminMemberships() {
     },
   });
 
+  const { data: paymentLogs = [] } = useQuery({
+    queryKey: ['membership-payment-logs'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('activity_logs')
+        .select('*')
+        .eq('entity_type', 'membership_payment')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
   const updateStatusMutation = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
       const { data, error } = await supabase.functions.invoke('manage-membership?action=update-status', {
