@@ -563,7 +563,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                           </thead>
                           <tbody>
                             {visitHistory.map((v) => (
-                              <tr key={v.id} className="border-t border-muted/30">
+                              <tr key={v.id} className="border-t border-muted/30 cursor-pointer hover:bg-muted/40 transition-colors" onClick={() => openVisitDetail(v.id)}>
                                 <td className="px-2 py-1">{format(new Date(v.slot_date), 'dd MMM yy')}</td>
                                 <td className="px-2 py-1 font-mono">{v.ticket_number}</td>
                                 <td className="px-2 py-1 text-center">{v.child_count || 1}/{v.guardian_count || 1}</td>
