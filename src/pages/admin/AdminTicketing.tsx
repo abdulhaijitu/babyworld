@@ -51,7 +51,6 @@ import {
   DoorClosed
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { format, parseISO } from 'date-fns';
 import { bn } from 'date-fns/locale';
 import { StatsCardSkeleton, TableRowSkeleton } from '@/components/admin/AdminSkeleton';
@@ -89,7 +88,6 @@ interface TicketType {
 }
 
 export default function AdminTicketing() {
-  const { language } = useLanguage();
   const [tickets, setTickets] = useState<TicketType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

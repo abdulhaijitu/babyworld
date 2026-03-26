@@ -5,7 +5,6 @@ import { PageTransition } from "@/components/PageTransition";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { ScrollFadeIn, StaggerContainer, StaggerItem } from "@/components/ScrollAnimations";
-import { useLanguage } from "@/contexts/LanguageContext";
 import { ImageLightbox, GalleryItem } from "@/components/ImageLightbox";
 import { Helmet } from "react-helmet-async";
 import { Camera, Play, X } from "lucide-react";
@@ -25,7 +24,6 @@ import playgroundKids from "@/assets/playground-kids.jpg";
 import tomMascot from "@/assets/tom-mascot.jpg";
 
 const Gallery = () => {
-  const { language } = useLanguage();
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [videoOpen, setVideoOpen] = useState(false);

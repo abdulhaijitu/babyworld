@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { ScrollFadeIn } from "./ScrollAnimations";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { t } from "@/lib/translations";
 
 // WhatsApp icon component
 const WhatsAppIcon = ({ className }: { className?: string }) => (
@@ -18,7 +18,6 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 const WHATSAPP_NUMBER = "8809606990128"; // Baby World's WhatsApp number (with country code)
 
 export function ContactForm() {
-  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     name: "",
     phone: "",

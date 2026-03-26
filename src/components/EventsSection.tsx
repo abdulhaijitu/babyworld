@@ -1,7 +1,7 @@
 import { Gift, Camera, Cake, Music } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollFadeIn, StaggerContainer, StaggerItem } from "./ScrollAnimations";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { t } from "@/lib/translations";
 
 import celebration1 from "@/assets/celebration-1.jpg";
 import celebration2 from "@/assets/celebration-2.jpg";
@@ -16,7 +16,6 @@ const celebrationImages = [
 ];
 
 export function EventsSection() {
-  const { t } = useLanguage();
 
   const packages = [
     {

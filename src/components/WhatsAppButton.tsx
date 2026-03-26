@@ -1,4 +1,4 @@
-import { useLanguage } from "@/contexts/LanguageContext";
+import { t } from "@/lib/translations";
 
 const WHATSAPP_NUMBER = "8809606990128";
 
@@ -15,7 +15,6 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 );
 
 export function WhatsAppButton({ variant = "navbar", className }: WhatsAppButtonProps) {
-  const { t } = useLanguage();
 
   const defaultMessage = "Hello, Baby World! I'd like to know more about your services.";
 

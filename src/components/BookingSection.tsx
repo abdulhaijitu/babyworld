@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollFadeIn, StaggerContainer, StaggerItem } from "./ScrollAnimations";
 import { cn } from "@/lib/utils";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { t } from "@/lib/translations";
 import { useAvailableSlots, Slot } from "@/hooks/useAvailableSlots";
 import { useCreateBooking } from "@/hooks/useCreateBooking";
 import { usePayment } from "@/hooks/usePayment";
@@ -30,7 +30,6 @@ export function BookingSection() {
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [parentName, setParentName] = useState("");
   const [parentPhone, setParentPhone] = useState("");
-  const { t } = useLanguage();
 
   const { slots, loading: slotsLoading, error: slotsError, refetch } = useAvailableSlots(selectedDate);
   const { createBooking, loading: bookingLoading, error: bookingError, success: bookingSuccess, reset: resetBooking } = useCreateBooking();
@@ -590,7 +589,6 @@ interface MobileSummaryProps {
 
 function BookingSummaryMobile({ selectedDate, selectedSlot, childCount, onBookingClick, onWhatsAppClick }: MobileSummaryProps) {
   const isComplete = selectedDate && selectedSlot;
-  const { t } = useLanguage();
 
   return (
     <div className="flex items-center gap-4">

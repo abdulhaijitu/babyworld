@@ -2,12 +2,11 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { X, Gift, Sparkles, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { t } from "@/lib/translations";
 import { motion, AnimatePresence } from "framer-motion";
 
 export function PromoBanner() {
   const [isVisible, setIsVisible] = useState(true);
-  const { t } = useLanguage();
 
   if (!isVisible) return null;
 

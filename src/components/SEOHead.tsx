@@ -1,5 +1,4 @@
 import { Helmet } from "react-helmet-async";
-import { useLanguage } from "@/contexts/LanguageContext";
 import { SOCIAL_LINKS } from "./SocialLinks";
 
 interface SEOHeadProps {
@@ -61,7 +60,6 @@ const ogImages = {
 };
 
 export function SEOHead({ page }: SEOHeadProps) {
-  const { language } = useLanguage();
   const data = seoData[language][page];
   const baseUrl = "https://babyworld.lovable.app";
   

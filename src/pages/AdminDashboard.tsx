@@ -62,7 +62,6 @@ import {
   X
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { format, parseISO, startOfMonth, endOfMonth, isWithinInterval, startOfWeek, endOfWeek } from 'date-fns';
 import { bn } from 'date-fns/locale';
 import babyWorldLogo from '@/assets/baby-world-logo.png';
@@ -75,7 +74,6 @@ export default function AdminDashboard() {
   const { user, isAdmin, loading: authLoading, initialized, signOut } = useAuth();
   const { bookings, loading: bookingsLoading, error: bookingsError, refetch, updateBookingStatus, cancelBooking } = useAdminBookings();
   const navigate = useNavigate();
-  const { language } = useLanguage();
   
   // Cancel dialog state
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);

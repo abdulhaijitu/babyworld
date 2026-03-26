@@ -1,7 +1,7 @@
 import { Gift, Cake, Music, Crown, Clock, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollFadeIn, StaggerContainer, StaggerItem } from "@/components/ScrollAnimations";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { t } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 
 interface EventPackagesProps {
@@ -10,7 +10,6 @@ interface EventPackagesProps {
 }
 
 export function EventPackages({ selectedPackage, onSelectPackage }: EventPackagesProps) {
-  const { t } = useLanguage();
 
   const packages = [
     {
