@@ -295,6 +295,16 @@ export default function AdminMembershipPackages() {
                 />
               </div>
             </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Max Guardians</Label>
+                <Input
+                  type="number"
+                  value={(editForm as any).max_guardians || 2}
+                  onChange={(e) => setEditForm({ ...editForm, max_guardians: Number(e.target.value) } as any)}
+                />
+              </div>
+            </div>
             <div className="flex items-center gap-2">
               <Switch
                 checked={editForm.is_active ?? true}
