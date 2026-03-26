@@ -46,8 +46,8 @@ interface MenuItem {
 const allMenuItems: MenuItem[] = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
   { id: 'ticketing', label: 'Ticketing', icon: Ticket, path: '/admin/ticketing', requiredRoles: ['super_admin', 'admin', 'manager', 'staff'], children: [
-    { id: 'ticketing-create', label: 'Create Ticket', icon: Plus, path: '/admin/ticketing?tab=create' },
-    { id: 'ticketing-list', label: 'Ticket List', icon: List, path: '/admin/ticketing?tab=list' },
+    { id: 'ticketing-create', label: 'Create Ticket', icon: Plus, path: '/admin/ticketing/create' },
+    { id: 'ticketing-list', label: 'Ticket List', icon: List, path: '/admin/ticketing' },
   ] },
   { id: 'memberships', label: 'Memberships', icon: Crown, path: '/admin/memberships', requiredRoles: ['super_admin', 'admin', 'manager'] },
   { id: 'gate-logs', label: 'Gate Logs', icon: Video, path: '/admin/gate-logs', requiredRoles: ['super_admin', 'admin', 'manager'] },
@@ -154,7 +154,7 @@ function SidebarContent({
           const active = isActive(item.path);
           
           if (item.children && item.children.length > 0 && !collapsed) {
-            const childActive = item.children.some(c => location.pathname + location.search === c.path || location.pathname.startsWith(item.path.split('?')[0]));
+            const childActive = item.children.some(c => location.pathname === c.path || location.pathname.startsWith(item.path));
             return (
               <Collapsible key={item.id} defaultOpen={childActive}>
                 <CollapsibleTrigger className={cn(
@@ -170,7 +170,7 @@ function SidebarContent({
                 <CollapsibleContent className="pl-4 mt-1 space-y-1">
                   {item.children.map((child) => {
                     const ChildIcon = child.icon;
-                    const childItemActive = location.pathname + location.search === child.path;
+                    const childItemActive = location.pathname === child.path;
                     return (
                       <button
                         key={child.id}

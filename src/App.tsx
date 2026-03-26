@@ -20,6 +20,7 @@ import NotFound from "./pages/NotFound";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminDashboardContent from "./pages/admin/AdminDashboardContent";
 import AdminTicketing from "./pages/admin/AdminTicketing";
+import AdminCreateTicket from "./pages/admin/AdminCreateTicket";
 import AdminGateLogs from "./pages/admin/AdminGateLogs";
 import AdminFoodSales from "./pages/admin/AdminFoodSales";
 import AdminEmployees from "./pages/admin/AdminEmployees";
@@ -61,6 +62,7 @@ const App = () => (
                 <Route path="/admin" element={<AdminLayout />}>
                   <Route index element={<AdminDashboardContent />} />
                   <Route path="ticketing" element={<AdminTicketing />} />
+                  <Route path="ticketing/create" element={<AdminCreateTicket />} />
                   <Route path="memberships" element={<AdminMemberships />} />
                   <Route path="gate-logs" element={<AdminGateLogs />} />
                   <Route path="food" element={<AdminFoodSales />} />

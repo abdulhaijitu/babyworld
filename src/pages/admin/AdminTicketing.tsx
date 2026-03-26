@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -52,8 +52,7 @@ import { format, parseISO } from 'date-fns';
 import { StatsCardSkeleton, TableRowSkeleton } from '@/components/admin/AdminSkeleton';
 import { PrintableTicket } from '@/components/admin/PrintableTicket';
 import { QRScannerDialog } from '@/components/admin/QRScannerDialog';
-import { CounterTicketForm } from '@/components/admin/ticketing/CounterTicketForm';
-import { TicketSuccessDialog } from '@/components/admin/ticketing/TicketSuccessDialog';
+
 
 
 interface TicketType {
@@ -108,18 +107,7 @@ export default function AdminTicketing() {
   const [selectedTicket, setSelectedTicket] = useState<TicketType | null>(null);
   const [sendingSMS, setSendingSMS] = useState<string | null>(null);
   const [gateActionLoading, setGateActionLoading] = useState<string | null>(null);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const activeView = searchParams.get('tab') || 'list';
-  const [createdTicket, setCreatedTicket] = useState<any>(null);
-  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [displayCount, setDisplayCount] = useState(PAGE_SIZE);
-
-  const handleTicketCreated = (ticket: any) => {
-    setCreatedTicket(ticket);
-    setShowSuccessDialog(true);
-    fetchTickets();
-    setSearchParams({ tab: 'list' }, { replace: true });
-  };
 
   const fetchTickets = useCallback(async () => {
     setLoading(true);
@@ -388,20 +376,15 @@ export default function AdminTicketing() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Ticket className="w-6 h-6" />
-            {activeView === 'create' ? 'Create Ticket' : 'Ticket List'}
+            Ticket List
           </h1>
-          <p className="text-muted-foreground">
-            {activeView === 'create' ? 'Create a new ticket' : 'Manage tickets'}
-          </p>
+          <p className="text-muted-foreground">Manage tickets</p>
         </div>
         <div className="flex items-center gap-2">
           <QRScannerDialog />
         </div>
       </div>
 
-      {activeView === 'create' ? (
-        <CounterTicketForm onSuccess={handleTicketCreated} />
-      ) : (
         <div className="space-y-6">
           {/* Stats Cards - 4 columns */}
           {loading ? (
@@ -760,7 +743,6 @@ export default function AdminTicketing() {
             </CardContent>
           </Card>
         </div>
-      )}
 
       {/* Print Dialog */}
       <Dialog open={printOpen} onOpenChange={setPrintOpen}>
@@ -802,14 +784,6 @@ export default function AdminTicketing() {
           )}
         </DialogContent>
       </Dialog>
-
-      {/* Success Dialog */}
-      <TicketSuccessDialog
-        open={showSuccessDialog}
-        onClose={() => setShowSuccessDialog(false)}
-        ticket={createdTicket}
-        rideNames={rideNames}
-      />
     </div>
   );
 }
