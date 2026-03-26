@@ -299,7 +299,9 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
       setSocksCount(1);
       setSelectedRides({});
       setMembershipInfo(null);
+      setPreviousCustomer(false);
       setDiscount(0);
+      generateEntryNo();
       onSuccess?.(data.ticket);
     } catch (error: any) {
       toast.error(error.message || 'Failed to create ticket');
