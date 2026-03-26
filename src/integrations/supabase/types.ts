@@ -715,6 +715,7 @@ export type Database = {
           max_riders: number | null
           name: string
           name_bn: string | null
+          offer_price: number | null
           price: number
           review_count: number | null
           ride_type: string | null
@@ -732,6 +733,7 @@ export type Database = {
           max_riders?: number | null
           name: string
           name_bn?: string | null
+          offer_price?: number | null
           price?: number
           review_count?: number | null
           ride_type?: string | null
@@ -749,6 +751,7 @@ export type Database = {
           max_riders?: number | null
           name?: string
           name_bn?: string | null
+          offer_price?: number | null
           price?: number
           review_count?: number | null
           ride_type?: string | null

@@ -35,6 +35,7 @@ interface Ride {
   name: string;
   description: string | null;
   price: number;
+  offer_price: number;
   category: string;
   is_active: boolean;
   image_url: string | null;
@@ -49,6 +50,7 @@ const defaultFormData = {
   name: '',
   description: '',
   price: 0,
+  offer_price: 0,
   category: 'kids' as string,
   is_active: true,
   image_url: '' as string,
@@ -88,6 +90,7 @@ export default function AdminRides() {
         name: data.name,
         description: data.description || '',
         price: data.price,
+        offer_price: data.offer_price,
         category: data.category as 'kids' | 'family' | 'thrill',
         is_active: data.is_active,
         image_url: data.image_url || null,
@@ -112,6 +115,7 @@ export default function AdminRides() {
         name: data.name,
         description: data.description || '',
         price: data.price,
+        offer_price: data.offer_price,
         category: data.category as 'kids' | 'family' | 'thrill',
         is_active: data.is_active,
         image_url: data.image_url || null,
@@ -172,6 +176,7 @@ export default function AdminRides() {
       name: ride.name,
       description: (ride as any).description || '',
       price: ride.price,
+      offer_price: ride.offer_price || 0,
       category: ride.category,
       is_active: ride.is_active,
       image_url: ride.image_url || '',
@@ -235,11 +240,17 @@ export default function AdminRides() {
       {/* Pricing & Type */}
       <div className="space-y-3">
         <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Pricing & Type</p>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 gap-3">
           <div className="space-y-2">
-            <Label>Price (৳)</Label>
+            <Label>Regular Price (৳)</Label>
             <Input type="number" value={formData.price} onChange={(e) => setFormData(prev => ({ ...prev, price: Number(e.target.value) }))} min={0} />
           </div>
+          <div className="space-y-2">
+            <Label>Offer Price (৳)</Label>
+            <Input type="number" value={formData.offer_price} onChange={(e) => setFormData(prev => ({ ...prev, offer_price: Number(e.target.value) }))} min={0} placeholder="0 = no offer" />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
           <div className="space-y-2">
             <Label>Type</Label>
             <Select value={formData.ride_type} onValueChange={(value) => setFormData(prev => ({ ...prev, ride_type: value }))}>
@@ -414,10 +425,10 @@ export default function AdminRides() {
                     <TableHead className="w-[50px]">SL</TableHead>
                     <TableHead className="w-[60px]">Image</TableHead>
                     <TableHead>Name</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Price</TableHead>
-                    <TableHead>Duration</TableHead>
-                    <TableHead>Status</TableHead>
+                     <TableHead>Type</TableHead>
+                     <TableHead>Regular Price</TableHead>
+                     <TableHead>Offer Price</TableHead>
+                     <TableHead>Status</TableHead>
                     <TableHead className="text-right">Action</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -444,7 +455,7 @@ export default function AdminRides() {
                         </span>
                       </TableCell>
                       <TableCell><span className="font-medium">৳{ride.price}</span></TableCell>
-                      <TableCell><span className="text-sm">{((ride.duration_minutes || 0) / 60) % 1 === 0 ? `${(ride.duration_minutes || 0) / 60} hr` : `${((ride.duration_minutes || 0) / 60).toFixed(1)} hr`}</span></TableCell>
+                      <TableCell><span className="font-medium text-orange-600">{ride.offer_price ? `৳${ride.offer_price}` : '—'}</span></TableCell>
                       <TableCell>
                         <Badge variant="outline" className={cn(
                           "text-xs font-semibold border-0",

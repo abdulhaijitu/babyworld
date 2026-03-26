@@ -1,0 +1,1 @@
+ALTER TABLE public.rides ADD COLUMN offer_price numeric DEFAULT 0;
