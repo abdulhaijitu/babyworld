@@ -382,6 +382,10 @@ export default function AdminTicketing() {
           <p className="text-muted-foreground">Manage tickets</p>
         </div>
         <div className="flex items-center gap-2">
+          <Button onClick={() => navigate('/admin/ticketing/create')}>
+            <Plus className="w-4 h-4 mr-2" />
+            Create Ticket
+          </Button>
           <QRScannerDialog />
         </div>
       </div>
