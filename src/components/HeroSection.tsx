@@ -23,13 +23,13 @@ const slides = [
   { src: arcadeGames, alt: "Arcade games", label: "Arcade Games" },
 ];
 
-// Fallback data when DB is loading or empty
 const fallbackOffer = {
   badge: "Special Offer!",
   title: "Visit Baby World Today",
   description: "A safe, hygienic, and joyful indoor playground for children aged 1–10 years.",
   cta_text: "Book Now",
   cta_link: "/play-booking",
+  image_url: null as string | null,
 };
 
 const fallbackEvent = {
@@ -39,6 +39,7 @@ const fallbackEvent = {
   cta_text: "Learn More",
   cta_link: "/birthday-events",
   date_text: null as string | null,
+  image_url: null as string | null,
 };
 
 export function HeroSection() {
@@ -137,8 +138,22 @@ export function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-primary via-primary/90 to-secondary text-primary-foreground p-5 sm:p-6 flex flex-col justify-between shadow-card-hover group hover:shadow-lg transition-shadow"
+              className="relative rounded-2xl overflow-hidden text-primary-foreground p-5 sm:p-6 flex flex-col justify-between shadow-card-hover group hover:shadow-lg transition-shadow"
             >
+              {/* Background: image or gradient */}
+              {offerCard.image_url ? (
+                <>
+                  <img
+                    src={offerCard.image_url}
+                    alt=""
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-primary/60 to-secondary/70" />
+                </>
+              ) : (
+                <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/90 to-secondary" />
+              )}
+              {/* Decorative circles */}
               <div className="absolute -top-8 -right-8 w-28 h-28 bg-white/10 rounded-full blur-xl" />
               <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-white/10 rounded-full blur-lg" />
 
@@ -173,7 +188,19 @@ export function HeroSection() {
               transition={{ duration: 0.6, delay: 0.35 }}
               className="relative rounded-2xl overflow-hidden bg-card border border-border p-5 sm:p-6 flex flex-col justify-between shadow-card hover:shadow-card-hover transition-shadow group"
             >
-              <div className="space-y-3">
+              {/* Background image if set */}
+              {eventCard.image_url && (
+                <>
+                  <img
+                    src={eventCard.image_url}
+                    alt=""
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-card/85 backdrop-blur-[2px]" />
+                </>
+              )}
+
+              <div className="relative z-10 space-y-3">
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-accent rounded-full text-xs font-semibold text-accent-foreground">
                   <Calendar className="w-3.5 h-3.5" />
                   {eventCard.badge}
@@ -192,7 +219,7 @@ export function HeroSection() {
                 )}
               </div>
 
-              <div className="mt-4">
+              <div className="relative z-10 mt-4">
                 <Button
                   size="sm"
                   variant="outline"

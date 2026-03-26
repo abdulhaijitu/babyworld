@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -9,13 +9,12 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Gift, Calendar, Save, X } from "lucide-react";
+import { Plus, Pencil, Trash2, Gift, Calendar, Save, X, Upload, ImageIcon } from "lucide-react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 
 interface HeroCard {
@@ -27,13 +26,16 @@ interface HeroCard {
   cta_text: string;
   cta_link: string;
   date_text: string | null;
+  image_url: string | null;
   is_active: boolean;
   sort_order: number;
   created_at: string;
   updated_at: string;
 }
 
-const emptyCard: Omit<HeroCard, "id" | "created_at" | "updated_at"> = {
+type CardForm = Omit<HeroCard, "id" | "created_at" | "updated_at">;
+
+const emptyCard: CardForm = {
   type: "offer",
   badge: "",
   title: "",
@@ -41,6 +43,7 @@ const emptyCard: Omit<HeroCard, "id" | "created_at" | "updated_at"> = {
   cta_text: "Learn More",
   cta_link: "/",
   date_text: null,
+  image_url: null,
   is_active: true,
   sort_order: 0,
 };
@@ -49,7 +52,9 @@ export default function AdminHeroCards() {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<HeroCard | null>(null);
-  const [form, setForm] = useState(emptyCard);
+  const [form, setForm] = useState<CardForm>(emptyCard);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { data: cards = [], isLoading } = useQuery({
     queryKey: ["admin-hero-cards"],
@@ -63,36 +68,60 @@ export default function AdminHeroCards() {
     },
   });
 
+  async function uploadImage(file: File): Promise<string> {
+    const ext = file.name.split(".").pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const { error } = await supabase.storage
+      .from("hero-images")
+      .upload(fileName, file, { upsert: true });
+    if (error) throw error;
+    const { data } = supabase.storage.from("hero-images").getPublicUrl(fileName);
+    return data.publicUrl;
+  }
+
+  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be under 5MB");
+      return;
+    }
+    setUploading(true);
+    try {
+      const url = await uploadImage(file);
+      setForm((prev) => ({ ...prev, image_url: url }));
+      toast.success("Image uploaded");
+    } catch (err: any) {
+      toast.error(err.message || "Upload failed");
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  }
+
   const saveMutation = useMutation({
-    mutationFn: async (card: typeof form & { id?: string }) => {
+    mutationFn: async (card: CardForm & { id?: string }) => {
+      const payload = {
+        type: card.type,
+        badge: card.badge,
+        title: card.title,
+        description: card.description,
+        cta_text: card.cta_text,
+        cta_link: card.cta_link,
+        date_text: card.date_text,
+        image_url: card.image_url,
+        is_active: card.is_active,
+        sort_order: card.sort_order,
+      };
       if (card.id) {
-        const { error } = await supabase
-          .from("hero_cards")
-          .update({
-            type: card.type,
-            badge: card.badge,
-            title: card.title,
-            description: card.description,
-            cta_text: card.cta_text,
-            cta_link: card.cta_link,
-            date_text: card.date_text,
-            is_active: card.is_active,
-            sort_order: card.sort_order,
-          })
-          .eq("id", card.id);
+        const { error } = await supabase.from("hero_cards").update(payload).eq("id", card.id);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from("hero_cards").insert({
-          type: card.type,
-          badge: card.badge,
-          title: card.title,
-          description: card.description,
-          cta_text: card.cta_text,
-          cta_link: card.cta_link,
-          date_text: card.date_text,
-          is_active: card.is_active,
-          sort_order: card.sort_order,
-        });
+        const { error } = await supabase.from("hero_cards").insert(payload);
         if (error) throw error;
       }
     },
@@ -120,10 +149,7 @@ export default function AdminHeroCards() {
 
   const toggleActive = useMutation({
     mutationFn: async ({ id, is_active }: { id: string; is_active: boolean }) => {
-      const { error } = await supabase
-        .from("hero_cards")
-        .update({ is_active })
-        .eq("id", id);
+      const { error } = await supabase.from("hero_cards").update({ is_active }).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -149,6 +175,7 @@ export default function AdminHeroCards() {
       cta_text: card.cta_text,
       cta_link: card.cta_link,
       date_text: card.date_text,
+      image_url: card.image_url,
       is_active: card.is_active,
       sort_order: card.sort_order,
     });
@@ -201,8 +228,18 @@ export default function AdminHeroCards() {
           {cards.map((card) => (
             <Card
               key={card.id}
-              className={`relative transition-opacity ${!card.is_active ? "opacity-50" : ""}`}
+              className={`relative overflow-hidden transition-opacity ${!card.is_active ? "opacity-50" : ""}`}
             >
+              {/* Image preview */}
+              {card.image_url && (
+                <div className="h-32 w-full overflow-hidden">
+                  <img
+                    src={card.image_url}
+                    alt={card.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -218,14 +255,12 @@ export default function AdminHeroCards() {
                       {card.badge}
                     </span>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <Switch
-                      checked={card.is_active}
-                      onCheckedChange={(checked) =>
-                        toggleActive.mutate({ id: card.id, is_active: checked })
-                      }
-                    />
-                  </div>
+                  <Switch
+                    checked={card.is_active}
+                    onCheckedChange={(checked) =>
+                      toggleActive.mutate({ id: card.id, is_active: checked })
+                    }
+                  />
                 </div>
                 <CardTitle className="text-lg">{card.title}</CardTitle>
               </CardHeader>
@@ -264,7 +299,7 @@ export default function AdminHeroCards() {
 
       {/* Create/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editing ? "Edit Card" : "Create Card"}</DialogTitle>
           </DialogHeader>
@@ -290,6 +325,59 @@ export default function AdminHeroCards() {
                   onChange={(e) => setForm({ ...form, sort_order: parseInt(e.target.value) || 0 })}
                 />
               </div>
+            </div>
+
+            {/* Image Upload */}
+            <div className="space-y-2">
+              <Label>Background Image (optional)</Label>
+              {form.image_url ? (
+                <div className="relative rounded-lg overflow-hidden border border-border">
+                  <img
+                    src={form.image_url}
+                    alt="Card background"
+                    className="w-full h-32 object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      <Upload className="w-3 h-3 mr-1" /> Replace
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={() => setForm({ ...form, image_url: null })}
+                    >
+                      <X className="w-3 h-3 mr-1" /> Remove
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                  className="w-full h-24 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center gap-1 text-muted-foreground hover:border-primary hover:text-primary transition-colors"
+                >
+                  {uploading ? (
+                    <span className="text-sm">Uploading...</span>
+                  ) : (
+                    <>
+                      <ImageIcon className="w-6 h-6" />
+                      <span className="text-xs">Click to upload image</span>
+                    </>
+                  )}
+                </button>
+              )}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageUpload}
+              />
             </div>
 
             <div className="space-y-2">
@@ -362,7 +450,7 @@ export default function AdminHeroCards() {
               <Button variant="outline" onClick={closeDialog}>
                 <X className="w-4 h-4 mr-1" /> Cancel
               </Button>
-              <Button onClick={handleSave} disabled={saveMutation.isPending}>
+              <Button onClick={handleSave} disabled={saveMutation.isPending || uploading}>
                 <Save className="w-4 h-4 mr-1" />
                 {saveMutation.isPending ? "Saving..." : "Save"}
               </Button>

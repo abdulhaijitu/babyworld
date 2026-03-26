@@ -10,6 +10,7 @@ export interface HeroCard {
   cta_text: string;
   cta_link: string;
   date_text: string | null;
+  image_url: string | null;
   is_active: boolean;
   sort_order: number;
 }
@@ -26,6 +27,6 @@ export function useHeroCards() {
       if (error) throw error;
       return data as HeroCard[];
     },
-    staleTime: 1000 * 60 * 5, // 5 min cache
+    staleTime: 1000 * 60 * 5,
   });
 }
