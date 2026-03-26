@@ -5,8 +5,11 @@ import { ScrollFadeIn, ScaleIn } from "./ScrollAnimations";
 import { t } from "@/lib/translations";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useSettings } from "@/hooks/useSettings";
 
 export function PricingSection() {
+  const { packagePricing } = useSettings();
+
   // Fetch rides for ride zone pricing
   const { data: rides = [] } = useQuery({
     queryKey: ['public-rides'],
@@ -66,15 +69,15 @@ export function PricingSection() {
                   <p className="text-sm text-muted-foreground">Soft Play Zone access</p>
                 </div>
                 <div className="flex items-baseline gap-3">
-                  <span className="text-3xl font-bold text-foreground">৳500</span>
+                  <span className="text-3xl font-bold text-foreground">৳{packagePricing.familyRegular}</span>
                   <Badge variant="secondary" className="text-xs">Regular</Badge>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Sparkles className="w-4 h-4 text-orange-500" />
-                  <span>Eid Special: <strong className="text-orange-600">৳350</strong></span>
+                  <span>Eid Special: <strong className="text-orange-600">৳{packagePricing.familyOffer}</strong></span>
                 </div>
                 <div className="text-sm text-muted-foreground pt-2 border-t border-border">
-                  Extra Guardian: ৳150/-
+                  Extra Guardian: ৳{packagePricing.extraGuardian}/-
                 </div>
               </div>
             </div>
@@ -94,7 +97,7 @@ export function PricingSection() {
                   <p className="text-sm text-muted-foreground">Soft Zone + Ride Zone</p>
                 </div>
                 <div className="flex items-baseline gap-3">
-                  <span className="text-3xl font-bold text-foreground">৳800</span>
+                  <span className="text-3xl font-bold text-foreground">৳{packagePricing.fullBoard}</span>
                 </div>
                 <div className="text-sm text-muted-foreground pt-2 border-t border-border">
                   Includes all soft play + all rides
@@ -116,12 +119,12 @@ export function PricingSection() {
                   <p className="text-sm text-muted-foreground">All ride zone rides included</p>
                 </div>
                 <div className="flex items-baseline gap-3">
-                  <span className="text-3xl font-bold text-foreground">৳1350</span>
+                  <span className="text-3xl font-bold text-foreground">৳{packagePricing.rideZoneRegular}</span>
                   <Badge variant="secondary" className="text-xs">Regular</Badge>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Sparkles className="w-4 h-4 text-orange-500" />
-                  <span>Eid Offer: <strong className="text-orange-600">৳500</strong></span>
+                  <span>Eid Offer: <strong className="text-orange-600">৳{packagePricing.rideZoneOffer}</strong></span>
                 </div>
               </div>
             </div>
