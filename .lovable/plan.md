@@ -1,58 +1,79 @@
 
 
-## Plan: CounterTicketForm কমপ্যাক্ট রিডিজাইন
+## Plan: Ticket Print Preview অডিট ও ফিক্স
 
-রেফারেন্স ইমেজ অনুসরণ করে **2-কলাম লেআউট** — বামে Rides সিলেক্ট, ডানে ফর্ম ফিল্ড ও প্রাইসিং — সব একনজরে দেখা যাবে।
+### সমস্যা চিহ্নিত
 
-### লেআউট পরিবর্তন
+1. **Print Output ভাঙা** — `TicketSuccessDialog` এর `printRef` innerHTML কপি করে print window-এ দেয়, কিন্তু Tailwind CSS classes (`text-primary`, `text-muted-foreground`, `bg-muted/50`) print window-এ কাজ করে না। ফলে print-এ colors, spacing, badges সব ভাঙা দেখায়।
 
+2. **Price Breakdown নেই** — TicketSuccessDialog শুধু `total_price` দেখায়, কিন্তু Entry Fee, Socks, Rides, Discount আলাদাভাবে দেখায় না (যদিও `price_breakdown` ডাটা আসে)।
+
+3. **Separator/Badge print-এ render হয় না** — React components innerHTML-এ Tailwind ছাড়া ঠিকমতো দেখায় না।
+
+4. **দুটি আলাদা print design** — `PrintableTicket` ও `TicketSuccessDialog` আলাদা design ও interface ব্যবহার করে, inconsistent।
+
+### সমাধান
+
+#### `TicketSuccessDialog.tsx` — সম্পূর্ণ রিফ্যাক্টর
+
+**Print approach পরিবর্তন**: innerHTML কপি না করে, `handlePrint` ফাংশনে সরাসরি pure HTML string generate করা হবে। এতে Tailwind dependency থাকবে না।
+
+**Dialog preview ফিক্স:**
+- Price breakdown section যোগ (Entry, Socks, Rides, Discount → Grand Total)
+- Time box styling ঠিক করা
+- Payment badge সঠিকভাবে দেখানো
+
+**Print output ফিক্স:**
+- Pure HTML/CSS দিয়ে print content generate (no innerHTML copy)
+- Logo base64 বা absolute URL ব্যবহার
+- QR code SVG string generate করা
+- Rides list, price breakdown, time box সব print-এ সঠিকভাবে দেখাবে
+
+**Print HTML structure:**
 ```text
-┌─ Entry Ticket Form ──────────────────────────────────────┐
-│                                                          │
-│  ┌─ Left (Rides) ─────────┐  ┌─ Right (Form) ─────────┐ │
-│  │ Search rides...        │  │ Entry No   Customer Name│ │
-│  │ ┌─────────────────┐ ☐ Q│  │ Phone      Address      │ │
-│  │ │ Horse Ride ৳170 │ 1  │  │ Guardians  Children     │ │
-│  │ │ Bike Race  ৳230 │ 1  │  │ Total Amount   Discount │ │
-│  │ │ Water Gun  ৳130 │ 1  │  │ Grand Total             │ │
-│  │ │ Socks      ৳50  │ 1  │  │ Valid Until (auto)      │ │
-│  │ │ ...scrollable   │    │  │ Payment Method          │ │
-│  │ └─────────────────┘    │  │ [Create Ticket]         │ │
-│  └────────────────────────┘  └─────────────────────────┘ │
-└──────────────────────────────────────────────────────────┘
+┌─── Dashed Border ─────────────────┐
+│     [Logo]                        │
+│  Baby World Indoor Playground     │
+│                                   │
+│     [QR Code 180px]               │
+│     Scan at gate                  │
+│                                   │
+│  Ticket: TK-XXXXXX               │
+│  ─────────────────────────        │
+│  Guardian: Name     Phone: 01XX   │
+│  Date: 26 Mar 2026               │
+│  ─────────────────────────        │
+│  IN: 10:30 AM  →  OUT: 11:30 AM  │
+│  ─────────────────────────        │
+│  Guardians: 1    Children: 1     │
+│  Socks: 2 pairs                   │
+│  ─────────────────────────        │
+│  Rides:                           │
+│    Horse Ride ×2      ৳340       │
+│    Bike Race ×1       ৳230       │
+│  ─────────────────────────        │
+│  Entry Fee            ৳500       │
+│  Socks (2)            ৳100       │
+│  Rides                ৳570       │
+│  Member Discount     -৳50        │
+│  ═══════════════════════          │
+│  TOTAL               ৳1,120      │
+│  Cash • Paid                      │
+│  ─────────────────────────        │
+│  Thank you! Visit again.          │
+└───────────────────────────────────┘
 ```
 
-### মূল পরিবর্তন (`CounterTicketForm.tsx`)
+#### `PrintableTicket.tsx` — একই approach
 
-1. **লেআউট**: 3-কলাম → 2-কলাম (`lg:grid-cols-2`)
-   - **বাম কলাম**: Rides তালিকা — scrollable list format (card grid নয়), প্রতিটি ride একটি row-তে: নাম, price badge, checkbox, quantity input। উপরে search input। Socks-ও এই list-এ থাকবে।
-   - **ডান কলাম**: সব ফর্ম ফিল্ড + price summary একসাথে (আলাদা cards নয়, একটি compact form)
-
-2. **Rides UI সরলীকরণ**: 
-   - Image, rating, category badge রিমুভ
-   - Compact list rows — প্রতিটিতে: colored bar, name, ৳price badge, checkbox, quantity
-   - Search by name ফিল্টার যোগ
-
-3. **ডান ফর্ম compact করা**:
-   - একাধিক Card রিমুভ → single section
-   - Entry No (auto-generated), Customer Name, Phone, Address ফিল্ড
-   - Guardian ও Children count inline
-   - Total Amount, Coupon Code (optional), Discount, VAT (optional), Grand Total
-   - Valid Until (auto-calculated from now + duration)
-   - Payment Method (select dropdown), Transaction ID
-   - Create Ticket button
-
-4. **নতুন ফিল্ড যোগ**:
-   - `customer_address` (optional text)
-   - `coupon_code` (optional, with Apply button — placeholder only)
-   - `transaction_id` (optional, for online payments)
-   - Entry No auto-generate (YYMMDD format + random)
+Print HTML direct generate করবে, innerHTML copy নয়। Design consistent থাকবে TicketSuccessDialog-এর সাথে।
 
 ### ফাইল পরিবর্তন
 
 | ফাইল | পরিবর্তন |
 |------|----------|
-| `src/components/admin/ticketing/CounterTicketForm.tsx` | সম্পূর্ণ UI restructure — 2-column compact layout |
+| `src/components/admin/ticketing/TicketSuccessDialog.tsx` | Print function রিফ্যাক্টর (pure HTML generate), price breakdown যোগ, dialog preview ফিক্স |
+| `src/components/admin/PrintableTicket.tsx` | Same pure HTML print approach, consistent design |
 
-কোনো DB migration লাগবে না — শুধু UI restructure।
+DB migration লাগবে না।
 
