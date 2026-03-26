@@ -199,7 +199,7 @@ export default function AdminMembershipPackages() {
                   </TableCell>
                   <TableCell>{pkg.duration_days} Days</TableCell>
                   <TableCell>
-                    <span className="text-sm">Guardian: 2, Kids: {pkg.max_children}</span>
+                    <span className="text-sm">Guardian: {(pkg as any).max_guardians ?? 2}, Kids: {pkg.max_children}</span>
                   </TableCell>
                   <TableCell className="font-semibold">৳{pkg.price.toLocaleString()}</TableCell>
                   <TableCell>{pkg.discount_percent}%</TableCell>
