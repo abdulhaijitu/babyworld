@@ -130,17 +130,16 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
       const { data } = await supabase
         .from('settings')
         .select('value')
-        .eq('key', 'ticket_pricing')
+        .eq('key', 'pricing_hourly')
         .single();
-      return data?.value as { entry_price: number; extra_guardian_price: number; extra_child_price: number; socks_price: number } | null;
+      return data?.value as { guardian_fee: number; child_fee: number; socks_fee: number } | null;
     },
   });
 
-  const pricing = ticketPricing || {
-    entry_price: 500,
-    extra_guardian_price: 100,
-    extra_child_price: 200,
-    socks_price: 50,
+  const pricing = {
+    guardian_fee: ticketPricing?.guardian_fee ?? 100,
+    child_fee: ticketPricing?.child_fee ?? 200,
+    socks_fee: ticketPricing?.socks_fee ?? 50,
   };
 
   const form = useForm<FormValues>({
