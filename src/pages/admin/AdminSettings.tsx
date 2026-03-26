@@ -78,7 +78,7 @@ export default function AdminSettings() {
     }
   };
 
-  const enabledSlotsCount = timeSlots.filter(s => s.enabled).length;
+  
 
   if (loading) {
     return (
