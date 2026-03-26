@@ -186,8 +186,26 @@ export default function AdminTicketing() {
     }
   };
 
-  const handlePrintTicket = (ticket: TicketType) => {
+  const handlePrintTicket = async (ticket: TicketType) => {
     setSelectedTicket(ticket);
+    // Fetch ride details for this ticket
+    try {
+      const { data: ticketRides } = await supabase
+        .from('ticket_rides')
+        .select('ride_id, quantity, total_price, unit_price')
+        .eq('ticket_id', ticket.id);
+      
+      if (ticketRides && ticketRides.length > 0) {
+        const ridesWithNames = ticketRides.map(r => ({
+          name: rideNames[r.ride_id] || 'Ride',
+          quantity: r.quantity,
+          total_price: Number(r.total_price),
+        }));
+        setSelectedTicket(prev => prev ? { ...prev, _rides: ridesWithNames } as any : prev);
+      }
+    } catch (e) {
+      // Ignore — print without rides
+    }
     setPrintOpen(true);
   };
 
@@ -739,6 +757,11 @@ export default function AdminTicketing() {
                 guardianCount: selectedTicket.guardian_count || undefined,
                 childCount: selectedTicket.child_count || undefined,
                 socksCount: selectedTicket.socks_count || undefined,
+                inTime: selectedTicket.in_time || undefined,
+                outTime: selectedTicket.out_time || undefined,
+                paymentType: selectedTicket.payment_type || undefined,
+                paymentStatus: selectedTicket.payment_status || undefined,
+                rides: (selectedTicket as any)._rides || undefined,
               }}
               onClose={() => setPrintOpen(false)}
             />
