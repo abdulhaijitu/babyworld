@@ -365,21 +365,12 @@ export default function AdminSettings() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>{'Name (English)'}</Label>
-                  <Input
-                    value={businessInfo.name}
-                    onChange={(e) => setBusinessInfo({...businessInfo, name: e.target.value})}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>{'Name (Bangla)'}</Label>
-                  <Input
-                    value={businessInfo.nameBn}
-                    onChange={(e) => setBusinessInfo({...businessInfo, nameBn: e.target.value})}
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label>{'Business Name'}</Label>
+                <Input
+                  value={businessInfo.name}
+                  onChange={(e) => setBusinessInfo({...businessInfo, name: e.target.value})}
+                />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
