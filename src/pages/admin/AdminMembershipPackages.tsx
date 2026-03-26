@@ -104,6 +104,13 @@ export default function AdminMembershipPackages() {
 
   const createMutation = useMutation({
     mutationFn: async () => {
+      const features = {
+        duration_minutes: createForm.duration_minutes,
+        entrance_method: createForm.entrance_method,
+        allowed_visits: createForm.allowed_visits,
+        benefit_title: createForm.benefit_title,
+        benefit_description: createForm.benefit_description,
+      };
       const { error } = await supabase
         .from('membership_packages')
         .insert({
