@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -107,7 +108,21 @@ export default function AdminTicketing() {
   const [selectedTicket, setSelectedTicket] = useState<TicketType | null>(null);
   const [sendingSMS, setSendingSMS] = useState<string | null>(null);
   const [gateActionLoading, setGateActionLoading] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState('list');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState(() => searchParams.get('tab') || 'list');
+
+  // Sync tab with URL params
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam && (tabParam === 'list' || tabParam === 'create')) {
+      setActiveTab(tabParam);
+    }
+  }, [searchParams]);
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    setSearchParams({ tab: value }, { replace: true });
+  };
   const [createdTicket, setCreatedTicket] = useState<any>(null);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [displayCount, setDisplayCount] = useState(PAGE_SIZE);
@@ -116,7 +131,7 @@ export default function AdminTicketing() {
     setCreatedTicket(ticket);
     setShowSuccessDialog(true);
     fetchTickets();
-    setActiveTab('list');
+    handleTabChange('list');
   };
 
   const fetchTickets = useCallback(async () => {
@@ -396,7 +411,7 @@ export default function AdminTicketing() {
       </div>
 
       {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
         <TabsList className="grid w-full max-w-md grid-cols-2">
           <TabsTrigger value="list">Ticket List</TabsTrigger>
           <TabsTrigger value="create">
