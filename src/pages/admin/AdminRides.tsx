@@ -455,7 +455,7 @@ export default function AdminRides() {
                         </span>
                       </TableCell>
                       <TableCell><span className="font-medium">৳{ride.price}</span></TableCell>
-                      <TableCell><span className="text-sm">{((ride.duration_minutes || 0) / 60) % 1 === 0 ? `${(ride.duration_minutes || 0) / 60} hr` : `${((ride.duration_minutes || 0) / 60).toFixed(1)} hr`}</span></TableCell>
+                      <TableCell><span className="font-medium text-orange-600">{ride.offer_price ? `৳${ride.offer_price}` : '—'}</span></TableCell>
                       <TableCell>
                         <Badge variant="outline" className={cn(
                           "text-xs font-semibold border-0",
