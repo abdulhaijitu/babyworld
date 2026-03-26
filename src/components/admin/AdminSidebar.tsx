@@ -170,7 +170,7 @@ function SidebarContent({
                 <CollapsibleContent className="pl-4 mt-1 space-y-1">
                   {item.children.map((child) => {
                     const ChildIcon = child.icon;
-                    const childItemActive = location.pathname + location.search === child.path;
+                    const childItemActive = location.pathname === child.path;
                     return (
                       <button
                         key={child.id}
