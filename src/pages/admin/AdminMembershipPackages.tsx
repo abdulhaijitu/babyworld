@@ -306,6 +306,94 @@ export default function AdminMembershipPackages() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Create Dialog */}
+      <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create New Package</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label>Name</Label>
+              <Input
+                value={createForm.name}
+                onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
+                placeholder="e.g. Monthly Package"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Name (Bangla)</Label>
+              <Input
+                value={createForm.name_bn}
+                onChange={(e) => setCreateForm({ ...createForm, name_bn: e.target.value })}
+                placeholder="e.g. মাসিক প্যাকেজ"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Type</Label>
+              <select
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                value={createForm.membership_type}
+                onChange={(e) => setCreateForm({ ...createForm, membership_type: e.target.value as any })}
+              >
+                <option value="monthly">Monthly</option>
+                <option value="quarterly">Quarterly</option>
+                <option value="yearly">Yearly</option>
+              </select>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Price (৳)</Label>
+                <Input
+                  type="number"
+                  value={createForm.price}
+                  onChange={(e) => setCreateForm({ ...createForm, price: Number(e.target.value) })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Duration (days)</Label>
+                <Input
+                  type="number"
+                  value={createForm.duration_days}
+                  onChange={(e) => setCreateForm({ ...createForm, duration_days: Number(e.target.value) })}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Discount %</Label>
+                <Input
+                  type="number"
+                  value={createForm.discount_percent}
+                  onChange={(e) => setCreateForm({ ...createForm, discount_percent: Number(e.target.value) })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Max Children</Label>
+                <Input
+                  type="number"
+                  value={createForm.max_children}
+                  onChange={(e) => setCreateForm({ ...createForm, max_children: Number(e.target.value) })}
+                />
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Switch
+                checked={createForm.is_active}
+                onCheckedChange={(checked) => setCreateForm({ ...createForm, is_active: checked })}
+              />
+              <Label>Active</Label>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
+            <Button onClick={() => createMutation.mutate()} disabled={createMutation.isPending || !createForm.name}>
+              Create Package
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
