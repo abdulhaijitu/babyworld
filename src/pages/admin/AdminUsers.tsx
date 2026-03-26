@@ -68,6 +68,7 @@ interface UserRoleRecord {
 }
 
 const roleConfig: Record<UserRole, { label: string; labelBn: string; icon: React.ElementType; color: string }> = {
+  super_admin: { label: 'Super Admin', labelBn: 'সুপার অ্যাডমিন', icon: Crown, color: 'bg-purple-500/10 text-purple-600 border-purple-500/20' },
   admin: { label: 'Admin', labelBn: 'অ্যাডমিন', icon: Shield, color: 'bg-primary/10 text-primary border-primary/20' },
   manager: { label: 'Manager', labelBn: 'ম্যানেজার', icon: Briefcase, color: 'bg-blue-500/10 text-blue-600 border-blue-500/20' },
   staff: { label: 'Staff', labelBn: 'স্টাফ', icon: HardHat, color: 'bg-amber-500/10 text-amber-600 border-amber-500/20' },
