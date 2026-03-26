@@ -52,8 +52,7 @@ import { format, parseISO } from 'date-fns';
 import { StatsCardSkeleton, TableRowSkeleton } from '@/components/admin/AdminSkeleton';
 import { PrintableTicket } from '@/components/admin/PrintableTicket';
 import { QRScannerDialog } from '@/components/admin/QRScannerDialog';
-import { CounterTicketForm } from '@/components/admin/ticketing/CounterTicketForm';
-import { TicketSuccessDialog } from '@/components/admin/ticketing/TicketSuccessDialog';
+
 
 
 interface TicketType {
