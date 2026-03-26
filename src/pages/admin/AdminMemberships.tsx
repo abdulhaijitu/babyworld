@@ -355,6 +355,7 @@ export default function AdminMemberships() {
                     🔄 পুরনো মেম্বার: <span className="font-semibold">{foundMember.member_name}</span> — তথ্য অটো-ফিল করা হয়েছে
                   </p>
                 )}
+              </div>
               <div className="space-y-2">
                 <Label>{'Plan *'}</Label>
                 <Select
