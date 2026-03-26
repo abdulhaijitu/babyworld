@@ -26,7 +26,7 @@ interface HeroSlide {
   updated_at: string;
 }
 
-export default function AdminHeroSlides() {
+export default function AdminHeroSlides({ embedded = false }: { embedded?: boolean }) {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [label, setLabel] = useState("");
