@@ -425,10 +425,10 @@ export default function AdminRides() {
                     <TableHead className="w-[50px]">SL</TableHead>
                     <TableHead className="w-[60px]">Image</TableHead>
                     <TableHead>Name</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Price</TableHead>
-                    <TableHead>Duration</TableHead>
-                    <TableHead>Status</TableHead>
+                     <TableHead>Type</TableHead>
+                     <TableHead>Regular Price</TableHead>
+                     <TableHead>Offer Price</TableHead>
+                     <TableHead>Status</TableHead>
                     <TableHead className="text-right">Action</TableHead>
                   </TableRow>
                 </TableHeader>
