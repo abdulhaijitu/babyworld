@@ -78,6 +78,32 @@ export default function AdminMembershipPackages() {
     onError: (err: any) => toast.error(err.message),
   });
 
+  const createMutation = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase
+        .from('membership_packages')
+        .insert({
+          name: createForm.name,
+          name_bn: createForm.name_bn || null,
+          membership_type: createForm.membership_type,
+          duration_days: createForm.duration_days,
+          price: createForm.price,
+          discount_percent: createForm.discount_percent,
+          max_children: createForm.max_children,
+          is_active: createForm.is_active,
+          sort_order: packages.length,
+        } as any);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['membership-packages'] });
+      setCreateOpen(false);
+      setCreateForm({ name: '', name_bn: '', membership_type: 'monthly', duration_days: 30, price: 0, discount_percent: 100, max_children: 1, is_active: true });
+      toast.success('Package created successfully');
+    },
+    onError: (err: any) => toast.error(err.message),
+  });
+
   const startEdit = (pkg: MembershipPackage) => {
     setEditForm({ ...pkg });
     setEditOpen(true);
