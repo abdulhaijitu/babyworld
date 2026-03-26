@@ -324,6 +324,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
       setSelectedRides({});
       setMembershipInfo(null);
       setPreviousCustomer(false);
+      setVisitHistory([]);
       setDiscount(0);
       generateEntryNo();
       onSuccess?.(data.ticket);
