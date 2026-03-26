@@ -362,99 +362,208 @@ export default function AdminMembershipPackages() {
 
       {/* Create Dialog */}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Create New Package</DialogTitle>
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto p-0">
+          <DialogHeader className="px-6 pt-6 pb-2">
+            <DialogTitle className="flex items-center gap-2 text-xl">
+              <Package className="h-5 w-5 text-primary" />
+              Create New Package
+            </DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 py-2">
-            <div className="space-y-2">
-              <Label>Name</Label>
-              <Input
-                value={createForm.name}
-                onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
-                placeholder="e.g. Monthly Package"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Name (Bangla)</Label>
-              <Input
-                value={createForm.name_bn}
-                onChange={(e) => setCreateForm({ ...createForm, name_bn: e.target.value })}
-                placeholder="e.g. মাসিক প্যাকেজ"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Type</Label>
-              <select
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                value={createForm.membership_type}
-                onChange={(e) => setCreateForm({ ...createForm, membership_type: e.target.value as any })}
-              >
-                <option value="monthly">Monthly</option>
-                <option value="quarterly">Quarterly</option>
-                <option value="yearly">Yearly</option>
-              </select>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Price (৳)</Label>
-                <Input
-                  type="number"
-                  value={createForm.price}
-                  onChange={(e) => setCreateForm({ ...createForm, price: Number(e.target.value) })}
-                />
+
+          <div className="px-6 space-y-6 pb-2">
+            {/* Section: PACKAGE INFORMATION */}
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-xs font-bold tracking-widest text-primary uppercase">Package Information</span>
               </div>
-              <div className="space-y-2">
-                <Label>Duration (days)</Label>
-                <Input
-                  type="number"
-                  value={createForm.duration_days}
-                  onChange={(e) => setCreateForm({ ...createForm, duration_days: Number(e.target.value) })}
-                />
+              <Separator className="mb-4" />
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-medium text-muted-foreground">Package Name *</Label>
+                  <Input
+                    value={createForm.name}
+                    onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
+                    placeholder="e.g. Monthly Package"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-medium text-muted-foreground">Price *</Label>
+                  <div className="relative">
+                    <Input
+                      type="number"
+                      value={createForm.price}
+                      onChange={(e) => setCreateForm({ ...createForm, price: Number(e.target.value) })}
+                      className="pr-14"
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground bg-muted px-2 py-0.5 rounded">BDT</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-medium text-muted-foreground">Name (Bangla)</Label>
+                  <Input
+                    value={createForm.name_bn}
+                    onChange={(e) => setCreateForm({ ...createForm, name_bn: e.target.value })}
+                    placeholder="e.g. মাসিক প্যাকেজ"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-medium text-muted-foreground">Package Type</Label>
+                  <select
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    value={createForm.membership_type}
+                    onChange={(e) => setCreateForm({ ...createForm, membership_type: e.target.value as any })}
+                  >
+                    <option value="monthly">Monthly</option>
+                    <option value="quarterly">Quarterly</option>
+                    <option value="yearly">Yearly</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-medium text-muted-foreground">Validity</Label>
+                  <div className="relative">
+                    <Input
+                      type="number"
+                      value={createForm.duration_days}
+                      onChange={(e) => setCreateForm({ ...createForm, duration_days: Number(e.target.value) })}
+                      className="pr-14"
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground bg-muted px-2 py-0.5 rounded">Days</span>
+                  </div>
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-medium text-muted-foreground">Duration</Label>
+                  <div className="relative">
+                    <Input
+                      type="number"
+                      value={createForm.duration_minutes}
+                      onChange={(e) => setCreateForm({ ...createForm, duration_minutes: Number(e.target.value) })}
+                      className="pr-20"
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground bg-muted px-2 py-0.5 rounded">Minutes</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-medium text-muted-foreground">Allowed Person (Guardian)</Label>
+                  <select
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    value={createForm.max_guardians}
+                    onChange={(e) => setCreateForm({ ...createForm, max_guardians: Number(e.target.value) })}
+                  >
+                    {[1, 2, 3, 4, 5].map((n) => (
+                      <option key={n} value={n}>{n} Guardian{n > 1 ? 's' : ''}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-medium text-muted-foreground">Allowed Person (Kids)</Label>
+                  <select
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    value={createForm.max_children}
+                    onChange={(e) => setCreateForm({ ...createForm, max_children: Number(e.target.value) })}
+                  >
+                    {[1, 2, 3, 4, 5].map((n) => (
+                      <option key={n} value={n}>{n} Kid{n > 1 ? 's' : ''}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-medium text-muted-foreground">Entrance Method</Label>
+                  <select
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    value={createForm.entrance_method}
+                    onChange={(e) => setCreateForm({ ...createForm, entrance_method: e.target.value })}
+                  >
+                    <option value="QR Code">QR Code</option>
+                    <option value="Manual">Manual</option>
+                    <option value="Card">Card</option>
+                  </select>
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-medium text-muted-foreground">Allowed Visit</Label>
+                  <div className="relative">
+                    <Input
+                      type="number"
+                      value={createForm.allowed_visits}
+                      onChange={(e) => setCreateForm({ ...createForm, allowed_visits: Number(e.target.value) })}
+                      className="pr-16"
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground bg-muted px-2 py-0.5 rounded">Times</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-medium text-muted-foreground">Discount %</Label>
+                  <Input
+                    type="number"
+                    value={createForm.discount_percent}
+                    onChange={(e) => setCreateForm({ ...createForm, discount_percent: Number(e.target.value) })}
+                  />
+                </div>
+                <div className="flex items-end pb-1 gap-2">
+                  <Switch
+                    checked={createForm.is_active}
+                    onCheckedChange={(checked) => setCreateForm({ ...createForm, is_active: checked })}
+                  />
+                  <Label className="text-sm">Active</Label>
+                </div>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Discount %</Label>
-                <Input
-                  type="number"
-                  value={createForm.discount_percent}
-                  onChange={(e) => setCreateForm({ ...createForm, discount_percent: Number(e.target.value) })}
-                />
+
+            {/* Section: PACKAGE BENEFITS */}
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-xs font-bold tracking-widest text-primary uppercase">Package Benefits</span>
               </div>
-              <div className="space-y-2">
-                <Label>Max Children</Label>
-                <Input
-                  type="number"
-                  value={createForm.max_children}
-                  onChange={(e) => setCreateForm({ ...createForm, max_children: Number(e.target.value) })}
-                />
+              <Separator className="mb-4" />
+
+              <div className="space-y-4">
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-medium text-muted-foreground">Benefit Title</Label>
+                  <Input
+                    value={createForm.benefit_title}
+                    onChange={(e) => setCreateForm({ ...createForm, benefit_title: e.target.value })}
+                    placeholder="e.g. Unlimited Play Access"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-medium text-muted-foreground">Description</Label>
+                  <Textarea
+                    value={createForm.benefit_description}
+                    onChange={(e) => setCreateForm({ ...createForm, benefit_description: e.target.value })}
+                    placeholder="Describe the benefits of this package..."
+                    rows={3}
+                  />
+                </div>
               </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Max Guardians</Label>
-                <Input
-                  type="number"
-                  value={createForm.max_guardians}
-                  onChange={(e) => setCreateForm({ ...createForm, max_guardians: Number(e.target.value) })}
-                />
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <Switch
-                checked={createForm.is_active}
-                onCheckedChange={(checked) => setCreateForm({ ...createForm, is_active: checked })}
-              />
-              <Label>Active</Label>
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
-            <Button onClick={() => createMutation.mutate()} disabled={createMutation.isPending || !createForm.name}>
-              Create Package
-            </Button>
-          </DialogFooter>
+
+          <div className="px-6 pb-6 pt-2">
+            <Separator className="mb-4" />
+            <div className="grid grid-cols-2 gap-3">
+              <Button variant="outline" className="w-full" onClick={() => setCreateOpen(false)}>
+                Discard
+              </Button>
+              <Button className="w-full" onClick={() => createMutation.mutate()} disabled={createMutation.isPending || !createForm.name}>
+                Save Package
+              </Button>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
