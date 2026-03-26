@@ -1,14 +1,22 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Crown, Edit2, Save, X } from 'lucide-react';
+import { Crown, Plus, Search, MoreHorizontal, Edit2, ToggleLeft } from 'lucide-react';
+import {
+  Table, TableHeader, TableBody, TableRow, TableHead, TableCell,
+} from '@/components/ui/table';
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
+} from '@/components/ui/dialog';
 
 interface MembershipPackage {
   id: string;
@@ -26,7 +34,8 @@ interface MembershipPackage {
 
 export default function AdminMembershipPackages() {
   const queryClient = useQueryClient();
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [search, setSearch] = useState('');
+  const [editOpen, setEditOpen] = useState(false);
   const [editForm, setEditForm] = useState<Partial<MembershipPackage>>({});
 
   const { data: packages = [], isLoading } = useQuery({
@@ -52,26 +61,21 @@ export default function AdminMembershipPackages() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['membership-packages'] });
-      setEditingId(null);
+      setEditOpen(false);
       toast.success('Package updated successfully');
     },
     onError: (err: any) => toast.error(err.message),
   });
 
   const startEdit = (pkg: MembershipPackage) => {
-    setEditingId(pkg.id);
     setEditForm({ ...pkg });
-  };
-
-  const cancelEdit = () => {
-    setEditingId(null);
-    setEditForm({});
+    setEditOpen(true);
   };
 
   const saveEdit = () => {
-    if (!editingId) return;
+    if (!editForm.id) return;
     updateMutation.mutate({
-      id: editingId,
+      id: editForm.id,
       name: editForm.name,
       name_bn: editForm.name_bn,
       duration_days: editForm.duration_days,
@@ -86,14 +90,9 @@ export default function AdminMembershipPackages() {
     updateMutation.mutate({ id: pkg.id, is_active: !pkg.is_active });
   };
 
-  const typeLabel = (type: string) => {
-    switch (type) {
-      case 'monthly': return 'Monthly';
-      case 'quarterly': return 'Quarterly';
-      case 'yearly': return 'Yearly';
-      default: return type;
-    }
-  };
+  const filtered = packages.filter((p) =>
+    p.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   if (isLoading) {
     return <div className="p-6 text-muted-foreground">Loading packages...</div>;
@@ -101,137 +100,175 @@ export default function AdminMembershipPackages() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Membership Packages</h1>
-        <p className="text-muted-foreground">Manage membership plans and pricing</p>
+      {/* Header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold flex items-center gap-2">
+            <Crown className="h-6 w-6 text-primary" />
+            Membership Packages
+          </h1>
+          <p className="text-sm text-muted-foreground">Manage membership plans and pricing</p>
+        </div>
+        <Button className="gap-2">
+          <Plus className="h-4 w-4" /> Create Package
+        </Button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
-        {packages.map((pkg) => {
-          const isEditing = editingId === pkg.id;
-
-          return (
-            <Card key={pkg.id} className={!pkg.is_active ? 'opacity-60' : ''}>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <div className="flex items-center gap-2">
-                  <Crown className="h-5 w-5 text-primary" />
-                  <CardTitle className="text-lg">
-                    {isEditing ? (
-                      <Input
-                        value={editForm.name || ''}
-                        onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                        className="h-8 w-40"
-                      />
-                    ) : (
-                      pkg.name
-                    )}
-                  </CardTitle>
-                </div>
-                <Badge variant={pkg.is_active ? 'default' : 'secondary'}>
-                  {typeLabel(pkg.membership_type)}
-                </Badge>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {isEditing ? (
-                  <>
-                    <div className="space-y-2">
-                      <Label>Name (Bangla)</Label>
-                      <Input
-                        value={editForm.name_bn || ''}
-                        onChange={(e) => setEditForm({ ...editForm, name_bn: e.target.value })}
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="space-y-1">
-                        <Label>Price (৳)</Label>
-                        <Input
-                          type="number"
-                          value={editForm.price || 0}
-                          onChange={(e) => setEditForm({ ...editForm, price: Number(e.target.value) })}
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <Label>Duration (days)</Label>
-                        <Input
-                          type="number"
-                          value={editForm.duration_days || 0}
-                          onChange={(e) => setEditForm({ ...editForm, duration_days: Number(e.target.value) })}
-                        />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="space-y-1">
-                        <Label>Discount %</Label>
-                        <Input
-                          type="number"
-                          value={editForm.discount_percent || 0}
-                          onChange={(e) => setEditForm({ ...editForm, discount_percent: Number(e.target.value) })}
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <Label>Max Children</Label>
-                        <Input
-                          type="number"
-                          value={editForm.max_children || 1}
-                          onChange={(e) => setEditForm({ ...editForm, max_children: Number(e.target.value) })}
-                        />
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Switch
-                        checked={editForm.is_active ?? true}
-                        onCheckedChange={(checked) => setEditForm({ ...editForm, is_active: checked })}
-                      />
-                      <Label>Active</Label>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button size="sm" onClick={saveEdit} disabled={updateMutation.isPending}>
-                        <Save className="h-4 w-4 mr-1" /> Save
-                      </Button>
-                      <Button size="sm" variant="outline" onClick={cancelEdit}>
-                        <X className="h-4 w-4 mr-1" /> Cancel
-                      </Button>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Price</span>
-                        <span className="font-semibold">৳{pkg.price}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Duration</span>
-                        <span>{pkg.duration_days} days</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Discount</span>
-                        <span>{pkg.discount_percent}%</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Max Children</span>
-                        <span>{pkg.max_children}</span>
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button size="sm" variant="outline" onClick={() => startEdit(pkg)}>
-                        <Edit2 className="h-4 w-4 mr-1" /> Edit
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant={pkg.is_active ? 'secondary' : 'default'}
-                        onClick={() => toggleActive(pkg)}
-                      >
-                        {pkg.is_active ? 'Deactivate' : 'Activate'}
-                      </Button>
-                    </div>
-                  </>
-                )}
-              </CardContent>
-            </Card>
-          );
-        })}
+      {/* Search */}
+      <div className="relative max-w-sm">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          placeholder="Search packages..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="pl-9"
+        />
       </div>
+
+      {/* Table */}
+      <div className="rounded-lg border bg-card">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-muted/50">
+              <TableHead className="w-14">SL</TableHead>
+              <TableHead>Package Name</TableHead>
+              <TableHead>Validity</TableHead>
+              <TableHead>Allowed Person</TableHead>
+              <TableHead>Price</TableHead>
+              <TableHead>Discount</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="w-20 text-center">Action</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filtered.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={8} className="text-center text-muted-foreground py-8">
+                  No packages found
+                </TableCell>
+              </TableRow>
+            ) : (
+              filtered.map((pkg, idx) => (
+                <TableRow key={pkg.id}>
+                  <TableCell className="font-medium text-muted-foreground">{idx + 1}</TableCell>
+                  <TableCell>
+                    <div>
+                      <span className="font-semibold">{pkg.name}</span>
+                      {pkg.name_bn && (
+                        <span className="block text-xs text-muted-foreground">{pkg.name_bn}</span>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell>{pkg.duration_days} Days</TableCell>
+                  <TableCell>
+                    <span className="text-sm">Guardian: 2, Kids: {pkg.max_children}</span>
+                  </TableCell>
+                  <TableCell className="font-semibold">৳{pkg.price.toLocaleString()}</TableCell>
+                  <TableCell>{pkg.discount_percent}%</TableCell>
+                  <TableCell>
+                    <Badge
+                      variant={pkg.is_active ? 'default' : 'secondary'}
+                      className={pkg.is_active ? 'bg-emerald-500/15 text-emerald-600 border-emerald-200 hover:bg-emerald-500/25' : ''}
+                    >
+                      {pkg.is_active ? 'Active' : 'Inactive'}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => startEdit(pkg)}>
+                          <Edit2 className="h-4 w-4 mr-2" /> Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => toggleActive(pkg)}>
+                          <ToggleLeft className="h-4 w-4 mr-2" />
+                          {pkg.is_active ? 'Deactivate' : 'Activate'}
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Edit Dialog */}
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Package</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label>Name</Label>
+              <Input
+                value={editForm.name || ''}
+                onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Name (Bangla)</Label>
+              <Input
+                value={editForm.name_bn || ''}
+                onChange={(e) => setEditForm({ ...editForm, name_bn: e.target.value })}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Price (৳)</Label>
+                <Input
+                  type="number"
+                  value={editForm.price || 0}
+                  onChange={(e) => setEditForm({ ...editForm, price: Number(e.target.value) })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Duration (days)</Label>
+                <Input
+                  type="number"
+                  value={editForm.duration_days || 0}
+                  onChange={(e) => setEditForm({ ...editForm, duration_days: Number(e.target.value) })}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Discount %</Label>
+                <Input
+                  type="number"
+                  value={editForm.discount_percent || 0}
+                  onChange={(e) => setEditForm({ ...editForm, discount_percent: Number(e.target.value) })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Max Children</Label>
+                <Input
+                  type="number"
+                  value={editForm.max_children || 1}
+                  onChange={(e) => setEditForm({ ...editForm, max_children: Number(e.target.value) })}
+                />
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Switch
+                checked={editForm.is_active ?? true}
+                onCheckedChange={(checked) => setEditForm({ ...editForm, is_active: checked })}
+              />
+              <Label>Active</Label>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditOpen(false)}>Cancel</Button>
+            <Button onClick={saveEdit} disabled={updateMutation.isPending}>Save Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
