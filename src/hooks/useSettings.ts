@@ -24,6 +24,15 @@ interface TimeSlot {
   enabled: boolean;
 }
 
+interface PackagePricing {
+  familyRegular: number;
+  familyOffer: number;
+  fullBoard: number;
+  extraGuardian: number;
+  rideZoneRegular: number;
+  rideZoneOffer: number;
+}
+
 interface BusinessInfo {
   name: string;
   nameBn: string;
@@ -58,6 +67,15 @@ const defaultPricing: PricingSettings = {
     premium: 12000,
     deluxe: 18000
   }
+};
+
+const defaultPackagePricing: PackagePricing = {
+  familyRegular: 500,
+  familyOffer: 350,
+  fullBoard: 800,
+  extraGuardian: 150,
+  rideZoneRegular: 1350,
+  rideZoneOffer: 500
 };
 
 const defaultTimeSlots: TimeSlot[] = [
@@ -102,6 +120,7 @@ export function useSettings() {
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>(defaultTimeSlots);
   const [businessInfo, setBusinessInfo] = useState<BusinessInfo>(defaultBusinessInfo);
   const [notifications, setNotifications] = useState<NotificationSettings>(defaultNotifications);
+  const [packagePricing, setPackagePricing] = useState<PackagePricing>(defaultPackagePricing);
 
   // Load all settings from database
   useEffect(() => {
@@ -196,6 +215,19 @@ export function useSettings() {
                 }));
               }
               break;
+            case 'package_pricing':
+              if (value) {
+                setPackagePricing(prev => ({
+                  ...prev,
+                  familyRegular: (value.familyRegular as number) ?? prev.familyRegular,
+                  familyOffer: (value.familyOffer as number) ?? prev.familyOffer,
+                  fullBoard: (value.fullBoard as number) ?? prev.fullBoard,
+                  extraGuardian: (value.extraGuardian as number) ?? prev.extraGuardian,
+                  rideZoneRegular: (value.rideZoneRegular as number) ?? prev.rideZoneRegular,
+                  rideZoneOffer: (value.rideZoneOffer as number) ?? prev.rideZoneOffer,
+                }));
+              }
+              break;
           }
         });
       }
@@ -247,6 +279,14 @@ export function useSettings() {
           standard: pricing.events.standard,
           premium: pricing.events.premium,
           deluxe: pricing.events.deluxe
+        }, 'pricing'),
+        saveSetting('package_pricing', {
+          familyRegular: packagePricing.familyRegular,
+          familyOffer: packagePricing.familyOffer,
+          fullBoard: packagePricing.fullBoard,
+          extraGuardian: packagePricing.extraGuardian,
+          rideZoneRegular: packagePricing.rideZoneRegular,
+          rideZoneOffer: packagePricing.rideZoneOffer
         }, 'pricing')
       ]);
       return true;
@@ -336,6 +376,8 @@ export function useSettings() {
     saving,
     pricing,
     setPricing,
+    packagePricing,
+    setPackagePricing,
     timeSlots,
     setTimeSlots,
     toggleTimeSlot,
