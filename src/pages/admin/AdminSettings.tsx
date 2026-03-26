@@ -39,8 +39,6 @@ export default function AdminSettings() {
     saving,
     pricing,
     setPricing,
-    timeSlots,
-    toggleTimeSlot,
     businessInfo,
     setBusinessInfo,
     notifications,
