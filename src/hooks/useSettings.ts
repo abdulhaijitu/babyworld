@@ -120,6 +120,7 @@ export function useSettings() {
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>(defaultTimeSlots);
   const [businessInfo, setBusinessInfo] = useState<BusinessInfo>(defaultBusinessInfo);
   const [notifications, setNotifications] = useState<NotificationSettings>(defaultNotifications);
+  const [packagePricing, setPackagePricing] = useState<PackagePricing>(defaultPackagePricing);
 
   // Load all settings from database
   useEffect(() => {
