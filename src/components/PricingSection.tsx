@@ -71,11 +71,11 @@ export function PricingSection() {
                 <div className="space-y-2 pt-2">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-muted-foreground">Guardian Fee</span>
-                    <span className="text-lg font-bold text-foreground">৳{packagePricing.extraGuardian}</span>
+                    <span className="text-lg font-bold text-foreground">৳{pricing.hourlyPlay.guardianFee}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-muted-foreground">Child Fee</span>
-                    <span className="text-lg font-bold text-foreground">৳{packagePricing.familyRegular}</span>
+                    <span className="text-lg font-bold text-foreground">৳{pricing.hourlyPlay.childFee}</span>
                   </div>
                 </div>
               </div>
