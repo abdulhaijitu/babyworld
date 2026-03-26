@@ -26,7 +26,7 @@ interface HeroSlide {
   updated_at: string;
 }
 
-export default function AdminHeroSlides() {
+export default function AdminHeroSlides({ embedded = false }: { embedded?: boolean }) {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [label, setLabel] = useState("");
@@ -145,17 +145,21 @@ export default function AdminHeroSlides() {
   }
 
   return (
-    <div className="p-4 md:p-6 space-y-6">
+    <div className={embedded ? "space-y-6" : "p-4 md:p-6 space-y-6"}>
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Hero Slider</h1>
-          <p className="text-sm text-muted-foreground">
-            Manage the images shown in the homepage hero slider. When no slides exist, default images are used.
-          </p>
+        {!embedded && (
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">Hero Slider</h1>
+            <p className="text-sm text-muted-foreground">
+              Manage the images shown in the homepage hero slider. When no slides exist, default images are used.
+            </p>
+          </div>
+        )}
+        <div className={embedded ? "ml-auto" : ""}>
+          <Button onClick={() => setDialogOpen(true)} className="gap-2">
+            <Plus className="w-4 h-4" /> Add Slide
+          </Button>
         </div>
-        <Button onClick={() => setDialogOpen(true)} className="gap-2">
-          <Plus className="w-4 h-4" /> Add Slide
-        </Button>
       </div>
 
       {isLoading ? (
