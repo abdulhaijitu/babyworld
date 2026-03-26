@@ -80,7 +80,8 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
   const [discount, setDiscount] = useState(0);
 
   const [previousCustomer, setPreviousCustomer] = useState(false);
-
+  const [visitHistory, setVisitHistory] = useState<VisitRecord[]>([]);
+  const [showHistory, setShowHistory] = useState(false);
   // Generate sequential entry number
   const [entryNo, setEntryNo] = useState('');
   const generateEntryNo = useCallback(async () => {
