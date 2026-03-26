@@ -538,6 +538,47 @@ export default function AdminUsers() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Reset Password Dialog */}
+      <Dialog open={!!resetPasswordUserId} onOpenChange={(open) => { if (!open) { setResetPasswordUserId(null); setResetNewPassword(''); } }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <KeyRound className="w-5 h-5" />
+              {'Reset Password'}
+            </DialogTitle>
+            <DialogDescription>
+              {'Set a new password for this user'}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label>{'User ID'}</Label>
+              <Input value={resetPasswordUserId?.slice(0, 16) + '...'} disabled />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="reset-password">{'New Password'}</Label>
+              <Input
+                id="reset-password"
+                type="password"
+                placeholder="••••••••"
+                value={resetNewPassword}
+                onChange={(e) => setResetNewPassword(e.target.value)}
+              />
+              <p className="text-xs text-muted-foreground">{'At least 6 characters'}</p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setResetPasswordUserId(null); setResetNewPassword(''); }}>
+              {'Cancel'}
+            </Button>
+            <Button onClick={handleResetPassword} disabled={resetPasswordMutation.isPending}>
+              {resetPasswordMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              {'Reset Password'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
