@@ -150,6 +150,27 @@ export default function AdminUsers() {
     }
   });
 
+  // Reset password mutation
+  const resetPasswordMutation = useMutation({
+    mutationFn: async ({ userId, password }: { userId: string; password: string }) => {
+      // We need the email - but we only have user_id. Call the edge function with user_id approach.
+      const { data, error } = await supabase.functions.invoke('reset-password', {
+        body: { user_id: userId, password }
+      });
+      if (error) throw error;
+      if (data.error) throw new Error(data.error);
+      return data;
+    },
+    onSuccess: () => {
+      toast.success('Password reset successfully');
+      setResetPasswordUserId(null);
+      setResetNewPassword('');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to reset password');
+    }
+  });
+
   const handleCreateUser = () => {
     if (!newUserEmail || !newUserPassword) {
       toast.error('Please fill all fields');
@@ -160,6 +181,16 @@ export default function AdminUsers() {
       return;
     }
     createUserMutation.mutate({ email: newUserEmail, password: newUserPassword, role: newUserRole });
+  };
+
+  const handleResetPassword = () => {
+    if (!resetNewPassword || resetNewPassword.length < 6) {
+      toast.error('Password must be at least 6 characters');
+      return;
+    }
+    if (resetPasswordUserId) {
+      resetPasswordMutation.mutate({ userId: resetPasswordUserId, password: resetNewPassword });
+    }
   };
 
   // Filter users based on search and role
