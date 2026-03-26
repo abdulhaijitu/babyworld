@@ -449,14 +449,36 @@ export default function AdminMemberships() {
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[140px]">
                 <SelectValue placeholder={'Status'} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{'All'}</SelectItem>
+                <SelectItem value="all">{'All Status'}</SelectItem>
                 <SelectItem value="active">{'Active'}</SelectItem>
                 <SelectItem value="expired">{'Expired'}</SelectItem>
                 <SelectItem value="cancelled">{'Cancelled'}</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={packageFilter} onValueChange={setPackageFilter}>
+              <SelectTrigger className="w-[140px]">
+                <SelectValue placeholder={'Package'} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{'All Package'}</SelectItem>
+                <SelectItem value="monthly">{'Monthly'}</SelectItem>
+                <SelectItem value="quarterly">{'Quarterly'}</SelectItem>
+                <SelectItem value="yearly">{'Yearly'}</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={paymentFilter} onValueChange={setPaymentFilter}>
+              <SelectTrigger className="w-[140px]">
+                <SelectValue placeholder={'Payment'} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{'All Payment'}</SelectItem>
+                <SelectItem value="cash">{'Cash'}</SelectItem>
+                <SelectItem value="online">{'Online'}</SelectItem>
+                <SelectItem value="pending">{'Pending'}</SelectItem>
               </SelectContent>
             </Select>
           </div>
