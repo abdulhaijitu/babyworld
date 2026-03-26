@@ -10,6 +10,7 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   Menu,
   LogOut,
   Clock,
@@ -22,7 +23,9 @@ import {
   FerrisWheel,
   Star,
   MessageSquare,
-  Home
+  Home,
+  Plus,
+  List
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
