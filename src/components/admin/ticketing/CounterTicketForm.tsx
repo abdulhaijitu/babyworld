@@ -257,10 +257,8 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
   }, [rides, rideSearch]);
 
   const calculatePrices = () => {
-    let entryPrice = pricing.entry_price;
-    if (guardianCount > 1) entryPrice += (guardianCount - 1) * pricing.extra_guardian_price;
-    if (childCount > 1) entryPrice += (childCount - 1) * pricing.extra_child_price;
-    const socksPrice = socksCount * pricing.socks_price;
+    const entryPrice = (guardianCount * pricing.guardian_fee) + (childCount * pricing.child_fee);
+    const socksPrice = socksCount * pricing.socks_fee;
     let ridesPrice = 0;
     Object.entries(selectedRides).forEach(([rideId, quantity]) => {
       const ride = rides.find(r => r.id === rideId);
