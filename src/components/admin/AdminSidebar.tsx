@@ -40,6 +40,7 @@ interface MenuItem {
   icon: React.ElementType;
   path: string;
   requiredRoles?: AppRole[];
+  children?: { id: string; label: string; icon: React.ElementType; path: string }[];
 }
 
 const allMenuItems: MenuItem[] = [
