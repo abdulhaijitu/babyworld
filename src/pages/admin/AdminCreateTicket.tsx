@@ -42,7 +42,7 @@ export default function AdminCreateTicket() {
         open={showSuccessDialog}
         onClose={() => {
           setShowSuccessDialog(false);
-          navigate('/admin/ticketing');
+          navigate('/admin/ticket-list');
         }}
         ticket={createdTicket}
         rideNames={rideNames}
