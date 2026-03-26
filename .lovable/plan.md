@@ -1,33 +1,31 @@
 
 
-## Plan: Create Package মোডাল রিডিজাইন
-
-রেফারেন্স ইমেজ অনুযায়ী Create Package ডায়ালগকে সেকশন-ভিত্তিক, পরিষ্কার লেআউটে রূপান্তর।
+## Plan: Create Package মোডাল সংশোধন ও Edit Package হুবহু ডিজাইন
 
 ### পরিবর্তন — `src/pages/admin/AdminMembershipPackages.tsx`
 
-**Create Dialog (lines 348-444) সম্পূর্ণ রিডিজাইন:**
+#### 1. Create Dialog থেকে ৩টি ফিল্ড সরানো
+- **Name (Bangla)** ফিল্ড (lines 446-453) — সম্পূর্ণ রিমুভ
+- **Package Type** সিলেক্ট (lines 454-465) — সম্পূর্ণ রিমুভ
+- **Discount %** ফিল্ড (lines 549-557) — সম্পূর্ণ রিমুভ
 
-1. **ডায়ালগ সাইজ বড়**: `max-w-2xl` করা হবে, `max-h-[85vh] overflow-y-auto` স্ক্রলযোগ্য
-2. **সেকশন হেডার** — রেফারেন্সের মতো রঙিন সেকশন টাইটেল:
-   - **PACKAGE INFORMATION** (প্রাইমারি কালার হেডিং + ডিভাইডার)
-   - **PACKAGE BENEFITS** (প্রাইমারি কালার হেডিং + ডিভাইডার)
-3. **ফিল্ড লেআউট** — 2-কলাম গ্রিড:
-   - Row 1: Package Name | Price (৳ BDT ব্যাজসহ)
-   - Row 2: Validity (Days ব্যাজসহ) | Duration (Minutes ব্যাজসহ)
-   - Row 3: Allowed Person (Guardian) Select | Allowed Person (Kids) Select
-   - Row 4: Entrance Method | Allowed Visit (Times ব্যাজসহ)
-4. **ইনপুট ব্যাজ/সাফিক্স**: Price → "BDT", Validity → "Days", Duration → "Minutes", Visit → "Times" — ইনপুটের ডানে ব্যাজ
-5. **Package Benefits সেকশন**: Benefit Title ইনপুট + Description টেক্সটেরিয়া
-6. **ফুটার বাটন**: "Discard" (আউটলাইন, ফুল-উইডথ) | "Save Package" (প্রাইমারি, ফুল-উইডথ)
+`createForm` state থেকে `name_bn`, `membership_type`, `discount_percent` রিমুভ। `createMutation`-এ `name_bn: null`, `membership_type: 'monthly'` (ডিফল্ট), `discount_percent: 100` (ডিফল্ট) সেট করা হবে।
 
-### নতুন ফিল্ড (DB ছাড়া, features JSON-এ সেভ):
-- `duration_minutes`, `entrance_method`, `allowed_visits`, `benefit_title`, `benefit_description` — সবই `features` JSON কলামে সংরক্ষণ
+Create Dialog-এ Name (Bangla)/Package Type সরানোর পর Validity ফিল্ড Price-এর পাশে উঠে আসবে (2-কলাম গ্রিড ঠিক থাকবে)।
+
+#### 2. Edit Dialog-কে Create Dialog-এর হুবহু ডিজাইনে আপডেট
+Edit Dialog-এ নিচের ফিল্ডগুলো যোগ হবে (Create-এর মতো):
+- **Duration** (Minutes ব্যাজসহ)
+- **Entrance Method** সিলেক্ট
+- **Allowed Visit** (Times ব্যাজসহ)
+- **Package Benefits** সেকশন (Benefit Title + Description)
+
+Edit Dialog থেকেও **Name (Bangla)**, **Discount %** সরানো হবে।
+
+`editForm` state-এ features JSON থেকে `duration_minutes`, `entrance_method`, `allowed_visits`, `benefit_title`, `benefit_description` লোড হবে। `saveEdit`-এ features JSON-এ সেভ হবে।
 
 ### টেকনিক্যাল ডিটেইলস
-- `createForm` state-এ নতুন ফিল্ড যোগ
-- `createMutation`-এ features JSON-এ এক্সট্রা ডাটা ইনসার্ট
-- `Separator` কম্পোনেন্ট ব্যবহার সেকশন ডিভাইডারে
-- `Textarea` কম্পোনেন্ট ইম্পোর্ট Description-এর জন্য
-- Select কম্পোনেন্ট Guardian/Kids ড্রপডাউনে
+- `startEdit` ফাংশনে `pkg.features` থেকে এক্সট্রা ফিল্ড এক্সট্র্যাক্ট করে `editForm`-এ সেট
+- `saveEdit`-এ features JSON তৈরি করে আপডেট কলে পাঠানো
+- উভয় ডায়ালগে একই ফিল্ড অর্ডার: Name → Price → Validity → Duration → Guardian → Kids → Entrance Method → Allowed Visit → Active → Benefits
 
