@@ -530,7 +530,35 @@ export default function AdminTicketing() {
                 )}
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
+              {/* Customer Summary */}
+              {customerSummary && (
+                <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Users className="w-4 h-4 text-primary" />
+                    <span className="font-semibold text-sm">{customerSummary.customerName}</span>
+                    <span className="text-xs text-muted-foreground font-mono">{customerSummary.phone}</span>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+                    <div>
+                      <p className="text-muted-foreground text-xs">Total Visits</p>
+                      <p className="font-bold text-lg">{customerSummary.totalVisits}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground text-xs">Total Spent</p>
+                      <p className="font-bold text-lg">৳{customerSummary.totalSpent.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground text-xs">Last Visit</p>
+                      <p className="font-medium">{customerSummary.lastVisit ? format(new Date(customerSummary.lastVisit), 'dd MMM yyyy') : 'N/A'}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground text-xs">Active / Cancelled</p>
+                      <p className="font-medium">{customerSummary.activeTickets} / {customerSummary.cancelledTickets}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
               {error ? (
                 <div className="text-center py-8">
                   <AlertCircle className="w-12 h-12 mx-auto mb-4 text-destructive" />
