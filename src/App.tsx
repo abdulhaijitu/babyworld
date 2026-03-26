@@ -74,6 +74,7 @@ const App = () => (
                   <Route path="ride-reviews" element={<AdminRideReviews />} />
                   <Route path="notifications" element={<AdminNotificationLogs />} />
                   <Route path="hero-cards" element={<AdminHeroCards />} />
+                  <Route path="hero-slides" element={<AdminHeroSlides />} />
                   <Route path="users" element={<AdminUsers />} />
                   <Route path="settings" element={<AdminSettings />} />
                 </Route>
