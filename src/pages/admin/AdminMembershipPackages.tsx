@@ -7,7 +7,9 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Crown, Plus, Search, MoreHorizontal, Edit2, ToggleLeft, Trash2 } from 'lucide-react';
+import { Crown, Plus, Search, MoreHorizontal, Edit2, ToggleLeft, Trash2, Package } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Table, TableHeader, TableBody, TableRow, TableHead, TableCell,
 } from '@/components/ui/table';
