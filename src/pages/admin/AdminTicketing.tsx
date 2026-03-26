@@ -307,6 +307,21 @@ export default function AdminTicketing() {
     return true;
   });
 
+  // Customer summary when searching by phone
+  const isPhoneSearch = /^(\+?880|0)?1[3-9]\d{4,8}$/.test(searchQuery.trim());
+  const customerSummary = useMemo(() => {
+    if (!isPhoneSearch || !searchQuery.trim()) return null;
+    const phoneTickets = tickets.filter(t => t.guardian_phone.includes(searchQuery.trim()));
+    if (phoneTickets.length === 0) return null;
+    const totalVisits = phoneTickets.length;
+    const totalSpent = phoneTickets.reduce((sum, t) => sum + (t.total_price || 0), 0);
+    const lastVisit = phoneTickets[0]?.slot_date;
+    const customerName = phoneTickets[0]?.guardian_name || 'Unknown';
+    const activeTickets = phoneTickets.filter(t => t.status === 'active').length;
+    const cancelledTickets = phoneTickets.filter(t => t.status === 'cancelled').length;
+    return { totalVisits, totalSpent, lastVisit, customerName, activeTickets, cancelledTickets, phone: searchQuery.trim() };
+  }, [isPhoneSearch, searchQuery, tickets]);
+
   // Paginated tickets
   const paginatedTickets = filteredTickets.slice(0, displayCount);
   const hasMore = filteredTickets.length > displayCount;
