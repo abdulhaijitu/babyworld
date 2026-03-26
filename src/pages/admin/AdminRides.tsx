@@ -69,10 +69,10 @@ interface Ride {
   created_at: string;
 }
 
-const CATEGORY_INFO: Record<RideCategory, { label: string; label_bn: string; icon: typeof Baby; color: string }> = {
-  kids: { label: 'Kids', label_bn: 'কিডস', icon: Baby, color: 'bg-green-500/10 text-green-600 border-green-200' },
-  family: { label: 'Family', label_bn: 'ফ্যামিলি', icon: Users, color: 'bg-blue-500/10 text-blue-600 border-blue-200' },
-  thrill: { label: 'Thrill', label_bn: 'থ্রিল', icon: Zap, color: 'bg-orange-500/10 text-orange-600 border-orange-200' }
+const CATEGORY_INFO: Record<RideCategory, { label: string; icon: typeof Baby; color: string }> = {
+  kids: { label: 'Kids', icon: Baby, color: 'bg-green-500/10 text-green-600 border-green-200' },
+  family: { label: 'Family', icon: Users, color: 'bg-blue-500/10 text-blue-600 border-blue-200' },
+  thrill: { label: 'Thrill', icon: Zap, color: 'bg-orange-500/10 text-orange-600 border-orange-200' }
 };
 
 const defaultFormData = {
