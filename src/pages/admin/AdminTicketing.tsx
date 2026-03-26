@@ -757,6 +757,11 @@ export default function AdminTicketing() {
                 guardianCount: selectedTicket.guardian_count || undefined,
                 childCount: selectedTicket.child_count || undefined,
                 socksCount: selectedTicket.socks_count || undefined,
+                inTime: selectedTicket.in_time || undefined,
+                outTime: selectedTicket.out_time || undefined,
+                paymentType: selectedTicket.payment_type || undefined,
+                paymentStatus: selectedTicket.payment_status || undefined,
+                rides: (selectedTicket as any)._rides || undefined,
               }}
               onClose={() => setPrintOpen(false)}
             />
