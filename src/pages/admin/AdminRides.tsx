@@ -35,6 +35,7 @@ interface Ride {
   name: string;
   description: string | null;
   price: number;
+  offer_price: number;
   category: string;
   is_active: boolean;
   image_url: string | null;
