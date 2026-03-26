@@ -280,8 +280,11 @@ export default function AdminTicketing() {
       }
     }
     if (statusFilter !== 'all' && ticket.status !== statusFilter) return false;
-    if (dateFilter) {
-      if (ticket.slot_date !== format(dateFilter, 'yyyy-MM-dd')) return false;
+    if (dateFrom) {
+      if (ticket.slot_date < format(dateFrom, 'yyyy-MM-dd')) return false;
+    }
+    if (dateTo) {
+      if (ticket.slot_date > format(dateTo, 'yyyy-MM-dd')) return false;
     }
     return true;
   });
