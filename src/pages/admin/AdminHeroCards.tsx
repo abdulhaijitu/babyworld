@@ -45,6 +45,7 @@ const emptyCard: CardForm = {
   cta_link: "/",
   date_text: null,
   image_url: null,
+  expires_at: null,
   is_active: true,
   sort_order: 0,
 };
