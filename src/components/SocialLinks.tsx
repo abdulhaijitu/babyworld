@@ -16,9 +16,8 @@ const TikTokIcon = ({ className }: { className?: string }) => (
 export const SOCIAL_LINKS = {
   facebook: "https://www.facebook.com/BabyWorldLimited",
   youtube: "https://www.youtube.com/@BabyWorldLimited",
-  // Instagram এবং TikTok লিংক যোগ করুন যখন অ্যাকাউন্ট তৈরি হবে
-  // instagram: "https://www.instagram.com/BabyWorldLimited",
-  // tiktok: "https://www.tiktok.com/@BabyWorldLimited",
+  instagram: "https://www.instagram.com/BabyWorldLimited",
+  tiktok: "https://www.tiktok.com/@BabyWorldLimited",
 };
 
 interface SocialLinksProps {
