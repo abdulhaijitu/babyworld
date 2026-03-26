@@ -24,6 +24,15 @@ interface TimeSlot {
   enabled: boolean;
 }
 
+interface PackagePricing {
+  familyRegular: number;
+  familyOffer: number;
+  fullBoard: number;
+  extraGuardian: number;
+  rideZoneRegular: number;
+  rideZoneOffer: number;
+}
+
 interface BusinessInfo {
   name: string;
   nameBn: string;
