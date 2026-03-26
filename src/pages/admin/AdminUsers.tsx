@@ -166,6 +166,7 @@ export default function AdminUsers() {
   });
 
   // Count by role
+  const superAdminCount = userRoles?.filter(u => u.role === 'super_admin').length || 0;
   const adminCount = userRoles?.filter(u => u.role === 'admin').length || 0;
   const managerCount = userRoles?.filter(u => u.role === 'manager').length || 0;
   const staffCount = userRoles?.filter(u => u.role === 'staff').length || 0;
