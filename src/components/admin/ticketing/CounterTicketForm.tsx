@@ -557,7 +557,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                       </div>
                     )}
                   </div>
-                )
+                )}
 
                 {/* Guardian & Children */}
                 <div className="grid grid-cols-2 gap-3">
