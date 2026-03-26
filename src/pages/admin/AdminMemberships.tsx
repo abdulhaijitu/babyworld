@@ -41,6 +41,9 @@ export default function AdminMemberships() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 15;
   const [phoneError, setPhoneError] = useState('');
+  const [lookupLoading, setLookupLoading] = useState(false);
+  const [foundMember, setFoundMember] = useState<Membership | null>(null);
+  const lookupTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -54,6 +57,52 @@ export default function AdminMemberships() {
     payment_amount: 0,
     valid_from: format(new Date(), 'yyyy-MM-dd'),
   });
+
+  // Debounced phone lookup for existing members
+  useEffect(() => {
+    const phone = formData.phone.replace(/\s/g, '');
+    const regex = /^(\+?880|0)?1[3-9]\d{8}$/;
+
+    if (!regex.test(phone)) {
+      setFoundMember(null);
+      return;
+    }
+
+    if (lookupTimerRef.current) clearTimeout(lookupTimerRef.current);
+
+    lookupTimerRef.current = setTimeout(async () => {
+      setLookupLoading(true);
+      try {
+        const { data } = await supabase
+          .from('memberships')
+          .select('*')
+          .eq('phone', phone)
+          .order('created_at', { ascending: false })
+          .limit(1);
+
+        if (data && data.length > 0) {
+          const member = data[0] as unknown as Membership;
+          setFoundMember(member);
+          setFormData(prev => ({
+            ...prev,
+            member_name: member.member_name,
+            child_count: member.child_count,
+            notes: member.notes || '',
+          }));
+        } else {
+          setFoundMember(null);
+        }
+      } catch {
+        setFoundMember(null);
+      } finally {
+        setLookupLoading(false);
+      }
+    }, 500);
+
+    return () => {
+      if (lookupTimerRef.current) clearTimeout(lookupTimerRef.current);
+    };
+  }, [formData.phone]);
 
   
 
