@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { format, differenceInDays } from 'date-fns';
-import { Plus, Search, Crown, Phone, Calendar, User, MoreVertical, CheckCircle, XCircle, Loader2, CreditCard, Banknote } from 'lucide-react';
+import { Plus, Search, Crown, Phone, Calendar, User, MoreVertical, CheckCircle, XCircle, Loader2, CreditCard, Banknote, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -74,6 +74,19 @@ export default function AdminMemberships() {
     },
   });
 
+  const { data: paymentLogs = [] } = useQuery({
+    queryKey: ['membership-payment-logs'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('activity_logs')
+        .select('*')
+        .eq('entity_type', 'membership_payment')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
   const updateStatusMutation = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
       const { data, error } = await supabase.functions.invoke('manage-membership?action=update-status', {
@@ -133,6 +146,29 @@ export default function AdminMemberships() {
     const matchesStatus = statusFilter === 'all' || m.status === statusFilter;
     return matchesSearch && matchesStatus;
   }) || [];
+
+  const paymentStats = {
+    totalCollected: paymentLogs.reduce((sum, log) => {
+      const details = log.details as any;
+      if (details?.payment_type !== 'pending') return sum + (details?.payment_amount || 0);
+      return sum;
+    }, 0),
+    pendingAmount: paymentLogs.reduce((sum, log) => {
+      const details = log.details as any;
+      if (details?.payment_type === 'pending') return sum + (details?.payment_amount || 0);
+      return sum;
+    }, 0),
+    cashTotal: paymentLogs.reduce((sum, log) => {
+      const details = log.details as any;
+      if (details?.payment_type === 'cash') return sum + (details?.payment_amount || 0);
+      return sum;
+    }, 0),
+    onlineTotal: paymentLogs.reduce((sum, log) => {
+      const details = log.details as any;
+      if (details?.payment_type === 'online') return sum + (details?.payment_amount || 0);
+      return sum;
+    }, 0),
+  };
 
   const stats = {
     total: memberships?.length || 0,
@@ -349,22 +385,52 @@ export default function AdminMemberships() {
         <Card>
           <CardContent className="p-4 text-center">
             <p className="text-3xl font-bold">{stats.total}</p>
-            <p className="text-sm text-muted-foreground">{'Total Members'}</p>
+            <p className="text-sm text-muted-foreground">Total Members</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
-            <p className="text-3xl font-bold text-green-600">{stats.active}</p>
-            <p className="text-sm text-muted-foreground">{'Active'}</p>
+            <p className="text-3xl font-bold text-primary">{stats.active}</p>
+            <p className="text-sm text-muted-foreground">Active</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
             <p className="text-3xl font-bold text-muted-foreground">{stats.expired}</p>
-            <p className="text-sm text-muted-foreground">{'Expired'}</p>
+            <p className="text-sm text-muted-foreground">Expired</p>
           </CardContent>
         </Card>
       </div>
+
+      {/* Payment Summary */}
+      <Card className="border-primary/20 bg-primary/5">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base flex items-center gap-2">
+            <TrendingUp className="h-4 w-4 text-primary" />
+            Payment Summary
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="text-center p-3 rounded-lg bg-background border">
+              <p className="text-xl font-bold text-primary">৳{paymentStats.totalCollected.toLocaleString()}</p>
+              <p className="text-xs text-muted-foreground">Total Collected</p>
+            </div>
+            <div className="text-center p-3 rounded-lg bg-background border">
+              <p className="text-xl font-bold">৳{paymentStats.cashTotal.toLocaleString()}</p>
+              <p className="text-xs text-muted-foreground flex items-center justify-center gap-1"><Banknote className="h-3 w-3" /> Cash</p>
+            </div>
+            <div className="text-center p-3 rounded-lg bg-background border">
+              <p className="text-xl font-bold">৳{paymentStats.onlineTotal.toLocaleString()}</p>
+              <p className="text-xs text-muted-foreground flex items-center justify-center gap-1"><CreditCard className="h-3 w-3" /> Online</p>
+            </div>
+            <div className="text-center p-3 rounded-lg bg-background border">
+              <p className="text-xl font-bold text-destructive">৳{paymentStats.pendingAmount.toLocaleString()}</p>
+              <p className="text-xs text-muted-foreground">Pending</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Filters */}
       <Card>
