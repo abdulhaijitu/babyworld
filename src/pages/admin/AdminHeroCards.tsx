@@ -272,6 +272,13 @@ export default function AdminHeroCards() {
                 <p className="text-sm text-muted-foreground line-clamp-2">
                   {card.description}
                 </p>
+                {card.expires_at && (
+                  <p className={`text-xs flex items-center gap-1 ${new Date(card.expires_at) < new Date() ? "text-destructive" : "text-muted-foreground"}`}>
+                    <Clock className="w-3 h-3" />
+                    {new Date(card.expires_at) < new Date() ? "Expired: " : "Expires: "}
+                    {new Date(card.expires_at).toLocaleDateString()}
+                  </p>
+                )}
                 {card.date_text && (
                   <p className="text-xs text-muted-foreground flex items-center gap-1">
                     <Calendar className="w-3 h-3" /> {card.date_text}
