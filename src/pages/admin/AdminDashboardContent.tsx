@@ -66,6 +66,7 @@ import { QuickActions } from '@/components/admin/QuickActions';
 import { ActivityLogCard } from '@/components/admin/ActivityLogCard';
 import { VisitorCounter } from '@/components/admin/VisitorCounter';
 import { QuickReportsWidget } from '@/components/admin/QuickReportsWidget';
+import { ExpiringCardsAlert } from '@/components/admin/ExpiringCardsAlert';
 
 const PRICE_PER_TICKET = 300;
 
@@ -231,6 +232,9 @@ export default function AdminDashboardContent() {
           {"Today's overview and bookings"}
         </p>
       </div>
+
+      {/* Expiring Hero Cards Alert */}
+      <ExpiringCardsAlert />
 
       {/* Revenue Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
