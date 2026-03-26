@@ -219,6 +219,7 @@ export default function AdminMemberships() {
         valid_from: format(new Date(), 'yyyy-MM-dd'),
       });
       setPhoneError('');
+      setFoundMember(null);
       queryClient.invalidateQueries({ queryKey: ['memberships'] });
     } catch (error: any) {
       toast.error(error.message || ('Creation failed'));
