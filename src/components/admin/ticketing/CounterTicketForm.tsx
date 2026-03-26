@@ -693,5 +693,137 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
         </div>
       </form>
     </Form>
+
+      {/* Visit Detail Modal */}
+      <Dialog open={!!selectedVisit} onOpenChange={(open) => { if (!open) { setSelectedVisit(null); setVisitDetail(null); } }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-base">
+              <Ticket className="h-4 w-4" />
+              Ticket Details
+            </DialogTitle>
+          </DialogHeader>
+          {loadingDetail ? (
+            <div className="flex justify-center py-8">
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            </div>
+          ) : visitDetail ? (
+            <div className="space-y-3 text-sm">
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <span className="text-muted-foreground text-xs">Entry No</span>
+                  <p className="font-mono font-semibold">{visitDetail.ticket_number}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground text-xs">Date</span>
+                  <p>{format(new Date(visitDetail.slot_date), 'dd MMM yyyy')}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground text-xs">Guardian</span>
+                  <p>{visitDetail.guardian_name}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground text-xs">Phone</span>
+                  <p className="font-mono">{visitDetail.guardian_phone}</p>
+                </div>
+                {visitDetail.child_name && (
+                  <div>
+                    <span className="text-muted-foreground text-xs">Child Name</span>
+                    <p>{visitDetail.child_name}</p>
+                  </div>
+                )}
+                <div>
+                  <span className="text-muted-foreground text-xs">Children / Guardians</span>
+                  <p>{visitDetail.child_count || 1} / {visitDetail.guardian_count || 1}</p>
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <span className="text-muted-foreground text-xs">Entry Fee</span>
+                  <p>৳{visitDetail.entry_price || 0}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground text-xs">Socks ({visitDetail.socks_count || 0})</span>
+                  <p>৳{visitDetail.socks_price || 0}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground text-xs">Addons/Rides</span>
+                  <p>৳{visitDetail.addons_price || 0}</p>
+                </div>
+                {(visitDetail.discount_applied || 0) > 0 && (
+                  <div>
+                    <span className="text-muted-foreground text-xs">Discount</span>
+                    <p className="text-green-600">-৳{visitDetail.discount_applied}</p>
+                  </div>
+                )}
+                <div>
+                  <span className="text-muted-foreground text-xs">Total</span>
+                  <p className="font-bold text-base">৳{visitDetail.total_price || 0}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground text-xs">Payment</span>
+                  <p className="capitalize">{visitDetail.payment_type || 'N/A'} / {visitDetail.payment_status || 'N/A'}</p>
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <span className="text-muted-foreground text-xs">Status</span>
+                  <div>
+                    <Badge variant={visitDetail.status === 'used' ? 'secondary' : visitDetail.status === 'cancelled' ? 'destructive' : 'default'}>
+                      {visitDetail.status}
+                    </Badge>
+                  </div>
+                </div>
+                {visitDetail.in_time && (
+                  <div>
+                    <span className="text-muted-foreground text-xs">In Time</span>
+                    <p>{format(new Date(visitDetail.in_time), 'hh:mm a')}</p>
+                  </div>
+                )}
+                {visitDetail.out_time && (
+                  <div>
+                    <span className="text-muted-foreground text-xs">Out Time</span>
+                    <p>{format(new Date(visitDetail.out_time), 'hh:mm a')}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Rides */}
+              {visitDetail.rides && visitDetail.rides.length > 0 && (
+                <>
+                  <Separator />
+                  <div>
+                    <span className="text-muted-foreground text-xs font-medium">Rides / Items</span>
+                    <div className="mt-1 space-y-1">
+                      {visitDetail.rides.map((r: any) => (
+                        <div key={r.id} className="flex justify-between items-center text-xs bg-muted/30 rounded px-2 py-1">
+                          <span>{r.rides?.name || 'Unknown'} × {r.quantity}</span>
+                          <span className="font-mono">৳{r.total_price}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {visitDetail.notes && (
+                <>
+                  <Separator />
+                  <div>
+                    <span className="text-muted-foreground text-xs">Notes</span>
+                    <p className="text-xs mt-0.5">{visitDetail.notes}</p>
+                  </div>
+                </>
+              )}
+            </div>
+          ) : null}
+        </DialogContent>
+      </Dialog>
   );
 }
