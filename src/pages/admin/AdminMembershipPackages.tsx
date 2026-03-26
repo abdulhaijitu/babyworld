@@ -51,6 +51,11 @@ export default function AdminMembershipPackages() {
     max_children: 1,
     max_guardians: 2,
     is_active: true,
+    duration_minutes: 60,
+    entrance_method: 'QR Code',
+    allowed_visits: 1,
+    benefit_title: '',
+    benefit_description: '',
   });
 
   const { data: packages = [], isLoading } = useQuery({
