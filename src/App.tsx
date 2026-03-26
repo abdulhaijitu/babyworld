@@ -37,6 +37,7 @@ import AdminRideReviews from "./pages/admin/AdminRideReviews";
 import AdminNotificationLogs from "./pages/admin/AdminNotificationLogs";
 import AdminHeroCards from "./pages/admin/AdminHeroCards";
 import AdminHeroSlides from "./pages/admin/AdminHeroSlides";
+import AdminHomepage from "./pages/admin/AdminHomepage";
 
 const queryClient = new QueryClient();
 
