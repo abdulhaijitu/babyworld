@@ -121,6 +121,7 @@ export default function AdminMembershipPackages() {
       price: editForm.price,
       discount_percent: editForm.discount_percent,
       max_children: editForm.max_children,
+      max_guardians: (editForm as any).max_guardians,
       is_active: editForm.is_active,
     });
   };
