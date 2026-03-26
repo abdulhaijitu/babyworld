@@ -98,8 +98,13 @@ export function useUserRoles() {
   );
 
   const canManageUsers = useMemo(() => 
-    state.isAdmin, 
-    [state.isAdmin]
+    state.isSuperAdmin, 
+    [state.isSuperAdmin]
+  );
+
+  const canManageAdmins = useMemo(() => 
+    state.isSuperAdmin, 
+    [state.isSuperAdmin]
   );
 
   const canAccessTicketing = useMemo(() => 
