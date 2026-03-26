@@ -1,17 +1,15 @@
 
 
-## Plan: Rides কে Ticketing সাবমেনুতে যোগ করা
+## Plan: Socks Fee তে 'per pair' লেবেল যোগ
 
-### পরিবর্তন — `src/components/admin/AdminSidebar.tsx`
+### পরিবর্তন — `src/components/PricingSection.tsx`
 
-1. **Ticketing children অ্যারেতে** `ticket-list` এর পরে Rides সাব-আইটেম যোগ:
-   ```tsx
-   { id: 'rides', label: 'Rides', icon: FerrisWheel, path: '/admin/rides' },
-   ```
-
-2. **আলাদা `rides` মেনু আইটেম রিমুভ** (লাইন ~61 এ আছে) — কারণ এটি এখন Ticketing এর ভেতরে থাকবে।
+Socks Fee লাইনে লেবেল টেক্সট আপডেট:
+```tsx
+<span className="text-sm text-muted-foreground">Socks Fee (per pair)</span>
+```
 
 | ফাইল | পরিবর্তন |
 |---|---|
-| `src/components/admin/AdminSidebar.tsx` | Rides কে Ticketing children-এ মুভ, আলাদা এন্ট্রি রিমুভ |
+| `src/components/PricingSection.tsx` | Socks Fee লেবেলে "per pair" যোগ |
 
