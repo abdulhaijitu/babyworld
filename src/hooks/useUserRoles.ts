@@ -50,11 +50,13 @@ export function useUserRoles() {
       }
 
       const roles = (data?.map(r => r.role) || []) as AppRole[];
+      const isSuperAdmin = roles.includes('super_admin');
       setState({
         roles,
-        isAdmin: roles.includes('admin'),
-        isManager: roles.includes('manager') || roles.includes('admin'),
-        isStaff: roles.includes('staff') || roles.includes('manager') || roles.includes('admin'),
+        isSuperAdmin,
+        isAdmin: isSuperAdmin || roles.includes('admin'),
+        isManager: isSuperAdmin || roles.includes('admin') || roles.includes('manager'),
+        isStaff: isSuperAdmin || roles.includes('admin') || roles.includes('manager') || roles.includes('staff'),
         loading: false,
       });
     } catch (err) {
