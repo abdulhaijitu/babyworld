@@ -826,5 +826,6 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
           ) : null}
         </DialogContent>
       </Dialog>
+    </>
   );
 }
