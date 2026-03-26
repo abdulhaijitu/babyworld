@@ -95,7 +95,6 @@ export function Navbar() {
 
           <div className="lg:hidden flex items-center gap-2">
             <ThemeToggle />
-            <LanguageToggle />
             <button
               className="p-2 text-foreground"
               onClick={() => setIsOpen(!isOpen)}
