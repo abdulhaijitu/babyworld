@@ -276,8 +276,9 @@ export default function AdminEventPackages() {
           <CardContent>
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead className="w-16">Image</TableHead>
+                 <TableRow>
+                   <TableHead className="w-10"></TableHead>
+                   <TableHead className="w-16">Image</TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Price</TableHead>
                   <TableHead>Guests</TableHead>
