@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Table,
   TableBody,
@@ -702,47 +703,49 @@ export default function AdminFoodOrders() {
               </div>
             </div>
 
-            {/* Item Search & Selection */}
+            {/* Item Selection with Category Tabs */}
             <div className="space-y-2">
               <Label className="text-sm">Add Items</Label>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="আইটেম সার্চ করুন..."
-                  value={itemSearch}
-                  onChange={(e) => setItemSearch(e.target.value)}
-                  className="pl-9"
-                />
-              </div>
               {foodItemsLoading ? (
                 <div className="flex items-center justify-center py-4">
                   <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
                 </div>
               ) : (
-                <div className="grid grid-cols-2 gap-2 max-h-[180px] overflow-y-auto border rounded-lg p-2">
-                  {filteredFoodItems.length === 0 ? (
-                    <p className="col-span-2 text-center text-sm text-muted-foreground py-3">কোনো আইটেম পাওয়া যায়নি</p>
-                  ) : (
-                    filteredFoodItems.map((item) => {
-                      const inCart = cart.find(c => c.itemId === item.id);
-                      return (
-                        <button
-                          key={item.id}
-                          onClick={() => addToCart(item)}
-                          className="flex items-center justify-between p-2 rounded-md border text-left text-sm hover:bg-muted transition-colors"
-                        >
-                          <div className="min-w-0">
-                            <p className="font-medium truncate">{item.name}</p>
-                            <p className="text-xs text-muted-foreground">৳{item.price} · {getCategoryLabel(item.category)}</p>
-                          </div>
-                          {inCart && (
-                            <Badge variant="secondary" className="ml-1 shrink-0">{inCart.quantity}</Badge>
-                          )}
-                        </button>
-                      );
-                    })
-                  )}
-                </div>
+                <Tabs defaultValue="snacks">
+                  <TabsList className="w-full">
+                    <TabsTrigger value="snacks" className="flex-1">Snacks ({foodItems.filter(i => i.category === 'snacks').length})</TabsTrigger>
+                    <TabsTrigger value="drinks" className="flex-1">Drinks ({foodItems.filter(i => i.category === 'drinks').length})</TabsTrigger>
+                    <TabsTrigger value="meals" className="flex-1">Meals ({foodItems.filter(i => i.category === 'meals').length})</TabsTrigger>
+                  </TabsList>
+                  {(['snacks', 'drinks', 'meals'] as const).map((cat) => (
+                    <TabsContent key={cat} value={cat} className="mt-2">
+                      <div className="grid grid-cols-2 gap-2 max-h-[160px] overflow-y-auto border rounded-lg p-2">
+                        {foodItems.filter(i => i.category === cat).length === 0 ? (
+                          <p className="col-span-2 text-center text-sm text-muted-foreground py-3">কোনো আইটেম নেই</p>
+                        ) : (
+                          foodItems.filter(i => i.category === cat).map((item) => {
+                            const inCart = cart.find(c => c.itemId === item.id);
+                            return (
+                              <button
+                                key={item.id}
+                                onClick={() => addToCart(item)}
+                                className="flex items-center justify-between p-2 rounded-md border text-left text-sm hover:bg-muted transition-colors"
+                              >
+                                <div className="min-w-0">
+                                  <p className="font-medium truncate">{item.name}</p>
+                                  <p className="text-xs text-muted-foreground">৳{item.price}</p>
+                                </div>
+                                {inCart && (
+                                  <Badge variant="secondary" className="ml-1 shrink-0">{inCart.quantity}</Badge>
+                                )}
+                              </button>
+                            );
+                          })
+                        )}
+                      </div>
+                    </TabsContent>
+                  ))}
+                </Tabs>
               )}
             </div>
 
