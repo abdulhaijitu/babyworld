@@ -472,6 +472,8 @@ export default function AdminFoodSales() {
                   if (!open) {
                     setEditingItem(null);
                     setNewItem({ name: '', name_bn: '', category: 'snacks', price: 0, is_available: true });
+                    setImageFile(null);
+                    setImagePreview(null);
                   }
                 }}>
                   <DialogTrigger asChild>
