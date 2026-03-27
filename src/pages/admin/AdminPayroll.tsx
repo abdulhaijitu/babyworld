@@ -124,9 +124,25 @@ export default function AdminPayroll() {
                   <TableCell className="font-semibold">৳{Number(p.net_salary).toLocaleString()}</TableCell>
                   <TableCell><Badge className={p.status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}>{p.status}</Badge></TableCell>
                   <TableCell>
-                    {p.status === 'draft' && (
-                      <Button size="sm" variant="outline" onClick={() => markAsPaid.mutate(p.id)}><CheckCircle className="h-4 w-4 mr-1" />Pay</Button>
-                    )}
+                    <div className="flex gap-1">
+                      {p.status === 'draft' && (
+                        <Button size="sm" variant="outline" onClick={() => markAsPaid.mutate(p.id)}><CheckCircle className="h-4 w-4 mr-1" />Pay</Button>
+                      )}
+                      <Button size="sm" variant="ghost" onClick={() => printPayslip({
+                        employeeName: p.employees?.name || '',
+                        employeeRole: p.employees?.role || '',
+                        month, year,
+                        basicSalary: p.basic_salary,
+                        deductions: p.deductions,
+                        bonuses: p.bonuses,
+                        netSalary: p.net_salary,
+                        status: p.status,
+                        paidAt: p.paid_at,
+                        notes: p.notes,
+                      })}>
+                        <Printer className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
