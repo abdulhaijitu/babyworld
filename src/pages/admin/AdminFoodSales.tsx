@@ -523,6 +523,38 @@ export default function AdminFoodSales() {
                           />
                         </div>
                       </div>
+                      {/* Image Upload */}
+                      <div className="space-y-2">
+                        <Label>Image</Label>
+                        <div className="flex items-center gap-3">
+                          {imagePreview ? (
+                            <div className="relative h-16 w-16 rounded-lg overflow-hidden border">
+                              <img src={imagePreview} alt="Preview" className="h-full w-full object-cover" />
+                              <button
+                                type="button"
+                                onClick={() => { setImageFile(null); setImagePreview(null); }}
+                                className="absolute top-0 right-0 bg-destructive text-destructive-foreground rounded-bl p-0.5"
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                            </div>
+                          ) : (
+                            <label className="flex items-center justify-center h-16 w-16 rounded-lg border-2 border-dashed border-muted-foreground/30 cursor-pointer hover:border-primary/50 transition-colors">
+                              <ImagePlus className="h-5 w-5 text-muted-foreground" />
+                              <input
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={handleImageSelect}
+                              />
+                            </label>
+                          )}
+                          <div className="text-xs text-muted-foreground">
+                            <p>JPG, PNG (max 5MB)</p>
+                            {uploadingImage && <p className="text-primary">Uploading...</p>}
+                          </div>
+                        </div>
+                      </div>
                       <div className="flex items-center space-x-2">
                         <Switch
                           checked={newItem.is_available}
