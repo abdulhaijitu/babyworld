@@ -96,22 +96,29 @@ function SidebarContent({
   const location = useLocation();
   const navigate = useNavigate();
   const { roles, isAdmin, isSuperAdmin, loading: rolesLoading } = useUserRoles();
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
 
   // Filter menu items based on user roles
   const menuItems = useMemo(() => {
     return allMenuItems.filter(item => {
-      // If no roles required, show to everyone
       if (!item.requiredRoles || item.requiredRoles.length === 0) {
         return true;
       }
-      // Super admin sees everything
       if (isSuperAdmin) {
         return true;
       }
-      // Check if user has any of the required roles
       return item.requiredRoles.some(role => roles.includes(role));
     });
   }, [roles, isSuperAdmin]);
+
+  // Auto-open group containing active child route
+  useEffect(() => {
+    menuItems.forEach(item => {
+      if (item.children?.some(c => location.pathname === c.path)) {
+        setOpenGroups(prev => ({ ...prev, [item.id]: true }));
+      }
+    });
+  }, [location.pathname, menuItems]);
 
   const handleNavigate = (path: string) => {
     navigate(path);
