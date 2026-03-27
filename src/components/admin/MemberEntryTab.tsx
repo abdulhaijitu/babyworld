@@ -473,9 +473,9 @@ function TodayVisitRow({ visit }: { visit: MembershipVisit }) {
       </TableCell>
       <TableCell>
         {visit.check_out_at ? (
-          <Badge variant="secondary">সম্পন্ন</Badge>
+          <Badge variant="secondary">Completed</Badge>
         ) : (
-          <Badge className="bg-green-500/10 text-green-600 border-green-200">ভেতরে</Badge>
+          <Badge className="bg-green-500/10 text-green-600 border-green-200">Inside</Badge>
         )}
       </TableCell>
     </TableRow>

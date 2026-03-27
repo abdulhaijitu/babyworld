@@ -8,9 +8,9 @@ interface SEOHeadProps {
 const seoData = {
   en: {
     home: {
-      title: "Baby World (বেবি ওয়ার্ল্ড) - Premium Indoor Playground | Dhaka",
+      title: "Baby World - Premium Indoor Playground | Dhaka",
       description: "Baby World is a safe, hygienic, and joyful indoor playground for children aged 1-10 years in Dhaka. Book hourly play sessions and birthday parties. Located in Lalbagh.",
-      keywords: "indoor playground Dhaka, kids play area, children activities, Baby World, বেবি ওয়ার্ল্ড, Lalbagh, safe playground",
+      keywords: "indoor playground Dhaka, kids play area, children activities, Baby World, Lalbagh, safe playground",
     },
     "play-booking": {
       title: "Play & Booking | Baby World - Indoor Playground Dhaka",
