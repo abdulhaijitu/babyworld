@@ -1,24 +1,31 @@
 
 
-## Plan: Sidebar-এ EVENTS গ্রুপ যোগ করা
+## সমস্যা
 
-**AdminSidebar.tsx** ফাইলে `allMenuItems` অ্যারেতে Foods আইটেমের পরে একটি নতুন "Events" গ্রুপ মেনু আইটেম যোগ করা হবে, যার একটি সাবমেনু থাকবে "Events" (existing `/admin/events` route ব্যবহার করে)।
+`bookings` টেবিলে INSERT করার কোনো RLS policy নেই। শুধু SELECT policy আছে। তাই Admin Events পেজ থেকে নতুন ইভেন্ট তৈরি করলে `"new row violates row-level security policy"` এরর আসছে।
 
-বর্তমানে `events` একটি standalone মেনু আইটেম হিসেবে আছে — সেটি সরিয়ে গ্রুপ আইটেমে রূপান্তর করা হবে।
+## সমাধান
 
-### পরিবর্তন
+**Database Migration** -- `bookings` টেবিলে INSERT, UPDATE, DELETE RLS policies যোগ করা:
 
-**`src/components/admin/AdminSidebar.tsx`**:
-- `allMenuItems` থেকে standalone `events` আইটেম সরানো হবে
-- Foods এর পরে নতুন গ্রুপ আইটেম যোগ:
-  ```
-  { id: 'events-group', label: 'Events', icon: PartyPopper, path: '/admin/events',
-    requiredRoles: ['super_admin', 'admin', 'manager'],
-    children: [
-      { id: 'events', label: 'Events', icon: PartyPopper, path: '/admin/events' },
-    ]
-  }
-  ```
+- **INSERT**: admin, manager, staff পারবে
+- **UPDATE**: admin, manager, staff পারবে  
+- **DELETE**: শুধু admin পারবে
 
-কোনো নতুন ফাইল বা রাউট পরিবর্তন দরকার নেই।
+```sql
+CREATE POLICY "Staff can create bookings"
+ON public.bookings FOR INSERT TO authenticated
+WITH CHECK (has_any_role(auth.uid(), ARRAY['admin','manager','staff']::app_role[]));
+
+CREATE POLICY "Staff can update bookings"
+ON public.bookings FOR UPDATE TO authenticated
+USING (has_any_role(auth.uid(), ARRAY['admin','manager','staff']::app_role[]))
+WITH CHECK (has_any_role(auth.uid(), ARRAY['admin','manager','staff']::app_role[]));
+
+CREATE POLICY "Admins can delete bookings"
+ON public.bookings FOR DELETE TO authenticated
+USING (has_role(auth.uid(), 'admin'::app_role));
+```
+
+কোনো কোড পরিবর্তনের প্রয়োজন নেই -- শুধু database migration।
 
