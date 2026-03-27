@@ -252,7 +252,7 @@ function SidebarContent({
 
       {/* Search */}
       <AnimatePresence>
-        {!collapsed && (
+        {!collapsed && showSearch && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
@@ -268,6 +268,7 @@ function SidebarContent({
                   placeholder="Search menu..."
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
+                  autoFocus
                   className="w-full h-7 pl-7 pr-3 rounded-md border border-border bg-muted/50 text-xs placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring focus:border-ring transition-colors"
                 />
               </div>
