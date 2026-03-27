@@ -1,55 +1,55 @@
 
 
-## পরিকল্পনা: সাইডবার টপবার ও বটম রিডিজাইন
+## পরিকল্পনা: Settings পেজ ৭-ট্যাব রিস্ট্রাকচার
 
-### যা পরিবর্তন হবে
+### বর্তমান অবস্থা
+Settings পেজে ৪টি ট্যাব আছে: Pricing, Business, Notifications, General
 
-**ফাইল:** `src/components/admin/AdminSidebar.tsx`
+### নতুন ট্যাব স্ট্রাকচার (৭টি)
+1. **General** — Theme (Dark Mode) + Security (Change Password) — বর্তমান কোড থেকে
+2. **Business** — Business Information — বর্তমান কোড থেকে
+3. **Pricing** — Hourly Play + Event Package + Package Pricing — বর্তমান কোড থেকে
+4. **Notifications** — SMS/WhatsApp চ্যানেল টগল + Template Editor — বর্তমান কোড থেকে
+5. **Email Configure** (নতুন) — Email notification সেটিংস (SMTP বা email provider কনফিগারেশন, email templates preview)
+6. **SMS Gateway** (নতুন) — SMS API কনফিগারেশন (API Key, Sender ID, API URL ফিল্ড) — বর্তমানে edge function-এ হার্ডকোড করা আছে, এখন settings থেকে কনফিগার করা যাবে
+7. **Payment Gateway** (নতুন) — UddoktaPay কনফিগারেশন (API mode: Sandbox/Live, API URL display, স্ট্যাটাস ইন্ডিকেটর)
 
-#### ১. টপবার রিডিজাইন (লাইন 194-229)
+### পরিবর্তনসমূহ
 
-**বর্তমান:** Logo + Name (বাম), Collapse icon (ডান)
+**ফাইল: `src/pages/admin/AdminSettings.tsx`**
+- TabsList কে ৭টি ট্যাবে আপডেট (স্ক্রলেবল হবে মোবাইলে)
+- ডিফল্ট ট্যাব `general` এ পরিবর্তন
+- ৩টি নতুন `TabsContent` যোগ
 
-**নতুন লেআউট:**
-- **বাম:** Logo + "Baby World" টেক্সট
-- **ডান:** Search আইকন বাটন + Collapse আইকন বাটন
+**নতুন ট্যাব কন্টেন্ট:**
 
-সার্চ আইকনে ক্লিক করলে সার্চ বার টগল হবে (নিচে স্লাইড-ডাউন)। বর্তমান সার্চ বার সরাসরি দেখানোর বদলে আইকন-ট্রিগার্ড হবে।
+#### Email Configure ট্যাব
+- Email notification enable/disable toggle
+- Email provider info card (বর্তমানে কোনো SMTP সেট নেই তাই "Not Configured" স্ট্যাটাস দেখাবে)
+- ভবিষ্যতে SMTP সেটআপ করার জন্য placeholder
 
-- একটি `showSearch` state যোগ হবে
-- সার্চ আইকন ক্লিক করলে `showSearch` টগল হবে
-- সার্চ বার `showSearch` true হলেই দেখাবে (AnimatePresence দিয়ে)
+#### SMS Gateway ট্যাব
+- SMS Provider Name (e.g. ReveCloud/Khudebarta)
+- API Key ফিল্ড (masked, শুধু শেষ ৪ ক্যারেক্টার দেখাবে — এটি settings টেবিলে সেভ হবে)
+- Sender ID ফিল্ড
+- API URL ফিল্ড
+- Connection Test বাটন
+- স্ট্যাটাস ব্যাজ (Configured/Not Configured)
+- `settings` টেবিলে `sms_gateway` কী-তে JSON হিসেবে সেভ হবে
 
-#### ২. সার্চ বার সেকশন আপডেট (লাইন 232-255)
+#### Payment Gateway ট্যাব
+- Gateway Name: UddoktaPay (readonly)
+- Mode সিলেক্ট: Sandbox / Live
+- API URL display
+- Connection status indicator
+- `settings` টেবিলে `payment_gateway` কী-তে JSON হিসেবে সেভ হবে
 
-বর্তমান কন্ডিশন `!collapsed` থেকে পরিবর্তন হবে `!collapsed && showSearch`-এ। সার্চ ক্লোজ করলে `searchQuery` ক্লিয়ার হবে।
+**হুক আপডেট: `src/hooks/useSettings.ts`**
+- `smsGateway` ও `paymentGateway` state যোগ
+- `saveSmsGateway()` ও `savePaymentGateway()` ফাংশন যোগ
+- settings লোডে নতুন কী-গুলো পড়া
 
-#### ৩. বটম সেকশন রিডিজাইন (লাইন 431-469)
-
-**বর্তমান:** প্রোফাইল কার্ড (অ্যাভাটার + নাম + ইমেইল) + আলাদা Logout বাটন
-
-**নতুন লেআউট (এক লাইনে):**
-- **বাম:** Admin ব্যাজ (অ্যাভাটার + "Admin" লেবেল)
-- **ডান:** Logout আইকন বাটন
-
-```text
-┌─────────────────────────────┐
-│ [AV] Admin        [LogOut]  │
-└─────────────────────────────┘
-```
-
-- প্রোফাইল কার্ড ও আলাদা লগআউট বাটন মুছে একটি সিঙ্গেল row-তে রাখা হবে
-- বামে: ছোট অ্যাভাটার + "Admin" টেক্সট
-- ডানে: LogOut আইকন বাটন (destructive color)
-
-#### ৪. কোলাপসড স্টেট
-- **টপবার কোলাপসড:** শুধু লোগো দেখাবে, সার্চ ও কোলাপস আইকন লুকানো থাকবে
-- **বটম কোলাপসড:** শুধু অ্যাভাটার দেখাবে, টুলটিপে "Logout" অপশন থাকবে
-
-### টেকনিক্যাল ডিটেইলস
-
-- নতুন state: `const [showSearch, setShowSearch] = useState(false)`
-- টপবার ডান পাশে দুটি `Button variant="ghost" size="icon"`: Search ও ChevronLeft/Right
-- বটম সেকশনে `flex items-center justify-between` লেআউট
-- সার্চ বন্ধ করলে `setSearchQuery('')` কল হবে
+### গুরুত্বপূর্ণ নোট
+- SMS API Key ও Payment API Key সিক্রেট হিসেবে edge function-এ থাকবে, settings-এ শুধু non-sensitive config (provider name, sender ID, mode, API URL) সেভ হবে
+- কোনো ডাটাবেস মাইগ্রেশন লাগবে না — `settings` টেবিলে নতুন key-value পেয়ার ইনসার্ট হবে
 
