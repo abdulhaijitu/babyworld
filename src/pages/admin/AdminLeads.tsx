@@ -215,11 +215,127 @@ function WhatsAppLeadButton({ phone, name }: { phone: string; name: string }) {
   );
 }
 
+function BulkMessageDialog({ leads, onClose }: { leads: Lead[]; onClose: () => void }) {
+  const { sendSMS, sending } = useSendSMS();
+  const [open, setOpen] = useState(false);
+  const [channel, setChannel] = useState<'sms' | 'whatsapp'>('whatsapp');
+  const [message, setMessage] = useState('প্রিয় গ্রাহক,\nBaby World-এ আপনাকে স্বাগতম! আমাদের নতুন অফার ও প্যাকেজ সম্পর্কে জানতে ভিজিট করুন।\n📍 Baby World Indoor Playground\n📞 +880 9606990128');
+  const [progress, setProgress] = useState({ sent: 0, failed: 0, total: 0 });
+  const [isSending, setIsSending] = useState(false);
+
+  const formatPhone = (phone: string) => {
+    let p = phone.replace(/\D/g, '');
+    if (p.startsWith('0')) p = '88' + p;
+    else if (!p.startsWith('88')) p = '88' + p;
+    return p;
+  };
+
+  const handleBulkWhatsApp = () => {
+    const phones = leads.map(l => formatPhone(l.phone));
+    // Open first one, show instructions for rest
+    if (phones.length > 0) {
+      const url = `https://wa.me/${phones[0]}?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+    }
+    // For bulk WhatsApp, we open each in sequence
+    leads.forEach((lead, i) => {
+      if (i === 0) return;
+      setTimeout(() => {
+        const url = `https://wa.me/${formatPhone(lead.phone)}?text=${encodeURIComponent(message)}`;
+        window.open(url, '_blank');
+      }, i * 1500);
+    });
+    toast.success(`${leads.length}টি WhatsApp উইন্ডো খোলা হচ্ছে`);
+    setOpen(false);
+    onClose();
+  };
+
+  const handleBulkSMS = async () => {
+    setIsSending(true);
+    setProgress({ sent: 0, failed: 0, total: leads.length });
+    let sent = 0, failed = 0;
+    for (const lead of leads) {
+      const personalMsg = message.replace('গ্রাহক', lead.name);
+      const result = await sendSMS(lead.phone, personalMsg);
+      if (result.success) sent++;
+      else failed++;
+      setProgress({ sent, failed, total: leads.length });
+    }
+    setIsSending(false);
+    toast.success(`SMS পাঠানো সম্পন্ন: ${sent} সফল, ${failed} ব্যর্থ`);
+    setOpen(false);
+    onClose();
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm">
+          <Megaphone className="h-4 w-4 mr-2" />
+          বাল্ক মেসেজ ({leads.length})
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle>বাল্ক মেসেজ পাঠান — {leads.length}টি লিড</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div>
+            <Label>চ্যানেল</Label>
+            <Select value={channel} onValueChange={v => setChannel(v as 'sms' | 'whatsapp')}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="whatsapp">WhatsApp</SelectItem>
+                <SelectItem value="sms">SMS</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label>মেসেজ</Label>
+            <Textarea value={message} onChange={e => setMessage(e.target.value)} rows={5} maxLength={1600} />
+            <p className="text-xs text-muted-foreground text-right">{message.length}/1600</p>
+          </div>
+
+          <div className="bg-muted p-3 rounded-lg text-sm space-y-1">
+            <p className="font-medium">প্রাপকগণ ({leads.length}জন):</p>
+            <div className="max-h-24 overflow-y-auto space-y-0.5">
+              {leads.map(l => (
+                <p key={l.id} className="text-muted-foreground">{l.name} — {l.phone}</p>
+              ))}
+            </div>
+          </div>
+
+          {isSending && (
+            <div className="bg-muted p-3 rounded-lg text-sm">
+              <p>প্রগতি: {progress.sent + progress.failed}/{progress.total}</p>
+              <p className="text-green-600">সফল: {progress.sent}</p>
+              {progress.failed > 0 && <p className="text-red-600">ব্যর্থ: {progress.failed}</p>}
+            </div>
+          )}
+
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setOpen(false)}>বাতিল</Button>
+            <Button
+              onClick={channel === 'whatsapp' ? handleBulkWhatsApp : handleBulkSMS}
+              disabled={isSending || !message.trim()}
+            >
+              {isSending ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Send className="h-4 w-4 mr-1" />}
+              {channel === 'whatsapp' ? 'WhatsApp পাঠান' : 'SMS পাঠান'}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 export default function AdminLeads() {
   const [statusFilter, setStatusFilter] = useState<LeadStatus | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingLead, setEditingLead] = useState<Lead | undefined>();
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
   const { data: leads = [], isLoading } = useLeads(statusFilter);
   const deleteLead = useDeleteLead();
@@ -255,6 +371,25 @@ export default function AdminLeads() {
     setDialogOpen(false);
     setEditingLead(undefined);
   };
+
+  const toggleSelect = (id: string) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.size === filteredLeads.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(filteredLeads.map(l => l.id)));
+    }
+  };
+
+  const selectedLeads = filteredLeads.filter(l => selectedIds.has(l.id));
 
   return (
     <div className="space-y-6">
