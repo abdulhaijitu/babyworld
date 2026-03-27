@@ -101,12 +101,12 @@ export function EventBookingForm({ selectedPackage, onSelectPackage }: EventBook
 
   if (isSubmitted) {
     return (
-      <section id="booking" className="py-24 bg-background">
-        <div className="container mx-auto max-w-2xl">
+      <section id="booking" className="py-16 sm:py-20 lg:py-24 bg-background">
+        <div className="container mx-auto max-w-2xl px-4 sm:px-6">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-card rounded-3xl p-8 md:p-12 shadow-card text-center space-y-6"
+            className="bg-card rounded-3xl p-6 sm:p-8 md:p-12 shadow-card text-center space-y-6"
           >
             <div className="w-20 h-20 mx-auto bg-primary/10 rounded-full flex items-center justify-center">
               <CheckCircle className="w-10 h-10 text-primary" />
@@ -127,10 +127,10 @@ export function EventBookingForm({ selectedPackage, onSelectPackage }: EventBook
   }
 
   return (
-    <section id="booking" className="py-24 bg-background">
-      <div className="container mx-auto">
+    <section id="booking" className="py-16 sm:py-20 lg:py-24 bg-background">
+      <div className="container mx-auto px-4 sm:px-6">
         {/* Header */}
-        <ScrollFadeIn className="text-center max-w-2xl mx-auto mb-12 space-y-4">
+        <ScrollFadeIn className="text-center max-w-2xl mx-auto mb-8 sm:mb-10 lg:mb-12 space-y-4">
           <span className="text-sm font-semibold text-primary uppercase tracking-wider">
             {t("eventsPage.booking.label")}
           </span>
@@ -143,14 +143,14 @@ export function EventBookingForm({ selectedPackage, onSelectPackage }: EventBook
         </ScrollFadeIn>
 
         {/* Step Indicators */}
-        <div className="max-w-3xl mx-auto mb-12">
+        <div className="max-w-3xl mx-auto mb-8 sm:mb-12">
           <div className="flex items-center justify-between">
             {steps.map((step, index) => (
               <div key={step.number} className="flex items-center">
                 <div className="flex flex-col items-center">
                   <div
                     className={cn(
-                      "w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all duration-300",
+                      "w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all duration-300",
                       currentStep >= step.number
                         ? "bg-primary text-primary-foreground"
                         : "bg-muted text-muted-foreground"

@@ -77,7 +77,7 @@ export function ContactForm() {
 
   return (
     <ScrollFadeIn className="w-full">
-      <div className="bg-card rounded-3xl p-8 shadow-card">
+      <div className="bg-card rounded-3xl p-5 sm:p-6 md:p-8 shadow-card">
         <AnimatePresence mode="wait">
           {isSubmitted ? (
             <motion.div

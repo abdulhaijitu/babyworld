@@ -72,10 +72,10 @@ export function EventPackages({ selectedPackage, onSelectPackage }: EventPackage
   ];
 
   return (
-    <section id="packages" className="py-24 bg-card">
-      <div className="container mx-auto">
+    <section id="packages" className="py-16 sm:py-20 lg:py-24 bg-card">
+      <div className="container mx-auto px-4 sm:px-6">
         {/* Header */}
-        <ScrollFadeIn className="text-center max-w-2xl mx-auto mb-16 space-y-4">
+        <ScrollFadeIn className="text-center max-w-2xl mx-auto mb-10 sm:mb-12 lg:mb-16 space-y-4">
           <span className="text-sm font-semibold text-secondary uppercase tracking-wider">
             {t("eventsPage.packages.label")}
           </span>
@@ -88,7 +88,7 @@ export function EventPackages({ selectedPackage, onSelectPackage }: EventPackage
         </ScrollFadeIn>
 
         {/* Package Cards */}
-        <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-4 gap-6" staggerDelay={0.1}>
+        <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6" staggerDelay={0.1}>
           {packages.map((pkg) => {
             const isSelected = selectedPackage === pkg.id;
             

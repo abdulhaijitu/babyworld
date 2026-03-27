@@ -54,7 +54,7 @@ export function GoogleMap() {
               />
               
               {/* Overlay with location info */}
-              <div className="absolute bottom-4 left-4 bg-card/95 backdrop-blur-sm rounded-xl p-4 shadow-lg max-w-xs">
+              <div className="absolute bottom-4 left-4 bg-card/95 backdrop-blur-sm rounded-xl p-4 shadow-lg max-w-xs hidden sm:block">
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
                     <span className="text-lg">🏠</span>
