@@ -112,11 +112,11 @@ export default function AdminDashboardContent() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       {/* Page Title */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Dashboard</h1>
+          <h1 className="text-xl md:text-2xl font-bold">Dashboard</h1>
           <p className="text-muted-foreground flex items-center gap-1">
             <Clock className="w-3.5 h-3.5" />
             {format(new Date(), 'PPP')}
