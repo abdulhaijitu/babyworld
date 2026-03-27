@@ -11,8 +11,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Plus, Search, Phone, Mail, Calendar, Trash2, Edit, UserPlus, 
-  Filter, Users, UserCheck, UserX, MessageSquare 
+  Filter, Users, UserCheck, UserX, MessageSquare, Send, Loader2
 } from 'lucide-react';
+import { useSendSMS } from '@/hooks/useSendSMS';
+import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { useLeads, useCreateLead, useUpdateLead, useDeleteLead, type LeadStatus, type LeadSource, type LeadInsert, type Lead } from '@/hooks/useLeads';
 
