@@ -20,13 +20,13 @@ export default function SettingsSms() {
   };
 
   if (loading) {
-    return <div className="p-4 md:p-6 lg:p-8 space-y-6"><Skeleton className="h-8 w-48" /><Skeleton className="h-64 w-full" /></div>;
+    return <div className="space-y-6"><Skeleton className="h-8 w-48" /><Skeleton className="h-64 w-full" /></div>;
   }
 
   const isConfigured = smsGateway.providerName && smsGateway.apiKey;
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 space-y-6">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2"><SendHorizonal className="w-6 h-6" />SMS Gateway</h1>

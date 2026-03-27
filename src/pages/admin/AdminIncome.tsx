@@ -238,7 +238,7 @@ export default function AdminIncome() {
   const isPending = createMutation.isPending || updateMutation.isPending;
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 space-y-6">
+    <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">

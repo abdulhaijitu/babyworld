@@ -98,7 +98,7 @@ export default function AdminDashboardContent() {
 
   if (error) {
     return (
-      <div className="p-4 md:p-6 lg:p-8">
+      <div>
         <div className="text-center py-16">
           <AlertCircle className="w-12 h-12 mx-auto mb-4 text-destructive" />
           <p className="text-destructive font-medium mb-2">Failed to load dashboard</p>
@@ -112,7 +112,7 @@ export default function AdminDashboardContent() {
   }
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 space-y-6">
+    <div className="space-y-6">
       {/* Page Title */}
       <div className="flex items-center justify-between">
         <div>

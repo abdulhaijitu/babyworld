@@ -57,7 +57,9 @@ export default function AdminLayout() {
         <div className="hidden md:flex items-center justify-end gap-2 p-4 border-b">
           <NotificationBell />
         </div>
-        <Outlet />
+        <div className="p-4 md:p-6 lg:p-8">
+          <Outlet />
+        </div>
       </main>
     </div>
   );
