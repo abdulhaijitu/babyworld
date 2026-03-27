@@ -80,7 +80,15 @@ const allMenuItems: MenuItem[] = [
     { id: 'seo-branding', label: 'SEO & Branding', icon: FileBarChart, path: '/admin/seo-branding' },
   ]},
   { id: 'users', label: 'Users', icon: Shield, path: '/admin/users', requiredRoles: ['super_admin'] },
-  { id: 'settings', label: 'Settings', icon: Settings, path: '/admin/settings', requiredRoles: ['super_admin', 'admin'] },
+  { id: 'settings', label: 'Settings', icon: Settings, path: '/admin/settings/general', requiredRoles: ['super_admin', 'admin'], children: [
+    { id: 'settings-general', label: 'General', icon: Settings, path: '/admin/settings/general' },
+    { id: 'settings-business', label: 'Business', icon: Briefcase, path: '/admin/settings/business' },
+    { id: 'settings-pricing', label: 'Pricing', icon: Receipt, path: '/admin/settings/pricing' },
+    { id: 'settings-notifications', label: 'Notifications', icon: MessageSquare, path: '/admin/settings/notifications' },
+    { id: 'settings-email', label: 'Email Configure', icon: Monitor, path: '/admin/settings/email' },
+    { id: 'settings-sms', label: 'SMS Gateway', icon: MessageSquare, path: '/admin/settings/sms' },
+    { id: 'settings-payment', label: 'Payment Gateway', icon: Crown, path: '/admin/settings/payment' },
+  ]},
 ];
 
 interface AdminSidebarProps {
