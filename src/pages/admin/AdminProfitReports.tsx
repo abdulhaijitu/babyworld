@@ -135,9 +135,9 @@ export default function AdminProfitReports() {
   ];
 
   const expensePieData = expenseBreakdown.map((e: { category: string; amount: number }) => ({
-    name: EXPENSE_CATEGORY_LABELS[e.category]?.en || e.category,
+    name: categoryLabels[e.category]?.en || e.category,
     value: e.amount,
-    fill: EXPENSE_CATEGORY_LABELS[e.category]?.color || '#64748b'
+    fill: categoryLabels[e.category]?.color || '#64748b'
   }));
 
   // Export to CSV
