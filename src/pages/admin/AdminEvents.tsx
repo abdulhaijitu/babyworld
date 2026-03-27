@@ -597,7 +597,7 @@ export default function AdminEvents() {
                 <SelectContent>
                   {eventPackages.map(pkg => (
                     <SelectItem key={pkg.id} value={pkg.id}>
-                      {pkg.name} - ৳{pkg.price.toLocaleString()} ({pkg.guests} {'guests'})
+                      {pkg.name} - ৳{pkg.price.toLocaleString()} ({pkg.max_guests} {'guests'})
                     </SelectItem>
                   ))}
                 </SelectContent>
