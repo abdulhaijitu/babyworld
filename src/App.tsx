@@ -90,6 +90,10 @@ const App = () => (
                   
                   <Route path="event-packages" element={<AdminEventPackages />} />
                   <Route path="event-calendar" element={<AdminEventCalendar />} />
+                  <Route path="leads" element={<AdminLeads />} />
+                  <Route path="promotions" element={<AdminPromotions />} />
+                  <Route path="sms-campaigns" element={<AdminSmsCampaigns />} />
+                  <Route path="social-media" element={<AdminSocialMedia />} />
                   <Route path="reports" element={<AdminReports />} />
                   <Route path="profit" element={<AdminProfitReports />} />
                   <Route path="expenses" element={<AdminExpenses />} />
