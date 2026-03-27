@@ -195,7 +195,59 @@ export default function AdminEventPackages() {
     }
   };
 
-  return (
+  // Drag and drop state
+  const [draggedId, setDraggedId] = useState<string | null>(null);
+  const [dragOverId, setDragOverId] = useState<string | null>(null);
+
+  const handleDragStart = (e: React.DragEvent, id: string) => {
+    setDraggedId(id);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e: React.DragEvent, id: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (id !== draggedId) setDragOverId(id);
+  };
+
+  const handleDragLeave = () => {
+    setDragOverId(null);
+  };
+
+  const handleDrop = async (e: React.DragEvent, targetId: string) => {
+    e.preventDefault();
+    setDragOverId(null);
+    if (!draggedId || draggedId === targetId) return;
+
+    const oldIndex = packages.findIndex(p => p.id === draggedId);
+    const newIndex = packages.findIndex(p => p.id === targetId);
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    const reordered = [...packages];
+    const [moved] = reordered.splice(oldIndex, 1);
+    reordered.splice(newIndex, 0, moved);
+
+    // Optimistic update
+    const updated = reordered.map((p, i) => ({ ...p, sort_order: i }));
+    setPackages(updated);
+
+    // Persist to DB
+    try {
+      const updates = updated.map(p =>
+        supabase.from('event_packages').update({ sort_order: p.sort_order }).eq('id', p.id)
+      );
+      await Promise.all(updates);
+      toast.success('Sort order updated');
+    } catch {
+      toast.error('Sort order update failed');
+      fetchPackages();
+    }
+  };
+
+  const handleDragEnd = () => {
+    setDraggedId(null);
+    setDragOverId(null);
+  };
     <div className="p-4 md:p-6 lg:p-8 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
