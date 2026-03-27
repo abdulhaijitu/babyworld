@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { Minus, Plus, Trash2, ShoppingCart, UtensilsCrossed, CheckCircle, XCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
+import { printFoodReceipt } from '@/lib/printFoodReceipt';
 import type { Tables } from '@/integrations/supabase/types';
 
 type FoodItem = Tables<'food_items'>;
