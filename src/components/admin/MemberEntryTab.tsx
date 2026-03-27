@@ -144,7 +144,7 @@ export default function MemberEntryTab() {
       if (data && data.length > 0) {
         setFoundMember(data[0]);
       } else {
-        toast.error('কোনো সক্রিয় মেম্বার পাওয়া যায়নি');
+        toast.error('No active member found');
       }
     } catch {
       toast.error('সার্চে সমস্যা হয়েছে');
