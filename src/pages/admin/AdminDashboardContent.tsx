@@ -17,9 +17,6 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
-import { QuickActions } from '@/components/admin/QuickActions';
-import { ActivityLogCard } from '@/components/admin/ActivityLogCard';
-import { VisitorCounter } from '@/components/admin/VisitorCounter';
 import { ExpiringCardsAlert } from '@/components/admin/ExpiringCardsAlert';
 
 export default function AdminDashboardContent() {
