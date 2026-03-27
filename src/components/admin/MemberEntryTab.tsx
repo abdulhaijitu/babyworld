@@ -147,7 +147,7 @@ export default function MemberEntryTab() {
         toast.error('No active member found');
       }
     } catch {
-      toast.error('সার্চে সমস্যা হয়েছে');
+      toast.error('Search failed');
     } finally {
       setSearching(false);
     }
