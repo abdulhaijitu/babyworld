@@ -63,6 +63,7 @@ const allMenuItems: MenuItem[] = [
     { id: 'food-pos', label: 'POS', icon: Monitor, path: '/admin/food-pos' },
     { id: 'food-orders', label: 'Orders', icon: Receipt, path: '/admin/food-orders' },
     { id: 'food-items', label: 'Items', icon: List, path: '/admin/food' },
+    { id: 'coupons', label: 'Coupons', icon: Crown, path: '/admin/coupons' },
   ]},
   { id: 'expenses', label: 'Expenses', icon: Receipt, path: '/admin/expenses', requiredRoles: ['super_admin', 'admin', 'manager'] },
   { id: 'employees', label: 'Employees', icon: Users, path: '/admin/employees', requiredRoles: ['super_admin', 'admin'] },

@@ -75,6 +75,7 @@ const App = () => (
                   <Route path="food" element={<AdminFoodSales />} />
                   <Route path="food-orders" element={<AdminFoodOrders />} />
                   <Route path="food-pos" element={<AdminFoodPOS />} />
+                  <Route path="coupons" element={<AdminCoupons />} />
                   <Route path="employees" element={<AdminEmployees />} />
                   <Route path="roster" element={<AdminRoster />} />
                   <Route path="bookings" element={<AdminBookings />} />
