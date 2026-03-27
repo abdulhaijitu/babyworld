@@ -255,10 +255,6 @@ export default function AdminFoodOrders() {
           <p className="text-muted-foreground">অর্ডার ম্যানেজমেন্ট ও ট্র্যাকিং</p>
         </div>
         <div className="flex gap-2">
-          <Button size="sm" onClick={handleOpenNewOrder}>
-            <Plus className="w-4 h-4 mr-2" />
-            New Order
-          </Button>
           <Button variant="outline" size="sm" onClick={fetchOrders} disabled={loading}>
             <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
             Refresh
