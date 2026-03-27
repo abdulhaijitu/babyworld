@@ -158,7 +158,8 @@ function SidebarContent({
 }: AdminSidebarProps & { isMobile?: boolean; onMobileClose?: () => void }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { roles, isSuperAdmin } = useUserRoles();
+  const { roles, isSuperAdmin, isAdmin } = useUserRoles();
+  const { viewableModules } = useRolePermissions();
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useState(false);
@@ -166,11 +167,29 @@ function SidebarContent({
 
   const menuItems = useMemo(() => {
     return allMenuItems.filter(item => {
-      if (!item.requiredRoles || item.requiredRoles.length === 0) return true;
-      if (isSuperAdmin) return true;
-      return item.requiredRoles.some(role => roles.includes(role));
+      // Dashboard is always visible
+      if (item.id === 'dashboard') return true;
+      
+      // Items with requiredRoles (like role-permission) use static role check
+      if (item.requiredRoles && item.requiredRoles.length > 0) {
+        if (isSuperAdmin) return true;
+        return item.requiredRoles.some(role => roles.includes(role));
+      }
+      
+      // Super admin and admin see everything
+      if (isSuperAdmin || isAdmin) return true;
+      
+      // For module-mapped items, check role_permissions dynamically
+      if (item.module && viewableModules !== null) {
+        return viewableModules.has(item.module);
+      }
+      
+      // If no module mapping and no requiredRoles, show by default for admin/super_admin only
+      if (!item.module) return isSuperAdmin || isAdmin;
+      
+      return false;
     });
-  }, [roles, isSuperAdmin]);
+  }, [roles, isSuperAdmin, isAdmin, viewableModules]);
 
   const filteredItems = useMemo(() => {
     if (!searchQuery.trim()) return menuItems;
