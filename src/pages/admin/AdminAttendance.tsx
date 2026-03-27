@@ -94,8 +94,7 @@ export default function AdminAttendance() {
     setBulkSaving(false);
     setBulkDialogOpen(false);
     toast.success(`${success}জন কর্মচারীর উপস্থিতি সেভ হয়েছে${failed > 0 ? `, ${failed}টি ব্যর্থ` : ''}`);
-    // Refresh data
-    window.location.reload();
+    queryClient.invalidateQueries({ queryKey: ['attendance'] });
   };
 
   const setAllBulkStatus = (status: string) => {
