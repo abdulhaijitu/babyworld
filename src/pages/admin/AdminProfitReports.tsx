@@ -63,7 +63,14 @@ function getHexFromColor(colorClass: string): string {
 const CHART_COLORS = ['#22c55e', '#3b82f6', '#f97316', '#8b5cf6', '#ec4899', '#eab308', '#6b7280', '#64748b'];
 
 export default function AdminProfitReports() {
-  
+  const { data: dbCategories = [] } = useExpenseCategories();
+
+  // Build dynamic label map from DB categories
+  const categoryLabels: Record<string, { en: string; color: string }> = {};
+  dbCategories.forEach(c => {
+    categoryLabels[c.name] = { en: c.label, color: getHexFromColor(c.color) };
+  });
+
   // Date range state
   const [startDate, setStartDate] = useState<Date>(startOfMonth(new Date()));
   const [endDate, setEndDate] = useState<Date>(endOfMonth(new Date()));
