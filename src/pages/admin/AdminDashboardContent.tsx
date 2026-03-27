@@ -128,7 +128,7 @@ export default function AdminDashboardContent() {
           <CardHeader className="pb-2">
             <CardDescription className="flex items-center gap-1.5">
               <UtensilsCrossed className="w-4 h-4" />
-              ফুড রেভিনিউ
+              Food Revenue
             </CardDescription>
             <CardTitle className="text-2xl">
               {isLoading ? <Skeleton className="h-8 w-24" /> : `৳${foodRevenue.toLocaleString()}`}
