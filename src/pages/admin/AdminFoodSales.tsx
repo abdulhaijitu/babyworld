@@ -45,7 +45,8 @@ import {
   Check,
   X,
   Trash2,
-  Edit
+  Edit,
+  ImagePlus,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
