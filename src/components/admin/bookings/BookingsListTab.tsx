@@ -180,7 +180,32 @@ export function BookingsListTab() {
         </Card>
       </div>
 
-      {/* Bookings Table */}
+      {/* View Toggle */}
+      <div className="flex justify-end">
+        <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as 'list' | 'calendar')} className="w-auto">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="list" className="gap-1">
+              <List className="w-4 h-4" />
+              List
+            </TabsTrigger>
+            <TabsTrigger value="calendar" className="gap-1">
+              <CalendarIcon className="w-4 h-4" />
+              Calendar
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
+
+      {/* Calendar View */}
+      {viewMode === 'calendar' && (
+        <BookingCalendarView
+          bookings={bookings as any}
+          onBookingSelect={(booking) => { setSelectedBooking(booking as any); setDetailOpen(true); }}
+        />
+      )}
+
+      {/* Bookings Table - List View */}
+      {viewMode === 'list' && (
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
