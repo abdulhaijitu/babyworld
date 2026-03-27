@@ -1147,6 +1147,57 @@ export type Database = {
         }
         Relationships: []
       }
+      sms_campaigns: {
+        Row: {
+          audience: Database["public"]["Enums"]["campaign_audience"]
+          created_at: string
+          created_by: string | null
+          custom_phones: string[] | null
+          failed_count: number
+          id: string
+          message: string
+          name: string
+          scheduled_at: string | null
+          sent_at: string | null
+          sent_count: number
+          status: Database["public"]["Enums"]["campaign_status"]
+          total_recipients: number
+          updated_at: string
+        }
+        Insert: {
+          audience?: Database["public"]["Enums"]["campaign_audience"]
+          created_at?: string
+          created_by?: string | null
+          custom_phones?: string[] | null
+          failed_count?: number
+          id?: string
+          message: string
+          name: string
+          scheduled_at?: string | null
+          sent_at?: string | null
+          sent_count?: number
+          status?: Database["public"]["Enums"]["campaign_status"]
+          total_recipients?: number
+          updated_at?: string
+        }
+        Update: {
+          audience?: Database["public"]["Enums"]["campaign_audience"]
+          created_at?: string
+          created_by?: string | null
+          custom_phones?: string[] | null
+          failed_count?: number
+          id?: string
+          message?: string
+          name?: string
+          scheduled_at?: string | null
+          sent_at?: string | null
+          sent_count?: number
+          status?: Database["public"]["Enums"]["campaign_status"]
+          total_recipients?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       ticket_rides: {
         Row: {
           created_at: string
@@ -1351,6 +1402,14 @@ export type Database = {
       app_role: "admin" | "user" | "manager" | "staff" | "super_admin"
       booking_status: "confirmed" | "pending" | "cancelled"
       booking_type: "hourly_play" | "birthday_event" | "private_event"
+      campaign_audience:
+        | "all_customers"
+        | "members"
+        | "expired_members"
+        | "leads"
+        | "event_bookings"
+        | "custom"
+      campaign_status: "draft" | "scheduled" | "sending" | "sent" | "failed"
       employee_role: "staff" | "supervisor" | "manager"
       employee_status: "active" | "inactive"
       expense_category:
@@ -1516,6 +1575,15 @@ export const Constants = {
       app_role: ["admin", "user", "manager", "staff", "super_admin"],
       booking_status: ["confirmed", "pending", "cancelled"],
       booking_type: ["hourly_play", "birthday_event", "private_event"],
+      campaign_audience: [
+        "all_customers",
+        "members",
+        "expired_members",
+        "leads",
+        "event_bookings",
+        "custom",
+      ],
+      campaign_status: ["draft", "scheduled", "sending", "sent", "failed"],
       employee_role: ["staff", "supervisor", "manager"],
       employee_status: ["active", "inactive"],
       expense_category: [
