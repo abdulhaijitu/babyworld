@@ -255,7 +255,7 @@ function SidebarContent({
       </AnimatePresence>
 
       {/* Menu Items */}
-      <nav className="flex-1 py-2 px-2 space-y-0.5 overflow-y-auto">
+      <nav className="flex-1 py-1.5 px-1.5 space-y-0.5 overflow-y-auto">
         {filteredItems.map((item, index) => {
           const Icon = item.icon;
           const active = isActive(item.path);
@@ -279,20 +279,20 @@ function SidebarContent({
                   onOpenChange={(open) => setOpenGroups(open ? { [item.id]: true } : {})}
                 >
                   <CollapsibleTrigger className={cn(
-                    "w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200",
+                    "w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all duration-200",
                     childActive
                       ? "bg-primary/10 text-primary"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground",
                   )}>
                     <motion.div
                       className={cn(
-                        "h-7 w-7 rounded-md flex items-center justify-center shrink-0 transition-colors duration-200",
+                        "h-6 w-6 rounded-md flex items-center justify-center shrink-0 transition-colors duration-200",
                         childActive ? "bg-primary/15" : "bg-transparent"
                       )}
                       whileHover={{ scale: 1.1 }}
                       transition={{ type: 'spring', stiffness: 400, damping: 17 }}
                     >
-                      <Icon className="h-4 w-4" />
+                      <Icon className="h-3.5 w-3.5" />
                     </motion.div>
                     <span className="flex-1 text-left">{item.label}</span>
                     <AnimatePresence>
@@ -301,7 +301,7 @@ function SidebarContent({
                       )}
                     </AnimatePresence>
                     <ChevronDown className={cn(
-                      "h-3.5 w-3.5 shrink-0 transition-transform duration-200",
+                      "h-3 w-3 shrink-0 transition-transform duration-200",
                       (openGroups[item.id] ?? childActive) ? "rotate-180" : ""
                     )} />
                   </CollapsibleTrigger>
@@ -314,7 +314,7 @@ function SidebarContent({
                         transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
                         className="overflow-hidden"
                       >
-                        <div className="pl-5 mt-0.5 space-y-0.5">
+                        <div className="pl-4 mt-0.5 space-y-0.5">
                           {filteredChildren.map((child) => {
                             const ChildIcon = child.icon;
                             const childItemActive = location.pathname === child.path;
@@ -324,7 +324,7 @@ function SidebarContent({
                                 key={child.id}
                                 onClick={() => handleNavigate(child.path)}
                                 className={cn(
-                                  "w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-all duration-200 relative",
+                                  "w-full flex items-center gap-2 px-2.5 py-1 rounded-md text-xs transition-all duration-200 relative",
                                   childItemActive
                                     ? "bg-primary/10 text-primary font-medium"
                                     : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -333,11 +333,11 @@ function SidebarContent({
                                 {childItemActive && (
                                   <motion.div
                                     layoutId="sidebar-active-indicator"
-                                    className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-primary"
+                                    className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 rounded-r-full bg-primary"
                                     transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                                   />
                                 )}
-                                <ChildIcon className="h-3.5 w-3.5 shrink-0" />
+                                <ChildIcon className="h-3 w-3 shrink-0" />
                                 <span>{child.label}</span>
                                 <AnimatePresence>
                                   {childBadge > 0 && (
@@ -364,30 +364,30 @@ function SidebarContent({
               transition={{ duration: 0.2, delay: index * 0.03 }}
               onClick={() => handleNavigate(item.path)}
               className={cn(
-                "w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 group relative",
+                "w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all duration-200 group relative",
                 active
                   ? "bg-primary/10 text-primary"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground",
-                collapsed && "justify-center px-2"
+                collapsed && "justify-center px-1.5"
               )}
               title={collapsed ? item.label : undefined}
             >
               {active && !collapsed && (
                 <motion.div
                   layoutId="sidebar-active-indicator"
-                  className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-primary"
+                  className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 rounded-r-full bg-primary"
                   transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                 />
               )}
               <motion.div
                 className={cn(
-                  "h-7 w-7 rounded-md flex items-center justify-center shrink-0 transition-colors duration-200 relative",
+                  "h-6 w-6 rounded-md flex items-center justify-center shrink-0 transition-colors duration-200 relative",
                   active ? "bg-primary/15" : "bg-transparent"
                 )}
                 whileHover={{ scale: 1.1 }}
                 transition={{ type: 'spring', stiffness: 400, damping: 17 }}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className="h-3.5 w-3.5" />
                 {collapsed && (
                   <AnimatePresence>
                     {groupBadge > 0 && (
