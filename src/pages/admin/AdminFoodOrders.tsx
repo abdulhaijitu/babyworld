@@ -79,13 +79,6 @@ interface FoodOrderItem {
   };
 }
 
-interface CartItem {
-  itemId: string;
-  name: string;
-  price: number;
-  quantity: number;
-}
-
 export default function AdminFoodOrders() {
   const [orders, setOrders] = useState<FoodOrder[]>([]);
   const [loading, setLoading] = useState(true);
@@ -99,17 +92,6 @@ export default function AdminFoodOrders() {
   const [selectedOrder, setSelectedOrder] = useState<FoodOrder | null>(null);
   const [orderItems, setOrderItems] = useState<FoodOrderItem[]>([]);
   const [detailLoading, setDetailLoading] = useState(false);
-
-  // New order dialog
-  const [newOrderOpen, setNewOrderOpen] = useState(false);
-  const [foodItems, setFoodItems] = useState<FoodItem[]>([]);
-  const [foodItemsLoading, setFoodItemsLoading] = useState(false);
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [customerName, setCustomerName] = useState('');
-  const [paymentType, setPaymentType] = useState<'cash' | 'pending'>('cash');
-  const [orderNotes, setOrderNotes] = useState('');
-  const [creatingOrder, setCreatingOrder] = useState(false);
-  const [itemSearch, setItemSearch] = useState('');
 
   const getDateRange = useCallback((filter: string) => {
     const now = new Date();
