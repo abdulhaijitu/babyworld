@@ -378,6 +378,7 @@ export default function AdminFoodOrders() {
                   <TableHead>Order #</TableHead>
                   <TableHead>Customer</TableHead>
                   <TableHead>Total</TableHead>
+                  <TableHead className="hidden lg:table-cell">Discount</TableHead>
                   <TableHead>Payment</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Time</TableHead>
