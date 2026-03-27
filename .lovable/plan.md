@@ -1,85 +1,58 @@
 
 
-## পরিকল্পনা: Role & Permission মেনু ও রোল ম্যানেজমেন্ট সিস্টেম
+## পরিকল্পনা: Users পেজে সকল রোল ইন্টিগ্রেশন ও অডিট ফিক্স
 
-### ১. সাইডবার আপডেট (`AdminSidebar.tsx`)
+### সমস্যা চিহ্নিত
 
-বর্তমান standalone `users` আইটেম (লাইন 83) সরিয়ে Frontend-এর পরে নতুন গ্রুপ যোগ:
+1. **`AdminUsers.tsx`** — `UserRole` টাইপে মাত্র ৪টি রোল (`super_admin`, `admin`, `manager`, `staff`), নতুন ১০টি রোল নেই
+2. **`AdminUsers.tsx`** — New User ডায়ালগে রোল সিলেক্টে মাত্র ৪টি অপশন
+3. **`AdminUsers.tsx`** — Stats কার্ডে মাত্র ৪টি রোলের কাউন্ট
+4. **`AdminUsers.tsx`** — ফিল্টার ড্রপডাউনে মাত্র ৪টি রোল
+5. **`AdminUsers.tsx`** — `roleConfig` ম্যাপে নতুন রোলগুলোর লেবেল/আইকন/কালার নেই
+6. **`create-admin` Edge Function** — `validRoles` অ্যারেতে মাত্র ৪টি রোল, নতুন রোল দিয়ে ইউজার তৈরি করলে reject হবে
+7. **Users টেবিলে email দেখায় না** — শুধু user_id দেখায়, email ফেচ হয় না
 
-```
-Role & Permission (icon: Shield, requiredRoles: ['super_admin'])
-  ├── Users         → /admin/users
-  └── Roles         → /admin/roles (নতুন পেজ)
-```
+### পরিবর্তনসমূহ
 
-### ২. রোল ম্যানেজমেন্ট পেজ তৈরি
+#### ১. `src/pages/admin/AdminUsers.tsx`
 
-**নতুন ফাইল:** `src/pages/admin/AdminRoles.tsx`
+- `UserRole` টাইপ আপডেট — `useUserRoles.ts`-এর `AppRole` টাইপ রিইউজ করা হবে
+- `roleConfig` অবজেক্টে সব ১৩টি রোলের label, icon, color যোগ
+- Stats সেকশন রিডিজাইন — ৪টি হার্ডকোডেড কার্ডের বদলে ডাইনামিক role count grid (রোলগুলো যেগুলোর user আছে সেগুলো দেখাবে)
+- New User ডায়ালগের রোল সিলেক্টে সব রোল যোগ (super_admin শুধু super_admin দেখতে পাবে)
+- ফিল্টার ড্রপডাউনে সব রোল যোগ
+- টেবিলে `roleConfig`-এর ফলব্যাক যোগ যাতে unknown রোল crash না করে
 
-এই পেজে সব রোল দেখাবে এবং প্রতিটি রোলের জন্য পারমিশন কনফিগার করা যাবে।
+#### ২. `supabase/functions/create-admin/index.ts`
 
-**প্রস্তাবিত রোলসমূহ:**
+- `validRoles` অ্যারে আপডেট — সব ১৩টি রোল যোগ
+- `CreateUserRequest` ইন্টারফেসে সব রোল টাইপ যোগ
 
-| রোল | বর্ণনা |
-|------|---------|
-| Management | সব মডিউলে ফুল অ্যাক্সেস (ডিলিট ছাড়া) |
-| Manager | HR, Accounts, Reports, Marketing অ্যাক্সেস |
-| Sales & Marketing | Leads, Promotions, SMS Campaigns, Social Media |
-| Ticket Counterman | টিকেট তৈরি, টিকেট লিস্ট, গেট লগ |
-| Gateman | গেট লগ এন্ট্রি, টিকেট স্ক্যান |
-| Food Manager | Food POS, Orders, Items, Coupons ম্যানেজমেন্ট |
-| Food Staff | Food POS ও Orders (আইটেম এডিট নয়) |
-| **Booking Manager** | ইভেন্ট বুকিং, ইভেন্ট ক্যালেন্ডার, প্যাকেজ |
-| **Accountant** | Income, Expenses, Daily Cash, Profit Reports |
-| **HR Manager** | Employees, Attendance, Payroll, Leave, Roster |
+#### ৩. ইউজারের Email দেখানো (অপশনাল উন্নতি)
 
-> শেষ ৩টি (Booking Manager, Accountant, HR Manager) আমার সাজেশন — কারণ এগুলো আলাদা ডিপার্টমেন্টের জন্য প্রয়োজন হতে পারে।
+- বর্তমানে শুধু `user_id` এর প্রথম ৮ ক্যারেক্টার দেখায়
+- Edge function-এ user create করার সময় email রিটার্ন করে — কিন্তু লিস্টে auth.users থেকে email আনার সুযোগ নেই (client-side)
+- সমাধান: `create-admin` edge function-এ user তৈরির পর user_roles-এ একটি metadata কলাম না থাকায়, বিকল্প হিসেবে user_id দিয়ে টেবিলে দেখানো চালিয়ে যাওয়া হবে (profiles টেবিল পরবর্তীতে যোগ করা যাবে)
 
-### ৩. ডাটাবেস পরিবর্তন
+### রোলের সম্পূর্ণ তালিকা ও কনফিগ
 
-**নতুন enum আপডেট:** বর্তমান `app_role` enum-এ নতুন ভ্যালু যোগ:
-```sql
-ALTER TYPE app_role ADD VALUE 'management';
-ALTER TYPE app_role ADD VALUE 'sales_marketing';
-ALTER TYPE app_role ADD VALUE 'ticket_counterman';
-ALTER TYPE app_role ADD VALUE 'gateman';
-ALTER TYPE app_role ADD VALUE 'food_manager';
-ALTER TYPE app_role ADD VALUE 'food_staff';
-```
+| রোল | লেবেল | আইকন |
+|------|--------|-------|
+| super_admin | Super Admin | Crown |
+| admin | Admin | Shield |
+| management | Management | Building |
+| manager | Manager | Briefcase |
+| sales_marketing | Sales & Marketing | Megaphone |
+| ticket_counterman | Ticket Counterman | Ticket |
+| gateman | Gateman | LogIn |
+| food_manager | Food Manager | UtensilsCrossed |
+| food_staff | Food Staff | UtensilsCrossed |
+| booking_manager | Booking Manager | CalendarDays |
+| accountant | Accountant | Wallet |
+| hr_manager | HR Manager | Briefcase |
+| staff | Staff | HardHat |
 
-**নতুন টেবিল:** `role_permissions` — প্রতিটি রোলের জন্য কোন মডিউলে অ্যাক্সেস আছে তা সংরক্ষণ:
-```sql
-CREATE TABLE role_permissions (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  role app_role NOT NULL,
-  module text NOT NULL,        -- e.g. 'ticketing', 'foods', 'hr'
-  can_view boolean DEFAULT true,
-  can_create boolean DEFAULT false,
-  can_edit boolean DEFAULT false,
-  can_delete boolean DEFAULT false,
-  UNIQUE(role, module)
-);
-```
-
-### ৪. রোল ম্যানেজমেন্ট UI
-
-`AdminRoles.tsx` পেজে:
-- সব রোলের কার্ড/টেবিল ভিউ (রোল নাম, বর্ণনা, অ্যাসাইনড ইউজার সংখ্যা)
-- রোলে ক্লিক করলে পারমিশন ম্যাট্রিক্স দেখাবে (মডিউল × View/Create/Edit/Delete চেকবক্স)
-- Super Admin দেখাবে না (হিডেন থাকবে, কিন্তু সব অ্যাক্সেস পাবে)
-
-### ৫. রাউটিং আপডেট (`App.tsx`)
-
-```
-<Route path="roles" element={<AdminRoles />} />
-```
-
-### ৬. `useUserRoles.ts` আপডেট
-
-নতুন রোলগুলোর জন্য `AppRole` টাইপ আপডেট এবং পারমিশন চেকিং লজিক যোগ।
-
-### টেকনিক্যাল নোট
-- `super_admin` সবসময় হিডেন থাকবে এবং `has_role` / `has_any_role` ফাংশনে ইমপ্লিসিটলি সব পারমিশন পাবে
-- সাইডবার মেনু আইটেমগুলোর `requiredRoles` পরবর্তীতে `role_permissions` টেবিল থেকে ডাইনামিক্যালি লোড করা যাবে
-- প্রথম ফেজে স্ট্যাটিক রোল ডেফিনিশন থাকবে, পরে ডাইনামিক পারমিশন ম্যাট্রিক্স যোগ করা যাবে
+### ফাইল পরিবর্তন
+- `src/pages/admin/AdminUsers.tsx` — রোল কনফিগ, UI, ফিল্টার আপডেট
+- `supabase/functions/create-admin/index.ts` — valid roles আপডেট
 
