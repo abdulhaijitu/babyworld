@@ -1,31 +1,31 @@
 
 
-## সমস্যা
+## পরিকল্পনা: Events সাবমেনু রিঅর্ডার + Events ও Event Bookings মার্জ
 
-`bookings` টেবিলে INSERT করার কোনো RLS policy নেই। শুধু SELECT policy আছে। তাই Admin Events পেজ থেকে নতুন ইভেন্ট তৈরি করলে `"new row violates row-level security policy"` এরর আসছে।
+### সমস্যা
+1. সাইডবারে EVENTS গ্রুপের সিরিয়াল ভুল আছে
+2. Events এবং Event Bookings দুটি আলাদা পেজ কিন্তু একই ডেটা দেখায় — মার্জ করা দরকার
 
-## সমাধান
+### পরিবর্তন
 
-**Database Migration** -- `bookings` টেবিলে INSERT, UPDATE, DELETE RLS policies যোগ করা:
-
-- **INSERT**: admin, manager, staff পারবে
-- **UPDATE**: admin, manager, staff পারবে  
-- **DELETE**: শুধু admin পারবে
-
-```sql
-CREATE POLICY "Staff can create bookings"
-ON public.bookings FOR INSERT TO authenticated
-WITH CHECK (has_any_role(auth.uid(), ARRAY['admin','manager','staff']::app_role[]));
-
-CREATE POLICY "Staff can update bookings"
-ON public.bookings FOR UPDATE TO authenticated
-USING (has_any_role(auth.uid(), ARRAY['admin','manager','staff']::app_role[]))
-WITH CHECK (has_any_role(auth.uid(), ARRAY['admin','manager','staff']::app_role[]));
-
-CREATE POLICY "Admins can delete bookings"
-ON public.bookings FOR DELETE TO authenticated
-USING (has_role(auth.uid(), 'admin'::app_role));
+**১. সাইডবার রিঅর্ডার (`AdminSidebar.tsx`)**
+EVENTS গ্রুপের children ক্রম পরিবর্তন:
 ```
+Event Packages → Events → Event Calendar
+```
+Event Bookings সাবমেনু সম্পূর্ণ বাদ।
 
-কোনো কোড পরিবর্তনের প্রয়োজন নেই -- শুধু database migration।
+**২. রাউট সরানো (`App.tsx`)**
+- `/admin/event-bookings` রাউট মুছে ফেলা
+- AdminEventBookings import বাদ দেওয়া
+
+**৩. AdminEventBookings.tsx রাখা বা মোছা**
+- ফাইলটি রাখার দরকার নেই কারণ AdminEvents.tsx-এ ইতিমধ্যে বুকিং তৈরি, স্ট্যাটাস আপডেট, পেমেন্ট ট্র্যাকিং সব আছে
+
+### ফাইল পরিবর্তন
+| ফাইল | পরিবর্তন |
+|---|---|
+| `src/components/admin/AdminSidebar.tsx` | EVENTS children রিঅর্ডার, Event Bookings বাদ |
+| `src/App.tsx` | event-bookings রাউট ও import বাদ |
+| `src/pages/admin/AdminEventBookings.tsx` | মুছে ফেলা |
 
