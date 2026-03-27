@@ -375,30 +375,6 @@ export default function AdminEvents() {
         </Card>
       </div>
 
-      {/* Event Packages Info */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">{'Event Packages'}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {eventPackages.map(pkg => (
-              <div key={pkg.id} className="border rounded-lg overflow-hidden text-center">
-                {pkg.image_url && (
-                  <img src={pkg.image_url} alt={pkg.name} className="w-full h-24 object-cover" />
-                )}
-                <div className="p-3">
-                  <p className="font-semibold">{pkg.name}</p>
-                  <p className="text-lg font-bold text-primary">৳{pkg.price.toLocaleString()}</p>
-                  <p className="text-xs text-muted-foreground flex items-center justify-center gap-1">
-                    <Users className="w-3 h-3" /> {pkg.max_guests} {'guests'}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
 
       {/* Events Table */}
       <Card>
