@@ -43,6 +43,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format, startOfDay, endOfDay, subDays } from 'date-fns';
+import { printFoodReceipt } from '@/lib/printFoodReceipt';
 import { TableRowSkeleton } from '@/components/admin/AdminSkeleton';
 
 interface FoodItem {
