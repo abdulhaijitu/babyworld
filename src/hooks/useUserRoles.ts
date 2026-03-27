@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 
-export type AppRole = 'super_admin' | 'admin' | 'manager' | 'staff' | 'user';
+export type AppRole = 'super_admin' | 'admin' | 'manager' | 'staff' | 'user' | 'management' | 'sales_marketing' | 'ticket_counterman' | 'gateman' | 'food_manager' | 'food_staff' | 'booking_manager' | 'accountant' | 'hr_manager';
 
 interface UserRoleState {
   roles: AppRole[];
