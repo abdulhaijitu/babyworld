@@ -146,7 +146,7 @@ export default function AdminDashboardContent() {
                 </p>
               </div>
             </div>
-            <div className="flex gap-6">
+            <div className="flex gap-4 md:gap-6">
               <div className="text-center">
                 <div className="flex items-center gap-1.5 text-muted-foreground mb-1">
                   <Baby className="w-4 h-4" />
