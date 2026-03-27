@@ -319,7 +319,7 @@ export default function MemberEntryTab() {
                   {remainingDays} days remaining
                 </Badge>
                 <p className="text-xs text-muted-foreground">
-                  মোট ভিজিট: {memberVisits.length}
+                  Total visits: {memberVisits.length}
                 </p>
               </div>
             </div>
