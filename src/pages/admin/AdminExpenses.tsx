@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { format, startOfMonth, endOfMonth } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 import { useUserRoles } from '@/hooks/useUserRoles';
+import { useExpenseCategories } from '@/hooks/useExpenseCategories';
 import { toast } from 'sonner';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -27,29 +28,10 @@ import {
   Pencil, 
   Trash2, 
   Loader2,
-  Building,
-  Users,
-  Zap,
-  ShoppingCart,
-  Gamepad2,
-  Wrench,
-  Megaphone,
-  MoreHorizontal,
   Banknote,
   CreditCard,
   Wallet
 } from 'lucide-react';
-
-const EXPENSE_CATEGORIES = [
-  { value: 'rent', label: 'Rent', icon: Building, color: 'bg-blue-100 text-blue-800' },
-  { value: 'staff_salary', label: 'Staff Salary', icon: Users, color: 'bg-purple-100 text-purple-800' },
-  { value: 'utilities', label: 'Utilities', icon: Zap, color: 'bg-yellow-100 text-yellow-800' },
-  { value: 'food_purchase', label: 'Food Purchase', icon: ShoppingCart, color: 'bg-orange-100 text-orange-800' },
-  { value: 'toys_equipment', label: 'Toys & Equipment', icon: Gamepad2, color: 'bg-pink-100 text-pink-800' },
-  { value: 'maintenance', label: 'Maintenance', icon: Wrench, color: 'bg-gray-100 text-gray-800' },
-  { value: 'marketing', label: 'Marketing', icon: Megaphone, color: 'bg-green-100 text-green-800' },
-  { value: 'other', label: 'Other', icon: MoreHorizontal, color: 'bg-slate-100 text-slate-800' },
-];
 
 const PAYMENT_METHODS = [
   { value: 'cash', label: 'Cash', icon: Banknote },
