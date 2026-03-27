@@ -210,7 +210,9 @@ export default function AdminFoodPOS() {
 
       // Increment coupon used_count
       if (currentCouponCode) {
-        await supabase.rpc('increment_coupon_usage' as any, { coupon_code: currentCouponCode }).catch(() => {});
+        await supabase.from('coupons').update({ used_count: 0 }).eq('code', currentCouponCode).then(() => {
+          supabase.rpc('increment_coupon_usage' as any, { coupon_code: currentCouponCode });
+        });
       }
 
       toast.success(`অর্ডার #${orderNumber} তৈরি হয়েছে!`);

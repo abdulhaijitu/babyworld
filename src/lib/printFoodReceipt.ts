@@ -10,6 +10,8 @@ export interface ReceiptItem {
 export interface ReceiptData {
   orderNumber: string;
   items: ReceiptItem[];
+  subtotal?: number;
+  discount?: number;
   total: number;
   customerName?: string | null;
   paymentType: string;
