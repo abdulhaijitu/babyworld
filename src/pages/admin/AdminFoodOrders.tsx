@@ -251,6 +251,7 @@ export default function AdminFoodOrders() {
     }
   };
 
+  const handleViewOrder = async (order: FoodOrder) => {
     setSelectedOrder(order);
     setDetailLoading(true);
     try {
