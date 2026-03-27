@@ -92,54 +92,52 @@ const App = () => (
                 {/* Admin routes with sidebar layout */}
                 <Route path="/admin" element={<AdminLayout />}>
                   <Route index element={<AdminDashboardContent />} />
-                  <Route path="create-ticket" element={<AdminCreateTicket />} />
-                  <Route path="ticket-list" element={<AdminTicketing />} />
-                  <Route path="membership-packages" element={<AdminMembershipPackages />} />
-                  <Route path="memberships" element={<AdminMemberships />} />
-                  <Route path="member-entry" element={<AdminMemberEntry />} />
-                  <Route path="gate-logs" element={<AdminGateLogs />} />
-                  <Route path="food" element={<AdminFoodSales />} />
-                  <Route path="food-orders" element={<AdminFoodOrders />} />
-                  <Route path="food-pos" element={<AdminFoodPOS />} />
-                  <Route path="coupons" element={<AdminCoupons />} />
-                  <Route path="employees" element={<AdminEmployees />} />
-                  <Route path="roster" element={<AdminRoster />} />
-                  <Route path="attendance" element={<AdminAttendance />} />
-                  <Route path="leaves" element={<AdminLeaveManagement />} />
-                  <Route path="payroll" element={<AdminPayroll />} />
-                  <Route path="performance" element={<AdminPerformance />} />
-                  <Route path="bookings" element={<AdminBookings />} />
-                  <Route path="events" element={<AdminEvents />} />
-                  
-                  <Route path="event-packages" element={<AdminEventPackages />} />
-                  <Route path="event-calendar" element={<AdminEventCalendar />} />
-                  <Route path="leads" element={<AdminLeads />} />
-                  <Route path="promotions" element={<AdminPromotions />} />
-                  <Route path="sms-campaigns" element={<AdminSmsCampaigns />} />
-                  <Route path="social-media" element={<AdminSocialMedia />} />
-                  <Route path="reports" element={<AdminReports />} />
-                  <Route path="profit" element={<AdminProfitReports />} />
-                  <Route path="expenses" element={<AdminExpenses />} />
-                  <Route path="expense-categories" element={<AdminExpenseCategories />} />
-                  <Route path="income" element={<AdminIncome />} />
-                  <Route path="income-categories" element={<AdminIncomeCategories />} />
-                  <Route path="daily-cash" element={<AdminDailyCashSummary />} />
-                  <Route path="rides" element={<AdminRides />} />
-                  
-                  <Route path="notifications" element={<AdminNotificationLogs />} />
-                  <Route path="homepage" element={<AdminHomepage />} />
-                  <Route path="about-contact" element={<AdminAboutContact />} />
-                  <Route path="seo-branding" element={<AdminSeoBranding />} />
-                  <Route path="users" element={<AdminUsers />} />
-                  <Route path="roles" element={<AdminRoles />} />
-                  <Route path="settings" element={<AdminSettings />} />
-                  <Route path="settings/general" element={<SettingsGeneral />} />
-                  <Route path="settings/business" element={<SettingsBusiness />} />
-                  <Route path="settings/pricing" element={<SettingsPricing />} />
-                  <Route path="settings/notifications" element={<SettingsNotifications />} />
-                  <Route path="settings/email" element={<SettingsEmail />} />
-                  <Route path="settings/sms" element={<SettingsSms />} />
-                  <Route path="settings/payment" element={<SettingsPayment />} />
+                  <Route path="create-ticket" element={<PermissionGuard module="ticketing"><AdminCreateTicket /></PermissionGuard>} />
+                  <Route path="ticket-list" element={<PermissionGuard module="ticketing"><AdminTicketing /></PermissionGuard>} />
+                  <Route path="membership-packages" element={<PermissionGuard module="membership"><AdminMembershipPackages /></PermissionGuard>} />
+                  <Route path="memberships" element={<PermissionGuard module="membership"><AdminMemberships /></PermissionGuard>} />
+                  <Route path="member-entry" element={<PermissionGuard module="membership"><AdminMemberEntry /></PermissionGuard>} />
+                  <Route path="gate-logs" element={<PermissionGuard module="ticketing"><AdminGateLogs /></PermissionGuard>} />
+                  <Route path="food" element={<PermissionGuard module="foods"><AdminFoodSales /></PermissionGuard>} />
+                  <Route path="food-orders" element={<PermissionGuard module="foods"><AdminFoodOrders /></PermissionGuard>} />
+                  <Route path="food-pos" element={<PermissionGuard module="foods"><AdminFoodPOS /></PermissionGuard>} />
+                  <Route path="coupons" element={<PermissionGuard module="foods"><AdminCoupons /></PermissionGuard>} />
+                  <Route path="employees" element={<PermissionGuard module="hr"><AdminEmployees /></PermissionGuard>} />
+                  <Route path="roster" element={<PermissionGuard module="hr"><AdminRoster /></PermissionGuard>} />
+                  <Route path="attendance" element={<PermissionGuard module="hr"><AdminAttendance /></PermissionGuard>} />
+                  <Route path="leaves" element={<PermissionGuard module="hr"><AdminLeaveManagement /></PermissionGuard>} />
+                  <Route path="payroll" element={<PermissionGuard module="hr"><AdminPayroll /></PermissionGuard>} />
+                  <Route path="performance" element={<PermissionGuard module="hr"><AdminPerformance /></PermissionGuard>} />
+                  <Route path="bookings" element={<PermissionGuard module="bookings"><AdminBookings /></PermissionGuard>} />
+                  <Route path="events" element={<PermissionGuard module="events"><AdminEvents /></PermissionGuard>} />
+                  <Route path="event-packages" element={<PermissionGuard module="events"><AdminEventPackages /></PermissionGuard>} />
+                  <Route path="event-calendar" element={<PermissionGuard module="events"><AdminEventCalendar /></PermissionGuard>} />
+                  <Route path="leads" element={<PermissionGuard module="marketing"><AdminLeads /></PermissionGuard>} />
+                  <Route path="promotions" element={<PermissionGuard module="marketing"><AdminPromotions /></PermissionGuard>} />
+                  <Route path="sms-campaigns" element={<PermissionGuard module="marketing"><AdminSmsCampaigns /></PermissionGuard>} />
+                  <Route path="social-media" element={<PermissionGuard module="marketing"><AdminSocialMedia /></PermissionGuard>} />
+                  <Route path="reports" element={<PermissionGuard module="reports"><AdminReports /></PermissionGuard>} />
+                  <Route path="profit" element={<PermissionGuard module="accounts"><AdminProfitReports /></PermissionGuard>} />
+                  <Route path="expenses" element={<PermissionGuard module="accounts"><AdminExpenses /></PermissionGuard>} />
+                  <Route path="expense-categories" element={<PermissionGuard module="accounts"><AdminExpenseCategories /></PermissionGuard>} />
+                  <Route path="income" element={<PermissionGuard module="accounts"><AdminIncome /></PermissionGuard>} />
+                  <Route path="income-categories" element={<PermissionGuard module="accounts"><AdminIncomeCategories /></PermissionGuard>} />
+                  <Route path="daily-cash" element={<PermissionGuard module="accounts"><AdminDailyCashSummary /></PermissionGuard>} />
+                  <Route path="rides" element={<PermissionGuard module="ticketing"><AdminRides /></PermissionGuard>} />
+                  <Route path="notifications" element={<PermissionGuard module="notifications"><AdminNotificationLogs /></PermissionGuard>} />
+                  <Route path="homepage" element={<PermissionGuard module="website"><AdminHomepage /></PermissionGuard>} />
+                  <Route path="about-contact" element={<PermissionGuard module="website"><AdminAboutContact /></PermissionGuard>} />
+                  <Route path="seo-branding" element={<PermissionGuard module="website"><AdminSeoBranding /></PermissionGuard>} />
+                  <Route path="users" element={<PermissionGuard module="user-management" superAdminOnly><AdminUsers /></PermissionGuard>} />
+                  <Route path="roles" element={<PermissionGuard module="role-permission" superAdminOnly><AdminRoles /></PermissionGuard>} />
+                  <Route path="settings" element={<PermissionGuard module="settings"><AdminSettings /></PermissionGuard>} />
+                  <Route path="settings/general" element={<PermissionGuard module="settings"><SettingsGeneral /></PermissionGuard>} />
+                  <Route path="settings/business" element={<PermissionGuard module="settings"><SettingsBusiness /></PermissionGuard>} />
+                  <Route path="settings/pricing" element={<PermissionGuard module="settings"><SettingsPricing /></PermissionGuard>} />
+                  <Route path="settings/notifications" element={<PermissionGuard module="settings"><SettingsNotifications /></PermissionGuard>} />
+                  <Route path="settings/email" element={<PermissionGuard module="settings"><SettingsEmail /></PermissionGuard>} />
+                  <Route path="settings/sms" element={<PermissionGuard module="settings"><SettingsSms /></PermissionGuard>} />
+                  <Route path="settings/payment" element={<PermissionGuard module="settings"><SettingsPayment /></PermissionGuard>} />
                 </Route>
                 
                 <Route path="/payment-success" element={<PaymentSuccess />} />
