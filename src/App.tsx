@@ -42,6 +42,7 @@ import AdminNotificationLogs from "./pages/admin/AdminNotificationLogs";
 import AdminHeroCards from "./pages/admin/AdminHeroCards";
 import AdminHeroSlides from "./pages/admin/AdminHeroSlides";
 import AdminHomepage from "./pages/admin/AdminHomepage";
+import AdminFoodPOS from "./pages/admin/AdminFoodPOS";
 
 const queryClient = new QueryClient();
 
