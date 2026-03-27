@@ -261,7 +261,7 @@ export default function AdminDashboardContent() {
             ) : (
               <div className="space-y-2">
                 {recentTickets.map((ticket) => (
-                  <div key={ticket.id} className="flex items-center justify-between p-2.5 rounded-lg bg-muted/50">
+                  <div key={ticket.id} className="flex items-center justify-between p-2 md:p-2.5 rounded-lg bg-muted/50">
                     <div className="min-w-0">
                       <p className="text-sm font-medium truncate">{ticket.guardian_name}</p>
                       <p className="text-xs text-muted-foreground">#{ticket.ticket_number}</p>
