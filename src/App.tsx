@@ -51,6 +51,8 @@ import AdminNotificationLogs from "./pages/admin/AdminNotificationLogs";
 import AdminHeroCards from "./pages/admin/AdminHeroCards";
 import AdminHeroSlides from "./pages/admin/AdminHeroSlides";
 import AdminHomepage from "./pages/admin/AdminHomepage";
+import AdminAboutContact from "./pages/admin/AdminAboutContact";
+import AdminSeoBranding from "./pages/admin/AdminSeoBranding";
 import AdminFoodPOS from "./pages/admin/AdminFoodPOS";
 import AdminCoupons from "./pages/admin/AdminCoupons";
 import AdminLeads from "./pages/admin/AdminLeads";
