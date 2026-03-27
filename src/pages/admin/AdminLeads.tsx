@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,8 +11,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Plus, Search, Phone, Mail, Calendar, Trash2, Edit, UserPlus, 
-  Filter, Users, UserCheck, UserX, MessageSquare 
+  Filter, Users, UserCheck, UserX, MessageSquare, Send, Loader2
 } from 'lucide-react';
+import { useSendSMS } from '@/hooks/useSendSMS';
+import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { useLeads, useCreateLead, useUpdateLead, useDeleteLead, type LeadStatus, type LeadSource, type LeadInsert, type Lead } from '@/hooks/useLeads';
 
@@ -140,6 +142,53 @@ function LeadForm({ lead, onClose }: { lead?: Lead; onClose: () => void }) {
         </Button>
       </div>
     </form>
+  );
+}
+function SMSButton({ phone, name }: { phone: string; name: string }) {
+  const { sendSMS, sending } = useSendSMS();
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState(`প্রিয় ${name},\nBaby World-এ আপনাকে স্বাগতম! আমাদের নতুন অফার ও প্যাকেজ সম্পর্কে জানতে ভিজিট করুন।\n📍 Baby World Indoor Playground`);
+
+  const handleSend = async () => {
+    const result = await sendSMS(phone, message);
+    if (result.success) {
+      toast.success(`${name}-কে SMS পাঠানো হয়েছে`);
+      setOpen(false);
+    } else {
+      toast.error('SMS পাঠাতে ব্যর্থ: ' + (result.error || result.message));
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="ghost" size="icon" title="SMS পাঠান">
+          <Send className="h-4 w-4" />
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>SMS পাঠান — {name}</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="text-sm text-muted-foreground flex items-center gap-1">
+            <Phone className="h-3 w-3" /> {phone}
+          </div>
+          <div className="space-y-2">
+            <Label>মেসেজ</Label>
+            <Textarea value={message} onChange={e => setMessage(e.target.value)} rows={5} maxLength={1600} />
+            <p className="text-xs text-muted-foreground text-right">{message.length}/1600</p>
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setOpen(false)}>বাতিল</Button>
+            <Button onClick={handleSend} disabled={sending || !message.trim()}>
+              {sending ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Send className="h-4 w-4 mr-1" />}
+              পাঠান
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -325,6 +374,7 @@ export default function AdminLeads() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1">
+                          <SMSButton phone={lead.phone} name={lead.name} />
                           <Button variant="ghost" size="icon" onClick={() => openEdit(lead)}>
                             <Edit className="h-4 w-4" />
                           </Button>
