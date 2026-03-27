@@ -6,7 +6,8 @@ import {
   Menu, LogOut, LogIn, Clock, FileBarChart, Shield, Video, Crown,
   Receipt, TrendingUp, FerrisWheel, MessageSquare, Home, Monitor,
   Plus, List, Megaphone, UserPlus, Tag, Share2, Briefcase,
-  ClipboardCheck, CalendarOff, Wallet, Award, Search
+  ClipboardCheck, CalendarOff, Wallet, Award, Search,
+  Building, Banknote, Bell, Mail, SendHorizonal, CreditCard
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
