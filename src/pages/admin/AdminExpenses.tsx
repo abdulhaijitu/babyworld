@@ -54,6 +54,13 @@ interface Expense {
 export default function AdminExpenses() {
   const { isAdmin } = useUserRoles();
   const queryClient = useQueryClient();
+  const { data: dbCategories = [] } = useExpenseCategories(true);
+
+  const expenseCategories = dbCategories.map(c => ({
+    value: c.name,
+    label: c.label,
+    color: c.color,
+  }));
 
   // Filters
   const [startDate, setStartDate] = useState<Date>(startOfMonth(new Date()));
