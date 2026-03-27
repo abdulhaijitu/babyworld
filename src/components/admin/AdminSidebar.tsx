@@ -102,6 +102,8 @@ interface AdminSidebarProps {
   onCollapse: (collapsed: boolean) => void;
   onSignOut: () => void;
   userEmail?: string;
+  mobileOpen?: boolean;
+  onMobileOpenChange?: (open: boolean) => void;
 }
 
 function getInitials(email?: string) {
