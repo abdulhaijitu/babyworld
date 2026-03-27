@@ -96,16 +96,7 @@ export default function AdminReports() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <FileBarChart className="w-6 h-6" />
-            {'Sales & Revenue Reports'}
-          </h1>
-          <p className="text-muted-foreground">
-            {'Detailed analytics and summaries'}
-          </p>
-        </div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-4">
         <div className="flex items-center gap-2 flex-wrap">
           <Select value={dateRange} onValueChange={(v) => setDateRange(v as DateRangeType)}>
             <SelectTrigger className="w-[140px]">

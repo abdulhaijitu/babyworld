@@ -174,16 +174,7 @@ export default function AdminGateLogs() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Video className="w-6 h-6" />
-            {'Gate Logs'}
-          </h1>
-          <p className="text-muted-foreground">
-            {'Entry/Exit tracking with CCTV reference'}
-          </p>
-        </div>
+      <div className="flex justify-end">
         <Button variant="outline" onClick={fetchLogs} disabled={loading}>
           <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
           {'Refresh'}

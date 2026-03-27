@@ -6,12 +6,6 @@ import AdminHeroSlides from "./AdminHeroSlides";
 export default function AdminHomepage() {
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">Homepage Management</h1>
-        <p className="text-sm text-muted-foreground">
-          Manage the hero slider images and promotional/event cards displayed on the homepage.
-        </p>
-      </div>
 
       <Tabs defaultValue="slides" className="w-full">
         <TabsList className="w-full sm:w-auto">
