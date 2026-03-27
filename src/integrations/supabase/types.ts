@@ -187,6 +187,45 @@ export type Database = {
         }
         Relationships: []
       }
+      event_packages: {
+        Row: {
+          created_at: string
+          duration_hours: number
+          features: Json | null
+          id: string
+          is_active: boolean
+          max_guests: number
+          name: string
+          price: number
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          duration_hours?: number
+          features?: Json | null
+          id?: string
+          is_active?: boolean
+          max_guests?: number
+          name: string
+          price?: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          duration_hours?: number
+          features?: Json | null
+          id?: string
+          is_active?: boolean
+          max_guests?: number
+          name?: string
+          price?: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       expenses: {
         Row: {
           added_by: string | null

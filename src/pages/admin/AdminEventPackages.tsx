@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -12,7 +13,7 @@ import {
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
-import { Package, Plus, Pencil, Users, Trash2 } from 'lucide-react';
+import { Package, Plus, Pencil, Users, Trash2, RefreshCw, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface EventPackage {
@@ -23,20 +24,38 @@ interface EventPackage {
   duration_hours: number;
   features: string[];
   is_active: boolean;
+  sort_order: number;
 }
 
-const defaultPackages: EventPackage[] = [
-  { id: '1', name: 'Basic', price: 5000, max_guests: 10, duration_hours: 3, features: ['Play area access', 'Basic decoration'], is_active: true },
-  { id: '2', name: 'Standard', price: 8000, max_guests: 20, duration_hours: 3, features: ['Play area access', 'Themed decoration', 'Cake arrangement'], is_active: true },
-  { id: '3', name: 'Premium', price: 12000, max_guests: 30, duration_hours: 4, features: ['Play area access', 'Premium decoration', 'Cake & snacks', 'Photo zone'], is_active: true },
-  { id: '4', name: 'Deluxe', price: 18000, max_guests: 50, duration_hours: 5, features: ['Full venue access', 'Luxury decoration', 'Full catering', 'Photo & video', 'Return gifts'], is_active: true },
-];
-
 export default function AdminEventPackages() {
-  const [packages, setPackages] = useState<EventPackage[]>(defaultPackages);
+  const [packages, setPackages] = useState<EventPackage[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingPkg, setEditingPkg] = useState<EventPackage | null>(null);
-  const [form, setForm] = useState({ name: '', price: '', max_guests: '', duration_hours: '', features: '', is_active: true });
+  const [form, setForm] = useState({ name: '', price: '', max_guests: '', duration_hours: '3', features: '', is_active: true });
+
+  const fetchPackages = useCallback(async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('event_packages')
+        .select('*')
+        .order('sort_order', { ascending: true });
+      if (error) throw error;
+      setPackages((data || []).map(d => ({
+        ...d,
+        features: Array.isArray(d.features) ? d.features as string[] : [],
+      })));
+    } catch (err: any) {
+      toast.error('Failed to load packages');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { fetchPackages(); }, [fetchPackages]);
 
   const openCreate = () => {
     setEditingPkg(null);
@@ -57,38 +76,60 @@ export default function AdminEventPackages() {
     setDialogOpen(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.name.trim() || !form.price) {
       toast.error('Name and price required');
       return;
     }
-    const newPkg: EventPackage = {
-      id: editingPkg?.id || Date.now().toString(),
-      name: form.name.trim(),
-      price: Number(form.price),
-      max_guests: Number(form.max_guests) || 10,
-      duration_hours: Number(form.duration_hours) || 3,
-      features: form.features.split('\n').map(f => f.trim()).filter(Boolean),
-      is_active: form.is_active,
-    };
+    setSaving(true);
+    try {
+      const payload = {
+        name: form.name.trim(),
+        price: Number(form.price),
+        max_guests: Number(form.max_guests) || 10,
+        duration_hours: Number(form.duration_hours) || 3,
+        features: form.features.split('\n').map(f => f.trim()).filter(Boolean),
+        is_active: form.is_active,
+      };
 
-    if (editingPkg) {
-      setPackages(prev => prev.map(p => p.id === editingPkg.id ? newPkg : p));
-      toast.success('Package updated');
-    } else {
-      setPackages(prev => [...prev, newPkg]);
-      toast.success('Package created');
+      if (editingPkg) {
+        const { error } = await supabase.from('event_packages').update(payload).eq('id', editingPkg.id);
+        if (error) throw error;
+        toast.success('Package updated');
+      } else {
+        const maxSort = packages.length > 0 ? Math.max(...packages.map(p => p.sort_order)) : 0;
+        const { error } = await supabase.from('event_packages').insert({ ...payload, sort_order: maxSort + 1 });
+        if (error) throw error;
+        toast.success('Package created');
+      }
+      setDialogOpen(false);
+      fetchPackages();
+    } catch (err: any) {
+      toast.error(err.message || 'Save failed');
+    } finally {
+      setSaving(false);
     }
-    setDialogOpen(false);
   };
 
-  const handleDelete = (id: string) => {
-    setPackages(prev => prev.filter(p => p.id !== id));
-    toast.success('Package deleted');
+  const handleDelete = async (id: string) => {
+    try {
+      const { error } = await supabase.from('event_packages').delete().eq('id', id);
+      if (error) throw error;
+      setPackages(prev => prev.filter(p => p.id !== id));
+      toast.success('Package deleted');
+    } catch {
+      toast.error('Delete failed');
+    }
   };
 
-  const toggleActive = (id: string) => {
-    setPackages(prev => prev.map(p => p.id === id ? { ...p, is_active: !p.is_active } : p));
+  const toggleActive = async (id: string, current: boolean) => {
+    try {
+      const { error } = await supabase.from('event_packages').update({ is_active: !current }).eq('id', id);
+      if (error) throw error;
+      setPackages(prev => prev.map(p => p.id === id ? { ...p, is_active: !current } : p));
+    } catch {
+      toast.error('Update failed');
+    }
   };
 
   return (
@@ -100,84 +141,88 @@ export default function AdminEventPackages() {
           </h1>
           <p className="text-muted-foreground">Manage birthday & event packages</p>
         </div>
-        <Button onClick={openCreate}>
-          <Plus className="w-4 h-4 mr-2" /> New Package
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={fetchPackages} disabled={loading}>
+            <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} /> Refresh
+          </Button>
+          <Button onClick={openCreate}>
+            <Plus className="w-4 h-4 mr-2" /> New Package
+          </Button>
+        </div>
       </div>
 
       {/* Package Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {packages.filter(p => p.is_active).map(pkg => (
-          <Card key={pkg.id} className="relative overflow-hidden">
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">{pkg.name}</CardTitle>
-                <Badge variant={pkg.is_active ? 'default' : 'secondary'}>{pkg.is_active ? 'Active' : 'Inactive'}</Badge>
-              </div>
-              <CardDescription className="text-2xl font-bold text-primary">৳{pkg.price.toLocaleString()}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Users className="w-4 h-4" /> Up to {pkg.max_guests} guests
-              </div>
-              <div className="text-sm text-muted-foreground">
-                {pkg.duration_hours} hours duration
-              </div>
-              <ul className="text-sm space-y-1">
-                {pkg.features.map((f, i) => (
-                  <li key={i} className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <div className="flex gap-2 pt-2">
-                <Button variant="outline" size="sm" className="flex-1" onClick={() => openEdit(pkg)}>
-                  <Pencil className="w-3 h-3 mr-1" /> Edit
-                </Button>
-              </div>
+      {loading ? (
+        <div className="flex items-center justify-center py-12"><Loader2 className="w-8 h-8 animate-spin text-muted-foreground" /></div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {packages.filter(p => p.is_active).map(pkg => (
+              <Card key={pkg.id} className="relative overflow-hidden">
+                <CardHeader className="pb-2">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-lg">{pkg.name}</CardTitle>
+                    <Badge variant="default">Active</Badge>
+                  </div>
+                  <CardDescription className="text-2xl font-bold text-primary">৳{pkg.price.toLocaleString()}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Users className="w-4 h-4" /> Up to {pkg.max_guests} guests
+                  </div>
+                  <div className="text-sm text-muted-foreground">{pkg.duration_hours} hours duration</div>
+                  <ul className="text-sm space-y-1">
+                    {pkg.features.map((f, i) => (
+                      <li key={i} className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />{f}
+                      </li>
+                    ))}
+                  </ul>
+                  <Button variant="outline" size="sm" className="w-full" onClick={() => openEdit(pkg)}>
+                    <Pencil className="w-3 h-3 mr-1" /> Edit
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* All Packages Table */}
+          <Card>
+            <CardHeader><CardTitle>All Packages</CardTitle></CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Price</TableHead>
+                    <TableHead>Guests</TableHead>
+                    <TableHead>Duration</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {packages.map(pkg => (
+                    <TableRow key={pkg.id}>
+                      <TableCell className="font-medium">{pkg.name}</TableCell>
+                      <TableCell>৳{pkg.price.toLocaleString()}</TableCell>
+                      <TableCell>{pkg.max_guests}</TableCell>
+                      <TableCell>{pkg.duration_hours}h</TableCell>
+                      <TableCell>
+                        <Switch checked={pkg.is_active} onCheckedChange={() => toggleActive(pkg.id, pkg.is_active)} />
+                      </TableCell>
+                      <TableCell className="text-right space-x-2">
+                        <Button variant="ghost" size="icon" onClick={() => openEdit(pkg)}><Pencil className="w-4 h-4" /></Button>
+                        <Button variant="ghost" size="icon" onClick={() => handleDelete(pkg.id)} className="text-destructive"><Trash2 className="w-4 h-4" /></Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </CardContent>
           </Card>
-        ))}
-      </div>
-
-      {/* All Packages Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>All Packages</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead>Guests</TableHead>
-                <TableHead>Duration</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {packages.map(pkg => (
-                <TableRow key={pkg.id}>
-                  <TableCell className="font-medium">{pkg.name}</TableCell>
-                  <TableCell>৳{pkg.price.toLocaleString()}</TableCell>
-                  <TableCell>{pkg.max_guests}</TableCell>
-                  <TableCell>{pkg.duration_hours}h</TableCell>
-                  <TableCell>
-                    <Switch checked={pkg.is_active} onCheckedChange={() => toggleActive(pkg.id)} />
-                  </TableCell>
-                  <TableCell className="text-right space-x-2">
-                    <Button variant="ghost" size="icon" onClick={() => openEdit(pkg)}><Pencil className="w-4 h-4" /></Button>
-                    <Button variant="ghost" size="icon" onClick={() => handleDelete(pkg.id)} className="text-destructive"><Trash2 className="w-4 h-4" /></Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+        </>
+      )}
 
       {/* Create/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -192,7 +237,7 @@ export default function AdminEventPackages() {
               <div><Label>Max Guests</Label><Input type="number" value={form.max_guests} onChange={e => setForm(f => ({ ...f, max_guests: e.target.value }))} /></div>
             </div>
             <div><Label>Duration (hours)</Label><Input type="number" value={form.duration_hours} onChange={e => setForm(f => ({ ...f, duration_hours: e.target.value }))} /></div>
-            <div><Label>Features (one per line)</Label><Textarea value={form.features} onChange={e => setForm(f => ({ ...f, features: e.target.value }))} rows={4} placeholder="Play area access&#10;Themed decoration&#10;Cake arrangement" /></div>
+            <div><Label>Features (one per line)</Label><Textarea value={form.features} onChange={e => setForm(f => ({ ...f, features: e.target.value }))} rows={4} placeholder={"Play area access\nThemed decoration\nCake arrangement"} /></div>
             <div className="flex items-center gap-2">
               <Switch checked={form.is_active} onCheckedChange={v => setForm(f => ({ ...f, is_active: v }))} />
               <Label>Active</Label>
@@ -200,7 +245,10 @@ export default function AdminEventPackages() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
-            <Button onClick={handleSave}>{editingPkg ? 'Update' : 'Create'}</Button>
+            <Button onClick={handleSave} disabled={saving}>
+              {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              {editingPkg ? 'Update' : 'Create'}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
