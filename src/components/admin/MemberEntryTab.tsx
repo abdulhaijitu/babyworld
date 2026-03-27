@@ -351,7 +351,7 @@ export default function MemberEntryTab() {
                   ) : (
                     <LogIn className="h-4 w-4 mr-2" />
                   )}
-                  চেক-ইন
+                  Check In
                 </Button>
               )}
             </div>
