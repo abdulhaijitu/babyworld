@@ -45,7 +45,8 @@ import {
   Check,
   X,
   Trash2,
-  Edit
+  Edit,
+  ImagePlus,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
@@ -92,6 +93,9 @@ export default function AdminFoodSales() {
     price: 0,
     is_available: true
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   // Orders state
   const [orders, setOrders] = useState<FoodOrder[]>([]);
@@ -152,16 +156,41 @@ export default function AdminFoodSales() {
 
     setSavingItem(true);
     try {
+      let image_url: string | null | undefined = undefined;
+
+      // Upload image if selected
+      if (imageFile) {
+        setUploadingImage(true);
+        const ext = imageFile.name.split('.').pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 7)}.${ext}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('food-images')
+          .upload(fileName, imageFile, { cacheControl: '3600', upsert: false });
+
+        if (uploadError) throw uploadError;
+
+        const { data: urlData } = supabase.storage
+          .from('food-images')
+          .getPublicUrl(fileName);
+
+        image_url = urlData.publicUrl;
+        setUploadingImage(false);
+      }
+
+      const baseData = {
+        name: newItem.name,
+        name_bn: newItem.name_bn || null,
+        category: newItem.category,
+        price: newItem.price,
+        is_available: newItem.is_available,
+        ...(image_url !== undefined ? { image_url } : {}),
+      };
+
       if (editingItem) {
         const { error } = await supabase
           .from('food_items')
-          .update({
-            name: newItem.name,
-            name_bn: newItem.name_bn || null,
-            category: newItem.category,
-            price: newItem.price,
-            is_available: newItem.is_available
-          })
+          .update(baseData)
           .eq('id', editingItem.id);
 
         if (error) throw error;
@@ -169,13 +198,7 @@ export default function AdminFoodSales() {
       } else {
         const { error } = await supabase
           .from('food_items')
-          .insert([{
-            name: newItem.name,
-            name_bn: newItem.name_bn || null,
-            category: newItem.category,
-            price: newItem.price,
-            is_available: newItem.is_available
-          }]);
+          .insert([baseData]);
 
         if (error) throw error;
         toast.success('Item added');
@@ -184,11 +207,14 @@ export default function AdminFoodSales() {
       setItemDialogOpen(false);
       setEditingItem(null);
       setNewItem({ name: '', name_bn: '', category: 'snacks', price: 0, is_available: true });
+      setImageFile(null);
+      setImagePreview(null);
       fetchFoodItems();
     } catch (err) {
       toast.error('Save failed');
     } finally {
       setSavingItem(false);
+      setUploadingImage(false);
     }
   };
 
@@ -226,7 +252,20 @@ export default function AdminFoodSales() {
       price: item.price,
       is_available: item.is_available
     });
+    setImageFile(null);
+    setImagePreview(item.image_url || null);
     setItemDialogOpen(true);
+  };
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('ছবি ৫MB এর কম হতে হবে');
+      return;
+    }
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
   };
 
   const generateOrderNumber = () => {
@@ -433,6 +472,8 @@ export default function AdminFoodSales() {
                   if (!open) {
                     setEditingItem(null);
                     setNewItem({ name: '', name_bn: '', category: 'snacks', price: 0, is_available: true });
+                    setImageFile(null);
+                    setImagePreview(null);
                   }
                 }}>
                   <DialogTrigger asChild>
@@ -480,6 +521,38 @@ export default function AdminFoodSales() {
                             value={newItem.price}
                             onChange={(e) => setNewItem({...newItem, price: Number(e.target.value)})}
                           />
+                        </div>
+                      </div>
+                      {/* Image Upload */}
+                      <div className="space-y-2">
+                        <Label>Image</Label>
+                        <div className="flex items-center gap-3">
+                          {imagePreview ? (
+                            <div className="relative h-16 w-16 rounded-lg overflow-hidden border">
+                              <img src={imagePreview} alt="Preview" className="h-full w-full object-cover" />
+                              <button
+                                type="button"
+                                onClick={() => { setImageFile(null); setImagePreview(null); }}
+                                className="absolute top-0 right-0 bg-destructive text-destructive-foreground rounded-bl p-0.5"
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                            </div>
+                          ) : (
+                            <label className="flex items-center justify-center h-16 w-16 rounded-lg border-2 border-dashed border-muted-foreground/30 cursor-pointer hover:border-primary/50 transition-colors">
+                              <ImagePlus className="h-5 w-5 text-muted-foreground" />
+                              <input
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={handleImageSelect}
+                              />
+                            </label>
+                          )}
+                          <div className="text-xs text-muted-foreground">
+                            <p>JPG, PNG (max 5MB)</p>
+                            {uploadingImage && <p className="text-primary">Uploading...</p>}
+                          </div>
                         </div>
                       </div>
                       <div className="flex items-center space-x-2">
