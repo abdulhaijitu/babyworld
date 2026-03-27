@@ -170,7 +170,7 @@ function SidebarContent({
   useEffect(() => {
     menuItems.forEach(item => {
       if (item.children?.some(c => location.pathname === c.path)) {
-        setOpenGroups(prev => ({ ...prev, [item.id]: true }));
+        setOpenGroups({ [item.id]: true });
       }
     });
   }, [location.pathname, menuItems]);
@@ -276,7 +276,7 @@ function SidebarContent({
               >
                 <Collapsible
                   open={openGroups[item.id] ?? childActive ?? !!searchQuery.trim()}
-                  onOpenChange={(open) => setOpenGroups(prev => ({ ...prev, [item.id]: open }))}
+                  onOpenChange={(open) => setOpenGroups(open ? { [item.id]: true } : {})}
                 >
                   <CollapsibleTrigger className={cn(
                     "w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200",
