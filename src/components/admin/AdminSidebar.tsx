@@ -26,6 +26,7 @@ import {
   MessageSquare,
   Home,
   Monitor,
+  Plus,
   List
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';

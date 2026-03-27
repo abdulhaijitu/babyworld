@@ -222,12 +222,6 @@ export default function AdminFoodOrders() {
     );
   });
 
-  const filteredFoodItems = foodItems.filter(i => {
-    if (!itemSearch) return true;
-    return i.name.toLowerCase().includes(itemSearch.toLowerCase()) ||
-      (i.name_bn && i.name_bn.includes(itemSearch));
-  });
-
   const pendingCount = orders.filter(o => o.status === 'pending').length;
   const servedCount = orders.filter(o => o.status === 'served').length;
   const totalRevenue = orders
