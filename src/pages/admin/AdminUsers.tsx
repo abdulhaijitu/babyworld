@@ -154,9 +154,9 @@ export default function AdminUsers() {
 
   // Create user mutation
   const createUserMutation = useMutation({
-    mutationFn: async ({ email, password, role }: { email: string; password: string; role: AppRole }) => {
+    mutationFn: async ({ email, password, role, full_name }: { email: string; password: string; role: AppRole; full_name?: string }) => {
       const { data, error } = await supabase.functions.invoke('create-admin', {
-        body: { email, password, role }
+        body: { email, password, role, full_name }
       });
       
       if (error) throw error;
@@ -165,10 +165,12 @@ export default function AdminUsers() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['all-user-roles'] });
+      queryClient.invalidateQueries({ queryKey: ['all-profiles'] });
       toast.success(`${roleConfig[newUserRole].label} created successfully`);
       setIsAddDialogOpen(false);
       setNewUserEmail('');
       setNewUserPassword('');
+      setNewUserName('');
       setNewUserRole('manager');
     },
     onError: (error: Error) => {
