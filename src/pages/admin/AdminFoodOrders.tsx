@@ -64,6 +64,9 @@ interface FoodOrder {
   payment_type: 'cash' | 'online' | 'pending';
   subtotal: number;
   total: number;
+  discount_amount: number;
+  discount_type: string | null;
+  coupon_code: string | null;
   notes: string | null;
   created_at: string;
 }
