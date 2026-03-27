@@ -1,58 +1,85 @@
 
 
-## পরিকল্পনা: Settings ট্যাবগুলো সাইডবার সাবমেনু হিসেবে
+## পরিকল্পনা: Role & Permission মেনু ও রোল ম্যানেজমেন্ট সিস্টেম
 
-### কী হবে
-বর্তমানে Settings একটি সিঙ্গেল পেজে ৭টি ট্যাব আছে। এগুলো সাইডবারে Settings-এর সাবমেনু হিসেবে দেখাবে, প্রতিটির জন্য আলাদা রাউট থাকবে।
+### ১. সাইডবার আপডেট (`AdminSidebar.tsx`)
 
-### পরিবর্তনসমূহ
-
-**১. সাইডবার আপডেট (`src/components/admin/AdminSidebar.tsx`)**
-
-`settings` আইটেমে `children` যোগ:
-```
-settings → children:
-  - General         → /admin/settings/general
-  - Business        → /admin/settings/business
-  - Pricing         → /admin/settings/pricing
-  - Notifications   → /admin/settings/notifications
-  - Email Configure → /admin/settings/email
-  - SMS Gateway     → /admin/settings/sms
-  - Payment Gateway → /admin/settings/payment
-```
-
-**২. ৭টি নতুন পেজ কম্পোনেন্ট তৈরি**
-
-বর্তমান `AdminSettings.tsx` থেকে প্রতিটি `TabsContent`-এর কন্টেন্ট আলাদা ফাইলে সরানো হবে:
-- `src/pages/admin/settings/SettingsGeneral.tsx`
-- `src/pages/admin/settings/SettingsBusiness.tsx`
-- `src/pages/admin/settings/SettingsPricing.tsx`
-- `src/pages/admin/settings/SettingsNotifications.tsx`
-- `src/pages/admin/settings/SettingsEmail.tsx`
-- `src/pages/admin/settings/SettingsSms.tsx`
-- `src/pages/admin/settings/SettingsPayment.tsx`
-
-প্রতিটি পেজ `useSettings()` হুক ব্যবহার করবে এবং নিজের সেকশনের ফর্ম/কন্টেন্ট রেন্ডার করবে।
-
-**৩. রাউটিং আপডেট (`src/App.tsx`)**
+বর্তমান standalone `users` আইটেম (লাইন 83) সরিয়ে Frontend-এর পরে নতুন গ্রুপ যোগ:
 
 ```
-<Route path="settings" element={<Navigate to="/admin/settings/general" />} />
-<Route path="settings/general" element={<SettingsGeneral />} />
-<Route path="settings/business" element={<SettingsBusiness />} />
-<Route path="settings/pricing" element={<SettingsPricing />} />
-<Route path="settings/notifications" element={<SettingsNotifications />} />
-<Route path="settings/email" element={<SettingsEmail />} />
-<Route path="settings/sms" element={<SettingsSms />} />
-<Route path="settings/payment" element={<SettingsPayment />} />
+Role & Permission (icon: Shield, requiredRoles: ['super_admin'])
+  ├── Users         → /admin/users
+  └── Roles         → /admin/roles (নতুন পেজ)
 ```
 
-**৪. পুরানো `AdminSettings.tsx` সরলীকরণ**
+### ২. রোল ম্যানেজমেন্ট পেজ তৈরি
 
-ফাইলটি `/admin/settings`-এ redirect করবে `/admin/settings/general`-এ, অথবা মুছে ফেলা হবে।
+**নতুন ফাইল:** `src/pages/admin/AdminRoles.tsx`
+
+এই পেজে সব রোল দেখাবে এবং প্রতিটি রোলের জন্য পারমিশন কনফিগার করা যাবে।
+
+**প্রস্তাবিত রোলসমূহ:**
+
+| রোল | বর্ণনা |
+|------|---------|
+| Management | সব মডিউলে ফুল অ্যাক্সেস (ডিলিট ছাড়া) |
+| Manager | HR, Accounts, Reports, Marketing অ্যাক্সেস |
+| Sales & Marketing | Leads, Promotions, SMS Campaigns, Social Media |
+| Ticket Counterman | টিকেট তৈরি, টিকেট লিস্ট, গেট লগ |
+| Gateman | গেট লগ এন্ট্রি, টিকেট স্ক্যান |
+| Food Manager | Food POS, Orders, Items, Coupons ম্যানেজমেন্ট |
+| Food Staff | Food POS ও Orders (আইটেম এডিট নয়) |
+| **Booking Manager** | ইভেন্ট বুকিং, ইভেন্ট ক্যালেন্ডার, প্যাকেজ |
+| **Accountant** | Income, Expenses, Daily Cash, Profit Reports |
+| **HR Manager** | Employees, Attendance, Payroll, Leave, Roster |
+
+> শেষ ৩টি (Booking Manager, Accountant, HR Manager) আমার সাজেশন — কারণ এগুলো আলাদা ডিপার্টমেন্টের জন্য প্রয়োজন হতে পারে।
+
+### ৩. ডাটাবেস পরিবর্তন
+
+**নতুন enum আপডেট:** বর্তমান `app_role` enum-এ নতুন ভ্যালু যোগ:
+```sql
+ALTER TYPE app_role ADD VALUE 'management';
+ALTER TYPE app_role ADD VALUE 'sales_marketing';
+ALTER TYPE app_role ADD VALUE 'ticket_counterman';
+ALTER TYPE app_role ADD VALUE 'gateman';
+ALTER TYPE app_role ADD VALUE 'food_manager';
+ALTER TYPE app_role ADD VALUE 'food_staff';
+```
+
+**নতুন টেবিল:** `role_permissions` — প্রতিটি রোলের জন্য কোন মডিউলে অ্যাক্সেস আছে তা সংরক্ষণ:
+```sql
+CREATE TABLE role_permissions (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  role app_role NOT NULL,
+  module text NOT NULL,        -- e.g. 'ticketing', 'foods', 'hr'
+  can_view boolean DEFAULT true,
+  can_create boolean DEFAULT false,
+  can_edit boolean DEFAULT false,
+  can_delete boolean DEFAULT false,
+  UNIQUE(role, module)
+);
+```
+
+### ৪. রোল ম্যানেজমেন্ট UI
+
+`AdminRoles.tsx` পেজে:
+- সব রোলের কার্ড/টেবিল ভিউ (রোল নাম, বর্ণনা, অ্যাসাইনড ইউজার সংখ্যা)
+- রোলে ক্লিক করলে পারমিশন ম্যাট্রিক্স দেখাবে (মডিউল × View/Create/Edit/Delete চেকবক্স)
+- Super Admin দেখাবে না (হিডেন থাকবে, কিন্তু সব অ্যাক্সেস পাবে)
+
+### ৫. রাউটিং আপডেট (`App.tsx`)
+
+```
+<Route path="roles" element={<AdminRoles />} />
+```
+
+### ৬. `useUserRoles.ts` আপডেট
+
+নতুন রোলগুলোর জন্য `AppRole` টাইপ আপডেট এবং পারমিশন চেকিং লজিক যোগ।
 
 ### টেকনিক্যাল নোট
-- `useSettings` হুক শেয়ার্ড থাকবে — প্রতিটি পেজ থেকে প্রয়োজনীয় state ও ফাংশন ব্যবহার করবে
-- Tabs কম্পোনেন্ট আর লাগবে না — প্রতিটি পেজ সরাসরি Card-ভিত্তিক লেআউট হবে
-- সাইডবারে আইকন: Settings (General), Building (Business), Banknote (Pricing), Bell (Notifications), Mail (Email), SendHorizonal (SMS), CreditCard (Payment)
+- `super_admin` সবসময় হিডেন থাকবে এবং `has_role` / `has_any_role` ফাংশনে ইমপ্লিসিটলি সব পারমিশন পাবে
+- সাইডবার মেনু আইটেমগুলোর `requiredRoles` পরবর্তীতে `role_permissions` টেবিল থেকে ডাইনামিক্যালি লোড করা যাবে
+- প্রথম ফেজে স্ট্যাটিক রোল ডেফিনিশন থাকবে, পরে ডাইনামিক পারমিশন ম্যাট্রিক্স যোগ করা যাবে
 
