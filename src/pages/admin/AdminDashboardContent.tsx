@@ -63,10 +63,10 @@ export default function AdminDashboardContent() {
       <div className="p-4 md:p-6 lg:p-8">
         <div className="text-center py-16">
           <AlertCircle className="w-12 h-12 mx-auto mb-4 text-destructive" />
-          <p className="text-destructive font-medium mb-2">ড্যাশবোর্ড লোড করতে সমস্যা হয়েছে</p>
+          <p className="text-destructive font-medium mb-2">Failed to load dashboard</p>
           <Button onClick={() => refetch()} size="sm">
             <RefreshCw className="w-4 h-4 mr-2" />
-            আবার চেষ্টা করুন
+            Retry
           </Button>
         </div>
       </div>
@@ -96,14 +96,14 @@ export default function AdminDashboardContent() {
           <CardHeader className="pb-2">
             <CardDescription className="flex items-center gap-1.5">
               <Banknote className="w-4 h-4" />
-              আজকের মোট রেভিনিউ
+              Today's Total Revenue
             </CardDescription>
             <CardTitle className="text-2xl">
               {isLoading ? <Skeleton className="h-8 w-28" /> : `৳${todayRevenue.toLocaleString()}`}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-xs text-muted-foreground">টিকেট + ফুড সেলস</p>
+            <p className="text-xs text-muted-foreground">Tickets + Food Sales</p>
           </CardContent>
         </Card>
 
@@ -111,7 +111,7 @@ export default function AdminDashboardContent() {
           <CardHeader className="pb-2">
             <CardDescription className="flex items-center gap-1.5">
               <Ticket className="w-4 h-4" />
-              টিকেট সেলস
+              Ticket Sales
             </CardDescription>
             <CardTitle className="text-2xl">
               {isLoading ? <Skeleton className="h-8 w-20" /> : ticketCount}
@@ -119,7 +119,7 @@ export default function AdminDashboardContent() {
           </CardHeader>
           <CardContent>
             <p className="text-xs text-muted-foreground">
-              {isLoading ? <Skeleton className="h-3 w-24" /> : `৳${ticketRevenue.toLocaleString()} রেভিনিউ`}
+              {isLoading ? <Skeleton className="h-3 w-24" /> : `৳${ticketRevenue.toLocaleString()} revenue`}
             </p>
           </CardContent>
         </Card>
@@ -128,7 +128,7 @@ export default function AdminDashboardContent() {
           <CardHeader className="pb-2">
             <CardDescription className="flex items-center gap-1.5">
               <UtensilsCrossed className="w-4 h-4" />
-              ফুড রেভিনিউ
+              Food Revenue
             </CardDescription>
             <CardTitle className="text-2xl">
               {isLoading ? <Skeleton className="h-8 w-24" /> : `৳${foodRevenue.toLocaleString()}`}
@@ -136,7 +136,7 @@ export default function AdminDashboardContent() {
           </CardHeader>
           <CardContent>
             <p className="text-xs text-muted-foreground">
-              {isLoading ? <Skeleton className="h-3 w-20" /> : `${summary?.today?.foodOrders || 0} অর্ডার`}
+              {isLoading ? <Skeleton className="h-3 w-20" /> : `${summary?.today?.foodOrders || 0} orders`}
             </p>
           </CardContent>
         </Card>
@@ -145,7 +145,7 @@ export default function AdminDashboardContent() {
           <CardHeader className="pb-2">
             <CardDescription className="flex items-center gap-1.5">
               <TrendingUp className="w-4 h-4" />
-              টিকেট ব্যবহৃত
+              Tickets Used
             </CardDescription>
             <CardTitle className="text-2xl">
               {isLoading ? <Skeleton className="h-8 w-16" /> : (summary?.today?.ticketsUsed || 0)}
@@ -153,7 +153,7 @@ export default function AdminDashboardContent() {
           </CardHeader>
           <CardContent>
             <p className="text-xs text-muted-foreground">
-              {isLoading ? <Skeleton className="h-3 w-28" /> : `${ticketCount} এর মধ্যে`}
+              {isLoading ? <Skeleton className="h-3 w-28" /> : `out of ${ticketCount}`}
             </p>
           </CardContent>
         </Card>
@@ -168,16 +168,16 @@ export default function AdminDashboardContent() {
             <div className="flex items-center justify-between">
               <CardTitle className="text-base flex items-center gap-2">
                 <Ticket className="w-4 h-4" />
-                আজকের টিকেট
+                Today's Tickets
               </CardTitle>
               <Button variant="ghost" size="sm" onClick={() => navigate('/admin/ticketing')}>
-                সব দেখুন <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                View All <ArrowRight className="w-3.5 h-3.5 ml-1" />
               </Button>
             </div>
           </CardHeader>
           <CardContent>
             {!recentTickets || recentTickets.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-6">আজ কোনো টিকেট নেই</p>
+              <p className="text-sm text-muted-foreground text-center py-6">No tickets today</p>
             ) : (
               <div className="space-y-2">
                 {recentTickets.map((ticket) => (
@@ -205,16 +205,16 @@ export default function AdminDashboardContent() {
             <div className="flex items-center justify-between">
               <CardTitle className="text-base flex items-center gap-2">
                 <UtensilsCrossed className="w-4 h-4" />
-                আজকের ফুড অর্ডার
+                Today's Food Orders
               </CardTitle>
               <Button variant="ghost" size="sm" onClick={() => navigate('/admin/food-orders')}>
-                সব দেখুন <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                View All <ArrowRight className="w-3.5 h-3.5 ml-1" />
               </Button>
             </div>
           </CardHeader>
           <CardContent>
             {!recentFoodOrders || recentFoodOrders.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-6">আজ কোনো ফুড অর্ডার নেই</p>
+              <p className="text-sm text-muted-foreground text-center py-6">No food orders today</p>
             ) : (
               <div className="space-y-2">
                 {recentFoodOrders.map((order) => (
