@@ -313,7 +313,7 @@ export default function MemberEntryTab() {
               </div>
               <div className="flex flex-col items-end gap-1 text-right">
                 <p className="text-sm text-muted-foreground">
-                  মেয়াদ: {foundMember.valid_from} → {foundMember.valid_till}
+                  Validity: {foundMember.valid_from} → {foundMember.valid_till}
                 </p>
                 <Badge variant={remainingDays <= 7 ? 'destructive' : 'secondary'}>
                   {remainingDays} দিন বাকি
