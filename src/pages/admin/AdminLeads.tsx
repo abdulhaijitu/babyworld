@@ -144,8 +144,55 @@ function LeadForm({ lead, onClose }: { lead?: Lead; onClose: () => void }) {
     </form>
   );
 }
+function SMSButton({ phone, name }: { phone: string; name: string }) {
+  const { sendSMS, sending } = useSendSMS();
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState(`প্রিয় ${name},\nBaby World-এ আপনাকে স্বাগতম! আমাদের নতুন অফার ও প্যাকেজ সম্পর্কে জানতে ভিজিট করুন।\n📍 Baby World Indoor Playground`);
 
-export default function AdminLeads() {
+  const handleSend = async () => {
+    const result = await sendSMS(phone, message);
+    if (result.success) {
+      toast.success(`${name}-কে SMS পাঠানো হয়েছে`);
+      setOpen(false);
+    } else {
+      toast.error('SMS পাঠাতে ব্যর্থ: ' + (result.error || result.message));
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="ghost" size="icon" title="SMS পাঠান">
+          <Send className="h-4 w-4" />
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>SMS পাঠান — {name}</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="text-sm text-muted-foreground flex items-center gap-1">
+            <Phone className="h-3 w-3" /> {phone}
+          </div>
+          <div className="space-y-2">
+            <Label>মেসেজ</Label>
+            <Textarea value={message} onChange={e => setMessage(e.target.value)} rows={5} maxLength={1600} />
+            <p className="text-xs text-muted-foreground text-right">{message.length}/1600</p>
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setOpen(false)}>বাতিল</Button>
+            <Button onClick={handleSend} disabled={sending || !message.trim()}>
+              {sending ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Send className="h-4 w-4 mr-1" />}
+              পাঠান
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+
   const [statusFilter, setStatusFilter] = useState<LeadStatus | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
