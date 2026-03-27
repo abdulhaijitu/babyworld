@@ -273,10 +273,9 @@ export default function AdminExpenses() {
                     <SelectValue placeholder={'Select category'} />
                   </SelectTrigger>
                   <SelectContent>
-                    {EXPENSE_CATEGORIES.map(cat => (
+                    {expenseCategories.map(cat => (
                       <SelectItem key={cat.value} value={cat.value}>
                         <div className="flex items-center gap-2">
-                          <cat.icon className="w-4 h-4" />
                           {cat.label}
                         </div>
                       </SelectItem>
