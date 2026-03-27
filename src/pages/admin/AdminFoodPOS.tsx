@@ -157,56 +157,6 @@ export default function AdminFoodPOS() {
     }
   };
 
-  const handlePlaceOrder = async () => {
-    if (cart.length === 0) { toast.error('কার্ট খালি!'); return; }
-    setSubmitting(true);
-    try {
-      const orderNumber = `FO${Date.now().toString(36).toUpperCase()}`;
-      const currentCart = [...cart];
-      const currentTotal = cartTotal;
-      const currentCustomer = customerName;
-      const currentPayment = paymentType;
-
-      const { data: order, error: orderError } = await supabase
-        .from('food_orders')
-        .insert({
-          order_number: orderNumber,
-          customer_name: customerName || null,
-          payment_type: paymentType,
-          subtotal: cartTotal,
-          total: cartTotal,
-          notes: notes || null,
-          status: 'pending',
-        })
-        .select()
-        .single();
-      if (orderError) throw orderError;
-
-      const items = cart.map(c => ({
-        order_id: order.id,
-        food_item_id: c.food_item.id,
-        quantity: c.quantity,
-        unit_price: c.food_item.price,
-        total_price: c.food_item.price * c.quantity,
-      }));
-      const { error: itemsError } = await supabase.from('food_order_items').insert(items);
-      if (itemsError) throw itemsError;
-
-      toast.success(`অর্ডার #${orderNumber} তৈরি হয়েছে!`);
-      setCart([]);
-      setCustomerName('');
-      setNotes('');
-      setPaymentType('cash');
-      queryClient.invalidateQueries({ queryKey: ['food-orders-today'] });
-
-      // Auto print receipt
-      printReceipt(orderNumber, currentCart, currentTotal, currentCustomer, currentPayment);
-    } catch (err: any) {
-      toast.error(err.message || 'অর্ডার তৈরি ব্যর্থ');
-    } finally {
-      setSubmitting(false);
-    }
-  };
 
   // Keyboard shortcuts: Enter = place order, Escape = clear cart
   useEffect(() => {
