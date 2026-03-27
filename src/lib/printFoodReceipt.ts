@@ -20,7 +20,8 @@ export interface ReceiptData {
 }
 
 export function printFoodReceipt(data: ReceiptData) {
-  const { orderNumber, items, total, customerName, paymentType, createdAt, isReprint } = data;
+  const { orderNumber, items, subtotal, discount, total, customerName, paymentType, createdAt, isReprint } = data;
+  const displaySubtotal = subtotal ?? total;
   const timeStr = format(createdAt || new Date(), 'dd/MM/yyyy hh:mm a');
   const logoUrl = new URL('/src/assets/baby-world-logo.png', window.location.origin).href;
   const totalQty = items.reduce((s, i) => s + i.quantity, 0);
