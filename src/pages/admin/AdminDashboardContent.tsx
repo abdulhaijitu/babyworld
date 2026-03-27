@@ -96,7 +96,7 @@ export default function AdminDashboardContent() {
           <CardHeader className="pb-2">
             <CardDescription className="flex items-center gap-1.5">
               <Banknote className="w-4 h-4" />
-              আজকের মোট রেভিনিউ
+              Today's Total Revenue
             </CardDescription>
             <CardTitle className="text-2xl">
               {isLoading ? <Skeleton className="h-8 w-28" /> : `৳${todayRevenue.toLocaleString()}`}
