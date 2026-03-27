@@ -376,7 +376,7 @@ export default function AdminEvents() {
                 <p className="font-semibold">{pkg.name}</p>
                 <p className="text-lg font-bold text-primary">৳{pkg.price.toLocaleString()}</p>
                 <p className="text-xs text-muted-foreground flex items-center justify-center gap-1">
-                  <Users className="w-3 h-3" /> {pkg.guests} {'guests'}
+                  <Users className="w-3 h-3" /> {pkg.max_guests} {'guests'}
                 </p>
               </div>
             ))}
