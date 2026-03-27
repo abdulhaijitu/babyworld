@@ -602,6 +602,7 @@ export default function AdminFoodSales() {
                 <Table>
                   <TableHeader>
                     <TableRow>
+                      <TableHead className="w-12"></TableHead>
                       <TableHead>{'Item'}</TableHead>
                       <TableHead>{'Category'}</TableHead>
                       <TableHead>{'Price'}</TableHead>
@@ -612,6 +613,15 @@ export default function AdminFoodSales() {
                   <TableBody>
                     {foodItems.map((item) => (
                       <TableRow key={item.id}>
+                        <TableCell className="w-12 p-2">
+                          {item.image_url ? (
+                            <img src={item.image_url} alt={item.name} className="h-10 w-10 rounded-md object-cover" />
+                          ) : (
+                            <div className="h-10 w-10 rounded-md bg-muted flex items-center justify-center">
+                              <UtensilsCrossed className="h-4 w-4 text-muted-foreground" />
+                            </div>
+                          )}
+                        </TableCell>
                         <TableCell>
                           <div className="font-medium">{item.name}</div>
                         </TableCell>
