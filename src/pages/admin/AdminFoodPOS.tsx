@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -253,6 +253,36 @@ export default function AdminFoodPOS() {
       setSubmitting(false);
     }
   };
+
+  // Keyboard shortcuts: Enter = place order, Escape = clear cart
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      // Skip if user is typing in an input/textarea
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA') {
+        if (e.key === 'Escape') {
+          (e.target as HTMLElement).blur();
+        }
+        return;
+      }
+      if (e.key === 'Enter' && cart.length > 0 && !submitting) {
+        e.preventDefault();
+        handlePlaceOrder();
+      }
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        if (cart.length > 0) {
+          setCart([]);
+          setCustomerName('');
+          setNotes('');
+          setPaymentType('cash');
+          toast.info('কার্ট ক্লিয়ার হয়েছে');
+        }
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [cart, submitting]);
 
   const categories = ['all', 'snacks', 'drinks', 'meals'] as const;
 
