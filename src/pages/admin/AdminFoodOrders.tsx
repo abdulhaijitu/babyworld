@@ -64,6 +64,9 @@ interface FoodOrder {
   payment_type: 'cash' | 'online' | 'pending';
   subtotal: number;
   total: number;
+  discount_amount: number;
+  discount_type: string | null;
+  coupon_code: string | null;
   notes: string | null;
   created_at: string;
 }
@@ -186,6 +189,8 @@ export default function AdminFoodOrders() {
           unitPrice: item.unit_price,
           totalPrice: item.total_price,
         })),
+        subtotal: order.subtotal,
+        discount: order.discount_amount,
         total: order.total,
         customerName: order.customer_name,
         paymentType: order.payment_type,
@@ -375,6 +380,7 @@ export default function AdminFoodOrders() {
                   <TableHead>Order #</TableHead>
                   <TableHead>Customer</TableHead>
                   <TableHead>Total</TableHead>
+                  <TableHead className="hidden lg:table-cell">Discount</TableHead>
                   <TableHead>Payment</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Time</TableHead>
@@ -390,7 +396,7 @@ export default function AdminFoodOrders() {
                   </>
                 ) : filteredOrders.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                       কোনো অর্ডার পাওয়া যায়নি
                     </TableCell>
                   </TableRow>
@@ -402,6 +408,18 @@ export default function AdminFoodOrders() {
                       </TableCell>
                       <TableCell>{order.customer_name || '—'}</TableCell>
                       <TableCell className="font-semibold">৳{order.total}</TableCell>
+                      <TableCell className="hidden lg:table-cell">
+                        {order.discount_amount > 0 ? (
+                          <div className="space-y-0.5">
+                            <span className="text-sm text-orange-600 dark:text-orange-400 font-medium">-৳{order.discount_amount}</span>
+                            {order.coupon_code && (
+                              <Badge variant="outline" className="text-xs block w-fit">{order.coupon_code}</Badge>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="text-muted-foreground text-xs">—</span>
+                        )}
+                      </TableCell>
                       <TableCell>{getPaymentBadge(order.payment_type)}</TableCell>
                       <TableCell>{getStatusBadge(order.status)}</TableCell>
                       <TableCell className="text-sm text-muted-foreground">
@@ -515,7 +533,19 @@ export default function AdminFoodOrders() {
                         <span className="font-medium">৳{item.total_price}</span>
                       </div>
                     ))}
-                    <div className="border-t pt-2 flex justify-between font-semibold">
+                    {selectedOrder.discount_amount > 0 && (
+                      <>
+                        <div className="border-t pt-2 flex justify-between text-sm">
+                          <span>Subtotal</span>
+                          <span>৳{selectedOrder.subtotal}</span>
+                        </div>
+                        <div className="flex justify-between text-sm text-orange-600 dark:text-orange-400">
+                          <span>Discount {selectedOrder.coupon_code ? `(${selectedOrder.coupon_code})` : ''}</span>
+                          <span>-৳{selectedOrder.discount_amount}</span>
+                        </div>
+                      </>
+                    )}
+                    <div className={`${selectedOrder.discount_amount > 0 ? '' : 'border-t pt-2'} flex justify-between font-semibold`}>
                       <span>Total</span>
                       <span>৳{selectedOrder.total}</span>
                     </div>
