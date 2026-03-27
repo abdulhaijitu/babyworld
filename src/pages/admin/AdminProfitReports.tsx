@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, subMonths } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
-
+import { useExpenseCategories } from '@/hooks/useExpenseCategories';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -42,21 +42,35 @@ import {
   Legend
 } from 'recharts';
 
-const EXPENSE_CATEGORY_LABELS: Record<string, { en: string; bn: string; color: string }> = {
-  rent: { en: 'Rent', bn: 'ভাড়া', color: '#3b82f6' },
-  staff_salary: { en: 'Staff Salary', bn: 'বেতন', color: '#8b5cf6' },
-  utilities: { en: 'Utilities', bn: 'ইউটিলিটি', color: '#eab308' },
-  food_purchase: { en: 'Food Purchase', bn: 'খাদ্য ক্রয়', color: '#f97316' },
-  toys_equipment: { en: 'Toys & Equipment', bn: 'খেলনা', color: '#ec4899' },
-  maintenance: { en: 'Maintenance', bn: 'রক্ষণাবেক্ষণ', color: '#6b7280' },
-  marketing: { en: 'Marketing', bn: 'মার্কেটিং', color: '#22c55e' },
-  other: { en: 'Other', bn: 'অন্যান্য', color: '#64748b' },
+const TAILWIND_COLOR_MAP: Record<string, string> = {
+  'bg-blue-100': '#3b82f6',
+  'bg-purple-100': '#8b5cf6',
+  'bg-yellow-100': '#eab308',
+  'bg-orange-100': '#f97316',
+  'bg-pink-100': '#ec4899',
+  'bg-gray-100': '#6b7280',
+  'bg-green-100': '#22c55e',
+  'bg-slate-100': '#64748b',
+  'bg-red-100': '#ef4444',
+  'bg-teal-100': '#14b8a6',
 };
+
+function getHexFromColor(colorClass: string): string {
+  const bgClass = colorClass.split(' ')[0];
+  return TAILWIND_COLOR_MAP[bgClass] || '#64748b';
+}
 
 const CHART_COLORS = ['#22c55e', '#3b82f6', '#f97316', '#8b5cf6', '#ec4899', '#eab308', '#6b7280', '#64748b'];
 
 export default function AdminProfitReports() {
-  
+  const { data: dbCategories = [] } = useExpenseCategories();
+
+  // Build dynamic label map from DB categories
+  const categoryLabels: Record<string, { en: string; color: string }> = {};
+  dbCategories.forEach(c => {
+    categoryLabels[c.name] = { en: c.label, color: getHexFromColor(c.color) };
+  });
+
   // Date range state
   const [startDate, setStartDate] = useState<Date>(startOfMonth(new Date()));
   const [endDate, setEndDate] = useState<Date>(endOfMonth(new Date()));
@@ -121,9 +135,9 @@ export default function AdminProfitReports() {
   ];
 
   const expensePieData = expenseBreakdown.map((e: { category: string; amount: number }) => ({
-    name: EXPENSE_CATEGORY_LABELS[e.category]?.en || e.category,
+    name: categoryLabels[e.category]?.en || e.category,
     value: e.amount,
-    fill: EXPENSE_CATEGORY_LABELS[e.category]?.color || '#64748b'
+    fill: categoryLabels[e.category]?.color || '#64748b'
   }));
 
   // Export to CSV
@@ -152,7 +166,7 @@ export default function AdminProfitReports() {
     rows.push([]);
     rows.push(['EXPENSE BREAKDOWN']);
     expenseBreakdown.forEach((e: { category: string; amount: number; percentage: number }) => {
-      rows.push([EXPENSE_CATEGORY_LABELS[e.category]?.en || e.category, e.amount, `${e.percentage}%`]);
+      rows.push([categoryLabels[e.category]?.en || e.category, e.amount, `${e.percentage}%`]);
     });
     
     const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
@@ -271,7 +285,7 @@ export default function AdminProfitReports() {
               <div className="text-xs text-muted-foreground mt-2">
                 {expenseBreakdown[0] && (
                   <span>
-                    {'Top:'} {EXPENSE_CATEGORY_LABELS[expenseBreakdown[0].category]?.en}
+                    {'Top:'} {categoryLabels[expenseBreakdown[0].category]?.en || expenseBreakdown[0].category}
                   </span>
                 )}
               </div>
@@ -501,7 +515,7 @@ export default function AdminProfitReports() {
               ) : (
                 <div className="space-y-4">
                   {expenseBreakdown.map((expense: { category: string; amount: number; percentage: number }, index: number) => {
-                    const catInfo = EXPENSE_CATEGORY_LABELS[expense.category];
+                    const catInfo = categoryLabels[expense.category];
                     return (
                       <div key={index} className="space-y-2">
                         <div className="flex justify-between items-center">
