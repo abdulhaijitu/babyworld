@@ -279,6 +279,7 @@ export default function AdminEventPackages() {
               <TableHeader>
                  <TableRow>
                    <TableHead className="w-10"></TableHead>
+                   <TableHead className="w-10 text-center">#</TableHead>
                    <TableHead className="w-16">Image</TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Price</TableHead>
