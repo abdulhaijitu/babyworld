@@ -192,7 +192,7 @@ function SMSButton({ phone, name }: { phone: string; name: string }) {
   );
 }
 
-
+export default function AdminLeads() {
   const [statusFilter, setStatusFilter] = useState<LeadStatus | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
