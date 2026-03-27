@@ -141,7 +141,7 @@ export default function AdminDashboardContent() {
               </div>
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Now Inside Venue</p>
-                <p className="text-3xl font-bold text-foreground">
+                <p className="text-2xl md:text-3xl font-bold text-foreground">
                   {visitorsLoading ? <Skeleton className="h-9 w-16" /> : visitors.total}
                 </p>
               </div>
