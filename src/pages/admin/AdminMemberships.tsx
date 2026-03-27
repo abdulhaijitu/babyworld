@@ -743,6 +743,7 @@ export default function AdminMemberships() {
           )}
         </CardContent>
       </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
-}
