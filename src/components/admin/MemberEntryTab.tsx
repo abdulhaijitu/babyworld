@@ -282,7 +282,7 @@ export default function MemberEntryTab() {
             </div>
             <Button onClick={handleSearch} disabled={searching}>
               {searching ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
-              <span className="ml-2 hidden sm:inline">খুঁজুন</span>
+              <span className="ml-2 hidden sm:inline">Search</span>
             </Button>
           </div>
         </CardContent>
