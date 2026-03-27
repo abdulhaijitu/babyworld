@@ -329,19 +329,7 @@ export default function AdminEvents() {
         </div>
       </div>
 
-      <Tabs defaultValue="events" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 max-w-md">
-          <TabsTrigger value="events">
-            <PartyPopper className="w-4 h-4 mr-2" />
-            Events
-          </TabsTrigger>
-          <TabsTrigger value="bookings">
-            <CalendarDays className="w-4 h-4 mr-2" />
-            Bookings
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="events" className="space-y-6 mt-6">
+      <div className="space-y-6">
           {/* New Event Button */}
           <div className="flex justify-end">
             <Button onClick={() => setCreateOpen(true)}>
