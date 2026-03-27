@@ -236,39 +236,17 @@ export default function AdminHeroSlides({ embedded = false }: { embedded?: boole
             <DialogTitle>Add New Slide</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            {/* Image Upload */}
+            {/* Image Upload with Drag & Drop */}
             <div className="space-y-2">
               <Label>Slide Image *</Label>
-              {previewUrl ? (
-                <div className="relative rounded-lg overflow-hidden border border-border">
-                  <img src={previewUrl} alt="Preview" className="w-full h-40 object-cover" />
-                  <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                    <Button size="sm" variant="secondary" onClick={() => fileInputRef.current?.click()}>
-                      <Upload className="w-3 h-3 mr-1" /> Replace
-                    </Button>
-                    <Button size="sm" variant="destructive" onClick={() => setPreviewUrl(null)}>
-                      <X className="w-3 h-3 mr-1" /> Remove
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={uploading}
-                  className="w-full h-32 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center gap-2 text-muted-foreground hover:border-primary hover:text-primary transition-colors"
-                >
-                  {uploading ? (
-                    <span className="text-sm">Uploading...</span>
-                  ) : (
-                    <>
-                      <ImageIcon className="w-8 h-8" />
-                      <span className="text-sm">Click to upload (max 5MB)</span>
-                    </>
-                  )}
-                </button>
-              )}
-              <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleImageSelect} />
+              <ImageDropZone
+                imageUrl={previewUrl}
+                onImageUploaded={handleImageUploaded}
+                onImageRemoved={() => setPreviewUrl(null)}
+                uploadFn={uploadImage}
+                height="h-40"
+                label="স্লাইড ইমেজ আপলোড করুন"
+              />
             </div>
 
             <div className="space-y-2">
