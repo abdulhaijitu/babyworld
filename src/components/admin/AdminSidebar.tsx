@@ -31,7 +31,12 @@ import {
   Megaphone,
   UserPlus,
   Tag,
-  Share2
+  Share2,
+  Briefcase,
+  ClipboardCheck,
+  CalendarOff,
+  Wallet,
+  Award
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -80,9 +85,15 @@ const allMenuItems: MenuItem[] = [
     { id: 'sms-campaigns', label: 'SMS Campaigns', icon: MessageSquare, path: '/admin/sms-campaigns' },
     { id: 'social-media', label: 'Social Media', icon: Share2, path: '/admin/social-media' },
   ]},
+  { id: 'hr', label: 'HUMAN RESOURCES', icon: Briefcase, path: '/admin/employees', requiredRoles: ['super_admin', 'admin', 'manager'], children: [
+    { id: 'employees', label: 'Employees', icon: Users, path: '/admin/employees' },
+    { id: 'roster', label: 'Roster', icon: Clock, path: '/admin/roster' },
+    { id: 'attendance', label: 'Attendance', icon: ClipboardCheck, path: '/admin/attendance' },
+    { id: 'leaves', label: 'Leave Management', icon: CalendarOff, path: '/admin/leaves' },
+    { id: 'payroll', label: 'Payroll', icon: Wallet, path: '/admin/payroll' },
+    { id: 'performance', label: 'Performance', icon: Award, path: '/admin/performance' },
+  ]},
   { id: 'expenses', label: 'Expenses', icon: Receipt, path: '/admin/expenses', requiredRoles: ['super_admin', 'admin', 'manager'] },
-  { id: 'employees', label: 'Employees', icon: Users, path: '/admin/employees', requiredRoles: ['super_admin', 'admin'] },
-  { id: 'roster', label: 'Roster', icon: Clock, path: '/admin/roster', requiredRoles: ['super_admin', 'admin', 'manager'] },
   
   
   { id: 'ride-reviews', label: 'Ride Reviews', icon: Star, path: '/admin/ride-reviews', requiredRoles: ['super_admin', 'admin', 'manager'] },
