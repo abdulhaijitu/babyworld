@@ -62,7 +62,24 @@ export default function MemberEntryTab() {
         .order('status', { ascending: true })
         .limit(5);
       if (error) throw error;
-      return data || [];
+      if (!data || data.length === 0) return [];
+
+      // Fetch last visit for each member
+      const memberIds = data.map((m: any) => m.id);
+      const { data: visits } = await supabase
+        .from('membership_visits')
+        .select('membership_id, check_in_at')
+        .in('membership_id', memberIds)
+        .order('check_in_at', { ascending: false });
+
+      const lastVisitMap: Record<string, string> = {};
+      (visits || []).forEach((v: any) => {
+        if (!lastVisitMap[v.membership_id]) {
+          lastVisitMap[v.membership_id] = v.check_in_at;
+        }
+      });
+
+      return data.map((m: any) => ({ ...m, lastVisit: lastVisitMap[m.id] || null }));
     },
     enabled: debouncedSearch.length >= 3,
   });
