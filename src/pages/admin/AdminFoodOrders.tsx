@@ -406,6 +406,18 @@ export default function AdminFoodOrders() {
                       </TableCell>
                       <TableCell>{order.customer_name || '—'}</TableCell>
                       <TableCell className="font-semibold">৳{order.total}</TableCell>
+                      <TableCell className="hidden lg:table-cell">
+                        {order.discount_amount > 0 ? (
+                          <div className="space-y-0.5">
+                            <span className="text-sm text-orange-600 dark:text-orange-400 font-medium">-৳{order.discount_amount}</span>
+                            {order.coupon_code && (
+                              <Badge variant="outline" className="text-xs block w-fit">{order.coupon_code}</Badge>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="text-muted-foreground text-xs">—</span>
+                        )}
+                      </TableCell>
                       <TableCell>{getPaymentBadge(order.payment_type)}</TableCell>
                       <TableCell>{getStatusBadge(order.status)}</TableCell>
                       <TableCell className="text-sm text-muted-foreground">
