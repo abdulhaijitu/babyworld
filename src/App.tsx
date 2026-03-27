@@ -47,6 +47,10 @@ import AdminHeroSlides from "./pages/admin/AdminHeroSlides";
 import AdminHomepage from "./pages/admin/AdminHomepage";
 import AdminFoodPOS from "./pages/admin/AdminFoodPOS";
 import AdminCoupons from "./pages/admin/AdminCoupons";
+import AdminLeads from "./pages/admin/AdminLeads";
+import AdminPromotions from "./pages/admin/AdminPromotions";
+import AdminSmsCampaigns from "./pages/admin/AdminSmsCampaigns";
+import AdminSocialMedia from "./pages/admin/AdminSocialMedia";
 
 const queryClient = new QueryClient();
 
