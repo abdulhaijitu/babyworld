@@ -21,8 +21,8 @@ const PlayBooking = () => {
           <TrustSection />
         </main>
         <Footer />
-        {/* Extra spacing for bottom nav - booking has its own sticky panel */}
         <div className="lg:hidden h-4" />
+        <WhatsAppButton variant="floating" />
         <MobileBottomNav />
       </div>
     </PageTransition>
