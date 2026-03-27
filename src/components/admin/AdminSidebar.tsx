@@ -31,7 +31,12 @@ import {
   Megaphone,
   UserPlus,
   Tag,
-  Share2
+  Share2,
+  Briefcase,
+  ClipboardCheck,
+  CalendarOff,
+  Wallet,
+  Award
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
