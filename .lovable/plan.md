@@ -1,68 +1,63 @@
 
 
-## পরিকল্পনা: Frontend কন্ট্রোল সিস্টেম — Backend ↔ Frontend রিলেশন ডিজাইন
+## পরিকল্পনা: Dashboard রিডিজাইন — প্রোজেক্ট-ভিত্তিক Overview
 
-### বর্তমান অবস্থা
+### বর্তমান সমস্যা
 
-```text
-Admin Frontend Menu
-├── Homepage (ট্যাবড: Slides + Cards) → /admin/homepage
-├── Hero Slides → /admin/hero-slides (স্ট্যান্ডঅ্যালোন)
-└── Hero Cards → /admin/hero-cards (স্ট্যান্ডঅ্যালোন)
-```
+1. **Revenue ভুল হিসাব** — হার্ডকোডেড `PRICE_PER_TICKET = 300` দিয়ে শুধু bookings থেকে revenue ক্যালকুলেট হচ্ছে। আসল টিকেট, ফুড অর্ডার, এক্সপেন্স কোনোটাই ধরা হচ্ছে না।
+2. **Bookings টেবিল ডুপ্লিকেশন** — ড্যাশবোর্ডে পুরো বুকিং টেবিল (ফিল্টার, সার্চ, ক্যান্সেল ডায়ালগসহ) আছে যা `/admin/bookings` পেজের কাজ। ড্যাশবোর্ড হওয়া উচিত quick overview।
+3. **মূল ডেটা সোর্স অনুপস্থিত** — টিকেট সেলস, ফুড রেভিনিউ, মেম্বারশিপ, এক্সপেন্স — এগুলো ড্যাশবোর্ডে নেই।
+4. **QuickReportsWidget** ইতিমধ্যে `get-reports-summary` edge function ব্যবহার করে আসল ডেটা আনে, কিন্তু revenue cards সেটা ব্যবহার করে না।
 
-**সমস্যা:** Homepage পেজ ইতিমধ্যে Slides ও Cards এম্বেড করে দেখায়, আবার আলাদা পেজেও একই কম্পোনেন্ট আছে — এটা ডুপ্লিকেশন। এছাড়া, ওয়েবসাইটের অন্যান্য সেকশন (About, Video, Testimonials, Trust, Contact info) কন্ট্রোল করার কোনো ব্যবস্থা নেই।
-
-### প্রস্তাবিত ডিজাইন
+### প্রস্তাবিত ড্যাশবোর্ড লেআউট
 
 ```text
-Admin Frontend Menu (Accounts-এর পরে)
-├── Homepage → /admin/homepage
-│   ├── Tab: Hero Slider (hero_slides টেবিল)
-│   └── Tab: Offer & Event Cards (hero_cards টেবিল)
-├── About & Contact → /admin/about-contact [নতুন]
-│   ├── Tab: About Section (settings টেবিল, key: 'about_content')
-│   ├── Tab: Contact Info (settings টেবিল, key: 'contact_info')
-│   └── Tab: Social Links (settings টেবিল, key: 'social_links')
-└── SEO & Branding → /admin/seo-branding [নতুন]
-    ├── Tab: SEO Meta Tags (settings টেবিল, key: 'seo_meta')
-    └── Tab: Branding (settings টেবিল, key: 'site_branding')
-```
-
-### ব্যাকএন্ড ↔ ফ্রন্টএন্ড ডেটা ফ্লো
-
-```text
-┌─────────────────────────────────────┐
-│         ADMIN (Backend Control)     │
-│                                     │
-│  hero_slides table ──────────────── │──→ HeroSection.tsx (Slider)
-│  hero_cards table ───────────────── │──→ HeroSection.tsx (Offer/Event Cards)
-│  settings['about_content'] ──────── │──→ AboutSection.tsx
-│  settings['contact_info'] ────────  │──→ ContactSection.tsx / Footer.tsx
-│  settings['social_links'] ────────  │──→ SocialLinks.tsx / Footer.tsx
-│  settings['seo_meta'] ───────────── │──→ SEOHead.tsx
-│  settings['site_branding'] ──────── │──→ Navbar.tsx / Footer.tsx
-└─────────────────────────────────────┘
+┌──────────────────────────────────────────────────┐
+│  Dashboard                                        │
+├──────────────────────────────────────────────────┤
+│  [Expiring Cards Alert — যদি থাকে]               │
+├──────────────────────────────────────────────────┤
+│  Revenue Summary Cards (from get-reports-summary) │
+│  ┌─────────┬──────────┬──────────┬──────────┐    │
+│  │Today's  │ Ticket   │ Food     │ Total    │    │
+│  │Revenue  │ Sales    │ Revenue  │ Expenses │    │
+│  │ (real)  │ (count)  │ (amount) │ (today)  │    │
+│  └─────────┴──────────┴──────────┴──────────┘    │
+├──────────────────────────────────────────────────┤
+│  ┌───────────┬───────────┬───────────────────┐   │
+│  │ Quick     │ Visitor   │ Activity Log      │   │
+│  │ Actions   │ Counter   │ (2 col wide)      │   │
+│  │           │ (live)    │                   │   │
+│  └───────────┴───────────┴───────────────────┘   │
+├──────────────────────────────────────────────────┤
+│  ┌────────────────────┬─────────────────────┐    │
+│  │ Today's Tickets    │ Recent Food Orders  │    │
+│  │ (compact list,     │ (compact list,      │    │
+│  │  last 5, link to   │  last 5, link to    │    │
+│  │  /admin/ticketing)  │  /admin/food-orders)│    │
+│  └────────────────────┴─────────────────────┘    │
+└──────────────────────────────────────────────────┘
 ```
 
 ### পরিবর্তন তালিকা
 
 | ফাইল | কাজ |
 |------|------|
-| `AdminSidebar.tsx` | Frontend সাবমেনু আপডেট — Hero Slides ও Hero Cards সরিয়ে Homepage, About & Contact, SEO & Branding যোগ |
-| `AdminAboutContact.tsx` [নতুন] | About text, Contact info, Social links এডিট করার ট্যাবড ইন্টারফেস — settings টেবিল ব্যবহার করবে |
-| `AdminSeoBranding.tsx` [নতুন] | SEO meta ও branding সেটিংস এডিট করার ইন্টারফেস |
-| `App.tsx` | নতুন রাউট যোগ: `/admin/about-contact`, `/admin/seo-branding`; পুরাতন `/admin/hero-slides` ও `/admin/hero-cards` রাউট রিমুভ |
-| `AboutSection.tsx` | settings থেকে ডাইনামিক কন্টেন্ট লোড করার লজিক যোগ |
-| `ContactSection.tsx` / `Footer.tsx` | settings থেকে ডাইনামিক কন্ট্যাক্ট ইনফো ও সোশ্যাল লিংক লোড |
-| `SEOHead.tsx` | settings থেকে ডাইনামিক মেটা ট্যাগ লোড |
+| `AdminDashboardContent.tsx` | সম্পূর্ণ রিফ্যাক্টর — হার্ডকোডেড revenue সরানো, `useReportsSummary('today')` থেকে আসল ডেটা ব্যবহার, বুকিং টেবিল বাদ দিয়ে compact Today's Tickets ও Recent Food Orders উইজেট যোগ |
+| `QuickReportsWidget.tsx` | বাদ — এর ডেটা সরাসরি ড্যাশবোর্ডের revenue cards-এ মার্জ হবে |
+
+### কী বদলাচ্ছে
+
+1. **Revenue Cards** — `useReportsSummary('today')` hook ব্যবহার করে আসল ডেটা দেখাবে (টিকেট রেভিনিউ, ফুড রেভিনিউ, combined revenue)
+2. **Bookings টেবিল বাদ** — পুরো ফিল্টারযুক্ত বুকিং টেবিল, ক্যান্সেল ডায়ালগ, সব সরে যাবে। এগুলো `/admin/bookings`-এ আছে
+3. **Today's Tickets** — আজকের শেষ ৫টি টিকেট compact list-এ দেখাবে, "View All" বাটন `/admin/ticketing`-এ নিয়ে যাবে
+4. **Recent Food Orders** — আজকের শেষ ৫টি ফুড অর্ডার compact list-এ, "View All" বাটন `/admin/food-orders`-এ
+5. **Quick Actions + Visitor Counter + Activity Log** — এগুলো বজায় থাকবে
 
 ### কারিগরি বিবরণ
 
-- **কোনো নতুন টেবিল লাগবে না** — বিদ্যমান `settings` টেবিল (key-value JSONB) ব্যবহার হবে নতুন কন্টেন্ট স্টোরের জন্য
-- `hero_slides` ও `hero_cards` টেবিল যেভাবে আছে সেভাবেই থাকবে
-- Homepage পেজ (`/admin/homepage`) এম্বেডেড আর্কিটেকচার বজায় রাখবে
-- স্ট্যান্ডঅ্যালোন Hero Slides ও Hero Cards রাউট বাদ যাবে কারণ Homepage-এ ইতিমধ্যে আছে
-- সব নতুন পেজ `requiredRoles: ['super_admin', 'admin']` থাকবে
-- settings টেবিলে RLS ইতিমধ্যে আছে (admin write, public read)
+- কোনো নতুন টেবিল বা migration লাগবে না
+- `useReportsSummary` hook ইতিমধ্যে আছে এবং edge function থেকে আসল revenue ডেটা আনে
+- `QuickReportsWidget` কম্পোনেন্ট মুছে ফেলা হবে কারণ এর ডেটা মূল revenue cards-এ চলে আসবে
+- ফাইল সাইজ উল্লেখযোগ্যভাবে কমবে (বর্তমান ~550 লাইন → ~200 লাইন)
 
