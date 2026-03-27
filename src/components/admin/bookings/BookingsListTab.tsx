@@ -324,6 +324,7 @@ export function BookingsListTab() {
           )}
         </CardContent>
       </Card>
+      )}
 
       {/* Detail Dialog */}
       <Dialog open={detailOpen} onOpenChange={setDetailOpen}>
