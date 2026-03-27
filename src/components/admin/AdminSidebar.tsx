@@ -279,20 +279,20 @@ function SidebarContent({
                   onOpenChange={(open) => setOpenGroups(open ? { [item.id]: true } : {})}
                 >
                   <CollapsibleTrigger className={cn(
-                    "w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200",
+                    "w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all duration-200",
                     childActive
                       ? "bg-primary/10 text-primary"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground",
                   )}>
                     <motion.div
                       className={cn(
-                        "h-7 w-7 rounded-md flex items-center justify-center shrink-0 transition-colors duration-200",
+                        "h-6 w-6 rounded-md flex items-center justify-center shrink-0 transition-colors duration-200",
                         childActive ? "bg-primary/15" : "bg-transparent"
                       )}
                       whileHover={{ scale: 1.1 }}
                       transition={{ type: 'spring', stiffness: 400, damping: 17 }}
                     >
-                      <Icon className="h-4 w-4" />
+                      <Icon className="h-3.5 w-3.5" />
                     </motion.div>
                     <span className="flex-1 text-left">{item.label}</span>
                     <AnimatePresence>
