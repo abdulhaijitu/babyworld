@@ -208,17 +208,25 @@ export default function AdminFoodPOS() {
         osc.stop(audioCtx.currentTime + 0.3);
       } catch {}
 
+      // Increment coupon used_count
+      if (currentCouponCode) {
+        await supabase.rpc('increment_coupon_usage' as any, { coupon_code: currentCouponCode }).catch(() => {});
+      }
+
       toast.success(`অর্ডার #${orderNumber} তৈরি হয়েছে!`);
       setCart([]);
       setCustomerName('');
       setNotes('');
       setPaymentType('cash');
+      clearDiscount();
       queryClient.invalidateQueries({ queryKey: ['food-orders-today'] });
 
       // Auto print receipt
       printFoodReceipt({
         orderNumber,
         items: receiptItems,
+        subtotal: currentSubtotal,
+        discount: currentDiscount,
         total: currentTotal,
         customerName: currentCustomer,
         paymentType: currentPayment,
