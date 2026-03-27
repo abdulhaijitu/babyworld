@@ -181,7 +181,7 @@ export default function MemberEntryTab() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success('✅ চেক-আউট সফল হয়েছে');
+      toast.success('✅ Check-out successful');
       queryClient.invalidateQueries({ queryKey: ['membership-visits-today'] });
       queryClient.invalidateQueries({ queryKey: ['member-visits', foundMember?.id] });
     },
