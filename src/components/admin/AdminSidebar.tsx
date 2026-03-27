@@ -30,35 +30,35 @@ interface MenuItem {
 
 const allMenuItems: MenuItem[] = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
-  { id: 'ticketing', label: 'Ticketing', icon: Ticket, path: '/admin/create-ticket', requiredRoles: ['super_admin', 'admin', 'manager', 'staff'], children: [
+  { id: 'ticketing', label: 'Ticketing', icon: Ticket, path: '/admin/create-ticket', module: 'ticketing', children: [
     { id: 'create-ticket', label: 'Create Ticket', icon: Plus, path: '/admin/create-ticket' },
     { id: 'ticket-list', label: 'Ticket List', icon: List, path: '/admin/ticket-list' },
     { id: 'rides', label: 'Rides', icon: FerrisWheel, path: '/admin/rides' },
     { id: 'gate-logs', label: 'Gate Logs', icon: Video, path: '/admin/gate-logs' },
   ]},
-  { id: 'membership', label: 'Membership', icon: Crown, path: '/admin/membership-packages', requiredRoles: ['super_admin', 'admin', 'manager'], children: [
+  { id: 'membership', label: 'Membership', icon: Crown, path: '/admin/membership-packages', module: 'membership', children: [
     { id: 'membership-packages', label: 'Packages', icon: List, path: '/admin/membership-packages' },
     { id: 'memberships', label: 'All Members', icon: Crown, path: '/admin/memberships' },
     { id: 'member-entry', label: 'Member Entry', icon: LogIn, path: '/admin/member-entry' },
   ]},
-  { id: 'foods', label: 'Foods', icon: UtensilsCrossed, path: '/admin/food-pos', requiredRoles: ['super_admin', 'admin', 'manager', 'staff'], children: [
+  { id: 'foods', label: 'Foods', icon: UtensilsCrossed, path: '/admin/food-pos', module: 'foods', children: [
     { id: 'food-pos', label: 'POS', icon: Monitor, path: '/admin/food-pos' },
     { id: 'food-orders', label: 'Orders', icon: Receipt, path: '/admin/food-orders' },
     { id: 'food-items', label: 'Items', icon: List, path: '/admin/food' },
     { id: 'coupons', label: 'Coupons', icon: Crown, path: '/admin/coupons' },
   ]},
-  { id: 'events-group', label: 'Events', icon: PartyPopper, path: '/admin/event-packages', requiredRoles: ['super_admin', 'admin', 'manager'], children: [
+  { id: 'events-group', label: 'Events', icon: PartyPopper, path: '/admin/event-packages', module: 'events', children: [
     { id: 'event-packages', label: 'Event Packages', icon: Crown, path: '/admin/event-packages' },
     { id: 'events', label: 'Bookings', icon: PartyPopper, path: '/admin/events' },
     { id: 'event-calendar', label: 'Event Calendar', icon: CalendarDays, path: '/admin/event-calendar' },
   ]},
-  { id: 'marketing', label: 'Marketing', icon: Megaphone, path: '/admin/leads', requiredRoles: ['super_admin', 'admin', 'manager'], children: [
+  { id: 'marketing', label: 'Marketing', icon: Megaphone, path: '/admin/leads', module: 'marketing', children: [
     { id: 'leads', label: 'Leads', icon: UserPlus, path: '/admin/leads' },
     { id: 'promotions', label: 'Promotions', icon: Tag, path: '/admin/promotions' },
     { id: 'sms-campaigns', label: 'SMS Campaigns', icon: MessageSquare, path: '/admin/sms-campaigns' },
     { id: 'social-media', label: 'Social Media', icon: Share2, path: '/admin/social-media' },
   ]},
-  { id: 'hr', label: 'Human Resources', icon: Briefcase, path: '/admin/employees', requiredRoles: ['super_admin', 'admin', 'manager'], children: [
+  { id: 'hr', label: 'Human Resources', icon: Briefcase, path: '/admin/employees', module: 'hr', children: [
     { id: 'employees', label: 'Employees', icon: Users, path: '/admin/employees' },
     { id: 'roster', label: 'Roster', icon: Clock, path: '/admin/roster' },
     { id: 'attendance', label: 'Attendance', icon: ClipboardCheck, path: '/admin/attendance' },
@@ -66,7 +66,7 @@ const allMenuItems: MenuItem[] = [
     { id: 'payroll', label: 'Payroll', icon: Wallet, path: '/admin/payroll' },
     { id: 'performance', label: 'Performance', icon: Award, path: '/admin/performance' },
   ]},
-  { id: 'accounts', label: 'Accounts', icon: Wallet, path: '/admin/daily-cash', requiredRoles: ['super_admin', 'admin', 'manager'], children: [
+  { id: 'accounts', label: 'Accounts', icon: Wallet, path: '/admin/daily-cash', module: 'accounts', children: [
     { id: 'daily-cash', label: 'Daily Cash Summary', icon: Briefcase, path: '/admin/daily-cash' },
     { id: 'income', label: 'Income', icon: TrendingUp, path: '/admin/income' },
     { id: 'income-categories', label: 'Income Categories', icon: Tag, path: '/admin/income-categories' },
@@ -75,8 +75,8 @@ const allMenuItems: MenuItem[] = [
     { id: 'profit', label: 'Profit & Loss', icon: TrendingUp, path: '/admin/profit' },
     { id: 'reports', label: 'Reports', icon: FileBarChart, path: '/admin/reports' },
   ]},
-  { id: 'notifications', label: 'Notifications', icon: MessageSquare, path: '/admin/notifications', requiredRoles: ['super_admin', 'admin', 'manager'] },
-  { id: 'frontend', label: 'Frontend', icon: Monitor, path: '/admin/homepage', requiredRoles: ['super_admin', 'admin'], children: [
+  { id: 'notifications', label: 'Notifications', icon: MessageSquare, path: '/admin/notifications', module: 'notifications' },
+  { id: 'frontend', label: 'Frontend', icon: Monitor, path: '/admin/homepage', module: 'frontend', children: [
     { id: 'homepage', label: 'Homepage', icon: Home, path: '/admin/homepage' },
     { id: 'about-contact', label: 'About & Contact', icon: Users, path: '/admin/about-contact' },
     { id: 'seo-branding', label: 'SEO & Branding', icon: FileBarChart, path: '/admin/seo-branding' },
@@ -85,7 +85,7 @@ const allMenuItems: MenuItem[] = [
     { id: 'users', label: 'Users', icon: Users, path: '/admin/users' },
     { id: 'roles', label: 'Roles', icon: Shield, path: '/admin/roles' },
   ]},
-  { id: 'settings', label: 'Settings', icon: Settings, path: '/admin/settings/general', requiredRoles: ['super_admin', 'admin'], children: [
+  { id: 'settings', label: 'Settings', icon: Settings, path: '/admin/settings/general', module: 'settings', children: [
     { id: 'settings-general', label: 'General', icon: Settings, path: '/admin/settings/general' },
     { id: 'settings-business', label: 'Business', icon: Building, path: '/admin/settings/business' },
     { id: 'settings-pricing', label: 'Pricing', icon: Banknote, path: '/admin/settings/pricing' },
