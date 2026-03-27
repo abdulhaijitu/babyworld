@@ -57,7 +57,7 @@ import {
   Eye,
   PartyPopper,
   Cake,
-  Users,
+  
   Gift,
   Banknote
 } from 'lucide-react';
