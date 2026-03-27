@@ -311,6 +311,7 @@ export default function AdminEventPackages() {
                      <TableCell className="cursor-grab active:cursor-grabbing">
                        <GripVertical className="w-4 h-4 text-muted-foreground" />
                      </TableCell>
+                     <TableCell className="text-center text-xs text-muted-foreground font-mono">{pkg.sort_order}</TableCell>
                     <TableCell>
                       {pkg.image_url ? (
                         <img src={pkg.image_url} alt={pkg.name} className="w-12 h-12 rounded-lg object-cover shadow-sm border border-border" />
