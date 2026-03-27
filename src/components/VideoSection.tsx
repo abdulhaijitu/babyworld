@@ -13,7 +13,7 @@ export function VideoSection() {
   const videoId = "v9fVa72l-Jg";
 
   return (
-    <section className="py-16 sm:py-20 lg:py-24 bg-background overflow-hidden">
+    <section className="py-10 sm:py-16 lg:py-24 bg-background overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6">
         {/* Header */}
         <ScrollFadeIn className="text-center max-w-2xl mx-auto mb-8 sm:mb-10 lg:mb-12 space-y-3 sm:space-y-4">

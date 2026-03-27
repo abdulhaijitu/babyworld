@@ -112,11 +112,11 @@ export default function AdminDashboardContent() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       {/* Page Title */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Dashboard</h1>
+          <h1 className="text-xl md:text-2xl font-bold">Dashboard</h1>
           <p className="text-muted-foreground flex items-center gap-1">
             <Clock className="w-3.5 h-3.5" />
             {format(new Date(), 'PPP')}
@@ -134,25 +134,25 @@ export default function AdminDashboardContent() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Users className="w-6 h-6 text-primary" />
+                <div className="h-10 w-10 md:h-12 md:w-12 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Users className="w-5 h-5 md:w-6 md:h-6 text-primary" />
                 </div>
                 <span className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-green-500 border-2 border-background animate-pulse" />
               </div>
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Now Inside Venue</p>
-                <p className="text-3xl font-bold text-foreground">
+                <p className="text-2xl md:text-3xl font-bold text-foreground">
                   {visitorsLoading ? <Skeleton className="h-9 w-16" /> : visitors.total}
                 </p>
               </div>
             </div>
-            <div className="flex gap-6">
+            <div className="flex gap-4 md:gap-6">
               <div className="text-center">
                 <div className="flex items-center gap-1.5 text-muted-foreground mb-1">
                   <Baby className="w-4 h-4" />
                   <span className="text-xs">Children</span>
                 </div>
-                <p className="text-xl font-semibold text-foreground">
+                <p className="text-lg md:text-xl font-semibold text-foreground">
                   {visitorsLoading ? <Skeleton className="h-7 w-10 mx-auto" /> : visitors.insideChildren}
                 </p>
               </div>
@@ -161,7 +161,7 @@ export default function AdminDashboardContent() {
                   <UserCheck className="w-4 h-4" />
                   <span className="text-xs">Guardians</span>
                 </div>
-                <p className="text-xl font-semibold text-foreground">
+                <p className="text-lg md:text-xl font-semibold text-foreground">
                   {visitorsLoading ? <Skeleton className="h-7 w-10 mx-auto" /> : visitors.insideGuardians}
                 </p>
               </div>
@@ -171,68 +171,68 @@ export default function AdminDashboardContent() {
       </Card>
 
       {/* Revenue Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 md:gap-4">
         <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
-          <CardHeader className="pb-2">
-            <CardDescription className="flex items-center gap-1.5">
-              <Banknote className="w-4 h-4" />
-              Today's Total Revenue
+          <CardHeader className="p-3 md:p-6 pb-1 md:pb-2">
+            <CardDescription className="flex items-center gap-1 md:gap-1.5 text-[11px] md:text-sm">
+              <Banknote className="w-3.5 h-3.5 md:w-4 md:h-4" />
+              Today's Revenue
             </CardDescription>
-            <CardTitle className="text-2xl">
+            <CardTitle className="text-lg md:text-2xl">
               {isLoading ? <Skeleton className="h-8 w-28" /> : `৳${todayRevenue.toLocaleString()}`}
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="text-xs text-muted-foreground">Tickets + Food Sales</p>
+          <CardContent className="p-3 md:p-6 pt-0">
+            <p className="text-[10px] md:text-xs text-muted-foreground">Tickets + Food</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="pb-2">
-            <CardDescription className="flex items-center gap-1.5">
-              <Ticket className="w-4 h-4" />
+          <CardHeader className="p-3 md:p-6 pb-1 md:pb-2">
+            <CardDescription className="flex items-center gap-1 md:gap-1.5 text-[11px] md:text-sm">
+              <Ticket className="w-3.5 h-3.5 md:w-4 md:h-4" />
               Ticket Sales
             </CardDescription>
-            <CardTitle className="text-2xl">
+            <CardTitle className="text-lg md:text-2xl">
               {isLoading ? <Skeleton className="h-8 w-20" /> : ticketCount}
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="text-xs text-muted-foreground">
-              {isLoading ? <Skeleton className="h-3 w-24" /> : `৳${ticketRevenue.toLocaleString()} revenue`}
+          <CardContent className="p-3 md:p-6 pt-0">
+            <p className="text-[10px] md:text-xs text-muted-foreground">
+              {isLoading ? <Skeleton className="h-3 w-24" /> : `৳${ticketRevenue.toLocaleString()}`}
             </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="pb-2">
-            <CardDescription className="flex items-center gap-1.5">
-              <UtensilsCrossed className="w-4 h-4" />
+          <CardHeader className="p-3 md:p-6 pb-1 md:pb-2">
+            <CardDescription className="flex items-center gap-1 md:gap-1.5 text-[11px] md:text-sm">
+              <UtensilsCrossed className="w-3.5 h-3.5 md:w-4 md:h-4" />
               Food Revenue
             </CardDescription>
-            <CardTitle className="text-2xl">
+            <CardTitle className="text-lg md:text-2xl">
               {isLoading ? <Skeleton className="h-8 w-24" /> : `৳${foodRevenue.toLocaleString()}`}
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="text-xs text-muted-foreground">
+          <CardContent className="p-3 md:p-6 pt-0">
+            <p className="text-[10px] md:text-xs text-muted-foreground">
               {isLoading ? <Skeleton className="h-3 w-20" /> : `${summary?.today?.foodOrders || 0} orders`}
             </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="pb-2">
-            <CardDescription className="flex items-center gap-1.5">
-              <TrendingUp className="w-4 h-4" />
+          <CardHeader className="p-3 md:p-6 pb-1 md:pb-2">
+            <CardDescription className="flex items-center gap-1 md:gap-1.5 text-[11px] md:text-sm">
+              <TrendingUp className="w-3.5 h-3.5 md:w-4 md:h-4" />
               Tickets Used
             </CardDescription>
-            <CardTitle className="text-2xl">
+            <CardTitle className="text-lg md:text-2xl">
               {isLoading ? <Skeleton className="h-8 w-16" /> : (summary?.today?.ticketsUsed || 0)}
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="text-xs text-muted-foreground">
+          <CardContent className="p-3 md:p-6 pt-0">
+            <p className="text-[10px] md:text-xs text-muted-foreground">
               {isLoading ? <Skeleton className="h-3 w-28" /> : `out of ${ticketCount}`}
             </p>
           </CardContent>
@@ -241,7 +241,7 @@ export default function AdminDashboardContent() {
 
 
       {/* Today's Tickets & Recent Food Orders */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
         {/* Today's Tickets */}
         <Card>
           <CardHeader className="pb-3">
@@ -261,7 +261,7 @@ export default function AdminDashboardContent() {
             ) : (
               <div className="space-y-2">
                 {recentTickets.map((ticket) => (
-                  <div key={ticket.id} className="flex items-center justify-between p-2.5 rounded-lg bg-muted/50">
+                  <div key={ticket.id} className="flex items-center justify-between p-2 md:p-2.5 rounded-lg bg-muted/50">
                     <div className="min-w-0">
                       <p className="text-sm font-medium truncate">{ticket.guardian_name}</p>
                       <p className="text-xs text-muted-foreground">#{ticket.ticket_number}</p>
@@ -298,7 +298,7 @@ export default function AdminDashboardContent() {
             ) : (
               <div className="space-y-2">
                 {recentFoodOrders.map((order) => (
-                  <div key={order.id} className="flex items-center justify-between p-2.5 rounded-lg bg-muted/50">
+                  <div key={order.id} className="flex items-center justify-between p-2 md:p-2.5 rounded-lg bg-muted/50">
                     <div className="min-w-0">
                       <p className="text-sm font-medium truncate">{order.customer_name || 'Walk-in'}</p>
                       <p className="text-xs text-muted-foreground">#{order.order_number}</p>

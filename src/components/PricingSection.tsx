@@ -39,7 +39,7 @@ export function PricingSection() {
   ];
 
   return (
-    <section id="pricing" className="py-16 sm:py-20 lg:py-24 bg-background overflow-hidden">
+    <section id="pricing" className="py-10 sm:py-16 lg:py-24 bg-background overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6">
         {/* Header */}
         <ScrollFadeIn className="text-center max-w-2xl mx-auto mb-16 space-y-4">

@@ -55,14 +55,14 @@ export default function AdminLayout() {
       
       <main className={cn(
         "flex-1 transition-all duration-300 min-h-screen",
-        "md:pt-0 pt-14",
+        "md:pt-0 pt-2",
         "pb-20 md:pb-0"
       )}>
         {/* Top bar with notifications */}
         <div className="hidden md:flex items-center justify-end gap-2 p-4 border-b">
           <NotificationBell />
         </div>
-        <div className="p-4 md:p-6 lg:p-8">
+        <div className="p-3 md:p-6 lg:p-8">
           <Outlet />
         </div>
       </main>
