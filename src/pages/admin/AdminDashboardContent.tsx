@@ -205,7 +205,7 @@ export default function AdminDashboardContent() {
             <div className="flex items-center justify-between">
               <CardTitle className="text-base flex items-center gap-2">
                 <UtensilsCrossed className="w-4 h-4" />
-                আজকের ফুড অর্ডার
+                Today's Food Orders
               </CardTitle>
               <Button variant="ghost" size="sm" onClick={() => navigate('/admin/food-orders')}>
                 সব দেখুন <ArrowRight className="w-3.5 h-3.5 ml-1" />
