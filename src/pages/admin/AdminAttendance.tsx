@@ -23,6 +23,7 @@ const statusColors: Record<string, string> = {
 
 export default function AdminAttendance() {
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const queryClient = useQueryClient();
   const { records, isLoading, upsertAttendance } = useAttendance(selectedDate);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [bulkDialogOpen, setBulkDialogOpen] = useState(false);
