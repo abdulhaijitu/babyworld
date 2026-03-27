@@ -145,7 +145,7 @@ export default function AdminFoodOrders() {
       setOrders((data || []) as FoodOrder[]);
     } catch (err) {
       console.error('[FoodOrders] fetch error:', err);
-      toast.error('অর্ডার লোড ব্যর্থ');
+      toast.error('Failed to load orders');
     } finally {
       setLoading(false);
     }
@@ -165,9 +165,9 @@ export default function AdminFoodOrders() {
 
       if (error) throw error;
       setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status } : o));
-      toast.success(status === 'served' ? 'সার্ভ সম্পন্ন' : 'অর্ডার বাতিল');
+      toast.success(status === 'served' ? 'Served successfully' : 'Order cancelled');
     } catch (err) {
-      toast.error('আপডেট ব্যর্থ');
+      toast.error('Update failed');
     } finally {
       setUpdatingId(null);
     }
@@ -198,7 +198,7 @@ export default function AdminFoodOrders() {
         isReprint: true,
       });
     } catch (err) {
-      toast.error('রিসিপ্ট প্রিন্ট ব্যর্থ');
+      toast.error('Failed to print receipt');
     }
   };
 
@@ -215,7 +215,7 @@ export default function AdminFoodOrders() {
       setOrderItems((data || []) as FoodOrderItem[]);
     } catch (err) {
       console.error('[FoodOrders] detail error:', err);
-      toast.error('আইটেম লোড ব্যর্থ');
+      toast.error('Failed to load items');
     } finally {
       setDetailLoading(false);
     }
@@ -280,7 +280,7 @@ export default function AdminFoodOrders() {
             <ShoppingCart className="w-6 h-6" />
             Food Orders
           </h1>
-          <p className="text-muted-foreground">অর্ডার ম্যানেজমেন্ট ও ট্র্যাকিং</p>
+          <p className="text-muted-foreground">Order management & tracking</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={fetchOrders} disabled={loading}>
@@ -319,7 +319,7 @@ export default function AdminFoodOrders() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="অর্ডার নম্বর বা কাস্টমার সার্চ..."
+                placeholder="Search order number or customer..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-9"
@@ -397,7 +397,7 @@ export default function AdminFoodOrders() {
                 ) : filteredOrders.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
-                      কোনো অর্ডার পাওয়া যায়নি
+                      No orders found
                     </TableCell>
                   </TableRow>
                 ) : (

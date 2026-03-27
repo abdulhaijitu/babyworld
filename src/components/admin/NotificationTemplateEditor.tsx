@@ -34,19 +34,19 @@ interface NotificationTemplates {
 
 const defaultTemplates: NotificationTemplates = {
   ticket_payment: {
-    bn: "🎟️ Baby World টিকিট কনফার্ম!\nটিকিট: {{ticket_number}}\nতারিখ: {{date}}\nসময়: {{time_slot}}\nমোট: ৳{{total}}\nধন্যবাদ {{name}}!",
+    bn: "🎟️ Baby World Ticket Confirmed!\nTicket: {{ticket_number}}\nDate: {{date}}\nTime: {{time_slot}}\nTotal: ৳{{total}}\nThank you {{name}}!",
     en: "🎟️ Baby World Ticket Confirmed!\nTicket: {{ticket_number}}\nDate: {{date}}\nTime: {{time_slot}}\nTotal: ৳{{total}}\nThank you {{name}}!"
   },
   food_order: {
-    bn: "🍔 Baby World ফুড অর্ডার কনফার্ম!\nঅর্ডার: {{order_number}}\nমোট: ৳{{total}}\nধন্যবাদ {{name}}!",
+    bn: "🍔 Baby World Food Order Confirmed!\nOrder: {{order_number}}\nTotal: ৳{{total}}\nThank you {{name}}!",
     en: "🍔 Food Order Confirmed!\nOrder: {{order_number}}\nTotal: ৳{{total}}\nThank you {{name}}!"
   },
   booking_payment: {
-    bn: "✅ Baby World বুকিং পেমেন্ট সফল!\nতারিখ: {{date}}\nসময়: {{time_slot}}\nমোট: ৳{{total}}\nধন্যবাদ {{name}}!",
+    bn: "✅ Baby World Booking Payment Successful!\nDate: {{date}}\nTime: {{time_slot}}\nTotal: ৳{{total}}\nThank you {{name}}!",
     en: "✅ Booking Payment Successful!\nDate: {{date}}\nTime: {{time_slot}}\nTotal: ৳{{total}}\nThank you {{name}}!"
   },
   booking_reminder: {
-    bn: "⏰ Baby World রিমাইন্ডার!\nআগামীকাল আপনার বুকিং আছে।\nতারিখ: {{date}}\nসময়: {{time_slot}}\nঅপেক্ষায় থাকলাম!",
+    bn: "⏰ Baby World Reminder!\nYou have a booking tomorrow.\nDate: {{date}}\nTime: {{time_slot}}\nSee you soon!",
     en: "⏰ Baby World Reminder!\nYou have a booking tomorrow.\nDate: {{date}}\nTime: {{time_slot}}\nSee you soon!"
   }
 };
@@ -262,10 +262,10 @@ export default function NotificationTemplateEditor() {
                   {content.bn
                     .replace('{{ticket_number}}', 'TKT-123456')
                     .replace('{{order_number}}', 'ORD-789')
-                    .replace('{{date}}', '২০২৬-০১-২৩')
-                    .replace('{{time_slot}}', '১০:০০ AM - ১১:০০ AM')
-                    .replace('{{total}}', '৫০০')
-                    .replace('{{name}}', 'রহিম')}
+                    .replace('{{date}}', '2026-01-23')
+                    .replace('{{time_slot}}', '10:00 AM - 11:00 AM')
+                    .replace('{{total}}', '500')
+                    .replace('{{name}}', 'Rahim')}
                 </div>
               </div>
 

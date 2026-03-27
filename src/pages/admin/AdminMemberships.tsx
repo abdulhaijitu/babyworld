@@ -110,7 +110,7 @@ export default function AdminMemberships() {
     const cleaned = phone.replace(/\s/g, '');
     const regex = /^(\+?880|0)?1[3-9]\d{8}$/;
     if (!cleaned) { setPhoneError(''); return false; }
-    if (!regex.test(cleaned)) { setPhoneError('সঠিক বাংলাদেশি ফোন নম্বর দিন (01XXXXXXXXX)'); return false; }
+    if (!regex.test(cleaned)) { setPhoneError('Enter a valid Bangladesh phone number (01XXXXXXXXX)'); return false; }
     setPhoneError('');
     return true;
   };
@@ -194,7 +194,7 @@ export default function AdminMemberships() {
       return;
     }
     if (!validatePhone(formData.phone)) {
-      toast.error('সঠিক ফোন নম্বর দিন');
+      toast.error('Enter a valid phone number');
       return;
     }
     if (!selectedPackage) {
@@ -365,12 +365,12 @@ export default function AdminMemberships() {
                 {phoneError && <p className="text-xs text-destructive">{phoneError}</p>}
                 {lookupLoading && (
                   <p className="text-xs text-muted-foreground flex items-center gap-1">
-                    <Loader2 className="h-3 w-3 animate-spin" /> খুঁজছে...
+                    <Loader2 className="h-3 w-3 animate-spin" /> Searching...
                   </p>
                 )}
                 {foundMember && !lookupLoading && (
                   <p className="text-xs text-primary flex items-center gap-1 bg-primary/10 rounded px-2 py-1">
-                    🔄 পুরনো মেম্বার: <span className="font-semibold">{foundMember.member_name}</span> — তথ্য অটো-ফিল করা হয়েছে
+                    🔄 Existing member: <span className="font-semibold">{foundMember.member_name}</span> — info auto-filled
                   </p>
                 )}
               </div>

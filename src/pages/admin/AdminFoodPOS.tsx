@@ -76,7 +76,7 @@ export default function AdminFoodPOS() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['food-orders-today'] });
-      toast.success('অর্ডার আপডেট হয়েছে');
+      toast.success('Order updated');
     },
   });
 
@@ -108,13 +108,13 @@ export default function AdminFoodPOS() {
         .eq('code', couponCode.trim().toUpperCase())
         .eq('is_active', true)
         .single();
-      if (error || !data) { toast.error('কুপন কোড সঠিক নয়!'); return; }
-      if (data.valid_till && new Date(data.valid_till) < new Date()) { toast.error('কুপন মেয়াদ উত্তীর্ণ!'); return; }
-      if (data.max_uses && data.used_count >= data.max_uses) { toast.error('কুপন সীমা শেষ!'); return; }
-      if (data.min_order_amount && cartSubtotal < Number(data.min_order_amount)) { toast.error(`ন্যূনতম অর্ডার ৳${data.min_order_amount} হতে হবে!`); return; }
+      if (error || !data) { toast.error('Invalid coupon code!'); return; }
+      if (data.valid_till && new Date(data.valid_till) < new Date()) { toast.error('Coupon expired!'); return; }
+      if (data.max_uses && data.used_count >= data.max_uses) { toast.error('Coupon limit reached!'); return; }
+      if (data.min_order_amount && cartSubtotal < Number(data.min_order_amount)) { toast.error(`Minimum order ৳${data.min_order_amount}  required!`); return; }
       setAppliedCoupon({ code: data.code, discount_type: data.discount_type, discount_value: Number(data.discount_value) });
-      toast.success(`কুপন "${data.code}" প্রয়োগ হয়েছে!`);
-    } catch { toast.error('কুপন চেক ব্যর্থ'); } finally { setCouponLoading(false); }
+      toast.success(`Coupon "${data.code}" applied!`);
+    } catch { toast.error('Coupon check failed'); } finally { setCouponLoading(false); }
   };
 
   const clearDiscount = () => {
@@ -147,7 +147,7 @@ export default function AdminFoodPOS() {
   };
 
   const handlePlaceOrder = async () => {
-    if (cart.length === 0) { toast.error('কার্ট খালি!'); return; }
+    if (cart.length === 0) { toast.error('Cart is empty!'); return; }
     setSubmitting(true);
     try {
       const orderNumber = `FO${Date.now().toString(36).toUpperCase()}`;
@@ -216,7 +216,7 @@ export default function AdminFoodPOS() {
         }
       }
 
-      toast.success(`অর্ডার #${orderNumber} তৈরি হয়েছে!`);
+      toast.success(`Order #${orderNumber} created!`);
       setCart([]);
       setCustomerName('');
       setNotes('');
@@ -235,7 +235,7 @@ export default function AdminFoodPOS() {
         paymentType: currentPayment,
       });
     } catch (err: any) {
-      toast.error(err.message || 'অর্ডার তৈরি ব্যর্থ');
+      toast.error(err.message || 'Failed to create order');
     } finally {
       setSubmitting(false);
     }
@@ -264,7 +264,7 @@ export default function AdminFoodPOS() {
           setCustomerName('');
           setNotes('');
           setPaymentType('cash');
-          toast.info('কার্ট ক্লিয়ার হয়েছে');
+          toast.info('Cart cleared');
         }
       }
     };
@@ -367,7 +367,7 @@ export default function AdminFoodPOS() {
         {/* Cart Items */}
         <div className="flex-1 overflow-y-auto px-4 py-2 space-y-2">
           {cart.length === 0 ? (
-            <p className="text-muted-foreground text-sm text-center py-8">আইটেম যোগ করুন</p>
+            <p className="text-muted-foreground text-sm text-center py-8">Add items</p>
           ) : (
             cart.map(c => (
               <div key={c.food_item.id} className="flex items-center gap-2 rounded-lg border border-border p-2">
@@ -482,7 +482,7 @@ export default function AdminFoodPOS() {
             {discountMode === 'coupon' && (
               <div className="flex gap-2">
                 <Input
-                  placeholder="কুপন কোড"
+                  placeholder="Coupon code"
                   value={couponCode}
                   onChange={e => setCouponCode(e.target.value.toUpperCase())}
                   className="h-8 flex-1"
@@ -502,7 +502,7 @@ export default function AdminFoodPOS() {
 
             {appliedCoupon && (
               <p className="text-xs text-green-600 dark:text-green-400">
-                ✅ কুপন "{appliedCoupon.code}" — {appliedCoupon.discount_type === 'percentage' ? `${appliedCoupon.discount_value}%` : `৳${appliedCoupon.discount_value}`} ছাড়
+                ✅ Coupon "{appliedCoupon.code}" — {appliedCoupon.discount_type === 'percentage' ? `${appliedCoupon.discount_value}%` : `৳${appliedCoupon.discount_value}`} off
               </p>
             )}
           </div>
@@ -538,7 +538,7 @@ export default function AdminFoodPOS() {
         <div className="border-t border-border px-4 py-2 max-h-48 overflow-y-auto">
           <h3 className="text-xs font-semibold text-muted-foreground uppercase mb-2">Today's Orders</h3>
           {recentOrders.length === 0 ? (
-            <p className="text-xs text-muted-foreground text-center py-2">কোনো অর্ডার নেই</p>
+            <p className="text-xs text-muted-foreground text-center py-2">No orders yet</p>
           ) : (
             <div className="space-y-1">
               {recentOrders.map(order => (
