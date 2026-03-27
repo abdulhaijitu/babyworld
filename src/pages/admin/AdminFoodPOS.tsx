@@ -420,6 +420,106 @@ export default function AdminFoodPOS() {
             onChange={e => setNotes(e.target.value)}
             className="h-9"
           />
+
+          {/* Discount Section */}
+          <div className="space-y-2">
+            <div className="flex gap-1">
+              <Button
+                size="sm"
+                variant={discountMode === 'none' ? 'secondary' : 'outline'}
+                onClick={clearDiscount}
+                className="text-xs flex-1"
+              >
+                No Discount
+              </Button>
+              <Button
+                size="sm"
+                variant={discountMode === 'manual' ? 'default' : 'outline'}
+                onClick={() => { setDiscountMode('manual'); setAppliedCoupon(null); setCouponCode(''); }}
+                className="text-xs flex-1 gap-1"
+              >
+                <Percent className="h-3 w-3" /> Manual
+              </Button>
+              <Button
+                size="sm"
+                variant={discountMode === 'coupon' ? 'default' : 'outline'}
+                onClick={() => { setDiscountMode('coupon'); setManualDiscountValue(''); }}
+                className="text-xs flex-1 gap-1"
+              >
+                <Tag className="h-3 w-3" /> Coupon
+              </Button>
+            </div>
+
+            {discountMode === 'manual' && (
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  variant={manualDiscountType === 'percentage' ? 'default' : 'outline'}
+                  onClick={() => setManualDiscountType('percentage')}
+                  className="text-xs h-8"
+                >
+                  %
+                </Button>
+                <Button
+                  size="sm"
+                  variant={manualDiscountType === 'fixed' ? 'default' : 'outline'}
+                  onClick={() => setManualDiscountType('fixed')}
+                  className="text-xs h-8"
+                >
+                  ৳
+                </Button>
+                <Input
+                  type="number"
+                  placeholder={manualDiscountType === 'percentage' ? 'e.g. 10' : 'e.g. 50'}
+                  value={manualDiscountValue}
+                  onChange={e => setManualDiscountValue(e.target.value)}
+                  className="h-8 flex-1"
+                  min="0"
+                />
+              </div>
+            )}
+
+            {discountMode === 'coupon' && (
+              <div className="flex gap-2">
+                <Input
+                  placeholder="কুপন কোড"
+                  value={couponCode}
+                  onChange={e => setCouponCode(e.target.value.toUpperCase())}
+                  className="h-8 flex-1"
+                  disabled={!!appliedCoupon}
+                />
+                {appliedCoupon ? (
+                  <Button size="sm" variant="destructive" className="h-8 text-xs" onClick={() => { setAppliedCoupon(null); setCouponCode(''); }}>
+                    Remove
+                  </Button>
+                ) : (
+                  <Button size="sm" className="h-8 text-xs" onClick={applyCoupon} disabled={couponLoading || !couponCode.trim()}>
+                    {couponLoading ? '...' : 'Apply'}
+                  </Button>
+                )}
+              </div>
+            )}
+
+            {appliedCoupon && (
+              <p className="text-xs text-green-600 dark:text-green-400">
+                ✅ কুপন "{appliedCoupon.code}" — {appliedCoupon.discount_type === 'percentage' ? `${appliedCoupon.discount_value}%` : `৳${appliedCoupon.discount_value}`} ছাড়
+              </p>
+            )}
+          </div>
+
+          {/* Totals */}
+          {discountAmount > 0 && (
+            <div className="space-y-1 text-sm">
+              <div className="flex justify-between text-muted-foreground">
+                <span>Subtotal</span>
+                <span>৳{cartSubtotal}</span>
+              </div>
+              <div className="flex justify-between text-orange-600 dark:text-orange-400">
+                <span>Discount</span>
+                <span>-৳{discountAmount}</span>
+              </div>
+            </div>
+          )}
           <div className="flex items-center justify-between text-lg font-bold">
             <span>Total</span>
             <span className="text-primary">৳{cartTotal}</span>
