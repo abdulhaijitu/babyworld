@@ -275,8 +275,8 @@ function SidebarContent({
                 transition={{ duration: 0.2, delay: index * 0.03 }}
               >
                 <Collapsible
-                  open={openGroups[item.id] ?? childActive ?? !!searchQuery.trim()}
-                  onOpenChange={(open) => setOpenGroups(open ? { [item.id]: true } : {})}
+                  open={item.id in openGroups ? openGroups[item.id] : (childActive || !!searchQuery.trim())}
+                  onOpenChange={(open) => setOpenGroups(open ? { [item.id]: true } : { [item.id]: false })}
                 >
                   <CollapsibleTrigger className={cn(
                     "w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all duration-200",
