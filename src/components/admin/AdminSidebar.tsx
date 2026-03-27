@@ -451,44 +451,57 @@ function SidebarContent({
         })}
       </nav>
 
-      {/* Bottom: Profile + Logout */}
-      <div className={cn("border-t border-border p-1.5 space-y-1", collapsed && "flex flex-col items-center")}>
-        {!collapsed ? (
-          <div className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-muted/50">
-            <div className="h-7 w-7 rounded-full bg-primary/15 text-primary flex items-center justify-center text-[10px] font-bold shrink-0">
+      {/* Bottom: Admin Badge + Logout */}
+      <div className={cn(
+        "border-t border-border p-1.5",
+        collapsed ? "flex flex-col items-center gap-1" : ""
+      )}>
+        <div className={cn(
+          "flex items-center rounded-md",
+          collapsed ? "justify-center" : "justify-between px-2 py-1.5"
+        )}>
+          {/* Left: Avatar + Admin label */}
+          <div className="flex items-center gap-2">
+            <div className="h-7 w-7 rounded-full bg-primary/15 text-primary flex items-center justify-center text-[10px] font-bold shrink-0 group relative">
               {getInitials(userEmail)}
+              {collapsed && (
+                <div className="absolute left-full ml-2 px-2.5 py-1.5 bg-popover text-popover-foreground text-xs font-medium rounded-md shadow-md border border-border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 pointer-events-none">
+                  {userEmail}
+                  <div className="absolute left-0 top-1/2 -translate-x-1 -translate-y-1/2 w-2 h-2 bg-popover border-l border-b border-border rotate-45" />
+                </div>
+              )}
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-foreground truncate">{userEmail?.split('@')[0]}</p>
-              <p className="text-[10px] text-muted-foreground truncate">{userEmail}</p>
-            </div>
+            {!collapsed && (
+              <span className="text-xs font-medium text-foreground">Admin</span>
+            )}
           </div>
-        ) : (
-          userEmail && (
-            <div className="h-7 w-7 rounded-full bg-primary/15 text-primary flex items-center justify-center text-[10px] font-bold" title={userEmail}>
-              {getInitials(userEmail)}
-            </div>
-          )
-        )}
 
-        <button
-          onClick={onSignOut}
-          className={cn(
-            "w-full flex items-center gap-2.5 rounded-md text-sm font-medium transition-all duration-200 group relative",
-            "text-destructive hover:bg-destructive/10",
-            collapsed ? "justify-center p-1.5" : "px-3 py-1.5"
+          {/* Right: Logout icon */}
+          {!collapsed && (
+            <button
+              onClick={onSignOut}
+              className="h-7 w-7 rounded-md flex items-center justify-center text-destructive hover:bg-destructive/10 transition-colors duration-200"
+              title="Logout"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+            </button>
           )}
-          title={collapsed ? "Logout" : undefined}
-        >
-          <LogOut className="h-4 w-4 shrink-0" />
-          {!collapsed && <span>Logout</span>}
-          {collapsed && (
+        </div>
+
+        {/* Collapsed logout */}
+        {collapsed && (
+          <button
+            onClick={onSignOut}
+            className="h-7 w-7 rounded-md flex items-center justify-center text-destructive hover:bg-destructive/10 transition-colors duration-200 group relative"
+            title="Logout"
+          >
+            <LogOut className="h-3.5 w-3.5" />
             <div className="absolute left-full ml-2 px-2.5 py-1.5 bg-popover text-destructive text-xs font-medium rounded-md shadow-md border border-border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 pointer-events-none">
               Logout
               <div className="absolute left-0 top-1/2 -translate-x-1 -translate-y-1/2 w-2 h-2 bg-popover border-l border-b border-border rotate-45" />
             </div>
-          )}
-        </button>
+          </button>
+        )}
       </div>
     </motion.div>
   );
