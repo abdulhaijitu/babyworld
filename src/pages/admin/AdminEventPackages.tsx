@@ -295,8 +295,20 @@ export default function AdminEventPackages() {
                       No packages found. Create your first package.
                     </TableCell>
                   </TableRow>
-                ) : packages.map(pkg => (
-                  <TableRow key={pkg.id}>
+                 ) : packages.map(pkg => (
+                   <TableRow
+                     key={pkg.id}
+                     draggable
+                     onDragStart={(e) => handleDragStart(e, pkg.id)}
+                     onDragOver={(e) => handleDragOver(e, pkg.id)}
+                     onDragLeave={handleDragLeave}
+                     onDrop={(e) => handleDrop(e, pkg.id)}
+                     onDragEnd={handleDragEnd}
+                     className={`transition-colors ${draggedId === pkg.id ? 'opacity-50' : ''} ${dragOverId === pkg.id ? 'bg-accent' : ''}`}
+                   >
+                     <TableCell className="cursor-grab active:cursor-grabbing">
+                       <GripVertical className="w-4 h-4 text-muted-foreground" />
+                     </TableCell>
                     <TableCell>
                       {pkg.image_url ? (
                         <img src={pkg.image_url} alt={pkg.name} className="w-12 h-12 rounded-lg object-cover shadow-sm border border-border" />
