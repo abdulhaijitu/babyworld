@@ -384,6 +384,10 @@ export default function AdminFoodSales() {
             {'Manage food & snacks'}
           </p>
         </div>
+        <Button onClick={() => navigate('/admin/food-orders')} variant="outline" size="sm">
+          <ShoppingCart className="w-4 h-4 mr-2" />
+          Orders
+        </Button>
       </div>
 
       {/* Stats */}
