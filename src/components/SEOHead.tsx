@@ -89,7 +89,7 @@ export function SEOHead({ page }: SEOHeadProps) {
         {JSON.stringify({
           "@context": "https://schema.org",
           "@type": "LocalBusiness",
-          "name": "Baby World (বেবি ওয়ার্ল্ড)",
+          "name": "Baby World",
           "description": data.description,
           "url": baseUrl,
           "telephone": "+8809606990128",
