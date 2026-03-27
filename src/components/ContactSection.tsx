@@ -95,8 +95,14 @@ export function ContactSection() {
             </div>
 
             <ScrollFadeIn delay={0.3}>
-              <Button size="lg" className="mt-4">
-                {t("contact.getDirections")}
+              <Button size="lg" className="mt-4" asChild>
+                <a
+                  href="https://www.google.com/maps/dir/?api=1&destination=23.7195,90.3882&destination_place_id=Baby+World+Lalbagh+Dhaka"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {t("contact.getDirections")}
+                </a>
               </Button>
             </ScrollFadeIn>
           </div>

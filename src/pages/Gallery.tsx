@@ -46,13 +46,13 @@ const Gallery = () => {
       id: "1",
       thumbnail: playgroundKids,
       title: "Playground Tour",
-      youtubeId: "dQw4w9WgXcQ", // Placeholder - replace with actual video
+      youtubeId: "v9fVa72l-Jg",
     },
     {
       id: "2",
       thumbnail: birthdayParty,
       title: "Birthday Party",
-      youtubeId: "dQw4w9WgXcQ", // Placeholder - replace with actual video
+      youtubeId: "v9fVa72l-Jg",
     },
   ];
 

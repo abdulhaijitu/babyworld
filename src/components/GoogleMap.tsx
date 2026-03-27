@@ -12,7 +12,7 @@ export function GoogleMap() {
 
   return (
     <section className="py-16 bg-muted/30">
-      <div className="container mx-auto">
+      <div className="container mx-auto px-4 sm:px-6">
         <ScrollFadeIn>
           <div className="space-y-6">
             {/* Section Header */}

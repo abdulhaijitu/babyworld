@@ -20,6 +20,7 @@ export function Navbar() {
     { label: t("nav.home"), href: "/" },
     { label: t("nav.pricing"), href: "/play-booking" },
     { label: t("nav.events"), href: "/birthday-events" },
+    { label: "Gallery", href: "/gallery" },
     { label: t("nav.contact"), href: "/contact" },
   ];
 

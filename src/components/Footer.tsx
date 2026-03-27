@@ -31,7 +31,7 @@ export function Footer() {
             <div className="flex items-center gap-2 text-sm opacity-80">
               <span className="font-semibold">Baby World</span>
               <span>•</span>
-              <span className="font-bangla">Baby World</span>
+              <span>বেবি ওয়ার্ল্ড</span>
             </div>
             <p className="text-sm opacity-70 max-w-md">
               {t("footer.description")}
