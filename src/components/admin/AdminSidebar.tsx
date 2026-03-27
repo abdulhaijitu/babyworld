@@ -24,6 +24,7 @@ interface MenuItem {
   icon: React.ElementType;
   path: string;
   requiredRoles?: AppRole[];
+  module?: string; // maps to role_permissions.module for dynamic access control
   children?: { id: string; label: string; icon: React.ElementType; path: string }[];
 }
 
