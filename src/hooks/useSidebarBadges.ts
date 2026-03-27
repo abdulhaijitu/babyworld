@@ -2,12 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 
-interface SidebarBadges {
-  'food-orders': number;
-  'create-ticket': number;
-  'leads': number;
-  'notifications': number;
-}
+type SidebarBadges = Record<string, number>;
 
 async function fetchBadgeCounts(): Promise<SidebarBadges> {
   const today = new Date().toISOString().split('T')[0];
