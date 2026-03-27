@@ -1,58 +1,99 @@
 
 
-## পরিকল্পনা: Users পেজে সকল রোল ইন্টিগ্রেশন ও অডিট ফিক্স
+## UI/UX Audit & Fix Plan — All Public Pages
 
-### সমস্যা চিহ্নিত
+### Issues Found
 
-1. **`AdminUsers.tsx`** — `UserRole` টাইপে মাত্র ৪টি রোল (`super_admin`, `admin`, `manager`, `staff`), নতুন ১০টি রোল নেই
-2. **`AdminUsers.tsx`** — New User ডায়ালগে রোল সিলেক্টে মাত্র ৪টি অপশন
-3. **`AdminUsers.tsx`** — Stats কার্ডে মাত্র ৪টি রোলের কাউন্ট
-4. **`AdminUsers.tsx`** — ফিল্টার ড্রপডাউনে মাত্র ৪টি রোল
-5. **`AdminUsers.tsx`** — `roleConfig` ম্যাপে নতুন রোলগুলোর লেবেল/আইকন/কালার নেই
-6. **`create-admin` Edge Function** — `validRoles` অ্যারেতে মাত্র ৪টি রোল, নতুন রোল দিয়ে ইউজার তৈরি করলে reject হবে
-7. **Users টেবিলে email দেখায় না** — শুধু user_id দেখায়, email ফেচ হয় না
+#### 1. **App.css — Unused Vite boilerplate conflicting with layout**
+- `src/App.css` has `#root { max-width: 1280px; margin: 0 auto; padding: 2rem; text-align: center; }` — this is leftover Vite boilerplate that could constrain layout width and add unwanted padding/centering if imported anywhere.
+- **Fix**: Delete `src/App.css` entirely (it's not imported in current code but is a risk).
 
-### পরিবর্তনসমূহ
+#### 2. **NotFound page — Minimal, no branding**
+- Plain text, no logo, no navigation, no consistent design.
+- **Fix**: Add logo, better illustration (emoji-based), "Back to Home" button styled consistently, add Navbar.
 
-#### ১. `src/pages/admin/AdminUsers.tsx`
+#### 3. **GoogleMap section — Missing container padding on mobile**
+- `<div className="container mx-auto">` but no `px-4` padding — content touches edges on mobile.
+- **Fix**: Add `px-4 sm:px-6` to the container.
 
-- `UserRole` টাইপ আপডেট — `useUserRoles.ts`-এর `AppRole` টাইপ রিইউজ করা হবে
-- `roleConfig` অবজেক্টে সব ১৩টি রোলের label, icon, color যোগ
-- Stats সেকশন রিডিজাইন — ৪টি হার্ডকোডেড কার্ডের বদলে ডাইনামিক role count grid (রোলগুলো যেগুলোর user আছে সেগুলো দেখাবে)
-- New User ডায়ালগের রোল সিলেক্টে সব রোল যোগ (super_admin শুধু super_admin দেখতে পাবে)
-- ফিল্টার ড্রপডাউনে সব রোল যোগ
-- টেবিলে `roleConfig`-এর ফলব্যাক যোগ যাতে unknown রোল crash না করে
+#### 4. **Contact page — "Get Directions" button not linked**
+- `ContactSection.tsx` line 98: Button says "Get Directions" but has no link/onClick.
+- **Fix**: Link it to Google Maps directions URL.
 
-#### ২. `supabase/functions/create-admin/index.ts`
+#### 5. **Gallery page — Missing WhatsApp floating button spacing**
+- WhatsApp floating button and bottom nav are present, but no `WhatsAppButton` is missing from some consideration.
+- Actually OK. No change needed.
 
-- `validRoles` অ্যারে আপডেট — সব ১৩টি রোল যোগ
-- `CreateUserRequest` ইন্টারফেসে সব রোল টাইপ যোগ
+#### 6. **BookingSection — Mobile summary panel hidden**
+- Desktop summary is `hidden lg:block`. On mobile, the booking summary/CTA is only in a sticky panel at the bottom (line 372+), but let me verify.
+- Need to check the mobile sticky panel exists. It does (line ~429+).
+- OK, no major issue.
 
-#### ৩. ইউজারের Email দেখানো (অপশনাল উন্নতি)
+#### 7. **PromoBanner — Not used on any page**
+- `PromoBanner.tsx` exists but is not rendered on any page layout.
+- **Fix**: Add it to Index page above Navbar (or decide to remove).
 
-- বর্তমানে শুধু `user_id` এর প্রথম ৮ ক্যারেক্টার দেখায়
-- Edge function-এ user create করার সময় email রিটার্ন করে — কিন্তু লিস্টে auth.users থেকে email আনার সুযোগ নেই (client-side)
-- সমাধান: `create-admin` edge function-এ user তৈরির পর user_roles-এ একটি metadata কলাম না থাকায়, বিকল্প হিসেবে user_id দিয়ে টেবিলে দেখানো চালিয়ে যাওয়া হবে (profiles টেবিল পরবর্তীতে যোগ করা যাবে)
+#### 8. **Hero Section — Offer/Event cards too small on mobile**
+- `grid-cols-2 lg:grid-cols-1` for the right column cards — on small screens (< 640px), two cards side by side get very cramped.
+- **Fix**: Change to `grid-cols-1 sm:grid-cols-2 lg:grid-cols-1` so they stack on very small screens.
 
-### রোলের সম্পূর্ণ তালিকা ও কনফিগ
+#### 9. **Footer — "Baby World" shown twice with odd Bangla class**
+- Line 33-34: Shows "Baby World • Baby World" with `font-bangla` class but same English text.
+- **Fix**: Remove the duplicate or show the actual Bangla name "বেবি ওয়ার্ল্ড".
 
-| রোল | লেবেল | আইকন |
-|------|--------|-------|
-| super_admin | Super Admin | Crown |
-| admin | Admin | Shield |
-| management | Management | Building |
-| manager | Manager | Briefcase |
-| sales_marketing | Sales & Marketing | Megaphone |
-| ticket_counterman | Ticket Counterman | Ticket |
-| gateman | Gateman | LogIn |
-| food_manager | Food Manager | UtensilsCrossed |
-| food_staff | Food Staff | UtensilsCrossed |
-| booking_manager | Booking Manager | CalendarDays |
-| accountant | Accountant | Wallet |
-| hr_manager | HR Manager | Briefcase |
-| staff | Staff | HardHat |
+#### 10. **ReviewForm — Not saving to database**
+- Reviews are UI-only (simulated submission). No Supabase integration.
+- **Fix**: This is a larger feature. Note but don't fix in this pass.
 
-### ফাইল পরিবর্তন
-- `src/pages/admin/AdminUsers.tsx` — রোল কনফিগ, UI, ফিল্টার আপডেট
-- `supabase/functions/create-admin/index.ts` — valid roles আপডেট
+#### 11. **PlayBooking page — Missing WhatsApp floating button**
+- Unlike Index page, PlayBooking doesn't have `<WhatsAppButton variant="floating" />`.
+- **Fix**: Add it.
+
+#### 12. **BirthdayEvents page — Missing WhatsApp floating button**
+- Same issue.
+- **Fix**: Add it.
+
+#### 13. **Contact page — Missing WhatsApp floating button**
+- Same issue.
+- **Fix**: Add it.
+
+#### 14. **Gallery page — Video placeholders use rickroll**
+- Videos use `dQw4w9WgXcQ` (rickroll) as placeholder YouTube ID.
+- **Fix**: Replace with the actual Baby World video ID `v9fVa72l-Jg` used in VideoSection.
+
+#### 15. **Accessibility — Missing skip-to-content link**
+- No skip navigation link for keyboard users across all pages.
+- Scope: Low priority, skip for now.
+
+#### 16. **MobileBottomNav — Gallery page not in nav**
+- Gallery is accessible via Footer quick links but not from mobile bottom nav or main Navbar.
+- **Fix**: Add Gallery to Navbar links.
+
+### Implementation Plan
+
+**File changes (7 files):**
+
+1. **Delete `src/App.css`** — remove unused Vite boilerplate
+
+2. **`src/pages/NotFound.tsx`** — redesign with logo, branding, proper layout, Navbar
+
+3. **`src/components/GoogleMap.tsx`** — add `px-4 sm:px-6` to container
+
+4. **`src/components/ContactSection.tsx`** — link "Get Directions" button to Google Maps
+
+5. **`src/components/HeroSection.tsx`** — fix mobile card grid: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-1`
+
+6. **`src/components/Footer.tsx`** — fix duplicate brand text, show Bangla name properly
+
+7. **`src/pages/PlayBooking.tsx`** — add WhatsAppButton floating
+
+8. **`src/pages/BirthdayEvents.tsx`** — add WhatsAppButton floating
+
+9. **`src/pages/Contact.tsx`** — add WhatsAppButton floating
+
+10. **`src/pages/Gallery.tsx`** — fix video placeholder IDs
+
+11. **`src/components/Navbar.tsx`** — add Gallery link to nav
+
+12. **`src/pages/Index.tsx`** — add PromoBanner above Navbar
 
