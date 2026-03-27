@@ -55,26 +55,48 @@ import {
   Briefcase,
   HardHat,
   Crown,
-  KeyRound
+  KeyRound,
+  Building,
+  Megaphone,
+  Ticket,
+  LogIn,
+  UtensilsCrossed,
+  CalendarDays,
+  Wallet,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format, parseISO } from 'date-fns';
-
-type UserRole = 'super_admin' | 'admin' | 'manager' | 'staff';
+import { type AppRole } from '@/hooks/useUserRoles';
 
 interface UserRoleRecord {
   id: string;
   user_id: string;
-  role: UserRole;
+  role: AppRole;
   created_at: string;
 }
 
-const roleConfig: Record<UserRole, { label: string; icon: React.ElementType; color: string }> = {
-  super_admin: { label: 'Super Admin', icon: Crown, color: 'bg-purple-500/10 text-purple-600 border-purple-500/20' },
-  admin: { label: 'Admin', icon: Shield, color: 'bg-primary/10 text-primary border-primary/20' },
-  manager: { label: 'Manager', icon: Briefcase, color: 'bg-blue-500/10 text-blue-600 border-blue-500/20' },
-  staff: { label: 'Staff', icon: HardHat, color: 'bg-amber-500/10 text-amber-600 border-amber-500/20' },
+const roleConfig: Record<AppRole, { label: string; icon: React.ElementType; color: string; description: string }> = {
+  super_admin: { label: 'Super Admin', icon: Crown, color: 'bg-purple-500/10 text-purple-600 border-purple-500/20', description: 'Full system control' },
+  admin: { label: 'Admin', icon: Shield, color: 'bg-primary/10 text-primary border-primary/20', description: 'Full access' },
+  management: { label: 'Management', icon: Building, color: 'bg-indigo-500/10 text-indigo-600 border-indigo-500/20', description: 'All modules (no delete)' },
+  manager: { label: 'Manager', icon: Briefcase, color: 'bg-blue-500/10 text-blue-600 border-blue-500/20', description: 'HR, Accounts, Reports' },
+  sales_marketing: { label: 'Sales & Marketing', icon: Megaphone, color: 'bg-orange-500/10 text-orange-600 border-orange-500/20', description: 'Leads, Promotions, SMS' },
+  ticket_counterman: { label: 'Ticket Counterman', icon: Ticket, color: 'bg-cyan-500/10 text-cyan-600 border-cyan-500/20', description: 'Ticket creation & list' },
+  gateman: { label: 'Gateman', icon: LogIn, color: 'bg-teal-500/10 text-teal-600 border-teal-500/20', description: 'Gate entry & scan' },
+  food_manager: { label: 'Food Manager', icon: UtensilsCrossed, color: 'bg-rose-500/10 text-rose-600 border-rose-500/20', description: 'Food POS, Orders, Items' },
+  food_staff: { label: 'Food Staff', icon: UtensilsCrossed, color: 'bg-pink-500/10 text-pink-600 border-pink-500/20', description: 'Food POS & Orders' },
+  booking_manager: { label: 'Booking Manager', icon: CalendarDays, color: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20', description: 'Event bookings & packages' },
+  accountant: { label: 'Accountant', icon: Wallet, color: 'bg-lime-500/10 text-lime-600 border-lime-500/20', description: 'Income, Expenses, Reports' },
+  hr_manager: { label: 'HR Manager', icon: Briefcase, color: 'bg-sky-500/10 text-sky-600 border-sky-500/20', description: 'Employees, Attendance, Payroll' },
+  staff: { label: 'Staff', icon: HardHat, color: 'bg-amber-500/10 text-amber-600 border-amber-500/20', description: 'Tickets & Sales' },
+  user: { label: 'User', icon: User, color: 'bg-gray-500/10 text-gray-600 border-gray-500/20', description: 'Basic user' },
 };
+
+// Roles available for creation (super_admin hidden from select but shown in list)
+const creatableRoles: AppRole[] = [
+  'admin', 'management', 'manager', 'sales_marketing', 'ticket_counterman',
+  'gateman', 'food_manager', 'food_staff', 'booking_manager', 'accountant', 'hr_manager', 'staff'
+];
 
 export default function AdminUsers() {
   const queryClient = useQueryClient();
@@ -88,7 +110,7 @@ export default function AdminUsers() {
   // Form state
   const [newUserEmail, setNewUserEmail] = useState('');
   const [newUserPassword, setNewUserPassword] = useState('');
-  const [newUserRole, setNewUserRole] = useState<UserRole>('manager');
+  const [newUserRole, setNewUserRole] = useState<AppRole>('manager');
 
   // Fetch all users with roles
   const { data: userRoles, isLoading } = useQuery({
@@ -104,9 +126,9 @@ export default function AdminUsers() {
     }
   });
 
-  // Create user mutation - calls edge function
+  // Create user mutation
   const createUserMutation = useMutation({
-    mutationFn: async ({ email, password, role }: { email: string; password: string; role: UserRole }) => {
+    mutationFn: async ({ email, password, role }: { email: string; password: string; role: AppRole }) => {
       const { data, error } = await supabase.functions.invoke('create-admin', {
         body: { email, password, role }
       });
@@ -115,18 +137,16 @@ export default function AdminUsers() {
       if (data.error) throw new Error(data.error);
       return data;
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['all-user-roles'] });
-      toast.success(
-        `${roleConfig[newUserRole].label} created successfully`
-      );
+      toast.success(`${roleConfig[newUserRole].label} created successfully`);
       setIsAddDialogOpen(false);
       setNewUserEmail('');
       setNewUserPassword('');
       setNewUserRole('manager');
     },
     onError: (error: Error) => {
-      toast.error(error.message || ('Failed to create user'));
+      toast.error(error.message || 'Failed to create user');
     }
   });
 
@@ -153,7 +173,6 @@ export default function AdminUsers() {
   // Reset password mutation
   const resetPasswordMutation = useMutation({
     mutationFn: async ({ userId, password }: { userId: string; password: string }) => {
-      // We need the email - but we only have user_id. Call the edge function with user_id approach.
       const { data, error } = await supabase.functions.invoke('reset-password', {
         body: { user_id: userId, password }
       });
@@ -193,21 +212,29 @@ export default function AdminUsers() {
     }
   };
 
-  // Filter users based on search and role
+  // Filter users
   const filteredUsers = userRoles?.filter(user => {
     const matchesSearch = user.user_id.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesRole = roleFilter === 'all' || user.role === roleFilter;
     return matchesSearch && matchesRole;
   });
 
-  // Count by role
-  const superAdminCount = userRoles?.filter(u => u.role === 'super_admin').length || 0;
-  const adminCount = userRoles?.filter(u => u.role === 'admin').length || 0;
-  const managerCount = userRoles?.filter(u => u.role === 'manager').length || 0;
-  const staffCount = userRoles?.filter(u => u.role === 'staff').length || 0;
+  // Dynamic role counts
+  const roleCounts = userRoles?.reduce((acc, u) => {
+    acc[u.role] = (acc[u.role] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>) || {};
 
-  const getRoleBadge = (role: UserRole) => {
-    const config = roleConfig[role];
+  // Roles that have users assigned (for stats display)
+  const activeRoleStats = Object.entries(roleCounts)
+    .filter(([role]) => role in roleConfig)
+    .sort(([a], [b]) => {
+      const order = Object.keys(roleConfig);
+      return order.indexOf(a) - order.indexOf(b);
+    });
+
+  const getRoleBadge = (role: string) => {
+    const config = roleConfig[role as AppRole] || { label: role, icon: User, color: 'bg-gray-500/10 text-gray-600 border-gray-500/20' };
     const Icon = config.icon;
     return (
       <Badge className={config.color}>
@@ -217,6 +244,12 @@ export default function AdminUsers() {
     );
   };
 
+  // All roles for filter dropdown
+  const allFilterRoles: AppRole[] = [
+    'super_admin', 'admin', 'management', 'manager', 'sales_marketing', 'ticket_counterman',
+    'gateman', 'food_manager', 'food_staff', 'booking_manager', 'accountant', 'hr_manager', 'staff'
+  ];
+
   return (
     <div className="p-4 md:p-6 lg:p-8 space-y-6">
       {/* Header */}
@@ -224,70 +257,57 @@ export default function AdminUsers() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Users className="w-6 h-6" />
-            {'User Management'}
+            User Management
           </h1>
           <p className="text-muted-foreground">
-            {'Manage admins, managers and staff'}
+            Manage all users and their roles
           </p>
         </div>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="w-4 h-4 mr-2" />
-              {'New User'}
+              New User
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <UserCheck className="w-5 h-5" />
-                {'Add New User'}
+                Add New User
               </DialogTitle>
               <DialogDescription>
-                {'Create a new admin, manager, or staff account'}
+                Create a new user and assign a role
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label htmlFor="role">
-                  {'Role'}
-                </Label>
-                <Select value={newUserRole} onValueChange={(v) => setNewUserRole(v as UserRole)}>
+                <Label htmlFor="role">Role</Label>
+                <Select value={newUserRole} onValueChange={(v) => setNewUserRole(v as AppRole)}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="super_admin">
-                      <div className="flex items-center gap-2">
-                        <Crown className="w-4 h-4" />
-                        {'Super Admin (Manage admins)'}
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="admin">
-                      <div className="flex items-center gap-2">
-                        <Shield className="w-4 h-4" />
-                        {'Admin (Full Access)'}
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="manager">
-                      <div className="flex items-center gap-2">
-                        <Briefcase className="w-4 h-4" />
-                        {'Manager (Can view reports)'}
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="staff">
-                      <div className="flex items-center gap-2">
-                        <HardHat className="w-4 h-4" />
-                        {'Staff (Tickets & Sales)'}
-                      </div>
-                    </SelectItem>
+                    {creatableRoles.map((role) => {
+                      const config = roleConfig[role];
+                      const Icon = config.icon;
+                      return (
+                        <SelectItem key={role} value={role}>
+                          <div className="flex items-center gap-2">
+                            <Icon className="w-4 h-4" />
+                            <span>{config.label}</span>
+                            <span className="text-xs text-muted-foreground ml-1">({config.description})</span>
+                          </div>
+                        </SelectItem>
+                      );
+                    })}
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email" className="flex items-center gap-2">
                   <Mail className="w-4 h-4" />
-                  {'Email'}
+                  Email
                 </Label>
                 <Input
                   id="email"
@@ -298,9 +318,7 @@ export default function AdminUsers() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">
-                  {'Password'}
-                </Label>
+                <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
                   type="password"
@@ -308,105 +326,56 @@ export default function AdminUsers() {
                   value={newUserPassword}
                   onChange={(e) => setNewUserPassword(e.target.value)}
                 />
-                <p className="text-xs text-muted-foreground">
-                  {'At least 6 characters'}
-                </p>
+                <p className="text-xs text-muted-foreground">At least 6 characters</p>
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
-                {'Cancel'}
-              </Button>
+              <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>Cancel</Button>
               <Button onClick={handleCreateUser} disabled={createUserMutation.isPending}>
                 {createUserMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                {'Create'}
+                Create
               </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {/* Dynamic Stats */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+        {/* Total users card */}
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-purple-500/10">
-                <Crown className="w-5 h-5 text-purple-600" />
+              <div className="p-2 rounded-lg bg-muted">
+                <Users className="w-5 h-5 text-foreground" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">
-                  {'Super Admins'}
-                </p>
-                {isLoading ? (
-                  <Skeleton className="h-6 w-12" />
-                ) : (
-                  <p className="text-xl font-bold">{superAdminCount}</p>
-                )}
+                <p className="text-xs text-muted-foreground">Total</p>
+                {isLoading ? <Skeleton className="h-6 w-10" /> : <p className="text-xl font-bold">{userRoles?.length || 0}</p>}
               </div>
             </div>
           </CardContent>
         </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-primary/10">
-                <Shield className="w-5 h-5 text-primary" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">
-                  {'Admins'}
-                </p>
-                {isLoading ? (
-                  <Skeleton className="h-6 w-12" />
-                ) : (
-                  <p className="text-xl font-bold">{adminCount}</p>
-                )}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-blue-500/10">
-                <Briefcase className="w-5 h-5 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">
-                  {'Managers'}
-                </p>
-                {isLoading ? (
-                  <Skeleton className="h-6 w-12" />
-                ) : (
-                  <p className="text-xl font-bold">{managerCount}</p>
-                )}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-amber-500/10">
-                <HardHat className="w-5 h-5 text-amber-600" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">
-                  {'Staff'}
-                </p>
-                {isLoading ? (
-                  <Skeleton className="h-6 w-12" />
-                ) : (
-                  <p className="text-xl font-bold">{staffCount}</p>
-                )}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {activeRoleStats.map(([role, count]) => {
+          const config = roleConfig[role as AppRole];
+          if (!config) return null;
+          const Icon = config.icon;
+          return (
+            <Card key={role}>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className={`p-2 rounded-lg ${config.color.split(' ')[0]}`}>
+                    <Icon className={`w-5 h-5 ${config.color.split(' ')[1]}`} />
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground truncate">{config.label}</p>
+                    {isLoading ? <Skeleton className="h-6 w-10" /> : <p className="text-xl font-bold">{count}</p>}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
 
       {/* Users Table */}
@@ -414,31 +383,28 @@ export default function AdminUsers() {
         <CardHeader>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <CardTitle>{'User List'}</CardTitle>
-              <CardDescription>
-                {'All users and their roles'}
-              </CardDescription>
+              <CardTitle>User List</CardTitle>
+              <CardDescription>All users and their roles</CardDescription>
             </div>
             <div className="flex gap-2">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
-                  placeholder={'Search...'}
+                  placeholder="Search..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-9 w-[180px]"
                 />
               </div>
               <Select value={roleFilter} onValueChange={setRoleFilter}>
-                <SelectTrigger className="w-[120px]">
+                <SelectTrigger className="w-[160px]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{'All'}</SelectItem>
-                   <SelectItem value="super_admin">{'Super Admin'}</SelectItem>
-                   <SelectItem value="admin">{'Admin'}</SelectItem>
-                   <SelectItem value="manager">{'Manager'}</SelectItem>
-                   <SelectItem value="staff">{'Staff'}</SelectItem>
+                  <SelectItem value="all">All Roles</SelectItem>
+                  {allFilterRoles.map((role) => (
+                    <SelectItem key={role} value={role}>{roleConfig[role].label}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -455,10 +421,10 @@ export default function AdminUsers() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>{'User ID'}</TableHead>
-                  <TableHead>{'Role'}</TableHead>
-                  <TableHead>{'Joined'}</TableHead>
-                  <TableHead className="text-right">{'Actions'}</TableHead>
+                  <TableHead>User ID</TableHead>
+                  <TableHead>Role</TableHead>
+                  <TableHead>Joined</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -473,7 +439,7 @@ export default function AdminUsers() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      {getRoleBadge(user.role as UserRole)}
+                      {getRoleBadge(user.role)}
                     </TableCell>
                     <TableCell>
                       {format(parseISO(user.created_at), 'MMM d, yyyy')}
@@ -509,7 +475,7 @@ export default function AdminUsers() {
           ) : (
             <div className="text-center py-12 text-muted-foreground">
               <UserX className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>{'No users found'}</p>
+              <p>No users found</p>
             </div>
           )}
         </CardContent>
@@ -519,21 +485,19 @@ export default function AdminUsers() {
       <AlertDialog open={!!deleteConfirmId} onOpenChange={(open) => !open && setDeleteConfirmId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>
-              {'Remove Role?'}
-            </AlertDialogTitle>
+            <AlertDialogTitle>Remove Role?</AlertDialogTitle>
             <AlertDialogDescription>
-              {'This will remove the role from this user. This action cannot be undone.'}
+              This will remove the role from this user. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>{'Cancel'}</AlertDialogCancel>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={() => deleteConfirmId && removeRoleMutation.mutate(deleteConfirmId)}
             >
               {removeRoleMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              {'Remove'}
+              Remove
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -545,19 +509,17 @@ export default function AdminUsers() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <KeyRound className="w-5 h-5" />
-              {'Reset Password'}
+              Reset Password
             </DialogTitle>
-            <DialogDescription>
-              {'Set a new password for this user'}
-            </DialogDescription>
+            <DialogDescription>Set a new password for this user</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label>{'User ID'}</Label>
+              <Label>User ID</Label>
               <Input value={resetPasswordUserId?.slice(0, 16) + '...'} disabled />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="reset-password">{'New Password'}</Label>
+              <Label htmlFor="reset-password">New Password</Label>
               <Input
                 id="reset-password"
                 type="password"
@@ -565,16 +527,14 @@ export default function AdminUsers() {
                 value={resetNewPassword}
                 onChange={(e) => setResetNewPassword(e.target.value)}
               />
-              <p className="text-xs text-muted-foreground">{'At least 6 characters'}</p>
+              <p className="text-xs text-muted-foreground">At least 6 characters</p>
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => { setResetPasswordUserId(null); setResetNewPassword(''); }}>
-              {'Cancel'}
-            </Button>
+            <Button variant="outline" onClick={() => { setResetPasswordUserId(null); setResetNewPassword(''); }}>Cancel</Button>
             <Button onClick={handleResetPassword} disabled={resetPasswordMutation.isPending}>
               {resetPasswordMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              {'Reset Password'}
+              Reset Password
             </Button>
           </DialogFooter>
         </DialogContent>
