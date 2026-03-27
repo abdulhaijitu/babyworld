@@ -27,7 +27,7 @@ interface SocialLinksProps {
 }
 
 export function SocialLinks({ variant = "footer", className, showLabels = false }: SocialLinksProps) {
-  // Active links - শুধু যেগুলোর URL আছে সেগুলো দেখাবে
+  // Active links - only show links that have a URL
   const links = [
     {
       name: "Facebook",

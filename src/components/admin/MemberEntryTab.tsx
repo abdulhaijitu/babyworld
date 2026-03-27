@@ -144,10 +144,10 @@ export default function MemberEntryTab() {
       if (data && data.length > 0) {
         setFoundMember(data[0]);
       } else {
-        toast.error('কোনো সক্রিয় মেম্বার পাওয়া যায়নি');
+        toast.error('No active member found');
       }
     } catch {
-      toast.error('সার্চে সমস্যা হয়েছে');
+      toast.error('Search failed');
     } finally {
       setSearching(false);
     }
@@ -165,11 +165,11 @@ export default function MemberEntryTab() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success('✅ চেক-ইন সফল হয়েছে');
+      toast.success('✅ Check-in successful');
       queryClient.invalidateQueries({ queryKey: ['membership-visits-today'] });
       queryClient.invalidateQueries({ queryKey: ['member-visits', foundMember?.id] });
     },
-    onError: () => toast.error('চেক-ইন ব্যর্থ'),
+    onError: () => toast.error('Check-in failed'),
   });
 
   const checkOutMutation = useMutation({
@@ -181,11 +181,11 @@ export default function MemberEntryTab() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success('✅ চেক-আউট সফল হয়েছে');
+      toast.success('✅ Check-out successful');
       queryClient.invalidateQueries({ queryKey: ['membership-visits-today'] });
       queryClient.invalidateQueries({ queryKey: ['member-visits', foundMember?.id] });
     },
-    onError: () => toast.error('চেক-আউট ব্যর্থ'),
+    onError: () => toast.error('Check-out failed'),
   });
 
   const remainingDays = foundMember
@@ -200,7 +200,7 @@ export default function MemberEntryTab() {
           <CardContent className="p-3 text-center">
             <p className="text-2xl font-bold text-primary">{todayCheckedIn}</p>
             <p className="text-xs text-muted-foreground flex items-center justify-center gap-1">
-              <CalendarCheck className="h-3 w-3" /> আজকের চেক-ইন
+              <CalendarCheck className="h-3 w-3" /> Today's Check-ins
             </p>
           </CardContent>
         </Card>
@@ -208,7 +208,7 @@ export default function MemberEntryTab() {
           <CardContent className="p-3 text-center">
             <p className="text-2xl font-bold text-green-600">{currentlyInside}</p>
             <p className="text-xs text-muted-foreground flex items-center justify-center gap-1">
-              <Users className="h-3 w-3" /> বর্তমানে ভেতরে
+              <Users className="h-3 w-3" /> Currently Inside
             </p>
           </CardContent>
         </Card>
@@ -216,7 +216,7 @@ export default function MemberEntryTab() {
           <CardContent className="p-3 text-center">
             <p className="text-2xl font-bold text-muted-foreground">{checkedOut}</p>
             <p className="text-xs text-muted-foreground flex items-center justify-center gap-1">
-              <LogOut className="h-3 w-3" /> চেক-আউট
+              <LogOut className="h-3 w-3" /> Checked Out
             </p>
           </CardContent>
         </Card>
@@ -229,7 +229,7 @@ export default function MemberEntryTab() {
             <div className="relative flex-1" ref={suggestionsRef}>
               <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="ফোন নম্বর বা নাম দিয়ে মেম্বার খুঁজুন..."
+                placeholder="Search by phone number or name..."
                 className="pl-10"
                 value={searchPhone}
                 onChange={(e) => {
@@ -264,8 +264,8 @@ export default function MemberEntryTab() {
                           <p className="text-xs text-muted-foreground">{member.phone}</p>
                           <p className="text-xs text-muted-foreground">
                             {member.lastVisit
-                              ? `শেষ ভিজিট: ${format(new Date(member.lastVisit), 'dd MMM yyyy')}`
-                              : 'কোনো ভিজিট নেই'}
+                              ? `Last visit: ${format(new Date(member.lastVisit), 'dd MMM yyyy')}`
+                              : 'No visits yet'}
                           </p>
                         </div>
                       </div>
@@ -282,7 +282,7 @@ export default function MemberEntryTab() {
             </div>
             <Button onClick={handleSearch} disabled={searching}>
               {searching ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
-              <span className="ml-2 hidden sm:inline">খুঁজুন</span>
+              <span className="ml-2 hidden sm:inline">Search</span>
             </Button>
           </div>
         </CardContent>
@@ -306,20 +306,20 @@ export default function MemberEntryTab() {
                     <Badge variant="outline" className="capitalize">{foundMember.membership_type}</Badge>
                     <Badge className="bg-green-500/10 text-green-600 border-green-200">Active</Badge>
                     <span className="text-xs text-muted-foreground">
-                      {foundMember.child_count} শিশু
+                      {foundMember.child_count} child(ren)
                     </span>
                   </div>
                 </div>
               </div>
               <div className="flex flex-col items-end gap-1 text-right">
                 <p className="text-sm text-muted-foreground">
-                  মেয়াদ: {foundMember.valid_from} → {foundMember.valid_till}
+                  Validity: {foundMember.valid_from} → {foundMember.valid_till}
                 </p>
                 <Badge variant={remainingDays <= 7 ? 'destructive' : 'secondary'}>
-                  {remainingDays} দিন বাকি
+                  {remainingDays} days remaining
                 </Badge>
                 <p className="text-xs text-muted-foreground">
-                  মোট ভিজিট: {memberVisits.length}
+                  Total visits: {memberVisits.length}
                 </p>
               </div>
             </div>
@@ -338,7 +338,7 @@ export default function MemberEntryTab() {
                   ) : (
                     <LogOut className="h-4 w-4 mr-2" />
                   )}
-                  চেক-আউট
+                  Check Out
                 </Button>
               ) : (
                 <Button
@@ -351,14 +351,14 @@ export default function MemberEntryTab() {
                   ) : (
                     <LogIn className="h-4 w-4 mr-2" />
                   )}
-                  চেক-ইন
+                  Check In
                 </Button>
               )}
             </div>
 
             {activeVisit && (
               <p className="mt-2 text-xs text-primary bg-primary/10 rounded px-3 py-1.5 text-center">
-                ⏰ চেক-ইন: {format(new Date(activeVisit.check_in_at), 'hh:mm a')} — বর্তমানে ভেতরে আছে
+                ⏰ Checked in: {format(new Date(activeVisit.check_in_at), 'hh:mm a')} — Currently inside
               </p>
             )}
           </CardContent>
@@ -371,16 +371,16 @@ export default function MemberEntryTab() {
           <CardContent className="p-0">
             <div className="px-4 py-3 border-b">
               <h4 className="font-semibold flex items-center gap-2">
-                <Clock className="h-4 w-4" /> ভিজিট হিস্ট্রি
+                <Clock className="h-4 w-4" /> Visit History
               </h4>
             </div>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>তারিখ</TableHead>
-                  <TableHead>চেক-ইন</TableHead>
-                  <TableHead>চেক-আউট</TableHead>
-                  <TableHead>স্ট্যাটাস</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Check In</TableHead>
+                  <TableHead>Check Out</TableHead>
+                  <TableHead>Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -399,9 +399,9 @@ export default function MemberEntryTab() {
                     </TableCell>
                     <TableCell>
                       {visit.check_out_at ? (
-                        <Badge variant="secondary">সম্পন্ন</Badge>
+                        <Badge variant="secondary">Completed</Badge>
                       ) : (
-                        <Badge className="bg-green-500/10 text-green-600 border-green-200">ভেতরে</Badge>
+                        <Badge className="bg-green-500/10 text-green-600 border-green-200">Inside</Badge>
                       )}
                     </TableCell>
                   </TableRow>
@@ -418,16 +418,16 @@ export default function MemberEntryTab() {
           <CardContent className="p-0">
             <div className="px-4 py-3 border-b">
               <h4 className="font-semibold flex items-center gap-2">
-                <CalendarCheck className="h-4 w-4" /> আজকের ভিজিট লগ
+                <CalendarCheck className="h-4 w-4" /> Today's Visit Log
               </h4>
             </div>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>মেম্বার</TableHead>
-                  <TableHead>চেক-ইন</TableHead>
-                  <TableHead>চেক-আউট</TableHead>
-                  <TableHead>স্ট্যাটাস</TableHead>
+                  <TableHead>Member</TableHead>
+                  <TableHead>Check In</TableHead>
+                  <TableHead>Check Out</TableHead>
+                  <TableHead>Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -473,9 +473,9 @@ function TodayVisitRow({ visit }: { visit: MembershipVisit }) {
       </TableCell>
       <TableCell>
         {visit.check_out_at ? (
-          <Badge variant="secondary">সম্পন্ন</Badge>
+          <Badge variant="secondary">Completed</Badge>
         ) : (
-          <Badge className="bg-green-500/10 text-green-600 border-green-200">ভেতরে</Badge>
+          <Badge className="bg-green-500/10 text-green-600 border-green-200">Inside</Badge>
         )}
       </TableCell>
     </TableRow>

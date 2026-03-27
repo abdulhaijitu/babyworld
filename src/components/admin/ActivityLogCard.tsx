@@ -81,26 +81,26 @@ export function ActivityLogCard() {
   };
 
   const getActionLabel = (action: string) => {
-    const labels: Record<string, { en: string; bn: string }> = {
-      create: { en: 'Created', bn: 'তৈরি' },
-      update: { en: 'Updated', bn: 'আপডেট' },
-      delete: { en: 'Deleted', bn: 'মুছে ফেলা' },
-      view: { en: 'Viewed', bn: 'দেখা' }
+    const labels: Record<string, string> = {
+      create: 'Created',
+      update: 'Updated',
+      delete: 'Deleted',
+      view: 'Viewed'
     };
-    return labels[action]?.['en'] || action;
+    return labels[action] || action;
   };
 
   const getEntityLabel = (entityType: string) => {
-    const labels: Record<string, { en: string; bn: string }> = {
-      ticket: { en: 'Ticket', bn: 'টিকেট' },
-      booking: { en: 'Booking', bn: 'বুকিং' },
-      payment: { en: 'Payment', bn: 'পেমেন্ট' },
-      user: { en: 'User', bn: 'ইউজার' },
-      settings: { en: 'Settings', bn: 'সেটিংস' },
-      food_order: { en: 'Food Order', bn: 'ফুড অর্ডার' },
-      employee: { en: 'Employee', bn: 'কর্মী' }
+    const labels: Record<string, string> = {
+      ticket: 'Ticket',
+      booking: 'Booking',
+      payment: 'Payment',
+      user: 'User',
+      settings: 'Settings',
+      food_order: 'Food Order',
+      employee: 'Employee'
     };
-    return labels[entityType]?.['en'] || entityType;
+    return labels[entityType] || entityType;
   };
 
   return (
