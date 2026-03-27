@@ -102,6 +102,8 @@ interface AdminSidebarProps {
   onCollapse: (collapsed: boolean) => void;
   onSignOut: () => void;
   userEmail?: string;
+  mobileOpen?: boolean;
+  onMobileOpenChange?: (open: boolean) => void;
 }
 
 function getInitials(email?: string) {
@@ -540,8 +542,14 @@ function SidebarContent({
   );
 }
 
-export function AdminSidebar({ collapsed, onCollapse, onSignOut, userEmail }: AdminSidebarProps) {
-  const [mobileOpen, setMobileOpen] = useState(false);
+export function AdminSidebar({ collapsed, onCollapse, onSignOut, userEmail, mobileOpen: externalMobileOpen, onMobileOpenChange }: AdminSidebarProps) {
+  const [internalMobileOpen, setInternalMobileOpen] = useState(false);
+  
+  const mobileOpen = externalMobileOpen ?? internalMobileOpen;
+  const setMobileOpen = (open: boolean) => {
+    setInternalMobileOpen(open);
+    onMobileOpenChange?.(open);
+  };
 
   return (
     <>
