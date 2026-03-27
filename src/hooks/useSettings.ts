@@ -54,28 +54,27 @@ interface NotificationSettings {
   smsEnabled: boolean;
 }
 
+interface SmsGatewaySettings {
+  providerName: string;
+  apiKey: string;
+  senderId: string;
+  apiUrl: string;
+}
+
+interface PaymentGatewaySettings {
+  gateway: string;
+  mode: 'sandbox' | 'live';
+}
+
 // Default values
 const defaultPricing: PricingSettings = {
-  hourlyPlay: {
-    guardianFee: 100,
-    childFee: 200,
-    socksFee: 50,
-  },
-  events: {
-    basic: 5000,
-    standard: 8000,
-    premium: 12000,
-    deluxe: 18000
-  }
+  hourlyPlay: { guardianFee: 100, childFee: 200, socksFee: 50 },
+  events: { basic: 5000, standard: 8000, premium: 12000, deluxe: 18000 }
 };
 
 const defaultPackagePricing: PackagePricing = {
-  familyRegular: 500,
-  familyOffer: 350,
-  fullBoard: 800,
-  extraGuardian: 150,
-  rideZoneRegular: 1350,
-  rideZoneOffer: 500
+  familyRegular: 500, familyOffer: 350, fullBoard: 800,
+  extraGuardian: 150, rideZoneRegular: 1350, rideZoneOffer: 500
 };
 
 const defaultTimeSlots: TimeSlot[] = [
@@ -105,12 +104,16 @@ const defaultBusinessInfo: BusinessInfo = {
 };
 
 const defaultNotifications: NotificationSettings = {
-  emailBooking: true,
-  smsBooking: true,
-  emailPayment: true,
-  smsPayment: false,
-  whatsappEnabled: false,
-  smsEnabled: true
+  emailBooking: true, smsBooking: true, emailPayment: true,
+  smsPayment: false, whatsappEnabled: false, smsEnabled: true
+};
+
+const defaultSmsGateway: SmsGatewaySettings = {
+  providerName: '', apiKey: '', senderId: '', apiUrl: ''
+};
+
+const defaultPaymentGateway: PaymentGatewaySettings = {
+  gateway: 'UddoktaPay', mode: 'sandbox'
 };
 
 export function useSettings() {
@@ -121,19 +124,15 @@ export function useSettings() {
   const [businessInfo, setBusinessInfo] = useState<BusinessInfo>(defaultBusinessInfo);
   const [notifications, setNotifications] = useState<NotificationSettings>(defaultNotifications);
   const [packagePricing, setPackagePricing] = useState<PackagePricing>(defaultPackagePricing);
+  const [smsGateway, setSmsGateway] = useState<SmsGatewaySettings>(defaultSmsGateway);
+  const [paymentGateway, setPaymentGateway] = useState<PaymentGatewaySettings>(defaultPaymentGateway);
 
-  // Load all settings from database
-  useEffect(() => {
-    loadSettings();
-  }, []);
+  useEffect(() => { loadSettings(); }, []);
 
   const loadSettings = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
-        .from('settings')
-        .select('key, value');
-
+      const { data, error } = await supabase.from('settings').select('key, value');
       if (error) throw error;
 
       if (data) {
@@ -228,6 +227,24 @@ export function useSettings() {
                 }));
               }
               break;
+            case 'sms_gateway':
+              if (value) {
+                setSmsGateway({
+                  providerName: (value.providerName as string) || '',
+                  apiKey: (value.apiKey as string) || '',
+                  senderId: (value.senderId as string) || '',
+                  apiUrl: (value.apiUrl as string) || '',
+                });
+              }
+              break;
+            case 'payment_gateway':
+              if (value) {
+                setPaymentGateway({
+                  gateway: (value.gateway as string) || 'UddoktaPay',
+                  mode: ((value.mode as string) === 'live' ? 'live' : 'sandbox'),
+                });
+              }
+              break;
           }
         });
       }
@@ -239,29 +256,17 @@ export function useSettings() {
   };
 
   const saveSetting = async (key: string, value: unknown, category: string) => {
-    // First check if the setting exists
     const { data: existing } = await supabase
-      .from('settings')
-      .select('id')
-      .eq('key', key)
-      .maybeSingle();
+      .from('settings').select('id').eq('key', key).maybeSingle();
 
     let error;
     if (existing) {
-      // Update existing
-      const result = await supabase
-        .from('settings')
-        .update({ value: value as Json, category })
-        .eq('key', key);
+      const result = await supabase.from('settings').update({ value: value as Json, category }).eq('key', key);
       error = result.error;
     } else {
-      // Insert new
-      const result = await supabase
-        .from('settings')
-        .insert([{ key, value: value as Json, category }]);
+      const result = await supabase.from('settings').insert([{ key, value: value as Json, category }]);
       error = result.error;
     }
-    
     if (error) throw error;
   };
 
@@ -275,18 +280,13 @@ export function useSettings() {
           socks_fee: pricing.hourlyPlay.socksFee,
         }, 'pricing'),
         saveSetting('pricing_events', {
-          basic: pricing.events.basic,
-          standard: pricing.events.standard,
-          premium: pricing.events.premium,
-          deluxe: pricing.events.deluxe
+          basic: pricing.events.basic, standard: pricing.events.standard,
+          premium: pricing.events.premium, deluxe: pricing.events.deluxe
         }, 'pricing'),
         saveSetting('package_pricing', {
-          familyRegular: packagePricing.familyRegular,
-          familyOffer: packagePricing.familyOffer,
-          fullBoard: packagePricing.fullBoard,
-          extraGuardian: packagePricing.extraGuardian,
-          rideZoneRegular: packagePricing.rideZoneRegular,
-          rideZoneOffer: packagePricing.rideZoneOffer
+          familyRegular: packagePricing.familyRegular, familyOffer: packagePricing.familyOffer,
+          fullBoard: packagePricing.fullBoard, extraGuardian: packagePricing.extraGuardian,
+          rideZoneRegular: packagePricing.rideZoneRegular, rideZoneOffer: packagePricing.rideZoneOffer
         }, 'pricing')
       ]);
       return true;
@@ -302,10 +302,7 @@ export function useSettings() {
     setSaving(true);
     try {
       await saveSetting('time_slots', timeSlots.map(slot => ({
-        id: slot.id,
-        start: slot.start,
-        end: slot.end,
-        enabled: slot.enabled
+        id: slot.id, start: slot.start, end: slot.end, enabled: slot.enabled
       })), 'schedule');
       return true;
     } catch (error) {
@@ -320,14 +317,10 @@ export function useSettings() {
     setSaving(true);
     try {
       await saveSetting('business_info', {
-        name: businessInfo.name,
-        nameBn: businessInfo.nameBn,
-        phone: businessInfo.phone,
-        email: businessInfo.email,
-        address: businessInfo.address,
-        addressBn: businessInfo.addressBn,
-        openingTime: businessInfo.openingTime,
-        closingTime: businessInfo.closingTime,
+        name: businessInfo.name, nameBn: businessInfo.nameBn,
+        phone: businessInfo.phone, email: businessInfo.email,
+        address: businessInfo.address, addressBn: businessInfo.addressBn,
+        openingTime: businessInfo.openingTime, closingTime: businessInfo.closingTime,
         website: businessInfo.website
       }, 'business');
       return true;
@@ -344,16 +337,12 @@ export function useSettings() {
     try {
       await Promise.all([
         saveSetting('notifications', {
-          emailBooking: notifications.emailBooking,
-          smsBooking: notifications.smsBooking,
-          emailPayment: notifications.emailPayment,
-          smsPayment: notifications.smsPayment,
-          whatsappEnabled: notifications.whatsappEnabled,
-          smsEnabled: notifications.smsEnabled
+          emailBooking: notifications.emailBooking, smsBooking: notifications.smsBooking,
+          emailPayment: notifications.emailPayment, smsPayment: notifications.smsPayment,
+          whatsappEnabled: notifications.whatsappEnabled, smsEnabled: notifications.smsEnabled
         }, 'general'),
         saveSetting('notification_channels', {
-          sms: notifications.smsEnabled,
-          whatsapp: notifications.whatsappEnabled
+          sms: notifications.smsEnabled, whatsapp: notifications.whatsappEnabled
         }, 'notifications')
       ]);
       return true;
@@ -365,30 +354,57 @@ export function useSettings() {
     }
   };
 
+  const saveSmsGateway = async () => {
+    setSaving(true);
+    try {
+      await saveSetting('sms_gateway', {
+        providerName: smsGateway.providerName,
+        apiKey: smsGateway.apiKey,
+        senderId: smsGateway.senderId,
+        apiUrl: smsGateway.apiUrl,
+      }, 'integrations');
+      return true;
+    } catch (error) {
+      console.error('Error saving SMS gateway:', error);
+      throw error;
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const savePaymentGateway = async () => {
+    setSaving(true);
+    try {
+      await saveSetting('payment_gateway', {
+        gateway: paymentGateway.gateway,
+        mode: paymentGateway.mode,
+      }, 'integrations');
+      return true;
+    } catch (error) {
+      console.error('Error saving payment gateway:', error);
+      throw error;
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const toggleTimeSlot = (id: string) => {
-    setTimeSlots(prev => prev.map(slot => 
+    setTimeSlots(prev => prev.map(slot =>
       slot.id === id ? { ...slot, enabled: !slot.enabled } : slot
     ));
   };
 
   return {
-    loading,
-    saving,
-    pricing,
-    setPricing,
-    packagePricing,
-    setPackagePricing,
-    timeSlots,
-    setTimeSlots,
-    toggleTimeSlot,
-    businessInfo,
-    setBusinessInfo,
-    notifications,
-    setNotifications,
-    savePricing,
-    saveTimeSlots,
-    saveBusinessInfo,
-    saveNotifications,
+    loading, saving,
+    pricing, setPricing,
+    packagePricing, setPackagePricing,
+    timeSlots, setTimeSlots, toggleTimeSlot,
+    businessInfo, setBusinessInfo,
+    notifications, setNotifications,
+    smsGateway, setSmsGateway,
+    paymentGateway, setPaymentGateway,
+    savePricing, saveTimeSlots, saveBusinessInfo,
+    saveNotifications, saveSmsGateway, savePaymentGateway,
     loadSettings
   };
 }
