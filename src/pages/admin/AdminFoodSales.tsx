@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -75,6 +76,7 @@ interface FoodOrder {
 }
 
 export default function AdminFoodSales() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('items');
   
   // Food Items state
@@ -384,6 +386,10 @@ export default function AdminFoodSales() {
             {'Manage food & snacks'}
           </p>
         </div>
+        <Button onClick={() => navigate('/admin/food-orders')} variant="outline" size="sm">
+          <ShoppingCart className="w-4 h-4 mr-2" />
+          Orders
+        </Button>
       </div>
 
       {/* Stats */}
