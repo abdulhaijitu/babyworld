@@ -94,11 +94,97 @@ export default function AdminFoodPOS() {
     setCart(prev => prev.filter(c => c.food_item.id !== itemId));
   };
 
+  const printReceipt = (orderNumber: string, cartItems: CartItem[], total: number, customer: string, payment: string) => {
+    const now = new Date();
+    const timeStr = format(now, 'dd/MM/yyyy hh:mm a');
+    const itemsHtml = cartItems.map(c => `
+      <tr>
+        <td style="padding:2px 0;font-size:12px;">${c.food_item.name}</td>
+        <td style="padding:2px 4px;font-size:12px;text-align:center;">${c.quantity}</td>
+        <td style="padding:2px 0;font-size:12px;text-align:right;">৳${c.food_item.price * c.quantity}</td>
+      </tr>
+    `).join('');
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Receipt - ${orderNumber}</title>
+        <style>
+          @media print {
+            @page { margin: 0; size: 80mm auto; }
+            body { margin: 0; }
+          }
+          body { font-family: 'Courier New', monospace; width: 76mm; margin: 0 auto; padding: 4mm; color: #000; }
+          .center { text-align: center; }
+          .bold { font-weight: bold; }
+          .divider { border-top: 1px dashed #000; margin: 6px 0; }
+          table { width: 100%; border-collapse: collapse; }
+          .total-row td { font-weight: bold; font-size: 14px; padding-top: 4px; }
+        </style>
+      </head>
+      <body>
+        <div class="center">
+          <h2 style="margin:0;font-size:16px;">🍽️ Baby World</h2>
+          <p style="margin:2px 0;font-size:11px;">Food Court Receipt</p>
+        </div>
+        <div class="divider"></div>
+        <div style="font-size:11px;">
+          <p style="margin:2px 0;"><strong>Order:</strong> ${orderNumber}</p>
+          <p style="margin:2px 0;"><strong>Date:</strong> ${timeStr}</p>
+          ${customer ? `<p style="margin:2px 0;"><strong>Customer:</strong> ${customer}</p>` : ''}
+          <p style="margin:2px 0;"><strong>Payment:</strong> ${payment === 'pending' ? 'Due' : payment.charAt(0).toUpperCase() + payment.slice(1)}</p>
+        </div>
+        <div class="divider"></div>
+        <table>
+          <thead>
+            <tr style="font-size:11px;font-weight:bold;border-bottom:1px solid #000;">
+              <td style="padding:2px 0;">Item</td>
+              <td style="padding:2px 4px;text-align:center;">Qty</td>
+              <td style="padding:2px 0;text-align:right;">Price</td>
+            </tr>
+          </thead>
+          <tbody>
+            ${itemsHtml}
+          </tbody>
+        </table>
+        <div class="divider"></div>
+        <table>
+          <tr class="total-row">
+            <td>TOTAL</td>
+            <td style="text-align:right;">৳${total}</td>
+          </tr>
+        </table>
+        <div class="divider"></div>
+        <div class="center" style="font-size:10px;margin-top:6px;">
+          <p style="margin:2px 0;">Thank you! 🎉</p>
+          <p style="margin:2px 0;">Baby World Indoor Playground</p>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const printWindow = window.open('', '_blank', 'width=350,height=500');
+    if (printWindow) {
+      printWindow.document.write(html);
+      printWindow.document.close();
+      printWindow.onload = () => {
+        printWindow.print();
+        printWindow.onafterprint = () => printWindow.close();
+      };
+    }
+  };
+
   const handlePlaceOrder = async () => {
     if (cart.length === 0) { toast.error('কার্ট খালি!'); return; }
     setSubmitting(true);
     try {
       const orderNumber = `FO${Date.now().toString(36).toUpperCase()}`;
+      const currentCart = [...cart];
+      const currentTotal = cartTotal;
+      const currentCustomer = customerName;
+      const currentPayment = paymentType;
+
       const { data: order, error: orderError } = await supabase
         .from('food_orders')
         .insert({
@@ -130,6 +216,9 @@ export default function AdminFoodPOS() {
       setNotes('');
       setPaymentType('cash');
       queryClient.invalidateQueries({ queryKey: ['food-orders-today'] });
+
+      // Auto print receipt
+      printReceipt(orderNumber, currentCart, currentTotal, currentCustomer, currentPayment);
     } catch (err: any) {
       toast.error(err.message || 'অর্ডার তৈরি ব্যর্থ');
     } finally {
