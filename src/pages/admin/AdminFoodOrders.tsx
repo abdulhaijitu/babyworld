@@ -39,6 +39,7 @@ import {
   Eye,
   Filter,
   Calendar,
+  Printer,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format, startOfDay, endOfDay, subDays } from 'date-fns';
