@@ -10,6 +10,7 @@ import { EventsFAQ } from "@/components/events/EventsFAQ";
 import { EventsTrust } from "@/components/events/EventsTrust";
 import { SEOHead } from "@/components/SEOHead";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 const BirthdayEvents = () => {
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
@@ -55,8 +56,8 @@ const BirthdayEvents = () => {
           <EventsTrust />
         </main>
         <Footer />
-        {/* Extra spacing for bottom nav - events has its own sticky panel */}
         <div className="lg:hidden h-4" />
+        <WhatsAppButton variant="floating" />
         <MobileBottomNav />
       </div>
     </PageTransition>

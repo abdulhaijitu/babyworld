@@ -10,12 +10,14 @@ import { PageTransition } from "@/components/PageTransition";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { SEOHead } from "@/components/SEOHead";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
+import { PromoBanner } from "@/components/PromoBanner";
 
 const Index = () => {
   return (
     <PageTransition>
       <SEOHead page="home" />
       <div className="min-h-screen bg-background overflow-x-hidden">
+        <PromoBanner />
         <Navbar />
         <main>
           <HeroSection />

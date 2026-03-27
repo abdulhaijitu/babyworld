@@ -7,6 +7,7 @@ import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
 import { SEOHead } from "@/components/SEOHead";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 const PlayBooking = () => {
   return (
@@ -21,8 +22,8 @@ const PlayBooking = () => {
           <TrustSection />
         </main>
         <Footer />
-        {/* Extra spacing for bottom nav - booking has its own sticky panel */}
         <div className="lg:hidden h-4" />
+        <WhatsAppButton variant="floating" />
         <MobileBottomNav />
       </div>
     </PageTransition>

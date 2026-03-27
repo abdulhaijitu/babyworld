@@ -5,6 +5,7 @@ import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
 import { SEOHead } from "@/components/SEOHead";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 const Contact = () => {
   return (
@@ -17,8 +18,8 @@ const Contact = () => {
           <GoogleMap />
         </main>
         <Footer />
-        {/* Safe spacing for mobile bottom nav */}
         <div className="lg:hidden h-20" />
+        <WhatsAppButton variant="floating" />
         <MobileBottomNav />
       </div>
     </PageTransition>
