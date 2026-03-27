@@ -23,6 +23,7 @@ import AdminTicketing from "./pages/admin/AdminTicketing";
 import AdminCreateTicket from "./pages/admin/AdminCreateTicket";
 import AdminGateLogs from "./pages/admin/AdminGateLogs";
 import AdminFoodSales from "./pages/admin/AdminFoodSales";
+import AdminFoodOrders from "./pages/admin/AdminFoodOrders";
 import AdminEmployees from "./pages/admin/AdminEmployees";
 import AdminRoster from "./pages/admin/AdminRoster";
 import AdminBookings from "./pages/admin/AdminBookings";
@@ -70,6 +71,7 @@ const App = () => (
                   <Route path="member-entry" element={<AdminMemberEntry />} />
                   <Route path="gate-logs" element={<AdminGateLogs />} />
                   <Route path="food" element={<AdminFoodSales />} />
+                  <Route path="food-orders" element={<AdminFoodOrders />} />
                   <Route path="employees" element={<AdminEmployees />} />
                   <Route path="roster" element={<AdminRoster />} />
                   <Route path="bookings" element={<AdminBookings />} />
