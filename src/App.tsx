@@ -46,7 +46,7 @@ import AdminExpenseCategories from "./pages/admin/AdminExpenseCategories";
 import AdminDailyCashSummary from "./pages/admin/AdminDailyCashSummary";
 import AdminProfitReports from "./pages/admin/AdminProfitReports";
 import AdminRides from "./pages/admin/AdminRides";
-import AdminRideReviews from "./pages/admin/AdminRideReviews";
+
 import AdminNotificationLogs from "./pages/admin/AdminNotificationLogs";
 import AdminHeroCards from "./pages/admin/AdminHeroCards";
 import AdminHeroSlides from "./pages/admin/AdminHeroSlides";
@@ -114,7 +114,7 @@ const App = () => (
                   <Route path="income-categories" element={<AdminIncomeCategories />} />
                   <Route path="daily-cash" element={<AdminDailyCashSummary />} />
                   <Route path="rides" element={<AdminRides />} />
-                  <Route path="ride-reviews" element={<AdminRideReviews />} />
+                  
                   <Route path="notifications" element={<AdminNotificationLogs />} />
                   <Route path="homepage" element={<AdminHomepage />} />
                   <Route path="users" element={<AdminUsers />} />
