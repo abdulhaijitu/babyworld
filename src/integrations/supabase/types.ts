@@ -193,6 +193,7 @@ export type Database = {
           duration_hours: number
           features: Json | null
           id: string
+          image_url: string | null
           is_active: boolean
           max_guests: number
           name: string
@@ -205,6 +206,7 @@ export type Database = {
           duration_hours?: number
           features?: Json | null
           id?: string
+          image_url?: string | null
           is_active?: boolean
           max_guests?: number
           name: string
@@ -217,6 +219,7 @@ export type Database = {
           duration_hours?: number
           features?: Json | null
           id?: string
+          image_url?: string | null
           is_active?: boolean
           max_guests?: number
           name?: string
