@@ -220,11 +220,11 @@ export default function AdminAboutContact() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>ঠিকানা লাইন ১ (বাংলা)</Label>
+                  <Label>Address Line 1 (Bangla)</Label>
                   <Input value={contact.addressLine1Bn} onChange={(e) => setContact({ ...contact, addressLine1Bn: e.target.value })} />
                 </div>
                 <div className="space-y-2">
-                  <Label>ঠিকানা লাইন ২ (বাংলা)</Label>
+                  <Label>Address Line 2 (Bangla)</Label>
                   <Input value={contact.addressLine2Bn} onChange={(e) => setContact({ ...contact, addressLine2Bn: e.target.value })} />
                 </div>
               </div>
