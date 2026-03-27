@@ -306,7 +306,7 @@ export default function MemberEntryTab() {
                     <Badge variant="outline" className="capitalize">{foundMember.membership_type}</Badge>
                     <Badge className="bg-green-500/10 text-green-600 border-green-200">Active</Badge>
                     <span className="text-xs text-muted-foreground">
-                      {foundMember.child_count} শিশু
+                      {foundMember.child_count} child(ren)
                     </span>
                   </div>
                 </div>
