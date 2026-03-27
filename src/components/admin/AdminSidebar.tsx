@@ -276,7 +276,14 @@ function SidebarContent({
               >
                 <Collapsible
                   open={item.id in openGroups ? openGroups[item.id] : (childActive || !!searchQuery.trim())}
-                  onOpenChange={(open) => setOpenGroups(open ? { [item.id]: true } : { [item.id]: false })}
+                  onOpenChange={(isOpen) => setOpenGroups(prev => {
+                    const next: Record<string, boolean> = {};
+                    Object.keys(prev).forEach(k => { next[k] = false; });
+                    // Also close any group with active children so accordion behavior works
+                    filteredItems.forEach(mi => { if (mi.children) next[mi.id] = false; });
+                    next[item.id] = isOpen;
+                    return next;
+                  })}
                 >
                   <CollapsibleTrigger className={cn(
                     "w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all duration-200",
