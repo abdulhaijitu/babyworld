@@ -22,7 +22,7 @@ import {
   Receipt,
   TrendingUp,
   FerrisWheel,
-  Star,
+  
   MessageSquare,
   Home,
   Monitor,
