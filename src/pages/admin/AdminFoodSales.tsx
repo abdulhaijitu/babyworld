@@ -93,6 +93,9 @@ export default function AdminFoodSales() {
     price: 0,
     is_available: true
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   // Orders state
   const [orders, setOrders] = useState<FoodOrder[]>([]);
