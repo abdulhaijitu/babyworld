@@ -102,7 +102,7 @@ const allMenuItems: MenuItem[] = [
     { id: 'profit', label: 'Profit & Loss', icon: TrendingUp, path: '/admin/profit' },
     { id: 'reports', label: 'Reports', icon: FileBarChart, path: '/admin/reports' },
   ]},
-  { id: 'ride-reviews', label: 'Ride Reviews', icon: Star, path: '/admin/ride-reviews', requiredRoles: ['super_admin', 'admin', 'manager'] },
+  
   { id: 'notifications', label: 'Notifications', icon: MessageSquare, path: '/admin/notifications', requiredRoles: ['super_admin', 'admin', 'manager'] },
   { id: 'homepage', label: 'Homepage', icon: Home, path: '/admin/homepage', requiredRoles: ['super_admin', 'admin'] },
   { id: 'users', label: 'Users', icon: Shield, path: '/admin/users', requiredRoles: ['super_admin'] },

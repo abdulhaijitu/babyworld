@@ -114,7 +114,7 @@ const App = () => (
                   <Route path="income-categories" element={<AdminIncomeCategories />} />
                   <Route path="daily-cash" element={<AdminDailyCashSummary />} />
                   <Route path="rides" element={<AdminRides />} />
-                  <Route path="ride-reviews" element={<AdminRideReviews />} />
+                  
                   <Route path="notifications" element={<AdminNotificationLogs />} />
                   <Route path="homepage" element={<AdminHomepage />} />
                   <Route path="users" element={<AdminUsers />} />
