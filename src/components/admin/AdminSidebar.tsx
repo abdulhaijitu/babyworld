@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useState, useMemo, useEffect } from 'react';
 import { useUserRoles, type AppRole } from '@/hooks/useUserRoles';
+import { useRolePermissions } from '@/hooks/useRolePermissions';
 import { Collapsible, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSidebarBadges } from '@/hooks/useSidebarBadges';
