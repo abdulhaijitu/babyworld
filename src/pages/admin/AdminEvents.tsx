@@ -85,6 +85,7 @@ interface EventPackage {
   max_guests: number;
   duration_hours: number;
   is_active: boolean;
+  image_url: string | null;
 }
 
 const timeSlots = [
