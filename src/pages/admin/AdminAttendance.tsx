@@ -112,8 +112,7 @@ export default function AdminAttendance() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <h1 className="text-2xl font-bold">Attendance</h1>
+      <div className="flex items-center justify-end flex-wrap gap-3">
         <div className="flex items-center gap-3 flex-wrap">
           <Input type="date" value={selectedDate} onChange={e => setSelectedDate(e.target.value)} className="w-auto" />
 
