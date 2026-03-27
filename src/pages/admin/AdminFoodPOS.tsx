@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { toast } from 'sonner';
-import { Minus, Plus, Trash2, ShoppingCart, UtensilsCrossed, CheckCircle, XCircle, Search } from 'lucide-react';
+import { Minus, Plus, Trash2, ShoppingCart, UtensilsCrossed, CheckCircle, XCircle, Search, Percent, Tag } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { printFoodReceipt } from '@/lib/printFoodReceipt';
@@ -27,6 +27,14 @@ export default function AdminFoodPOS() {
   const [paymentType, setPaymentType] = useState<'cash' | 'online' | 'pending'>('cash');
   const [submitting, setSubmitting] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Discount state
+  const [discountMode, setDiscountMode] = useState<'none' | 'manual' | 'coupon'>('none');
+  const [manualDiscountType, setManualDiscountType] = useState<'percentage' | 'fixed'>('percentage');
+  const [manualDiscountValue, setManualDiscountValue] = useState('');
+  const [couponCode, setCouponCode] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount_type: string; discount_value: number } | null>(null);
+  const [couponLoading, setCouponLoading] = useState(false);
 
   const today = format(new Date(), 'yyyy-MM-dd');
 
@@ -72,7 +80,49 @@ export default function AdminFoodPOS() {
     },
   });
 
-  const cartTotal = useMemo(() => cart.reduce((sum, c) => sum + c.food_item.price * c.quantity, 0), [cart]);
+  const cartSubtotal = useMemo(() => cart.reduce((sum, c) => sum + c.food_item.price * c.quantity, 0), [cart]);
+
+  const discountAmount = useMemo(() => {
+    if (discountMode === 'manual' && manualDiscountValue) {
+      const val = parseFloat(manualDiscountValue);
+      if (isNaN(val) || val <= 0) return 0;
+      if (manualDiscountType === 'percentage') return Math.min(Math.round(cartSubtotal * val / 100), cartSubtotal);
+      return Math.min(val, cartSubtotal);
+    }
+    if (discountMode === 'coupon' && appliedCoupon) {
+      if (appliedCoupon.discount_type === 'percentage') return Math.min(Math.round(cartSubtotal * appliedCoupon.discount_value / 100), cartSubtotal);
+      return Math.min(appliedCoupon.discount_value, cartSubtotal);
+    }
+    return 0;
+  }, [cartSubtotal, discountMode, manualDiscountType, manualDiscountValue, appliedCoupon]);
+
+  const cartTotal = cartSubtotal - discountAmount;
+
+  const applyCoupon = async () => {
+    if (!couponCode.trim()) return;
+    setCouponLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('coupons')
+        .select('*')
+        .eq('code', couponCode.trim().toUpperCase())
+        .eq('is_active', true)
+        .single();
+      if (error || !data) { toast.error('কুপন কোড সঠিক নয়!'); return; }
+      if (data.valid_till && new Date(data.valid_till) < new Date()) { toast.error('কুপন মেয়াদ উত্তীর্ণ!'); return; }
+      if (data.max_uses && data.used_count >= data.max_uses) { toast.error('কুপন সীমা শেষ!'); return; }
+      if (data.min_order_amount && cartSubtotal < Number(data.min_order_amount)) { toast.error(`ন্যূনতম অর্ডার ৳${data.min_order_amount} হতে হবে!`); return; }
+      setAppliedCoupon({ code: data.code, discount_type: data.discount_type, discount_value: Number(data.discount_value) });
+      toast.success(`কুপন "${data.code}" প্রয়োগ হয়েছে!`);
+    } catch { toast.error('কুপন চেক ব্যর্থ'); } finally { setCouponLoading(false); }
+  };
+
+  const clearDiscount = () => {
+    setDiscountMode('none');
+    setManualDiscountValue('');
+    setCouponCode('');
+    setAppliedCoupon(null);
+  };
 
   const addToCart = (item: FoodItem) => {
     setCart(prev => {
@@ -108,8 +158,12 @@ export default function AdminFoodPOS() {
         totalPrice: c.food_item.price * c.quantity,
       }));
       const currentTotal = cartTotal;
+      const currentSubtotal = cartSubtotal;
+      const currentDiscount = discountAmount;
       const currentCustomer = customerName;
       const currentPayment = paymentType;
+      const currentCouponCode = appliedCoupon?.code || null;
+      const currentDiscountType = discountMode === 'manual' ? manualDiscountType : (appliedCoupon?.discount_type || null);
 
       const { data: order, error: orderError } = await supabase
         .from('food_orders')
@@ -117,8 +171,11 @@ export default function AdminFoodPOS() {
           order_number: orderNumber,
           customer_name: customerName || null,
           payment_type: paymentType,
-          subtotal: cartTotal,
-          total: cartTotal,
+          subtotal: currentSubtotal,
+          total: currentTotal,
+          discount_amount: currentDiscount,
+          discount_type: currentDiscountType,
+          coupon_code: currentCouponCode,
           notes: notes || null,
           status: 'pending',
         })
@@ -151,17 +208,28 @@ export default function AdminFoodPOS() {
         osc.stop(audioCtx.currentTime + 0.3);
       } catch {}
 
+      // Increment coupon used_count
+      if (currentCouponCode) {
+        const { data: couponData } = await supabase.from('coupons').select('used_count').eq('code', currentCouponCode).single();
+        if (couponData) {
+          await supabase.from('coupons').update({ used_count: (couponData.used_count || 0) + 1 }).eq('code', currentCouponCode);
+        }
+      }
+
       toast.success(`অর্ডার #${orderNumber} তৈরি হয়েছে!`);
       setCart([]);
       setCustomerName('');
       setNotes('');
       setPaymentType('cash');
+      clearDiscount();
       queryClient.invalidateQueries({ queryKey: ['food-orders-today'] });
 
       // Auto print receipt
       printFoodReceipt({
         orderNumber,
         items: receiptItems,
+        subtotal: currentSubtotal,
+        discount: currentDiscount,
         total: currentTotal,
         customerName: currentCustomer,
         paymentType: currentPayment,
@@ -352,6 +420,106 @@ export default function AdminFoodPOS() {
             onChange={e => setNotes(e.target.value)}
             className="h-9"
           />
+
+          {/* Discount Section */}
+          <div className="space-y-2">
+            <div className="flex gap-1">
+              <Button
+                size="sm"
+                variant={discountMode === 'none' ? 'secondary' : 'outline'}
+                onClick={clearDiscount}
+                className="text-xs flex-1"
+              >
+                No Discount
+              </Button>
+              <Button
+                size="sm"
+                variant={discountMode === 'manual' ? 'default' : 'outline'}
+                onClick={() => { setDiscountMode('manual'); setAppliedCoupon(null); setCouponCode(''); }}
+                className="text-xs flex-1 gap-1"
+              >
+                <Percent className="h-3 w-3" /> Manual
+              </Button>
+              <Button
+                size="sm"
+                variant={discountMode === 'coupon' ? 'default' : 'outline'}
+                onClick={() => { setDiscountMode('coupon'); setManualDiscountValue(''); }}
+                className="text-xs flex-1 gap-1"
+              >
+                <Tag className="h-3 w-3" /> Coupon
+              </Button>
+            </div>
+
+            {discountMode === 'manual' && (
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  variant={manualDiscountType === 'percentage' ? 'default' : 'outline'}
+                  onClick={() => setManualDiscountType('percentage')}
+                  className="text-xs h-8"
+                >
+                  %
+                </Button>
+                <Button
+                  size="sm"
+                  variant={manualDiscountType === 'fixed' ? 'default' : 'outline'}
+                  onClick={() => setManualDiscountType('fixed')}
+                  className="text-xs h-8"
+                >
+                  ৳
+                </Button>
+                <Input
+                  type="number"
+                  placeholder={manualDiscountType === 'percentage' ? 'e.g. 10' : 'e.g. 50'}
+                  value={manualDiscountValue}
+                  onChange={e => setManualDiscountValue(e.target.value)}
+                  className="h-8 flex-1"
+                  min="0"
+                />
+              </div>
+            )}
+
+            {discountMode === 'coupon' && (
+              <div className="flex gap-2">
+                <Input
+                  placeholder="কুপন কোড"
+                  value={couponCode}
+                  onChange={e => setCouponCode(e.target.value.toUpperCase())}
+                  className="h-8 flex-1"
+                  disabled={!!appliedCoupon}
+                />
+                {appliedCoupon ? (
+                  <Button size="sm" variant="destructive" className="h-8 text-xs" onClick={() => { setAppliedCoupon(null); setCouponCode(''); }}>
+                    Remove
+                  </Button>
+                ) : (
+                  <Button size="sm" className="h-8 text-xs" onClick={applyCoupon} disabled={couponLoading || !couponCode.trim()}>
+                    {couponLoading ? '...' : 'Apply'}
+                  </Button>
+                )}
+              </div>
+            )}
+
+            {appliedCoupon && (
+              <p className="text-xs text-green-600 dark:text-green-400">
+                ✅ কুপন "{appliedCoupon.code}" — {appliedCoupon.discount_type === 'percentage' ? `${appliedCoupon.discount_value}%` : `৳${appliedCoupon.discount_value}`} ছাড়
+              </p>
+            )}
+          </div>
+
+          {/* Totals */}
+          {discountAmount > 0 && (
+            <div className="space-y-1 text-sm">
+              <div className="flex justify-between text-muted-foreground">
+                <span>Subtotal</span>
+                <span>৳{cartSubtotal}</span>
+              </div>
+              <div className="flex justify-between text-orange-600 dark:text-orange-400">
+                <span>Discount</span>
+                <span>-৳{discountAmount}</span>
+              </div>
+            </div>
+          )}
           <div className="flex items-center justify-between text-lg font-bold">
             <span>Total</span>
             <span className="text-primary">৳{cartTotal}</span>

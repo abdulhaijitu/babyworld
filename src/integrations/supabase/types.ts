@@ -103,6 +103,51 @@ export type Database = {
           },
         ]
       }
+      coupons: {
+        Row: {
+          code: string
+          created_at: string
+          discount_type: string
+          discount_value: number
+          id: string
+          is_active: boolean
+          max_uses: number | null
+          min_order_amount: number
+          updated_at: string
+          used_count: number
+          valid_from: string
+          valid_till: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          discount_type?: string
+          discount_value?: number
+          id?: string
+          is_active?: boolean
+          max_uses?: number | null
+          min_order_amount?: number
+          updated_at?: string
+          used_count?: number
+          valid_from?: string
+          valid_till?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          discount_type?: string
+          discount_value?: number
+          id?: string
+          is_active?: boolean
+          max_uses?: number | null
+          min_order_amount?: number
+          updated_at?: string
+          used_count?: number
+          valid_from?: string
+          valid_till?: string | null
+        }
+        Relationships: []
+      }
       employees: {
         Row: {
           created_at: string
@@ -267,8 +312,11 @@ export type Database = {
       }
       food_orders: {
         Row: {
+          coupon_code: string | null
           created_at: string
           customer_name: string | null
+          discount_amount: number
+          discount_type: string | null
           id: string
           notes: string | null
           order_number: string
@@ -280,8 +328,11 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          coupon_code?: string | null
           created_at?: string
           customer_name?: string | null
+          discount_amount?: number
+          discount_type?: string | null
           id?: string
           notes?: string | null
           order_number: string
@@ -293,8 +344,11 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          coupon_code?: string | null
           created_at?: string
           customer_name?: string | null
+          discount_amount?: number
+          discount_type?: string | null
           id?: string
           notes?: string | null
           order_number?: string

@@ -10,6 +10,8 @@ export interface ReceiptItem {
 export interface ReceiptData {
   orderNumber: string;
   items: ReceiptItem[];
+  subtotal?: number;
+  discount?: number;
   total: number;
   customerName?: string | null;
   paymentType: string;
@@ -18,7 +20,8 @@ export interface ReceiptData {
 }
 
 export function printFoodReceipt(data: ReceiptData) {
-  const { orderNumber, items, total, customerName, paymentType, createdAt, isReprint } = data;
+  const { orderNumber, items, subtotal, discount, total, customerName, paymentType, createdAt, isReprint } = data;
+  const displaySubtotal = subtotal ?? total;
   const timeStr = format(createdAt || new Date(), 'dd/MM/yyyy hh:mm a');
   const logoUrl = new URL('/src/assets/baby-world-logo.png', window.location.origin).href;
   const totalQty = items.reduce((s, i) => s + i.quantity, 0);
@@ -72,6 +75,10 @@ export function printFoodReceipt(data: ReceiptData) {
     <tbody>${itemsHtml}</tbody></table>
     <hr class="divider" />
     <div class="total-section">
+      ${discount && discount > 0 ? `
+        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;"><span>Subtotal</span><span>৳${displaySubtotal}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:#e65100;margin-bottom:4px;"><span>Discount</span><span>-৳${discount}</span></div>
+      ` : ''}
       <div class="total-row"><span class="total-label">TOTAL</span><span class="total-amount">৳${total}</span></div>
       <div style="text-align:right;font-size:10px;color:#666;margin-top:2px;">${totalQty} item(s)</div>
     </div>
