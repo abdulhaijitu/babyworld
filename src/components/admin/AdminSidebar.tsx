@@ -314,7 +314,7 @@ function SidebarContent({
                         transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
                         className="overflow-hidden"
                       >
-                        <div className="pl-5 mt-0.5 space-y-0.5">
+                        <div className="pl-4 mt-0.5 space-y-0.5">
                           {filteredChildren.map((child) => {
                             const ChildIcon = child.icon;
                             const childItemActive = location.pathname === child.path;
