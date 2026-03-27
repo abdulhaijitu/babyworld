@@ -36,6 +36,13 @@ import AdminPerformance from "./pages/admin/AdminPerformance";
 import AdminEventPackages from "./pages/admin/AdminEventPackages";
 import AdminEventCalendar from "./pages/admin/AdminEventCalendar";
 import AdminSettings from "./pages/admin/AdminSettings";
+import SettingsGeneral from "./pages/admin/settings/SettingsGeneral";
+import SettingsBusiness from "./pages/admin/settings/SettingsBusiness";
+import SettingsPricing from "./pages/admin/settings/SettingsPricing";
+import SettingsNotifications from "./pages/admin/settings/SettingsNotifications";
+import SettingsEmail from "./pages/admin/settings/SettingsEmail";
+import SettingsSms from "./pages/admin/settings/SettingsSms";
+import SettingsPayment from "./pages/admin/settings/SettingsPayment";
 import AdminReports from "./pages/admin/AdminReports";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminMemberships from "./pages/admin/AdminMemberships";
@@ -123,6 +130,13 @@ const App = () => (
                   <Route path="seo-branding" element={<AdminSeoBranding />} />
                   <Route path="users" element={<AdminUsers />} />
                   <Route path="settings" element={<AdminSettings />} />
+                  <Route path="settings/general" element={<SettingsGeneral />} />
+                  <Route path="settings/business" element={<SettingsBusiness />} />
+                  <Route path="settings/pricing" element={<SettingsPricing />} />
+                  <Route path="settings/notifications" element={<SettingsNotifications />} />
+                  <Route path="settings/email" element={<SettingsEmail />} />
+                  <Route path="settings/sms" element={<SettingsSms />} />
+                  <Route path="settings/payment" element={<SettingsPayment />} />
                 </Route>
                 
                 <Route path="/payment-success" element={<PaymentSuccess />} />
