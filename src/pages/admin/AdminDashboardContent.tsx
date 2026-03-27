@@ -153,7 +153,7 @@ export default function AdminDashboardContent() {
           </CardHeader>
           <CardContent>
             <p className="text-xs text-muted-foreground">
-              {isLoading ? <Skeleton className="h-3 w-28" /> : `${ticketCount} এর মধ্যে`}
+              {isLoading ? <Skeleton className="h-3 w-28" /> : `out of ${ticketCount}`}
             </p>
           </CardContent>
         </Card>
