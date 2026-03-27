@@ -8,6 +8,7 @@ interface CreateUserRequest {
   email: string;
   password: string;
   role: AppRole;
+  full_name?: string;
 }
 
 const validRoles: AppRole[] = [
@@ -24,7 +25,7 @@ serve(async (req) => {
   try {
     const supabase = createAdminClient();
     const body: CreateUserRequest = await req.json();
-    const { email, password, role = 'staff' } = body;
+    const { email, password, role = 'staff', full_name } = body;
 
     if (!email || !password) {
       return new Response(
@@ -61,22 +62,21 @@ serve(async (req) => {
       );
     }
 
+    // Assign role
     const { error: roleError } = await supabase
       .from('user_roles')
-      .insert({
-        user_id: authData.user.id,
-        role: role
-      });
+      .insert({ user_id: authData.user.id, role });
 
     if (roleError) {
       console.error('Role error:', roleError);
-      return new Response(
-        JSON.stringify({ 
-          error: `User created but failed to assign ${role} role`,
-          user_id: authData.user.id 
-        }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+    }
+
+    // Update profile name if provided (profile auto-created by trigger)
+    if (full_name) {
+      await supabase
+        .from('profiles')
+        .update({ full_name })
+        .eq('id', authData.user.id);
     }
 
     return new Response(
@@ -86,7 +86,7 @@ serve(async (req) => {
         user: {
           id: authData.user.id,
           email: authData.user.email,
-          role: role
+          role
         }
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
