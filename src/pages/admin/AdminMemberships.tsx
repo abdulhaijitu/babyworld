@@ -643,8 +643,8 @@ export default function AdminMemberships() {
                   <TableHead>{'Plan'}</TableHead>
                   <TableHead>{'Validity'}</TableHead>
                   <TableHead>{'Status'}</TableHead>
+                  <TableHead>{'Visits'}</TableHead>
                   <TableHead>{'Discount'}</TableHead>
-                  <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
