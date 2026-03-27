@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Search, LogIn, LogOut, User, Phone, Crown, Clock, Loader2, Users, CalendarCheck } from 'lucide-react';
+import { Search, LogIn, LogOut, Phone, Crown, Clock, Loader2, Users, CalendarCheck } from 'lucide-react';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
