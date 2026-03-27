@@ -97,6 +97,7 @@ export default function AdminEvents() {
   const [events, setEvents] = useState<EventBooking[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [eventPackages, setEventPackages] = useState<EventPackage[]>([]);
   
   // Filters
   const [searchQuery, setSearchQuery] = useState('');
@@ -112,7 +113,7 @@ export default function AdminEvents() {
     slot_date: new Date(),
     time_slot: timeSlots[0],
     booking_type: 'birthday_event' as 'birthday_event' | 'private_event',
-    package: 'standard',
+    package: '',
     notes: ''
   });
   
