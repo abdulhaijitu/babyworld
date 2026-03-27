@@ -216,7 +216,7 @@ export default function MemberEntryTab() {
           <CardContent className="p-3 text-center">
             <p className="text-2xl font-bold text-muted-foreground">{checkedOut}</p>
             <p className="text-xs text-muted-foreground flex items-center justify-center gap-1">
-              <LogOut className="h-3 w-3" /> চেক-আউট
+              <LogOut className="h-3 w-3" /> Checked Out
             </p>
           </CardContent>
         </Card>
