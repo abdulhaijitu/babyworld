@@ -191,8 +191,16 @@ export default function AdminFoodPOS() {
 
   const categories = ['all', 'snacks', 'drinks', 'meals'] as const;
 
-  const getItemsByCategory = (cat: string) =>
-    cat === 'all' ? foodItems : foodItems.filter(i => i.category === cat);
+  const filteredBySearch = (items: FoodItem[]) => {
+    if (!searchQuery.trim()) return items;
+    const q = searchQuery.toLowerCase();
+    return items.filter(i => i.name.toLowerCase().includes(q) || (i.name_bn && i.name_bn.includes(q)));
+  };
+
+  const getItemsByCategory = (cat: string) => {
+    const byCategory = cat === 'all' ? foodItems : foodItems.filter(i => i.category === cat);
+    return filteredBySearch(byCategory);
+  };
 
   const getCartQty = (itemId: string) => cart.find(c => c.food_item.id === itemId)?.quantity || 0;
 
