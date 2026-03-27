@@ -324,7 +324,7 @@ function SidebarContent({
                                 key={child.id}
                                 onClick={() => handleNavigate(child.path)}
                                 className={cn(
-                                  "w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-all duration-200 relative",
+                                  "w-full flex items-center gap-2 px-2.5 py-1 rounded-md text-xs transition-all duration-200 relative",
                                   childItemActive
                                     ? "bg-primary/10 text-primary font-medium"
                                     : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -333,11 +333,11 @@ function SidebarContent({
                                 {childItemActive && (
                                   <motion.div
                                     layoutId="sidebar-active-indicator"
-                                    className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-primary"
+                                    className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 rounded-r-full bg-primary"
                                     transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                                   />
                                 )}
-                                <ChildIcon className="h-3.5 w-3.5 shrink-0" />
+                                <ChildIcon className="h-3 w-3 shrink-0" />
                                 <span>{child.label}</span>
                                 <AnimatePresence>
                                   {childBadge > 0 && (
