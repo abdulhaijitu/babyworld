@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -63,6 +64,7 @@ import {
 import { toast } from 'sonner';
 import { format, parseISO } from 'date-fns';
 import { TableRowSkeleton } from '@/components/admin/AdminSkeleton';
+import { BookingsListTab } from '@/components/admin/bookings/BookingsListTab';
 
 interface EventBooking {
   id: string;
@@ -319,18 +321,34 @@ export default function AdminEvents() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <PartyPopper className="w-6 h-6" />
-            {'Events'}
+            {'Events & Bookings'}
           </h1>
           <p className="text-muted-foreground">
-            {'Birthday parties & private events'}
+            {'Manage events, parties & play bookings'}
           </p>
         </div>
-
-        <Button onClick={() => setCreateOpen(true)}>
-          <Plus className="w-4 h-4 mr-2" />
-          {'New Event'}
-        </Button>
       </div>
+
+      <Tabs defaultValue="events" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 max-w-md">
+          <TabsTrigger value="events">
+            <PartyPopper className="w-4 h-4 mr-2" />
+            Events
+          </TabsTrigger>
+          <TabsTrigger value="bookings">
+            <CalendarDays className="w-4 h-4 mr-2" />
+            Bookings
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="events" className="space-y-6 mt-6">
+          {/* New Event Button */}
+          <div className="flex justify-end">
+            <Button onClick={() => setCreateOpen(true)}>
+              <Plus className="w-4 h-4 mr-2" />
+              {'New Event'}
+            </Button>
+          </div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -562,6 +580,12 @@ export default function AdminEvents() {
           )}
         </CardContent>
       </Card>
+        </TabsContent>
+
+        <TabsContent value="bookings" className="mt-6">
+          <BookingsListTab />
+        </TabsContent>
+      </Tabs>
 
       {/* Create Event Dialog */}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
