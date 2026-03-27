@@ -66,7 +66,7 @@ export default function AdminDashboardContent() {
           <p className="text-destructive font-medium mb-2">Failed to load dashboard</p>
           <Button onClick={() => refetch()} size="sm">
             <RefreshCw className="w-4 h-4 mr-2" />
-            আবার চেষ্টা করুন
+            Retry
           </Button>
         </div>
       </div>
