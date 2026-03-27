@@ -119,7 +119,7 @@ export default function AdminDashboardContent() {
           </CardHeader>
           <CardContent>
             <p className="text-xs text-muted-foreground">
-              {isLoading ? <Skeleton className="h-3 w-24" /> : `৳${ticketRevenue.toLocaleString()} রেভিনিউ`}
+              {isLoading ? <Skeleton className="h-3 w-24" /> : `৳${ticketRevenue.toLocaleString()} revenue`}
             </p>
           </CardContent>
         </Card>
