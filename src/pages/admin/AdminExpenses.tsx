@@ -205,7 +205,8 @@ export default function AdminExpenses() {
   };
 
   const getCategoryInfo = (category: string) => {
-    return EXPENSE_CATEGORIES.find(c => c.value === category) || EXPENSE_CATEGORIES[7];
+    const found = expenseCategories.find(c => c.value === category);
+    return found || { value: category, label: category, color: 'bg-gray-100 text-gray-800' };
   };
 
   const getPaymentMethodInfo = (method: string) => {
