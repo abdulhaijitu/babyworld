@@ -380,7 +380,7 @@ export default function AdminEvents() {
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <CardTitle>{'Event List'}</CardTitle>
+            <CardTitle>{'Booking List'}</CardTitle>
             <Button variant="outline" size="sm" onClick={fetchEvents} disabled={loading}>
               <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
               {'Refresh'}
