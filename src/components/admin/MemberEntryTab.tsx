@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Search, LogIn, LogOut, User, Phone, Crown, Clock, Loader2, Users, CalendarCheck } from 'lucide-react';
+import { Search, LogIn, LogOut, Phone, Crown, Clock, Loader2, Users, CalendarCheck } from 'lucide-react';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -61,7 +62,24 @@ export default function MemberEntryTab() {
         .order('status', { ascending: true })
         .limit(5);
       if (error) throw error;
-      return data || [];
+      if (!data || data.length === 0) return [];
+
+      // Fetch last visit for each member
+      const memberIds = data.map((m: any) => m.id);
+      const { data: visits } = await supabase
+        .from('membership_visits')
+        .select('membership_id, check_in_at')
+        .in('membership_id', memberIds)
+        .order('check_in_at', { ascending: false });
+
+      const lastVisitMap: Record<string, string> = {};
+      (visits || []).forEach((v: any) => {
+        if (!lastVisitMap[v.membership_id]) {
+          lastVisitMap[v.membership_id] = v.check_in_at;
+        }
+      });
+
+      return data.map((m: any) => ({ ...m, lastVisit: lastVisitMap[m.id] || null }));
     },
     enabled: debouncedSearch.length >= 3,
   });
@@ -236,10 +254,19 @@ export default function MemberEntryTab() {
                       }}
                     >
                       <div className="flex items-center gap-2 min-w-0">
-                        <User className="h-4 w-4 text-muted-foreground shrink-0" />
+                        <Avatar className="h-8 w-8 shrink-0">
+                          <AvatarFallback className="bg-primary/10 text-primary text-xs font-bold">
+                            {member.member_name?.charAt(0)?.toUpperCase() || '?'}
+                          </AvatarFallback>
+                        </Avatar>
                         <div className="min-w-0">
                           <p className="font-medium text-sm truncate">{member.member_name}</p>
                           <p className="text-xs text-muted-foreground">{member.phone}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {member.lastVisit
+                              ? `শেষ ভিজিট: ${format(new Date(member.lastVisit), 'dd MMM yyyy')}`
+                              : 'কোনো ভিজিট নেই'}
+                          </p>
                         </div>
                       </div>
                       <div className="flex items-center gap-1.5 shrink-0">
