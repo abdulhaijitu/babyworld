@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -73,6 +73,8 @@ interface UserRoleRecord {
   user_id: string;
   role: AppRole;
   created_at: string;
+  email?: string;
+  full_name?: string;
 }
 
 const roleConfig: Record<AppRole, { label: string; icon: React.ElementType; color: string; description: string }> = {
@@ -110,7 +112,26 @@ export default function AdminUsers() {
   // Form state
   const [newUserEmail, setNewUserEmail] = useState('');
   const [newUserPassword, setNewUserPassword] = useState('');
+  const [newUserName, setNewUserName] = useState('');
   const [newUserRole, setNewUserRole] = useState<AppRole>('manager');
+
+  // Fetch profiles for email/name lookup
+  const { data: profiles } = useQuery({
+    queryKey: ['all-profiles'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, email, full_name');
+      if (error) throw error;
+      return data as { id: string; email: string | null; full_name: string | null }[];
+    }
+  });
+
+  const profileMap = useMemo(() => {
+    const map = new Map<string, { email: string | null; full_name: string | null }>();
+    profiles?.forEach(p => map.set(p.id, { email: p.email, full_name: p.full_name }));
+    return map;
+  }, [profiles]);
 
   // Fetch all users with roles
   const { data: userRoles, isLoading } = useQuery({
@@ -122,15 +143,20 @@ export default function AdminUsers() {
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return data as UserRoleRecord[];
-    }
+      return (data as UserRoleRecord[]).map(r => ({
+        ...r,
+        email: profileMap.get(r.user_id)?.email || undefined,
+        full_name: profileMap.get(r.user_id)?.full_name || undefined,
+      }));
+    },
+    enabled: !!profiles,
   });
 
   // Create user mutation
   const createUserMutation = useMutation({
-    mutationFn: async ({ email, password, role }: { email: string; password: string; role: AppRole }) => {
+    mutationFn: async ({ email, password, role, full_name }: { email: string; password: string; role: AppRole; full_name?: string }) => {
       const { data, error } = await supabase.functions.invoke('create-admin', {
-        body: { email, password, role }
+        body: { email, password, role, full_name }
       });
       
       if (error) throw error;
@@ -139,10 +165,12 @@ export default function AdminUsers() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['all-user-roles'] });
+      queryClient.invalidateQueries({ queryKey: ['all-profiles'] });
       toast.success(`${roleConfig[newUserRole].label} created successfully`);
       setIsAddDialogOpen(false);
       setNewUserEmail('');
       setNewUserPassword('');
+      setNewUserName('');
       setNewUserRole('manager');
     },
     onError: (error: Error) => {
@@ -199,7 +227,7 @@ export default function AdminUsers() {
       toast.error('Password must be at least 6 characters');
       return;
     }
-    createUserMutation.mutate({ email: newUserEmail, password: newUserPassword, role: newUserRole });
+    createUserMutation.mutate({ email: newUserEmail, password: newUserPassword, role: newUserRole, full_name: newUserName || undefined });
   };
 
   const handleResetPassword = () => {
@@ -214,7 +242,11 @@ export default function AdminUsers() {
 
   // Filter users
   const filteredUsers = userRoles?.filter(user => {
-    const matchesSearch = user.user_id.toLowerCase().includes(searchQuery.toLowerCase());
+    const q = searchQuery.toLowerCase();
+    const matchesSearch = !q || 
+      user.user_id.toLowerCase().includes(q) ||
+      (user.email?.toLowerCase().includes(q)) ||
+      (user.full_name?.toLowerCase().includes(q));
     const matchesRole = roleFilter === 'all' || user.role === roleFilter;
     return matchesSearch && matchesRole;
   });
@@ -303,6 +335,18 @@ export default function AdminUsers() {
                     })}
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="name" className="flex items-center gap-2">
+                  <User className="w-4 h-4" />
+                  Full Name (Optional)
+                </Label>
+                <Input
+                  id="name"
+                  placeholder="John Doe"
+                  value={newUserName}
+                  onChange={(e) => setNewUserName(e.target.value)}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email" className="flex items-center gap-2">
@@ -421,7 +465,7 @@ export default function AdminUsers() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>User ID</TableHead>
+                  <TableHead>User</TableHead>
                   <TableHead>Role</TableHead>
                   <TableHead>Joined</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
@@ -431,11 +475,18 @@ export default function AdminUsers() {
                 {filteredUsers.map((user) => (
                   <TableRow key={user.id}>
                     <TableCell>
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center shrink-0">
                           <User className="w-4 h-4 text-muted-foreground" />
                         </div>
-                        <span className="font-mono text-sm">{user.user_id.slice(0, 8)}...</span>
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium truncate">
+                            {user.full_name || user.user_id.slice(0, 8) + '...'}
+                          </p>
+                          {user.email && (
+                            <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                          )}
+                        </div>
                       </div>
                     </TableCell>
                     <TableCell>
