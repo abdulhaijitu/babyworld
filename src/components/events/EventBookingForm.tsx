@@ -127,10 +127,10 @@ export function EventBookingForm({ selectedPackage, onSelectPackage }: EventBook
   }
 
   return (
-    <section id="booking" className="py-24 bg-background">
-      <div className="container mx-auto">
+    <section id="booking" className="py-16 sm:py-20 lg:py-24 bg-background">
+      <div className="container mx-auto px-4 sm:px-6">
         {/* Header */}
-        <ScrollFadeIn className="text-center max-w-2xl mx-auto mb-12 space-y-4">
+        <ScrollFadeIn className="text-center max-w-2xl mx-auto mb-8 sm:mb-10 lg:mb-12 space-y-4">
           <span className="text-sm font-semibold text-primary uppercase tracking-wider">
             {t("eventsPage.booking.label")}
           </span>
@@ -143,7 +143,7 @@ export function EventBookingForm({ selectedPackage, onSelectPackage }: EventBook
         </ScrollFadeIn>
 
         {/* Step Indicators */}
-        <div className="max-w-3xl mx-auto mb-12">
+        <div className="max-w-3xl mx-auto mb-8 sm:mb-12">
           <div className="flex items-center justify-between">
             {steps.map((step, index) => (
               <div key={step.number} className="flex items-center">
