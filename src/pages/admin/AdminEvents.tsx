@@ -321,10 +321,10 @@ export default function AdminEvents() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <PartyPopper className="w-6 h-6" />
-            {'Events'}
+            {'Bookings'}
           </h1>
           <p className="text-muted-foreground">
-            {'Manage birthday parties & private events'}
+            {'Manage birthday parties & private event bookings'}
           </p>
         </div>
       </div>
@@ -380,7 +380,7 @@ export default function AdminEvents() {
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <CardTitle>{'Event List'}</CardTitle>
+            <CardTitle>{'Booking List'}</CardTitle>
             <Button variant="outline" size="sm" onClick={fetchEvents} disabled={loading}>
               <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
               {'Refresh'}
@@ -456,7 +456,7 @@ export default function AdminEvents() {
           ) : filteredEvents.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <PartyPopper className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>{'No events found'}</p>
+              <p>{'No bookings found'}</p>
               {hasActiveFilters && (
                 <Button variant="link" onClick={clearFilters} className="mt-2">
                   {'Clear filters'}
