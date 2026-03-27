@@ -231,8 +231,8 @@ export default function AdminDashboardContent() {
               {isLoading ? <Skeleton className="h-8 w-16" /> : (summary?.today?.ticketsUsed || 0)}
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="text-xs text-muted-foreground">
+          <CardContent className="p-3 md:p-6 pt-0">
+            <p className="text-[10px] md:text-xs text-muted-foreground">
               {isLoading ? <Skeleton className="h-3 w-28" /> : `out of ${ticketCount}`}
             </p>
           </CardContent>
@@ -241,7 +241,7 @@ export default function AdminDashboardContent() {
 
 
       {/* Today's Tickets & Recent Food Orders */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
         {/* Today's Tickets */}
         <Card>
           <CardHeader className="pb-3">
