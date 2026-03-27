@@ -154,19 +154,14 @@ serve(async (req) => {
       message = replaceVariables(template.bn, variables) + '\n\n' + replaceVariables(template.en, variables);
     } else {
       // Default message
-      const timeSlotText = time_slot ? `\nসময়: ${time_slot}` : '';
+      const timeSlotText = time_slot ? `\nTime: ${time_slot}` : '';
       const timeSlotTextEn = time_slot ? `\nTime: ${time_slot}` : '';
       
-      message = `🎟️ Baby World টিকিট কনফার্ম!
-টিকিট: ${ticket_number}
-তারিখ: ${slot_date}${timeSlotText}
-মোট: ৳${total_price}
-ধন্যবাদ ${guardian_name}!
-
-Ticket Confirmed!
-ID: ${ticket_number}
+      message = `🎟️ Baby World Ticket Confirmed!
+Ticket: ${ticket_number}
 Date: ${slot_date}${timeSlotTextEn}
-Total: ৳${total_price}`;
+Total: ৳${total_price}
+Thank you ${guardian_name}!`;
     }
 
     const result = await sendNotification(guardian_phone, message, channel, ticket_id);

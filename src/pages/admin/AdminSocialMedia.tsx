@@ -34,10 +34,10 @@ const STATUS_CONFIG: Record<SocialPostStatus, { label: string; variant: 'default
 };
 
 const POST_TYPE_OPTIONS = [
-  { value: 'post', label: 'পোস্ট', icon: FileText },
-  { value: 'story', label: 'স্টোরি', icon: Image },
-  { value: 'reel', label: 'রিল/শর্ট', icon: Video },
-  { value: 'live', label: 'লাইভ', icon: Video },
+  { value: 'post', label: 'Post', icon: FileText },
+  { value: 'story', label: 'Story', icon: Image },
+  { value: 'reel', label: 'Reel/Short', icon: Video },
+  { value: 'live', label: 'Live', icon: Video },
 ];
 
 function PostForm({ post, onClose }: { post?: SocialMediaPost; onClose: () => void }) {
@@ -91,11 +91,11 @@ function PostForm({ post, onClose }: { post?: SocialMediaPost; onClose: () => vo
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-2 sm:col-span-2">
-          <Label htmlFor="title">শিরোনাম *</Label>
-          <Input id="title" value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))} required maxLength={200} placeholder="পোস্টের শিরোনাম" />
+          <Label htmlFor="title">Title *</Label>
+          <Input id="title" value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))} required maxLength={200} placeholder="Post title" />
         </div>
         <div className="space-y-2">
-          <Label>প্ল্যাটফর্ম *</Label>
+          <Label>Platform *</Label>
           <Select value={form.platform} onValueChange={v => setForm(p => ({ ...p, platform: v as SocialPlatform }))}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
@@ -106,7 +106,7 @@ function PostForm({ post, onClose }: { post?: SocialMediaPost; onClose: () => vo
           </Select>
         </div>
         <div className="space-y-2">
-          <Label>পোস্ট টাইপ</Label>
+          <Label>Post Type</Label>
           <Select value={form.post_type} onValueChange={v => setForm(p => ({ ...p, post_type: v }))}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
@@ -115,28 +115,28 @@ function PostForm({ post, onClose }: { post?: SocialMediaPost; onClose: () => vo
           </Select>
         </div>
         <div className="space-y-2 sm:col-span-2">
-          <Label htmlFor="content">কন্টেন্ট / ক্যাপশন *</Label>
-          <Textarea id="content" value={form.content} onChange={e => setForm(p => ({ ...p, content: e.target.value }))} required maxLength={2200} rows={4} placeholder="পোস্টের কন্টেন্ট লিখুন..." />
+          <Label htmlFor="content">Content / Caption *</Label>
+          <Textarea id="content" value={form.content} onChange={e => setForm(p => ({ ...p, content: e.target.value }))} required maxLength={2200} rows={4} placeholder="Write post content..." />
           <p className="text-xs text-muted-foreground text-right">{form.content.length}/2200</p>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="image_url">ইমেজ/ভিডিও URL</Label>
+          <Label htmlFor="image_url">Image/Video URL</Label>
           <Input id="image_url" value={form.image_url} onChange={e => setForm(p => ({ ...p, image_url: e.target.value }))} placeholder="https://..." />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="post_url">পোস্ট লিংক (পাবলিশ হলে)</Label>
+          <Label htmlFor="post_url">Post Link (if published)</Label>
           <Input id="post_url" value={form.post_url} onChange={e => setForm(p => ({ ...p, post_url: e.target.value }))} placeholder="https://..." />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="scheduled_at">শিডিউল তারিখ</Label>
+          <Label htmlFor="scheduled_at">Schedule Date</Label>
           <Input id="scheduled_at" type="datetime-local" value={form.scheduled_at} onChange={e => setForm(p => ({ ...p, scheduled_at: e.target.value }))} />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="published_at">পাবলিশ তারিখ</Label>
+          <Label htmlFor="published_at">Publish Date</Label>
           <Input id="published_at" type="datetime-local" value={form.published_at} onChange={e => setForm(p => ({ ...p, published_at: e.target.value }))} />
         </div>
         <div className="space-y-2">
-          <Label>স্ট্যাটাস</Label>
+          <Label>Status</Label>
           <Select value={form.status} onValueChange={v => setForm(p => ({ ...p, status: v as SocialPostStatus }))}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
@@ -145,18 +145,18 @@ function PostForm({ post, onClose }: { post?: SocialMediaPost; onClose: () => vo
           </Select>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="tags">ট্যাগ (কমা দিয়ে আলাদা)</Label>
+          <Label htmlFor="tags">Tags (comma separated)</Label>
           <Input id="tags" value={form.tags} onChange={e => setForm(p => ({ ...p, tags: e.target.value }))} placeholder="offer, eid, summer" />
         </div>
         <div className="space-y-2 sm:col-span-2">
-          <Label htmlFor="notes">নোট</Label>
+          <Label htmlFor="notes">Notes</Label>
           <Textarea id="notes" value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))} maxLength={500} rows={2} />
         </div>
       </div>
       <div className="flex justify-end gap-2 pt-2">
-        <Button type="button" variant="outline" onClick={onClose}>বাতিল</Button>
+        <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
         <Button type="submit" disabled={createPost.isPending || updatePost.isPending}>
-          {isEdit ? 'আপডেট' : 'তৈরি করুন'}
+          {isEdit ? 'Update' : 'Create'}
         </Button>
       </div>
     </form>
@@ -195,15 +195,15 @@ export default function AdminSocialMedia() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold">Social Media</h1>
-          <p className="text-muted-foreground">পোস্ট শিডিউল, ম্যানেজ ও ট্র্যাকিং</p>
+          <p className="text-muted-foreground">Schedule, manage & track posts</p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={openNew}><Plus className="h-4 w-4 mr-2" />নতুন পোস্ট</Button>
+            <Button onClick={openNew}><Plus className="h-4 w-4 mr-2" />New Post</Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>{editingPost ? 'পোস্ট এডিট' : 'নতুন পোস্ট তৈরি'}</DialogTitle>
+              <DialogTitle>{editingPost ? 'Edit Post' : 'New Post তৈরি'}</DialogTitle>
             </DialogHeader>
             <PostForm post={editingPost} onClose={handleClose} />
           </DialogContent>
@@ -214,19 +214,19 @@ export default function AdminSocialMedia() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card><CardContent className="p-4 flex items-center gap-3">
           <FileText className="h-8 w-8 text-primary" />
-          <div><p className="text-2xl font-bold">{stats.total}</p><p className="text-xs text-muted-foreground">মোট পোস্ট</p></div>
+          <div><p className="text-2xl font-bold">{stats.total}</p><p className="text-xs text-muted-foreground">Total Posts</p></div>
         </CardContent></Card>
         <Card><CardContent className="p-4 flex items-center gap-3">
           <CheckCircle className="h-8 w-8 text-emerald-500" />
-          <div><p className="text-2xl font-bold">{stats.published}</p><p className="text-xs text-muted-foreground">পাবলিশড</p></div>
+          <div><p className="text-2xl font-bold">{stats.published}</p><p className="text-xs text-muted-foreground">Published</p></div>
         </CardContent></Card>
         <Card><CardContent className="p-4 flex items-center gap-3">
           <Clock className="h-8 w-8 text-amber-500" />
-          <div><p className="text-2xl font-bold">{stats.scheduled}</p><p className="text-xs text-muted-foreground">শিডিউলড</p></div>
+          <div><p className="text-2xl font-bold">{stats.scheduled}</p><p className="text-xs text-muted-foreground">Scheduled</p></div>
         </CardContent></Card>
         <Card><CardContent className="p-4 flex items-center gap-3">
           <Edit className="h-8 w-8 text-muted-foreground" />
-          <div><p className="text-2xl font-bold">{stats.draft}</p><p className="text-xs text-muted-foreground">ড্রাফট</p></div>
+          <div><p className="text-2xl font-bold">{stats.draft}</p><p className="text-xs text-muted-foreground">Draft</p></div>
         </CardContent></Card>
       </div>
 
@@ -236,12 +236,12 @@ export default function AdminSocialMedia() {
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="পোস্ট খুঁজুন..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="pl-10" />
+              <Input placeholder="Search posts..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="pl-10" />
             </div>
             <Select value={platformFilter} onValueChange={v => setPlatformFilter(v as SocialPlatform | 'all')}>
-              <SelectTrigger className="w-[160px]"><SelectValue placeholder="প্ল্যাটফর্ম" /></SelectTrigger>
+              <SelectTrigger className="w-[160px]"><SelectValue placeholder="Platform" /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">সব প্ল্যাটফর্ম</SelectItem>
+                <SelectItem value="all">All Platform</SelectItem>
                 {Object.entries(PLATFORM_CONFIG).map(([k, v]) => (
                   <SelectItem key={k} value={k}>{v.label}</SelectItem>
                 ))}
@@ -250,7 +250,7 @@ export default function AdminSocialMedia() {
           </div>
           <Tabs value={statusFilter} onValueChange={v => setStatusFilter(v as SocialPostStatus | 'all')}>
             <TabsList>
-              <TabsTrigger value="all">সব</TabsTrigger>
+              <TabsTrigger value="all">All</TabsTrigger>
               <TabsTrigger value="draft">Draft</TabsTrigger>
               <TabsTrigger value="scheduled">Scheduled</TabsTrigger>
               <TabsTrigger value="published">Published</TabsTrigger>
@@ -263,21 +263,21 @@ export default function AdminSocialMedia() {
       {/* Post List */}
       <Card><CardContent className="p-0">
         {isLoading ? (
-          <div className="p-8 text-center text-muted-foreground">লোড হচ্ছে...</div>
+          <div className="p-8 text-center text-muted-foreground">Loading...</div>
         ) : filtered.length === 0 ? (
-          <div className="p-8 text-center text-muted-foreground">কোনো পোস্ট পাওয়া যায়নি</div>
+          <div className="p-8 text-center text-muted-foreground">No posts found</div>
         ) : (
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>পোস্ট</TableHead>
-                  <TableHead>প্ল্যাটফর্ম</TableHead>
-                  <TableHead>টাইপ</TableHead>
-                  <TableHead>শিডিউল</TableHead>
-                  <TableHead>স্ট্যাটাস</TableHead>
-                  <TableHead>ট্যাগ</TableHead>
-                  <TableHead className="text-right">অ্যাকশন</TableHead>
+                  <TableHead>Post</TableHead>
+                  <TableHead>Platform</TableHead>
+                  <TableHead>Type</TableHead>
+                  <TableHead>Schedule</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Tags</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -342,7 +342,7 @@ export default function AdminSocialMedia() {
                             <Edit className="h-4 w-4" />
                           </Button>
                           <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive"
-                            onClick={() => { if (confirm('এই পোস্ট ডিলিট করতে চান?')) deletePost.mutate(post.id); }}>
+                            onClick={() => { if (confirm('এই Post ডিলিট করতে চান?')) deletePost.mutate(post.id); }}>
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>

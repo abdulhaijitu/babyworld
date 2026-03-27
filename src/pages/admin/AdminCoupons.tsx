@@ -58,8 +58,8 @@ export default function AdminCoupons() {
 
   const saveMutation = useMutation({
     mutationFn: async () => {
-      if (!form.code.trim()) throw new Error('কুপন কোড দিন');
-      if (!form.discount_value || Number(form.discount_value) <= 0) throw new Error('ডিসকাউন্ট মান দিন');
+      if (!form.code.trim()) throw new Error('Enter coupon code');
+      if (!form.discount_value || Number(form.discount_value) <= 0) throw new Error('Enter discount value');
 
       const payload = {
         code: form.code.trim().toUpperCase(),
@@ -81,7 +81,7 @@ export default function AdminCoupons() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['coupons'] });
-      toast.success(editingId ? 'কুপন আপডেট হয়েছে' : 'কুপন তৈরি হয়েছে');
+      toast.success(editingId ? 'Coupon updated' : 'Coupon created');
       resetForm();
     },
     onError: (err: any) => toast.error(err.message),
@@ -94,7 +94,7 @@ export default function AdminCoupons() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['coupons'] });
-      toast.success('কুপন ডিলিট হয়েছে');
+      toast.success('Coupon deleted');
     },
     onError: (err: any) => toast.error(err.message),
   });
@@ -131,7 +131,7 @@ export default function AdminCoupons() {
 
   const copyCode = (code: string) => {
     navigator.clipboard.writeText(code);
-    toast.success(`"${code}" কপি হয়েছে`);
+    toast.success(`"${code}" copied`);
   };
 
   return (
@@ -143,15 +143,15 @@ export default function AdminCoupons() {
         </h1>
         <Dialog open={dialogOpen} onOpenChange={(open) => { if (!open) resetForm(); setDialogOpen(open); }}>
           <DialogTrigger asChild>
-            <Button className="gap-2"><Plus className="h-4 w-4" /> নতুন কুপন</Button>
+            <Button className="gap-2"><Plus className="h-4 w-4" /> New Coupon</Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle>{editingId ? 'কুপন এডিট' : 'নতুন কুপন তৈরি'}</DialogTitle>
+              <DialogTitle>{editingId ? 'Edit Coupon' : 'New Coupon তৈরি'}</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 pt-2">
               <div>
-                <Label>কুপন কোড</Label>
+                <Label>Coupon Code</Label>
                 <Input
                   placeholder="e.g. SAVE20"
                   value={form.code}
@@ -161,17 +161,17 @@ export default function AdminCoupons() {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <Label>ডিসকাউন্ট টাইপ</Label>
+                  <Label>Discount Type</Label>
                   <Select value={form.discount_type} onValueChange={v => setForm(f => ({ ...f, discount_type: v }))}>
                     <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="percentage">শতকরা (%)</SelectItem>
-                      <SelectItem value="fixed">নির্দিষ্ট (৳)</SelectItem>
+                      <SelectItem value="percentage">Percentage (%)</SelectItem>
+                      <SelectItem value="fixed">Fixed (৳)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <Label>ডিসকাউন্ট মান</Label>
+                  <Label>Discount Value</Label>
                   <Input
                     type="number"
                     placeholder={form.discount_type === 'percentage' ? 'e.g. 10' : 'e.g. 50'}
@@ -184,7 +184,7 @@ export default function AdminCoupons() {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <Label>ন্যূনতম অর্ডার (৳)</Label>
+                  <Label>Min Order (৳)</Label>
                   <Input
                     type="number"
                     value={form.min_order_amount}
@@ -194,10 +194,10 @@ export default function AdminCoupons() {
                   />
                 </div>
                 <div>
-                  <Label>সর্বোচ্চ ব্যবহার</Label>
+                  <Label>Max Uses</Label>
                   <Input
                     type="number"
-                    placeholder="সীমাহীন"
+                    placeholder="Unlimited"
                     value={form.max_uses}
                     onChange={e => setForm(f => ({ ...f, max_uses: e.target.value }))}
                     className="mt-1"
@@ -206,7 +206,7 @@ export default function AdminCoupons() {
                 </div>
               </div>
               <div>
-                <Label>মেয়াদ শেষ (ঐচ্ছিক)</Label>
+                <Label>Expiry (Optional)</Label>
                 <Input
                   type="datetime-local"
                   value={form.valid_till}
@@ -216,10 +216,10 @@ export default function AdminCoupons() {
               </div>
               <div className="flex items-center gap-2">
                 <Switch checked={form.is_active} onCheckedChange={v => setForm(f => ({ ...f, is_active: v }))} />
-                <Label>সক্রিয়</Label>
+                <Label>Active</Label>
               </div>
               <Button className="w-full" onClick={() => saveMutation.mutate()} disabled={saveMutation.isPending}>
-                {saveMutation.isPending ? 'সেভ হচ্ছে...' : editingId ? 'আপডেট করুন' : 'তৈরি করুন'}
+                {saveMutation.isPending ? 'Saving...' : editingId ? 'Update' : 'Create'}
               </Button>
             </div>
           </DialogContent>
@@ -231,20 +231,20 @@ export default function AdminCoupons() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>কোড</TableHead>
-                <TableHead>ডিসকাউন্ট</TableHead>
-                <TableHead className="hidden sm:table-cell">ন্যূনতম অর্ডার</TableHead>
-                <TableHead className="hidden md:table-cell">ব্যবহার</TableHead>
-                <TableHead className="hidden md:table-cell">মেয়াদ</TableHead>
-                <TableHead>স্ট্যাটাস</TableHead>
-                <TableHead className="text-right">অ্যাকশন</TableHead>
+                <TableHead>Code</TableHead>
+                <TableHead>Discount</TableHead>
+                <TableHead className="hidden sm:table-cell">Min Order</TableHead>
+                <TableHead className="hidden md:table-cell">Usage</TableHead>
+                <TableHead className="hidden md:table-cell">Expiry</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading ? (
-                <TableRow><TableCell colSpan={7} className="text-center py-8 text-muted-foreground">লোড হচ্ছে...</TableCell></TableRow>
+                <TableRow><TableCell colSpan={7} className="text-center py-8 text-muted-foreground">Loading...</TableCell></TableRow>
               ) : coupons.length === 0 ? (
-                <TableRow><TableCell colSpan={7} className="text-center py-8 text-muted-foreground">কোনো কুপন নেই</TableCell></TableRow>
+                <TableRow><TableCell colSpan={7} className="text-center py-8 text-muted-foreground">No coupons found</TableCell></TableRow>
               ) : coupons.map(coupon => {
                 const expired = coupon.valid_till && new Date(coupon.valid_till) < new Date();
                 const limitReached = coupon.max_uses && coupon.used_count >= coupon.max_uses;
@@ -272,9 +272,9 @@ export default function AdminCoupons() {
                     </TableCell>
                     <TableCell>
                       {expired ? (
-                        <Badge variant="destructive" className="text-xs">মেয়াদ শেষ</Badge>
+                        <Badge variant="destructive" className="text-xs">Expiry শেষ</Badge>
                       ) : limitReached ? (
-                        <Badge variant="secondary" className="text-xs">সীমা শেষ</Badge>
+                        <Badge variant="secondary" className="text-xs">Limit reached</Badge>
                       ) : (
                         <Switch
                           checked={coupon.is_active}
@@ -291,7 +291,7 @@ export default function AdminCoupons() {
                           size="icon"
                           variant="ghost"
                           className="h-7 w-7 text-destructive"
-                          onClick={() => { if (confirm('ডিলিট করতে চান?')) deleteMutation.mutate(coupon.id); }}
+                          onClick={() => { if (confirm('Delete this coupon?')) deleteMutation.mutate(coupon.id); }}
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </Button>

@@ -114,9 +114,9 @@ export default function AdminAboutContact() {
       if (section === "about") await saveKey("about_content", about);
       if (section === "contact") await saveKey("contact_info", contact);
       if (section === "social") await saveKey("social_links", social);
-      toast.success("সফলভাবে সেভ হয়েছে!");
+      toast.success("Saved successfully!");
     } catch (e) {
-      toast.error("সেভ করতে সমস্যা হয়েছে");
+      toast.error("Failed to save");
       console.error(e);
     } finally {
       setSaving(false);
@@ -135,7 +135,7 @@ export default function AdminAboutContact() {
     <div className="p-4 md:p-6 space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-foreground">About & Contact Management</h1>
-        <p className="text-sm text-muted-foreground">ওয়েবসাইটের About, Contact এবং Social Links কন্ট্রোল করুন</p>
+        <p className="text-sm text-muted-foreground">Manage About, Contact and Social Links content</p>
       </div>
 
       <Tabs defaultValue="about" className="w-full">
@@ -158,7 +158,7 @@ export default function AdminAboutContact() {
           <Card>
             <CardHeader>
               <CardTitle>About Section Content</CardTitle>
-              <CardDescription>হোমপেজের About সেকশনের কন্টেন্ট এডিট করুন</CardDescription>
+              <CardDescription>Edit the About section content on the homepage</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -167,7 +167,7 @@ export default function AdminAboutContact() {
                   <Input value={about.title} onChange={(e) => setAbout({ ...about, title: e.target.value })} />
                 </div>
                 <div className="space-y-2">
-                  <Label>Title (বাংলা)</Label>
+                  <Label>Title (Bangla)</Label>
                   <Input value={about.titleBn} onChange={(e) => setAbout({ ...about, titleBn: e.target.value })} />
                 </div>
               </div>
@@ -176,7 +176,7 @@ export default function AdminAboutContact() {
                 <Textarea rows={3} value={about.description} onChange={(e) => setAbout({ ...about, description: e.target.value })} />
               </div>
               <div className="space-y-2">
-                <Label>Description (বাংলা)</Label>
+                <Label>Description (Bangla)</Label>
                 <Textarea rows={3} value={about.descriptionBn} onChange={(e) => setAbout({ ...about, descriptionBn: e.target.value })} />
               </div>
               <div className="space-y-2">
@@ -195,7 +195,7 @@ export default function AdminAboutContact() {
           <Card>
             <CardHeader>
               <CardTitle>Contact Information</CardTitle>
-              <CardDescription>ওয়েবসাইটে প্রদর্শিত যোগাযোগের তথ্য</CardDescription>
+              <CardDescription>Contact information displayed on the website</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -220,11 +220,11 @@ export default function AdminAboutContact() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>ঠিকানা লাইন ১ (বাংলা)</Label>
+                  <Label>Address Line 1 (Bangla)</Label>
                   <Input value={contact.addressLine1Bn} onChange={(e) => setContact({ ...contact, addressLine1Bn: e.target.value })} />
                 </div>
                 <div className="space-y-2">
-                  <Label>ঠিকানা লাইন ২ (বাংলা)</Label>
+                  <Label>Address Line 2 (Bangla)</Label>
                   <Input value={contact.addressLine2Bn} onChange={(e) => setContact({ ...contact, addressLine2Bn: e.target.value })} />
                 </div>
               </div>
@@ -244,7 +244,7 @@ export default function AdminAboutContact() {
           <Card>
             <CardHeader>
               <CardTitle>Social Media Links</CardTitle>
-              <CardDescription>সোশ্যাল মিডিয়া প্রোফাইল লিংক আপডেট করুন</CardDescription>
+              <CardDescription>Update social media profile links</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">

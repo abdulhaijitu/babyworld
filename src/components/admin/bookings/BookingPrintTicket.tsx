@@ -134,18 +134,18 @@ export function BookingPrintTicket({ booking, onClose }: BookingPrintTicketProps
 
   const getTicketTypeLabel = (type: string) => {
     const labels: Record<string, { en: string; bn: string }> = {
-      child_guardian: { en: 'Child + Guardian', bn: 'শিশু + অভিভাবক' },
-      child_only: { en: 'Child Only', bn: 'শুধু শিশু' },
-      group: { en: 'Group', bn: 'গ্রুপ' }
+      child_guardian: { en: 'Child + Guardian', bn: 'Child + Guardian' },
+      child_only: { en: 'Child Only', bn: 'Child Only' },
+      group: { en: 'Group', bn: 'Group' }
     };
     return labels[type]?.['en'] || type;
   };
 
   const getBookingTypeLabel = (type: string) => {
     const labels: Record<string, { en: string; bn: string }> = {
-      hourly_play: { en: 'Hourly Play', bn: 'আওয়ারলি প্লে' },
-      birthday_event: { en: 'Birthday Event', bn: 'বার্থডে ইভেন্ট' },
-      private_event: { en: 'Private Event', bn: 'প্রাইভেট ইভেন্ট' }
+      hourly_play: { en: 'Hourly Play', bn: 'Hourly Play' },
+      birthday_event: { en: 'Birthday Event', bn: 'Birthday Event' },
+      private_event: { en: 'Private Event', bn: 'Private Event' }
     };
     return labels[type]?.['en'] || type;
   };

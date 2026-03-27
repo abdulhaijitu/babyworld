@@ -29,11 +29,11 @@ const STATUS_CONFIG: Record<PromoStatus, { label: string; variant: 'default' | '
 };
 
 const APPLICABLE_OPTIONS: { value: PromoApplicableTo; label: string; icon: React.ElementType }[] = [
-  { value: 'all', label: 'সবকিছু', icon: Gift },
-  { value: 'ticket', label: 'টিকেট', icon: Ticket },
-  { value: 'food', label: 'ফুড', icon: UtensilsCrossed },
-  { value: 'event', label: 'ইভেন্ট', icon: PartyPopper },
-  { value: 'membership', label: 'মেম্বারশিপ', icon: Crown },
+  { value: 'all', label: 'All', icon: Gift },
+  { value: 'ticket', label: 'Ticket', icon: Ticket },
+  { value: 'food', label: 'Food', icon: UtensilsCrossed },
+  { value: 'event', label: 'Event', icon: PartyPopper },
+  { value: 'membership', label: 'Membership', icon: Crown },
 ];
 
 function PromotionForm({ promo, onClose }: { promo?: Promotion; onClose: () => void }) {
@@ -85,19 +85,19 @@ function PromotionForm({ promo, onClose }: { promo?: Promotion; onClose: () => v
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-2 sm:col-span-2">
-          <Label htmlFor="title">শিরোনাম *</Label>
-          <Input id="title" value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))} required maxLength={150} placeholder="যেমন: ঈদ স্পেশাল ২০% ছাড়" />
+          <Label htmlFor="title">Title *</Label>
+          <Input id="title" value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))} required maxLength={150} placeholder="e.g. Eid Special 20% Off" />
         </div>
         <div className="space-y-2 sm:col-span-2">
-          <Label htmlFor="description">বিবরণ</Label>
+          <Label htmlFor="description">Description</Label>
           <Textarea id="description" value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} maxLength={500} rows={2} />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="promo_code">প্রমো কোড</Label>
+          <Label htmlFor="promo_code">Promo Code</Label>
           <Input id="promo_code" value={form.promo_code} onChange={e => setForm(p => ({ ...p, promo_code: e.target.value.toUpperCase() }))} maxLength={30} placeholder="EID2025" className="uppercase" />
         </div>
         <div className="space-y-2">
-          <Label>প্রযোজ্য</Label>
+          <Label>Applicable To</Label>
           <Select value={form.applicable_to} onValueChange={v => setForm(p => ({ ...p, applicable_to: v as PromoApplicableTo }))}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
@@ -106,33 +106,33 @@ function PromotionForm({ promo, onClose }: { promo?: Promotion; onClose: () => v
           </Select>
         </div>
         <div className="space-y-2">
-          <Label>ডিসকাউন্ট টাইপ</Label>
+          <Label>Discount Type</Label>
           <Select value={form.discount_type} onValueChange={v => setForm(p => ({ ...p, discount_type: v as PromoDiscountType }))}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="percentage">শতাংশ (%)</SelectItem>
-              <SelectItem value="fixed">নির্দিষ্ট পরিমাণ (৳)</SelectItem>
+              <SelectItem value="percentage">Percentage (%)</SelectItem>
+              <SelectItem value="fixed">Fixed Amount (৳)</SelectItem>
             </SelectContent>
           </Select>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="discount_value">ডিসকাউন্ট মান</Label>
+          <Label htmlFor="discount_value">Discount Value</Label>
           <Input id="discount_value" type="number" min={0} max={form.discount_type === 'percentage' ? 100 : 100000} value={form.discount_value} onChange={e => setForm(p => ({ ...p, discount_value: Number(e.target.value) }))} />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="start_date">শুরু *</Label>
+          <Label htmlFor="start_date">Start *</Label>
           <Input id="start_date" type="datetime-local" value={form.start_date} onChange={e => setForm(p => ({ ...p, start_date: e.target.value }))} required />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="end_date">শেষ</Label>
+          <Label htmlFor="end_date">End</Label>
           <Input id="end_date" type="datetime-local" value={form.end_date} onChange={e => setForm(p => ({ ...p, end_date: e.target.value }))} />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="max_uses">সর্বোচ্চ ব্যবহার</Label>
-          <Input id="max_uses" type="number" min={0} value={form.max_uses} onChange={e => setForm(p => ({ ...p, max_uses: e.target.value }))} placeholder="সীমাহীন" />
+          <Label htmlFor="max_uses">Max Uses</Label>
+          <Input id="max_uses" type="number" min={0} value={form.max_uses} onChange={e => setForm(p => ({ ...p, max_uses: e.target.value }))} placeholder="Unlimited" />
         </div>
         <div className="space-y-2">
-          <Label>স্ট্যাটাস</Label>
+          <Label>Status</Label>
           <Select value={form.status} onValueChange={v => setForm(p => ({ ...p, status: v as PromoStatus }))}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
@@ -142,13 +142,13 @@ function PromotionForm({ promo, onClose }: { promo?: Promotion; onClose: () => v
         </div>
         <div className="flex items-center gap-3 pt-6">
           <Switch id="featured" checked={form.is_featured} onCheckedChange={v => setForm(p => ({ ...p, is_featured: v }))} />
-          <Label htmlFor="featured">ফিচার্ড প্রমোশন</Label>
+          <Label htmlFor="featured">Featured Promotion</Label>
         </div>
       </div>
       <div className="flex justify-end gap-2 pt-2">
-        <Button type="button" variant="outline" onClick={onClose}>বাতিল</Button>
+        <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
         <Button type="submit" disabled={createPromo.isPending || updatePromo.isPending}>
-          {isEdit ? 'আপডেট' : 'তৈরি করুন'}
+          {isEdit ? 'Update' : 'Create'}
         </Button>
       </div>
     </form>
@@ -195,15 +195,15 @@ export default function AdminPromotions() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold">Promotions</h1>
-          <p className="text-muted-foreground">অফার তৈরি, শিডিউল ও ট্র্যাকিং</p>
+          <p className="text-muted-foreground">Create, schedule & track offers</p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={openNew}><Plus className="h-4 w-4 mr-2" />নতুন প্রমোশন</Button>
+            <Button onClick={openNew}><Plus className="h-4 w-4 mr-2" />New Promotion</Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>{editingPromo ? 'প্রমোশন এডিট' : 'নতুন প্রমোশন তৈরি'}</DialogTitle>
+              <DialogTitle>{editingPromo ? 'Edit Promotion' : 'Create New Promotion'}</DialogTitle>
             </DialogHeader>
             <PromotionForm promo={editingPromo} onClose={handleClose} />
           </DialogContent>
@@ -214,19 +214,19 @@ export default function AdminPromotions() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card><CardContent className="p-4 flex items-center gap-3">
           <Tag className="h-8 w-8 text-primary" />
-          <div><p className="text-2xl font-bold">{stats.total}</p><p className="text-xs text-muted-foreground">মোট</p></div>
+          <div><p className="text-2xl font-bold">{stats.total}</p><p className="text-xs text-muted-foreground">Total</p></div>
         </CardContent></Card>
         <Card><CardContent className="p-4 flex items-center gap-3">
           <Zap className="h-8 w-8 text-emerald-500" />
-          <div><p className="text-2xl font-bold">{stats.active}</p><p className="text-xs text-muted-foreground">সক্রিয়</p></div>
+          <div><p className="text-2xl font-bold">{stats.active}</p><p className="text-xs text-muted-foreground">Active</p></div>
         </CardContent></Card>
         <Card><CardContent className="p-4 flex items-center gap-3">
           <Edit className="h-8 w-8 text-amber-500" />
-          <div><p className="text-2xl font-bold">{stats.draft}</p><p className="text-xs text-muted-foreground">ড্রাফট</p></div>
+          <div><p className="text-2xl font-bold">{stats.draft}</p><p className="text-xs text-muted-foreground">Draft</p></div>
         </CardContent></Card>
         <Card><CardContent className="p-4 flex items-center gap-3">
           <Calendar className="h-8 w-8 text-destructive" />
-          <div><p className="text-2xl font-bold">{stats.expired}</p><p className="text-xs text-muted-foreground">মেয়াদোত্তীর্ণ</p></div>
+          <div><p className="text-2xl font-bold">{stats.expired}</p><p className="text-xs text-muted-foreground">Expired</p></div>
         </CardContent></Card>
       </div>
 
@@ -235,11 +235,11 @@ export default function AdminPromotions() {
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="শিরোনাম বা কোড দিয়ে খুঁজুন..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="pl-10" />
+            <Input placeholder="Search by title or code..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="pl-10" />
           </div>
           <Tabs value={statusFilter} onValueChange={v => setStatusFilter(v as PromoStatus | 'all')}>
             <TabsList>
-              <TabsTrigger value="all">সব</TabsTrigger>
+              <TabsTrigger value="all">All</TabsTrigger>
               <TabsTrigger value="active">Active</TabsTrigger>
               <TabsTrigger value="draft">Draft</TabsTrigger>
               <TabsTrigger value="paused">Paused</TabsTrigger>
@@ -252,22 +252,22 @@ export default function AdminPromotions() {
       {/* List */}
       <Card><CardContent className="p-0">
         {isLoading ? (
-          <div className="p-8 text-center text-muted-foreground">লোড হচ্ছে...</div>
+          <div className="p-8 text-center text-muted-foreground">Loading...</div>
         ) : filtered.length === 0 ? (
-          <div className="p-8 text-center text-muted-foreground">কোনো প্রমোশন পাওয়া যায়নি</div>
+          <div className="p-8 text-center text-muted-foreground">No promotions found</div>
         ) : (
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>প্রমোশন</TableHead>
-                  <TableHead>কোড</TableHead>
-                  <TableHead>ডিসকাউন্ট</TableHead>
-                  <TableHead>প্রযোজ্য</TableHead>
-                  <TableHead>সময়কাল</TableHead>
-                  <TableHead>ব্যবহার</TableHead>
-                  <TableHead>স্ট্যাটাস</TableHead>
-                  <TableHead className="text-right">অ্যাকশন</TableHead>
+                  <TableHead>Promotion</TableHead>
+                  <TableHead>Code</TableHead>
+                  <TableHead>Discount</TableHead>
+                  <TableHead>Applicable</TableHead>
+                  <TableHead>Duration</TableHead>
+                  <TableHead>Usage</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -329,7 +329,7 @@ export default function AdminPromotions() {
                             <Edit className="h-4 w-4" />
                           </Button>
                           <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive"
-                            onClick={() => { if (confirm('এই প্রমোশন ডিলিট করতে চান?')) deletePromo.mutate(promo.id); }}>
+                            onClick={() => { if (confirm('Delete this promotion?')) deletePromo.mutate(promo.id); }}>
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>

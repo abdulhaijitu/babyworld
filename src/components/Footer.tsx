@@ -31,7 +31,7 @@ export function Footer() {
             <div className="flex items-center gap-2 text-sm opacity-80">
               <span className="font-semibold">Baby World</span>
               <span>•</span>
-              <span className="font-bangla">বেবি ওয়ার্ল্ড</span>
+              <span className="font-bangla">Baby World</span>
             </div>
             <p className="text-sm opacity-70 max-w-md">
               {t("footer.description")}
@@ -104,7 +104,7 @@ export function Footer() {
         <div className="mt-10 sm:mt-12 pt-6 sm:pt-8 border-t border-background/10">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-center sm:text-left">
             <p className="text-xs sm:text-sm opacity-60">
-              © {new Date().getFullYear()} Baby World (<span className="font-bangla">বেবি ওয়ার্ল্ড</span>). {t("footer.rights")}
+              © {new Date().getFullYear()} Baby World. {t("footer.rights")}
             </p>
             <p className="text-xs sm:text-sm opacity-60">{t("footer.ageRange")} • {t("hero.learnPlay")}</p>
           </div>

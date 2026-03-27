@@ -39,23 +39,23 @@ export function useSendSMS() {
     timeSlot: string,
     bookingRef: string
   ): Promise<boolean> => {
-    const message = `প্রিয় ${parentName},
-আপনার Baby World বুকিং নিশ্চিত হয়েছে!
+    const message = `Dear ${parentName},
+Your Baby World booking is confirmed!
 
-📅 তারিখ: ${slotDate}
-⏰ সময়: ${timeSlot}
-🎫 রেফারেন্স: ${bookingRef}
+📅 Date: ${slotDate}
+⏰ Time: ${timeSlot}
+🎫 Reference: ${bookingRef}
 
-প্রবেশের সময় এই মেসেজ দেখান।
+Please show this message at entry.
 📍 Baby World Indoor Playground
 📞 +880 1234-567890`;
 
     const result = await sendSMS(phone, message);
     
     if (result.success) {
-      toast.success('SMS সফলভাবে পাঠানো হয়েছে');
+      toast.success('SMS sent successfully');
     } else {
-      toast.error('SMS পাঠাতে ব্যর্থ: ' + (result.error || result.message));
+      toast.error('Failed to send SMS: ' + (result.error || result.message));
     }
     
     return result.success;
@@ -67,13 +67,13 @@ export function useSendSMS() {
     slotDate: string,
     timeSlot: string
   ): Promise<boolean> => {
-    const message = `প্রিয় ${parentName},
-আপনার Baby World বুকিং আগামীকাল!
+    const message = `Dear ${parentName},
+Your Baby World booking is tomorrow!
 
-📅 তারিখ: ${slotDate}
-⏰ সময়: ${timeSlot}
+📅 Date: ${slotDate}
+⏰ Time: ${timeSlot}
 
-আমরা আপনার জন্য অপেক্ষায় আছি! 🎉
+We look forward to seeing you! 🎉
 📍 Baby World Indoor Playground`;
 
     const result = await sendSMS(phone, message);
@@ -86,13 +86,13 @@ export function useSendSMS() {
     slotDate: string,
     reason?: string
   ): Promise<boolean> => {
-    const message = `প্রিয় ${parentName},
-আপনার Baby World বুকিং বাতিল করা হয়েছে।
+    const message = `Dear ${parentName},
+Your Baby World booking has been cancelled.
 
-📅 তারিখ: ${slotDate}
-${reason ? `📝 কারণ: ${reason}` : ''}
+📅 Date: ${slotDate}
+${reason ? `📝 Reason: ${reason}` : ''}
 
-নতুন বুকিংয়ের জন্য যোগাযোগ করুন।
+Please contact us for a new booking.
 📞 +880 1234-567890`;
 
     const result = await sendSMS(phone, message);
@@ -107,7 +107,6 @@ ${reason ? `📝 কারণ: ${reason}` : ''}
     timeSlot: string,
     bookingRef: string
   ): string => {
-    // Format phone for WhatsApp (remove leading 0 and add country code)
     let formattedPhone = phone.replace(/\D/g, '');
     if (formattedPhone.startsWith('0')) {
       formattedPhone = '88' + formattedPhone;
@@ -115,14 +114,14 @@ ${reason ? `📝 কারণ: ${reason}` : ''}
       formattedPhone = '88' + formattedPhone;
     }
 
-    const message = encodeURIComponent(`প্রিয় ${parentName},
-আপনার Baby World বুকিং নিশ্চিত হয়েছে!
+    const message = encodeURIComponent(`Dear ${parentName},
+Your Baby World booking is confirmed!
 
-📅 তারিখ: ${slotDate}
-⏰ সময়: ${timeSlot}
-🎫 রেফারেন্স: ${bookingRef}
+📅 Date: ${slotDate}
+⏰ Time: ${timeSlot}
+🎫 Reference: ${bookingRef}
 
-প্রবেশের সময় এই মেসেজ দেখান।
+Please show this message at entry.
 📍 Baby World Indoor Playground
 📞 +880 1234-567890`);
 
@@ -138,7 +137,7 @@ ${reason ? `📝 কারণ: ${reason}` : ''}
   ): void => {
     const link = getWhatsAppLink(phone, parentName, slotDate, timeSlot, bookingRef);
     window.open(link, '_blank');
-    toast.success('WhatsApp খোলা হয়েছে');
+    toast.success('WhatsApp opened');
   };
 
   return {

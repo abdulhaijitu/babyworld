@@ -62,10 +62,10 @@ export function useCreatePromotion() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['promotions'] });
-      toast.success('প্রমোশন সফলভাবে তৈরি হয়েছে');
+      toast.success('Promotion created successfully');
     },
     onError: (error: any) => {
-      toast.error('প্রমোশন তৈরি ব্যর্থ: ' + error.message);
+      toast.error('Failed to create promotion: ' + error.message);
     },
   });
 }
@@ -85,10 +85,10 @@ export function useUpdatePromotion() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['promotions'] });
-      toast.success('প্রমোশন আপডেট হয়েছে');
+      toast.success('Promotion updated');
     },
     onError: (error: any) => {
-      toast.error('আপডেট ব্যর্থ: ' + error.message);
+      toast.error('Update failed: ' + error.message);
     },
   });
 }
@@ -102,10 +102,10 @@ export function useDeletePromotion() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['promotions'] });
-      toast.success('প্রমোশন ডিলিট হয়েছে');
+      toast.success('Promotion deleted');
     },
     onError: (error: any) => {
-      toast.error('ডিলিট ব্যর্থ: ' + error.message);
+      toast.error('Delete failed: ' + error.message);
     },
   });
 }

@@ -32,17 +32,17 @@ const STATUS_CONFIG: Record<CampaignStatus, { label: string; variant: 'default' 
 };
 
 const AUDIENCE_OPTIONS: { value: CampaignAudience; label: string; desc: string }[] = [
-  { value: 'all_customers', label: 'সব কাস্টমার', desc: 'টিকেট, মেম্বারশিপ ও বুকিং থেকে সব ফোন নম্বর' },
-  { value: 'members', label: 'সক্রিয় মেম্বার', desc: 'শুধুমাত্র অ্যাক্টিভ মেম্বারশিপ হোল্ডার' },
-  { value: 'expired_members', label: 'মেয়াদোত্তীর্ণ মেম্বার', desc: 'যাদের মেম্বারশিপ শেষ হয়ে গেছে' },
-  { value: 'leads', label: 'লিডস', desc: 'নতুন, যোগাযোগকৃত ও আগ্রহী লিড' },
-  { value: 'event_bookings', label: 'ইভেন্ট বুকিং', desc: 'বার্থডে ইভেন্ট বুককারী' },
-  { value: 'custom', label: 'কাস্টম নম্বর', desc: 'নিজে নম্বর লিখুন' },
+  { value: 'all_customers', label: 'All Customers', desc: 'All phone numbers from tickets, memberships & bookings' },
+  { value: 'members', label: 'Active Members', desc: 'Active membership holders only' },
+  { value: 'expired_members', label: 'Expired Members', desc: 'Members whose subscription has ended' },
+  { value: 'leads', label: 'Leads', desc: 'New, contacted & interested leads' },
+  { value: 'event_bookings', label: 'Event Bookings', desc: 'Birthday event bookers' },
+  { value: 'custom', label: 'Custom Numbers', desc: 'Enter numbers manually' },
 ];
 
 const TEMPLATE_VARS = [
-  { var: '{{name}}', desc: 'কাস্টমার নাম' },
-  { var: '{{date}}', desc: 'আজকের তারিখ' },
+  { var: '{{name}}', desc: 'Customer name' },
+  { var: '{{date}}', desc: "Today's date" },
 ];
 
 function CampaignForm({ campaign, onClose }: { campaign?: SmsCampaign; onClose: () => void }) {
@@ -72,7 +72,7 @@ function CampaignForm({ campaign, onClose }: { campaign?: SmsCampaign; onClose: 
         setPreviewCount(phones.length);
       }
     } catch {
-      toast.error('অডিয়েন্স লোড করতে ব্যর্থ');
+      toast.error('Failed to load audience');
     }
     setLoadingCount(false);
   };
@@ -109,12 +109,12 @@ function CampaignForm({ campaign, onClose }: { campaign?: SmsCampaign; onClose: 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="name">ক্যাম্পেইন নাম *</Label>
-        <Input id="name" value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} required maxLength={150} placeholder="যেমন: ঈদ স্পেশাল অফার" />
+        <Label htmlFor="name">Campaign Name *</Label>
+        <Input id="name" value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} required maxLength={150} placeholder="e.g. Eid Special Offer" />
       </div>
 
       <div className="space-y-2">
-        <Label>অডিয়েন্স *</Label>
+        <Label>Audience *</Label>
         <Select value={form.audience} onValueChange={v => { setForm(p => ({ ...p, audience: v as CampaignAudience })); setPreviewCount(null); }}>
           <SelectTrigger><SelectValue /></SelectTrigger>
           <SelectContent>
@@ -131,27 +131,27 @@ function CampaignForm({ campaign, onClose }: { campaign?: SmsCampaign; onClose: 
         <div className="flex items-center gap-2">
           <Button type="button" variant="outline" size="sm" onClick={handlePreviewAudience} disabled={loadingCount}>
             {loadingCount ? <Loader2 className="h-3 w-3 animate-spin mr-1" /> : <Users className="h-3 w-3 mr-1" />}
-            প্রাপক সংখ্যা দেখুন
+            Preview Recipients
           </Button>
           {previewCount !== null && (
-            <Badge variant="secondary">{previewCount} জন প্রাপক</Badge>
+            <Badge variant="secondary">{previewCount}  recipients</Badge>
           )}
         </div>
       </div>
 
       {form.audience === 'custom' && (
         <div className="space-y-2">
-          <Label htmlFor="custom_phones">ফোন নম্বর (প্রতি লাইনে একটি)</Label>
+          <Label htmlFor="custom_phones">Phone Numbers (one per line)</Label>
           <Textarea id="custom_phones" value={form.custom_phones} onChange={e => setForm(p => ({ ...p, custom_phones: e.target.value }))} rows={4} placeholder="01712345678&#10;01812345678&#10;01912345678" />
         </div>
       )}
 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label htmlFor="message">মেসেজ *</Label>
-          <span className="text-xs text-muted-foreground">{charCount} অক্ষর • {smsCount} SMS</span>
+          <Label htmlFor="message">Message *</Label>
+          <span className="text-xs text-muted-foreground">{charCount} chars • {smsCount} SMS</span>
         </div>
-        <Textarea id="message" value={form.message} onChange={e => setForm(p => ({ ...p, message: e.target.value }))} required maxLength={1600} rows={4} placeholder="আপনার SMS মেসেজ লিখুন..." />
+        <Textarea id="message" value={form.message} onChange={e => setForm(p => ({ ...p, message: e.target.value }))} required maxLength={1600} rows={4} placeholder="Write your SMS message..." />
         <div className="flex gap-1 flex-wrap">
           {TEMPLATE_VARS.map(tv => (
             <Badge key={tv.var} variant="outline" className="cursor-pointer text-xs" onClick={() => setForm(p => ({ ...p, message: p.message + ' ' + tv.var }))}>
@@ -162,15 +162,15 @@ function CampaignForm({ campaign, onClose }: { campaign?: SmsCampaign; onClose: 
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="scheduled_at">শিডিউল (ঐচ্ছিক)</Label>
+        <Label htmlFor="scheduled_at">Schedule (Optional)</Label>
         <Input id="scheduled_at" type="datetime-local" value={form.scheduled_at} onChange={e => setForm(p => ({ ...p, scheduled_at: e.target.value }))} />
-        <p className="text-xs text-muted-foreground">খালি রাখলে ম্যানুয়ালি পাঠাতে হবে</p>
+        <p className="text-xs text-muted-foreground">Leave empty to send manually</p>
       </div>
 
       <div className="flex justify-end gap-2 pt-2">
-        <Button type="button" variant="outline" onClick={onClose}>বাতিল</Button>
+        <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
         <Button type="submit" disabled={createCampaign.isPending || updateCampaign.isPending}>
-          {isEdit ? 'আপডেট' : 'তৈরি করুন'}
+          {isEdit ? 'Update' : 'Create'}
         </Button>
       </div>
     </form>
@@ -205,7 +205,7 @@ export default function AdminSmsCampaigns() {
   const handleClose = () => { setDialogOpen(false); setEditingCampaign(undefined); };
 
   const handleSendCampaign = async (campaign: SmsCampaign) => {
-    if (!confirm(`"${campaign.name}" ক্যাম্পেইনের SMS পাঠাতে চান?`)) return;
+    if (!confirm(`"${campaign.name}" Campaignের SMS পাঠাতে চান?`)) return;
 
     setSendingId(campaign.id);
     try {
@@ -221,7 +221,7 @@ export default function AdminSmsCampaigns() {
       }
 
       if (phones.length === 0) {
-        toast.error('কোনো প্রাপক পাওয়া যায়নি');
+        toast.error('কোনো Recipients পাওয়া যায়নি');
         await supabase.from('sms_campaigns').update({ status: 'draft' } as any).eq('id', campaign.id);
         setSendingId(null);
         return;
@@ -255,9 +255,9 @@ export default function AdminSmsCampaigns() {
         failed_count: failedCount,
       } as any).eq('id', campaign.id);
 
-      toast.success(`${sentCount}/${phones.length} SMS সফলভাবে পাঠানো হয়েছে`);
+      toast.success(`${sentCount}/${phones.length} SMS successভাবে Sent`);
     } catch (err: any) {
-      toast.error('ক্যাম্পেইন পাঠাতে ব্যর্থ: ' + err.message);
+      toast.error('Campaign পাঠাতে failed: ' + err.message);
       await supabase.from('sms_campaigns').update({ status: 'failed' } as any).eq('id', campaign.id);
     }
 
@@ -274,15 +274,15 @@ export default function AdminSmsCampaigns() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold">SMS Campaigns</h1>
-          <p className="text-muted-foreground">বাল্ক SMS পাঠানো ও ক্যাম্পেইন ট্র্যাকিং</p>
+          <p className="text-muted-foreground">Send bulk SMS & track campaigns</p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={openNew}><Plus className="h-4 w-4 mr-2" />নতুন ক্যাম্পেইন</Button>
+            <Button onClick={openNew}><Plus className="h-4 w-4 mr-2" />New Campaign</Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>{editingCampaign ? 'ক্যাম্পেইন এডিট' : 'নতুন ক্যাম্পেইন তৈরি'}</DialogTitle>
+              <DialogTitle>{editingCampaign ? 'Edit Campaign' : 'New Campaign তৈরি'}</DialogTitle>
             </DialogHeader>
             <CampaignForm campaign={editingCampaign} onClose={handleClose} />
           </DialogContent>
@@ -293,19 +293,19 @@ export default function AdminSmsCampaigns() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card><CardContent className="p-4 flex items-center gap-3">
           <MessageSquare className="h-8 w-8 text-primary" />
-          <div><p className="text-2xl font-bold">{stats.total}</p><p className="text-xs text-muted-foreground">মোট ক্যাম্পেইন</p></div>
+          <div><p className="text-2xl font-bold">{stats.total}</p><p className="text-xs text-muted-foreground">Total Campaigns</p></div>
         </CardContent></Card>
         <Card><CardContent className="p-4 flex items-center gap-3">
           <CheckCircle className="h-8 w-8 text-emerald-500" />
-          <div><p className="text-2xl font-bold">{stats.sent}</p><p className="text-xs text-muted-foreground">পাঠানো হয়েছে</p></div>
+          <div><p className="text-2xl font-bold">{stats.sent}</p><p className="text-xs text-muted-foreground">Sent</p></div>
         </CardContent></Card>
         <Card><CardContent className="p-4 flex items-center gap-3">
           <Edit className="h-8 w-8 text-amber-500" />
-          <div><p className="text-2xl font-bold">{stats.draft}</p><p className="text-xs text-muted-foreground">ড্রাফট</p></div>
+          <div><p className="text-2xl font-bold">{stats.draft}</p><p className="text-xs text-muted-foreground">Draft</p></div>
         </CardContent></Card>
         <Card><CardContent className="p-4 flex items-center gap-3">
           <Send className="h-8 w-8 text-primary" />
-          <div><p className="text-2xl font-bold">{stats.totalSms}</p><p className="text-xs text-muted-foreground">মোট SMS পাঠানো</p></div>
+          <div><p className="text-2xl font-bold">{stats.totalSms}</p><p className="text-xs text-muted-foreground">Total SMS Sent</p></div>
         </CardContent></Card>
       </div>
 
@@ -314,11 +314,11 @@ export default function AdminSmsCampaigns() {
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="ক্যাম্পেইন খুঁজুন..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="pl-10" />
+            <Input placeholder="Search campaigns..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="pl-10" />
           </div>
           <Tabs value={statusFilter} onValueChange={v => setStatusFilter(v as CampaignStatus | 'all')}>
             <TabsList>
-              <TabsTrigger value="all">সব</TabsTrigger>
+              <TabsTrigger value="all">All</TabsTrigger>
               <TabsTrigger value="draft">Draft</TabsTrigger>
               <TabsTrigger value="sent">Sent</TabsTrigger>
               <TabsTrigger value="scheduled">Scheduled</TabsTrigger>
@@ -331,21 +331,21 @@ export default function AdminSmsCampaigns() {
       {/* Campaign List */}
       <Card><CardContent className="p-0">
         {isLoading ? (
-          <div className="p-8 text-center text-muted-foreground">লোড হচ্ছে...</div>
+          <div className="p-8 text-center text-muted-foreground">Loading...</div>
         ) : filtered.length === 0 ? (
-          <div className="p-8 text-center text-muted-foreground">কোনো ক্যাম্পেইন পাওয়া যায়নি</div>
+          <div className="p-8 text-center text-muted-foreground">No campaigns found</div>
         ) : (
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>ক্যাম্পেইন</TableHead>
-                  <TableHead>অডিয়েন্স</TableHead>
-                  <TableHead>প্রাপক</TableHead>
-                  <TableHead>ডেলিভারি</TableHead>
-                  <TableHead>স্ট্যাটাস</TableHead>
-                  <TableHead>তারিখ</TableHead>
-                  <TableHead className="text-right">অ্যাকশন</TableHead>
+                  <TableHead>Campaign</TableHead>
+                  <TableHead>Audience</TableHead>
+                  <TableHead>Recipients</TableHead>
+                  <TableHead>Delivery</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -377,8 +377,8 @@ export default function AdminSmsCampaigns() {
                         {campaign.status === 'sent' ? (
                           <div className="space-y-1 min-w-[120px]">
                             <div className="flex justify-between text-xs">
-                              <span className="text-emerald-600">{campaign.sent_count} সফল</span>
-                              {campaign.failed_count > 0 && <span className="text-destructive">{campaign.failed_count} ব্যর্থ</span>}
+                              <span className="text-emerald-600">{campaign.sent_count} success</span>
+                              {campaign.failed_count > 0 && <span className="text-destructive">{campaign.failed_count} failed</span>}
                             </div>
                             <Progress value={deliveryPercent} className="h-1.5" />
                           </div>
@@ -393,7 +393,7 @@ export default function AdminSmsCampaigns() {
                       <TableCell className="text-sm text-muted-foreground">
                         <div className="flex flex-col">
                           <span>{format(new Date(campaign.created_at), 'dd MMM yyyy')}</span>
-                          {campaign.sent_at && <span className="text-xs">পাঠানো: {format(new Date(campaign.sent_at), 'dd MMM HH:mm')}</span>}
+                          {campaign.sent_at && <span className="text-xs">Sent: {format(new Date(campaign.sent_at), 'dd MMM HH:mm')}</span>}
                         </div>
                       </TableCell>
                       <TableCell className="text-right">
@@ -401,7 +401,7 @@ export default function AdminSmsCampaigns() {
                           {campaign.status === 'draft' && (
                             <Button variant="default" size="sm" onClick={() => handleSendCampaign(campaign)} disabled={isSending}>
                               {isSending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4 mr-1" />}
-                              পাঠান
+                              Send
                             </Button>
                           )}
                           {campaign.status === 'draft' && (
@@ -410,7 +410,7 @@ export default function AdminSmsCampaigns() {
                             </Button>
                           )}
                           <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive"
-                            onClick={() => { if (confirm('এই ক্যাম্পেইন ডিলিট করতে চান?')) deleteCampaign.mutate(campaign.id); }}>
+                            onClick={() => { if (confirm('এই Campaign ডিলিট করতে চান?')) deleteCampaign.mutate(campaign.id); }}>
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
@@ -428,8 +428,8 @@ export default function AdminSmsCampaigns() {
       <Card><CardContent className="p-4 flex items-start gap-3">
         <AlertCircle className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
         <div className="text-sm text-muted-foreground">
-          <p className="font-medium text-foreground">SMS পাঠানোর জন্য আপনার SMS API কনফিগার করা থাকতে হবে।</p>
-          <p>SMS_API_KEY, SMS_SENDER_ID এবং SMS_API_URL সেটিংসে কনফিগার করুন।</p>
+          <p className="font-medium text-foreground">SMS Sendোর জন্য আপনার SMS API কনফিগার করা থাকতে হবে।</p>
+          <p>Configure SMS_API_KEY, SMS_SENDER_ID and SMS_API_URL in settings.</p>
         </div>
       </CardContent></Card>
     </div>

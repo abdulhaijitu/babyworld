@@ -139,16 +139,11 @@ serve(async (req) => {
       message = replaceVariables(template.bn, variables) + '\n\n' + replaceVariables(template.en, variables);
     } else {
       // Default message
-      message = `🍔 Baby World ফুড অর্ডার কনফার্ম!
-অর্ডার: ${order_number}
-মোট: ৳${total}
-পেমেন্ট: ${payment_type === 'cash' ? 'ক্যাশ' : 'অনলাইন'}
-ধন্যবাদ ${customer_name}!
-
-Food Order Confirmed!
+      message = `🍔 Baby World Food Order Confirmed!
 Order: ${order_number}
 Total: ৳${total}
-Thank you!`;
+Payment: ${payment_type}
+Thank you ${customer_name}!`;
     }
 
     const result = await sendNotification(customer_phone, message, channel, order_id);
