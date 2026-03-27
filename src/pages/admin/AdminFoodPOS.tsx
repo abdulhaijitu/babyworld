@@ -208,11 +208,20 @@ export default function AdminFoodPOS() {
     <div className="flex flex-col lg:flex-row h-[calc(100vh-4rem)] lg:h-[calc(100vh-1rem)] gap-0 overflow-hidden">
       {/* Left Panel — Menu */}
       <div className="flex-1 flex flex-col min-w-0 border-r border-border">
-        <div className="px-4 pt-4 pb-2">
-          <h1 className="text-xl font-bold flex items-center gap-2">
+        <div className="px-4 pt-4 pb-2 flex items-center gap-3">
+          <h1 className="text-xl font-bold flex items-center gap-2 shrink-0">
             <UtensilsCrossed className="h-5 w-5 text-primary" />
             Food POS
           </h1>
+          <div className="relative flex-1 max-w-xs">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search items..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              className="pl-8 h-9"
+            />
+          </div>
         </div>
 
         <Tabs defaultValue="all" className="flex-1 flex flex-col px-4 overflow-hidden">
