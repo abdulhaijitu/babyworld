@@ -58,10 +58,10 @@ export function useCreateSmsCampaign() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['sms-campaigns'] });
-      toast.success('ক্যাম্পেইন তৈরি হয়েছে');
+      toast.success('Campaign created');
     },
     onError: (error: any) => {
-      toast.error('ক্যাম্পেইন তৈরি ব্যর্থ: ' + error.message);
+      toast.error('Failed to create campaign: ' + error.message);
     },
   });
 }
@@ -81,10 +81,10 @@ export function useUpdateSmsCampaign() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['sms-campaigns'] });
-      toast.success('ক্যাম্পেইন আপডেট হয়েছে');
+      toast.success('Campaign updated');
     },
     onError: (error: any) => {
-      toast.error('আপডেট ব্যর্থ: ' + error.message);
+      toast.error('Update failed: ' + error.message);
     },
   });
 }
@@ -98,10 +98,10 @@ export function useDeleteSmsCampaign() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['sms-campaigns'] });
-      toast.success('ক্যাম্পেইন ডিলিট হয়েছে');
+      toast.success('Campaign deleted');
     },
     onError: (error: any) => {
-      toast.error('ডিলিট ব্যর্থ: ' + error.message);
+      toast.error('Delete failed: ' + error.message);
     },
   });
 }
@@ -132,7 +132,6 @@ export async function fetchAudiencePhones(audience: CampaignAudience): Promise<s
       break;
     }
     case 'all_customers': {
-      // Combine tickets + memberships + bookings unique phones
       const [tickets, memberships, bookings] = await Promise.all([
         supabase.from('tickets').select('guardian_phone'),
         supabase.from('memberships').select('phone'),

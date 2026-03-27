@@ -62,10 +62,10 @@ export function useCreateSocialMediaPost() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['social-media-posts'] });
-      toast.success('পোস্ট তৈরি হয়েছে');
+      toast.success('Post created');
     },
     onError: (error: any) => {
-      toast.error('পোস্ট তৈরি ব্যর্থ: ' + error.message);
+      toast.error('Failed to create post: ' + error.message);
     },
   });
 }
@@ -85,10 +85,10 @@ export function useUpdateSocialMediaPost() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['social-media-posts'] });
-      toast.success('পোস্ট আপডেট হয়েছে');
+      toast.success('Post updated');
     },
     onError: (error: any) => {
-      toast.error('আপডেট ব্যর্থ: ' + error.message);
+      toast.error('Update failed: ' + error.message);
     },
   });
 }
@@ -102,10 +102,10 @@ export function useDeleteSocialMediaPost() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['social-media-posts'] });
-      toast.success('পোস্ট ডিলিট হয়েছে');
+      toast.success('Post deleted');
     },
     onError: (error: any) => {
-      toast.error('ডিলিট ব্যর্থ: ' + error.message);
+      toast.error('Delete failed: ' + error.message);
     },
   });
 }

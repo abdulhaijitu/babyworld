@@ -57,10 +57,10 @@ export function useCreateLead() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['leads'] });
-      toast.success('লিড সফলভাবে যোগ হয়েছে');
+      toast.success('Lead added successfully');
     },
     onError: (error: any) => {
-      toast.error('লিড যোগ করতে ব্যর্থ: ' + error.message);
+      toast.error('Failed to add lead: ' + error.message);
     },
   });
 }
@@ -80,10 +80,10 @@ export function useUpdateLead() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['leads'] });
-      toast.success('লিড আপডেট হয়েছে');
+      toast.success('Lead updated');
     },
     onError: (error: any) => {
-      toast.error('আপডেট ব্যর্থ: ' + error.message);
+      toast.error('Update failed: ' + error.message);
     },
   });
 }
@@ -97,10 +97,10 @@ export function useDeleteLead() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['leads'] });
-      toast.success('লিড ডিলিট হয়েছে');
+      toast.success('Lead deleted');
     },
     onError: (error: any) => {
-      toast.error('ডিলিট ব্যর্থ: ' + error.message);
+      toast.error('Delete failed: ' + error.message);
     },
   });
 }
