@@ -52,6 +52,7 @@ export function BookingsListTab() {
   const [dateRangeFilter, setDateRangeFilter] = useState<string>('all');
   const [detailOpen, setDetailOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list');
 
   const fetchBookings = useCallback(async () => {
     setLoading(true);
