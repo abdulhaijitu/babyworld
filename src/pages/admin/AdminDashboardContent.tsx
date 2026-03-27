@@ -171,14 +171,14 @@ export default function AdminDashboardContent() {
       </Card>
 
       {/* Revenue Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 md:gap-4">
         <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
-          <CardHeader className="pb-2">
-            <CardDescription className="flex items-center gap-1.5">
-              <Banknote className="w-4 h-4" />
-              Today's Total Revenue
+          <CardHeader className="p-3 md:p-6 pb-1 md:pb-2">
+            <CardDescription className="flex items-center gap-1 md:gap-1.5 text-[11px] md:text-sm">
+              <Banknote className="w-3.5 h-3.5 md:w-4 md:h-4" />
+              Today's Revenue
             </CardDescription>
-            <CardTitle className="text-2xl">
+            <CardTitle className="text-lg md:text-2xl">
               {isLoading ? <Skeleton className="h-8 w-28" /> : `৳${todayRevenue.toLocaleString()}`}
             </CardTitle>
           </CardHeader>
