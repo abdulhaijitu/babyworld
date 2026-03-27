@@ -111,7 +111,7 @@ export default function AdminDashboardContent() {
           <CardHeader className="pb-2">
             <CardDescription className="flex items-center gap-1.5">
               <Ticket className="w-4 h-4" />
-              টিকেট সেলস
+              Ticket Sales
             </CardDescription>
             <CardTitle className="text-2xl">
               {isLoading ? <Skeleton className="h-8 w-20" /> : ticketCount}
