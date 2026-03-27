@@ -141,9 +141,27 @@ export default function AdminEvents() {
     }
   }, []);
 
+  const fetchPackages = useCallback(async () => {
+    try {
+      const { data } = await supabase
+        .from('event_packages')
+        .select('*')
+        .eq('is_active', true)
+        .order('sort_order', { ascending: true });
+      const pkgs = (data || []) as EventPackage[];
+      setEventPackages(pkgs);
+      if (pkgs.length > 0 && !formData.package) {
+        setFormData(prev => ({ ...prev, package: pkgs[0].id }));
+      }
+    } catch (err) {
+      console.error('[Events] Packages error:', err);
+    }
+  }, []);
+
   useEffect(() => {
     fetchEvents();
-  }, [fetchEvents]);
+    fetchPackages();
+  }, [fetchEvents, fetchPackages]);
 
   const handleCreateEvent = async () => {
     if (!formData.parent_name.trim() || !formData.parent_phone.trim()) {
