@@ -46,7 +46,7 @@ import AdminExpenseCategories from "./pages/admin/AdminExpenseCategories";
 import AdminDailyCashSummary from "./pages/admin/AdminDailyCashSummary";
 import AdminProfitReports from "./pages/admin/AdminProfitReports";
 import AdminRides from "./pages/admin/AdminRides";
-import AdminRideReviews from "./pages/admin/AdminRideReviews";
+
 import AdminNotificationLogs from "./pages/admin/AdminNotificationLogs";
 import AdminHeroCards from "./pages/admin/AdminHeroCards";
 import AdminHeroSlides from "./pages/admin/AdminHeroSlides";
