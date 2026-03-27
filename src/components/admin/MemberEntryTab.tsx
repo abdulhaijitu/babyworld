@@ -254,10 +254,19 @@ export default function MemberEntryTab() {
                       }}
                     >
                       <div className="flex items-center gap-2 min-w-0">
-                        <User className="h-4 w-4 text-muted-foreground shrink-0" />
+                        <Avatar className="h-8 w-8 shrink-0">
+                          <AvatarFallback className="bg-primary/10 text-primary text-xs font-bold">
+                            {member.member_name?.charAt(0)?.toUpperCase() || '?'}
+                          </AvatarFallback>
+                        </Avatar>
                         <div className="min-w-0">
                           <p className="font-medium text-sm truncate">{member.member_name}</p>
                           <p className="text-xs text-muted-foreground">{member.phone}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {member.lastVisit
+                              ? `শেষ ভিজিট: ${format(new Date(member.lastVisit), 'dd MMM yyyy')}`
+                              : 'কোনো ভিজিট নেই'}
+                          </p>
                         </div>
                       </div>
                       <div className="flex items-center gap-1.5 shrink-0">
