@@ -7,7 +7,7 @@ import { Mail, XCircle } from 'lucide-react';
 
 export default function SettingsEmail() {
   return (
-    <div className="p-4 md:p-6 lg:p-8 space-y-6">
+    <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2"><Mail className="w-6 h-6" />Email Configuration</h1>
         <p className="text-muted-foreground">Configure email notification settings</p>
