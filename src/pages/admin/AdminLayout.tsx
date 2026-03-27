@@ -113,7 +113,7 @@ export default function AdminLayout() {
         "pb-20 md:pb-0"
       )}>
         {/* Top bar with page title and notifications */}
-        <div className="flex items-center justify-between gap-2 px-3 md:px-6 py-2 md:py-3 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-30">
+        <div className="flex items-center justify-between gap-2 <div className="flex items-center justify-between gap-2 px-3 md:px-6 h-12 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-30"> bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-30">
           <div className="flex items-center gap-2">
             <Button
               variant="ghost"
