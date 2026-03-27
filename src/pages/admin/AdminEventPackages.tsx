@@ -217,87 +217,76 @@ export default function AdminEventPackages() {
       {loading ? (
         <div className="flex items-center justify-center py-12"><Loader2 className="w-8 h-8 animate-spin text-muted-foreground" /></div>
       ) : (
-        <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {packages.filter(p => p.is_active).map(pkg => (
-              <Card key={pkg.id} className="relative overflow-hidden">
-                {pkg.image_url && (
-                  <div className="aspect-video w-full overflow-hidden">
-                    <img src={pkg.image_url} alt={pkg.name} className="w-full h-full object-cover" />
-                  </div>
-                )}
-                <CardHeader className="pb-2">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-lg">{pkg.name}</CardTitle>
-                    <Badge variant="default">Active</Badge>
-                  </div>
-                  <CardDescription className="text-2xl font-bold text-primary">৳{pkg.price.toLocaleString()}</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Users className="w-4 h-4" /> Up to {pkg.max_guests} guests
-                  </div>
-                  <div className="text-sm text-muted-foreground">{pkg.duration_hours} hours duration</div>
-                  <ul className="text-sm space-y-1">
-                    {pkg.features.map((f, i) => (
-                      <li key={i} className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />{f}
-                      </li>
-                    ))}
-                  </ul>
-                  <Button variant="outline" size="sm" className="w-full" onClick={() => openEdit(pkg)}>
-                    <Pencil className="w-3 h-3 mr-1" /> Edit
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          <Card>
-            <CardHeader><CardTitle>All Packages</CardTitle></CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">All Packages ({packages.length})</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-16">Image</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Price</TableHead>
+                  <TableHead>Guests</TableHead>
+                  <TableHead>Duration</TableHead>
+                  <TableHead className="min-w-[200px]">Features</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {packages.length === 0 ? (
                   <TableRow>
-                    <TableHead>Image</TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Price</TableHead>
-                    <TableHead>Guests</TableHead>
-                    <TableHead>Duration</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                      No packages found. Create your first package.
+                    </TableCell>
                   </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {packages.map(pkg => (
-                    <TableRow key={pkg.id}>
-                      <TableCell>
-                        {pkg.image_url ? (
-                          <img src={pkg.image_url} alt={pkg.name} className="w-12 h-12 rounded object-cover" />
-                        ) : (
-                          <div className="w-12 h-12 rounded bg-muted flex items-center justify-center">
-                            <ImagePlus className="w-5 h-5 text-muted-foreground" />
-                          </div>
+                ) : packages.map(pkg => (
+                  <TableRow key={pkg.id}>
+                    <TableCell>
+                      {pkg.image_url ? (
+                        <img src={pkg.image_url} alt={pkg.name} className="w-12 h-12 rounded-lg object-cover shadow-sm border border-border" />
+                      ) : (
+                        <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center border border-border">
+                          <ImagePlus className="w-5 h-5 text-muted-foreground" />
+                        </div>
+                      )}
+                    </TableCell>
+                    <TableCell className="font-semibold">{pkg.name}</TableCell>
+                    <TableCell className="font-bold text-primary">৳{pkg.price.toLocaleString()}</TableCell>
+                    <TableCell>
+                      <span className="flex items-center gap-1"><Users className="w-3.5 h-3.5 text-muted-foreground" /> {pkg.max_guests}</span>
+                    </TableCell>
+                    <TableCell>{pkg.duration_hours}h</TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap gap-1">
+                        {pkg.features.slice(0, 3).map((f, i) => (
+                          <Badge key={i} variant="secondary" className="text-[10px] px-1.5 py-0 font-normal">{f}</Badge>
+                        ))}
+                        {pkg.features.length > 3 && (
+                          <Badge variant="outline" className="text-[10px] px-1.5 py-0 font-normal">+{pkg.features.length - 3}</Badge>
                         )}
-                      </TableCell>
-                      <TableCell className="font-medium">{pkg.name}</TableCell>
-                      <TableCell>৳{pkg.price.toLocaleString()}</TableCell>
-                      <TableCell>{pkg.max_guests}</TableCell>
-                      <TableCell>{pkg.duration_hours}h</TableCell>
-                      <TableCell>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
                         <Switch checked={pkg.is_active} onCheckedChange={() => toggleActive(pkg.id, pkg.is_active)} />
-                      </TableCell>
-                      <TableCell className="text-right space-x-2">
-                        <Button variant="ghost" size="icon" onClick={() => openEdit(pkg)}><Pencil className="w-4 h-4" /></Button>
-                        <Button variant="ghost" size="icon" onClick={() => handleDelete(pkg.id)} className="text-destructive"><Trash2 className="w-4 h-4" /></Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </>
+                        <Badge variant={pkg.is_active ? 'default' : 'outline'} className="text-[10px]">
+                          {pkg.is_active ? 'Active' : 'Inactive'}
+                        </Badge>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-right space-x-1">
+                      <Button variant="ghost" size="icon" onClick={() => openEdit(pkg)}><Pencil className="w-4 h-4" /></Button>
+                      <Button variant="ghost" size="icon" onClick={() => handleDelete(pkg.id)} className="text-destructive hover:text-destructive"><Trash2 className="w-4 h-4" /></Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
       )}
 
       {/* Create/Edit Dialog */}
