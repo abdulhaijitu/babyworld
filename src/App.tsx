@@ -51,6 +51,8 @@ import AdminNotificationLogs from "./pages/admin/AdminNotificationLogs";
 import AdminHeroCards from "./pages/admin/AdminHeroCards";
 import AdminHeroSlides from "./pages/admin/AdminHeroSlides";
 import AdminHomepage from "./pages/admin/AdminHomepage";
+import AdminAboutContact from "./pages/admin/AdminAboutContact";
+import AdminSeoBranding from "./pages/admin/AdminSeoBranding";
 import AdminFoodPOS from "./pages/admin/AdminFoodPOS";
 import AdminCoupons from "./pages/admin/AdminCoupons";
 import AdminLeads from "./pages/admin/AdminLeads";
@@ -116,9 +118,9 @@ const App = () => (
                   <Route path="rides" element={<AdminRides />} />
                   
                   <Route path="notifications" element={<AdminNotificationLogs />} />
-                  <Route path="hero-slides" element={<AdminHeroSlides />} />
-                  <Route path="hero-cards" element={<AdminHeroCards />} />
                   <Route path="homepage" element={<AdminHomepage />} />
+                  <Route path="about-contact" element={<AdminAboutContact />} />
+                  <Route path="seo-branding" element={<AdminSeoBranding />} />
                   <Route path="users" element={<AdminUsers />} />
                   <Route path="settings" element={<AdminSettings />} />
                 </Route>
