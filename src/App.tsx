@@ -130,6 +130,13 @@ const App = () => (
                   <Route path="seo-branding" element={<AdminSeoBranding />} />
                   <Route path="users" element={<AdminUsers />} />
                   <Route path="settings" element={<AdminSettings />} />
+                  <Route path="settings/general" element={<SettingsGeneral />} />
+                  <Route path="settings/business" element={<SettingsBusiness />} />
+                  <Route path="settings/pricing" element={<SettingsPricing />} />
+                  <Route path="settings/notifications" element={<SettingsNotifications />} />
+                  <Route path="settings/email" element={<SettingsEmail />} />
+                  <Route path="settings/sms" element={<SettingsSms />} />
+                  <Route path="settings/payment" element={<SettingsPayment />} />
                 </Route>
                 
                 <Route path="/payment-success" element={<PaymentSuccess />} />
