@@ -68,7 +68,7 @@ export function SEOHead({ page }: SEOHeadProps) {
       <meta property="og:title" content={data.title} />
       <meta property="og:description" content={data.description} />
       <meta property="og:image" content={ogImages[page]} />
-      <meta property="og:site_name" content="Baby World (বেবি ওয়ার্ল্ড)" />
+      <meta property="og:site_name" content="Baby World" />
       <meta property="og:locale" content={"en_US"} />
 
       {/* Twitter */}
