@@ -227,7 +227,7 @@ export default function AdminUsers() {
       toast.error('Password must be at least 6 characters');
       return;
     }
-    createUserMutation.mutate({ email: newUserEmail, password: newUserPassword, role: newUserRole });
+    createUserMutation.mutate({ email: newUserEmail, password: newUserPassword, role: newUserRole, full_name: newUserName || undefined });
   };
 
   const handleResetPassword = () => {
