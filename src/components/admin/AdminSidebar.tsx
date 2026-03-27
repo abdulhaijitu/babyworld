@@ -422,10 +422,10 @@ function SidebarContent({
       </nav>
 
       {/* Bottom: Profile + Logout */}
-      <div className={cn("border-t border-border p-2 space-y-1", collapsed && "flex flex-col items-center")}>
+      <div className={cn("border-t border-border p-1.5 space-y-1", collapsed && "flex flex-col items-center")}>
         {!collapsed ? (
-          <div className="flex items-center gap-2.5 px-2 py-2 rounded-md bg-muted/50">
-            <div className="h-8 w-8 rounded-full bg-primary/15 text-primary flex items-center justify-center text-xs font-bold shrink-0">
+          <div className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-muted/50">
+            <div className="h-7 w-7 rounded-full bg-primary/15 text-primary flex items-center justify-center text-[10px] font-bold shrink-0">
               {getInitials(userEmail)}
             </div>
             <div className="flex-1 min-w-0">
@@ -435,7 +435,7 @@ function SidebarContent({
           </div>
         ) : (
           userEmail && (
-            <div className="h-8 w-8 rounded-full bg-primary/15 text-primary flex items-center justify-center text-[10px] font-bold" title={userEmail}>
+            <div className="h-7 w-7 rounded-full bg-primary/15 text-primary flex items-center justify-center text-[10px] font-bold" title={userEmail}>
               {getInitials(userEmail)}
             </div>
           )
@@ -446,7 +446,7 @@ function SidebarContent({
           className={cn(
             "w-full flex items-center gap-2.5 rounded-md text-sm font-medium transition-all duration-200 group relative",
             "text-destructive hover:bg-destructive/10",
-            collapsed ? "justify-center p-2" : "px-3 py-2"
+            collapsed ? "justify-center p-1.5" : "px-3 py-1.5"
           )}
           title={collapsed ? "Logout" : undefined}
         >
