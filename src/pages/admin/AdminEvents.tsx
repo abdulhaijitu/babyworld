@@ -324,7 +324,7 @@ export default function AdminEvents() {
             {'Bookings'}
           </h1>
           <p className="text-muted-foreground">
-            {'Manage birthday parties & private events'}
+            {'Manage birthday parties & private event bookings'}
           </p>
         </div>
       </div>
