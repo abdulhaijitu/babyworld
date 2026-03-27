@@ -47,6 +47,10 @@ import AdminHeroSlides from "./pages/admin/AdminHeroSlides";
 import AdminHomepage from "./pages/admin/AdminHomepage";
 import AdminFoodPOS from "./pages/admin/AdminFoodPOS";
 import AdminCoupons from "./pages/admin/AdminCoupons";
+import AdminLeads from "./pages/admin/AdminLeads";
+import AdminPromotions from "./pages/admin/AdminPromotions";
+import AdminSmsCampaigns from "./pages/admin/AdminSmsCampaigns";
+import AdminSocialMedia from "./pages/admin/AdminSocialMedia";
 
 const queryClient = new QueryClient();
 
@@ -86,6 +90,10 @@ const App = () => (
                   
                   <Route path="event-packages" element={<AdminEventPackages />} />
                   <Route path="event-calendar" element={<AdminEventCalendar />} />
+                  <Route path="leads" element={<AdminLeads />} />
+                  <Route path="promotions" element={<AdminPromotions />} />
+                  <Route path="sms-campaigns" element={<AdminSmsCampaigns />} />
+                  <Route path="social-media" element={<AdminSocialMedia />} />
                   <Route path="reports" element={<AdminReports />} />
                   <Route path="profit" element={<AdminProfitReports />} />
                   <Route path="expenses" element={<AdminExpenses />} />
