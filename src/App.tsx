@@ -57,6 +57,8 @@ import AdminLeads from "./pages/admin/AdminLeads";
 import AdminPromotions from "./pages/admin/AdminPromotions";
 import AdminSmsCampaigns from "./pages/admin/AdminSmsCampaigns";
 import AdminSocialMedia from "./pages/admin/AdminSocialMedia";
+import AdminIncome from "./pages/admin/AdminIncome";
+import AdminIncomeCategories from "./pages/admin/AdminIncomeCategories";
 
 const queryClient = new QueryClient();
 
@@ -108,6 +110,8 @@ const App = () => (
                   <Route path="profit" element={<AdminProfitReports />} />
                   <Route path="expenses" element={<AdminExpenses />} />
                   <Route path="expense-categories" element={<AdminExpenseCategories />} />
+                  <Route path="income" element={<AdminIncome />} />
+                  <Route path="income-categories" element={<AdminIncomeCategories />} />
                   <Route path="daily-cash" element={<AdminDailyCashSummary />} />
                   <Route path="rides" element={<AdminRides />} />
                   <Route path="ride-reviews" element={<AdminRideReviews />} />

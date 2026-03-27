@@ -790,6 +790,81 @@ export type Database = {
         }
         Relationships: []
       }
+      income_categories: {
+        Row: {
+          color: string | null
+          created_at: string | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          is_system: boolean | null
+          label: string
+          name: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_system?: boolean | null
+          label: string
+          name: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_system?: boolean | null
+          label?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      incomes: {
+        Row: {
+          added_by: string | null
+          added_by_name: string | null
+          amount: number
+          category: string
+          created_at: string | null
+          description: string
+          id: string
+          income_date: string
+          notes: string | null
+          payment_method: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          added_by?: string | null
+          added_by_name?: string | null
+          amount: number
+          category: string
+          created_at?: string | null
+          description: string
+          id?: string
+          income_date?: string
+          notes?: string | null
+          payment_method?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          added_by?: string | null
+          added_by_name?: string | null
+          amount?: number
+          category?: string
+          created_at?: string | null
+          description?: string
+          id?: string
+          income_date?: string
+          notes?: string | null
+          payment_method?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           created_at: string
