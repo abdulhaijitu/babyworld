@@ -472,6 +472,15 @@ export default function AdminFoodOrders() {
                           >
                             <Eye className="h-4 w-4" />
                           </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => handlePrintOrder(order)}
+                            title="Print receipt"
+                          >
+                            <Printer className="h-4 w-4" />
+                          </Button>
                           {order.status === 'pending' && (
                             <>
                               <Button
