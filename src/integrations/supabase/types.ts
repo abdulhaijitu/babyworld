@@ -888,6 +888,63 @@ export type Database = {
           },
         ]
       }
+      promotions: {
+        Row: {
+          applicable_to: Database["public"]["Enums"]["promo_applicable_to"]
+          created_at: string
+          created_by: string | null
+          description: string | null
+          discount_type: Database["public"]["Enums"]["promo_discount_type"]
+          discount_value: number
+          end_date: string | null
+          id: string
+          is_featured: boolean
+          max_uses: number | null
+          promo_code: string | null
+          start_date: string
+          status: Database["public"]["Enums"]["promo_status"]
+          title: string
+          updated_at: string
+          usage_count: number
+        }
+        Insert: {
+          applicable_to?: Database["public"]["Enums"]["promo_applicable_to"]
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          discount_type?: Database["public"]["Enums"]["promo_discount_type"]
+          discount_value?: number
+          end_date?: string | null
+          id?: string
+          is_featured?: boolean
+          max_uses?: number | null
+          promo_code?: string | null
+          start_date?: string
+          status?: Database["public"]["Enums"]["promo_status"]
+          title: string
+          updated_at?: string
+          usage_count?: number
+        }
+        Update: {
+          applicable_to?: Database["public"]["Enums"]["promo_applicable_to"]
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          discount_type?: Database["public"]["Enums"]["promo_discount_type"]
+          discount_value?: number
+          end_date?: string | null
+          id?: string
+          is_featured?: boolean
+          max_uses?: number | null
+          promo_code?: string | null
+          start_date?: string
+          status?: Database["public"]["Enums"]["promo_status"]
+          title?: string
+          updated_at?: string
+          usage_count?: number
+        }
+        Relationships: []
+      }
       ride_reviews: {
         Row: {
           created_at: string
@@ -1321,6 +1378,9 @@ export type Database = {
       lead_status: "new" | "contacted" | "interested" | "converted" | "lost"
       membership_status: "active" | "expired" | "cancelled"
       membership_type: "monthly" | "quarterly" | "yearly"
+      promo_applicable_to: "ticket" | "food" | "event" | "membership" | "all"
+      promo_discount_type: "percentage" | "fixed"
+      promo_status: "draft" | "active" | "paused" | "expired"
       ride_category: "kids" | "family" | "thrill"
       slot_status: "available" | "booked"
       ticket_source: "online" | "physical"
@@ -1485,6 +1545,9 @@ export const Constants = {
       lead_status: ["new", "contacted", "interested", "converted", "lost"],
       membership_status: ["active", "expired", "cancelled"],
       membership_type: ["monthly", "quarterly", "yearly"],
+      promo_applicable_to: ["ticket", "food", "event", "membership", "all"],
+      promo_discount_type: ["percentage", "fixed"],
+      promo_status: ["draft", "active", "paused", "expired"],
       ride_category: ["kids", "family", "thrill"],
       slot_status: ["available", "booked"],
       ticket_source: ["online", "physical"],
