@@ -142,6 +142,22 @@ export default function AdminMemberships() {
     },
   });
 
+  // Fetch visit counts per membership
+  const { data: visitCounts = {} } = useQuery<Record<string, number>>({
+    queryKey: ['membership-visit-counts'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('membership_visits')
+        .select('membership_id');
+      if (error) throw error;
+      const counts: Record<string, number> = {};
+      (data || []).forEach((v: any) => {
+        counts[v.membership_id] = (counts[v.membership_id] || 0) + 1;
+      });
+      return counts;
+    },
+  });
+
   const { data: paymentLogs = [] } = useQuery({
     queryKey: ['membership-payment-logs'],
     queryFn: async () => {
