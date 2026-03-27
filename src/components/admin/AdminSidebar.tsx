@@ -255,7 +255,7 @@ function SidebarContent({
       </AnimatePresence>
 
       {/* Menu Items */}
-      <nav className="flex-1 py-2 px-2 space-y-0.5 overflow-y-auto">
+      <nav className="flex-1 py-1.5 px-1.5 space-y-0.5 overflow-y-auto">
         {filteredItems.map((item, index) => {
           const Icon = item.icon;
           const active = isActive(item.path);
