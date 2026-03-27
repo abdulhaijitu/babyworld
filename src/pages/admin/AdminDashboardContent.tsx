@@ -103,7 +103,7 @@ export default function AdminDashboardContent() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-xs text-muted-foreground">টিকেট + ফুড সেলস</p>
+            <p className="text-xs text-muted-foreground">Tickets + Food Sales</p>
           </CardContent>
         </Card>
 
