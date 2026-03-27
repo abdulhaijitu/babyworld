@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { toast } from 'sonner';
-import { Minus, Plus, Trash2, ShoppingCart, UtensilsCrossed, CheckCircle, XCircle, Search } from 'lucide-react';
+import { Minus, Plus, Trash2, ShoppingCart, UtensilsCrossed, CheckCircle, XCircle, Search, Percent, Tag } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { printFoodReceipt } from '@/lib/printFoodReceipt';
@@ -27,6 +27,14 @@ export default function AdminFoodPOS() {
   const [paymentType, setPaymentType] = useState<'cash' | 'online' | 'pending'>('cash');
   const [submitting, setSubmitting] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Discount state
+  const [discountMode, setDiscountMode] = useState<'none' | 'manual' | 'coupon'>('none');
+  const [manualDiscountType, setManualDiscountType] = useState<'percentage' | 'fixed'>('percentage');
+  const [manualDiscountValue, setManualDiscountValue] = useState('');
+  const [couponCode, setCouponCode] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount_type: string; discount_value: number } | null>(null);
+  const [couponLoading, setCouponLoading] = useState(false);
 
   const today = format(new Date(), 'yyyy-MM-dd');
 
