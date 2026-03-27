@@ -377,10 +377,10 @@ export default function MemberEntryTab() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>তারিখ</TableHead>
-                  <TableHead>চেক-ইন</TableHead>
-                  <TableHead>চেক-আউট</TableHead>
-                  <TableHead>স্ট্যাটাস</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Check In</TableHead>
+                  <TableHead>Check Out</TableHead>
+                  <TableHead>Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
