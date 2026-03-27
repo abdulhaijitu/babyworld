@@ -327,6 +327,7 @@ export default function AdminLeads() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1">
+                          <SMSButton phone={lead.phone} name={lead.name} />
                           <Button variant="ghost" size="icon" onClick={() => openEdit(lead)}>
                             <Edit className="h-4 w-4" />
                           </Button>
