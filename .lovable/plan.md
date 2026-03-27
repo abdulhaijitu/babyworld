@@ -1,15 +1,20 @@
 
 
-## পরিকল্পনা: Events পেজ সিম্পলিফাই
+## পরিকল্পনা: Events → Bookings নাম পরিবর্তন
 
-### পরিবর্তন (`src/pages/admin/AdminEvents.tsx`)
+### পরিবর্তন
 
-1. **Bookings ট্যাব সরানো** — `Tabs` কম্পোনেন্ট, `TabsList`, `TabsTrigger`, `TabsContent` সব বাদ। শুধু Events কন্টেন্ট সরাসরি থাকবে। `BookingsListTab` import বাদ।
-2. **Event Packages কার্ড সরানো** — লাইন 390-413 এর "Event Packages Info" কার্ড ব্লক মুছে ফেলা।
-3. **হেডার আপডেট** — "Events & Bookings" → "Events", সাবটাইটেল থেকে "& play bookings" বাদ।
+**1. `src/pages/admin/AdminEvents.tsx`**
+- লাইন 324: `'Events'` → `'Bookings'`
+- লাইন 327: `'Manage birthday parties & private events'` → `'Manage birthday parties & private event bookings'`
+- লাইন 383: `'Event List'` → `'Booking List'`
+- লাইন 459: `'No events found'` → `'No bookings found'`
 
-### ফাইল পরিবর্তন
+**2. `src/components/admin/AdminSidebar.tsx`**
+- লাইন 70: `label: 'Events'` → `label: 'Bookings'`
+
 | ফাইল | পরিবর্তন |
 |---|---|
-| `src/pages/admin/AdminEvents.tsx` | Tabs স্ট্রাকচার সরানো, Event Packages কার্ড সরানো, হেডার আপডেট |
+| `src/pages/admin/AdminEvents.tsx` | পেজ টাইটেল ও টেক্সট Events → Bookings |
+| `src/components/admin/AdminSidebar.tsx` | সাইডবার লেবেল Events → Bookings |
 
