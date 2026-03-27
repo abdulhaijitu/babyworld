@@ -580,6 +580,12 @@ export default function AdminEvents() {
           )}
         </CardContent>
       </Card>
+        </TabsContent>
+
+        <TabsContent value="bookings" className="mt-6">
+          <BookingsListTab />
+        </TabsContent>
+      </Tabs>
 
       {/* Create Event Dialog */}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
