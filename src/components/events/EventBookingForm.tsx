@@ -101,12 +101,12 @@ export function EventBookingForm({ selectedPackage, onSelectPackage }: EventBook
 
   if (isSubmitted) {
     return (
-      <section id="booking" className="py-24 bg-background">
-        <div className="container mx-auto max-w-2xl">
+      <section id="booking" className="py-16 sm:py-20 lg:py-24 bg-background">
+        <div className="container mx-auto max-w-2xl px-4 sm:px-6">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-card rounded-3xl p-8 md:p-12 shadow-card text-center space-y-6"
+            className="bg-card rounded-3xl p-6 sm:p-8 md:p-12 shadow-card text-center space-y-6"
           >
             <div className="w-20 h-20 mx-auto bg-primary/10 rounded-full flex items-center justify-center">
               <CheckCircle className="w-10 h-10 text-primary" />
