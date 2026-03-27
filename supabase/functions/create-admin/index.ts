@@ -2,14 +2,21 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { corsHeaders } from '../_shared/cors.ts';
 import { createAdminClient } from '../_shared/supabase-admin.ts';
 
+type AppRole = 'super_admin' | 'admin' | 'management' | 'manager' | 'sales_marketing' | 'ticket_counterman' | 'gateman' | 'food_manager' | 'food_staff' | 'booking_manager' | 'accountant' | 'hr_manager' | 'staff';
+
 interface CreateUserRequest {
   email: string;
   password: string;
-  role: 'super_admin' | 'admin' | 'manager' | 'staff';
+  role: AppRole;
 }
 
+const validRoles: AppRole[] = [
+  'super_admin', 'admin', 'management', 'manager', 'sales_marketing',
+  'ticket_counterman', 'gateman', 'food_manager', 'food_staff',
+  'booking_manager', 'accountant', 'hr_manager', 'staff'
+];
+
 serve(async (req) => {
-  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -17,7 +24,7 @@ serve(async (req) => {
   try {
     const supabase = createAdminClient();
     const body: CreateUserRequest = await req.json();
-    const { email, password, role = 'admin' } = body;
+    const { email, password, role = 'staff' } = body;
 
     if (!email || !password) {
       return new Response(
@@ -26,16 +33,13 @@ serve(async (req) => {
       );
     }
 
-    // Validate role
-    const validRoles = ['super_admin', 'admin', 'manager', 'staff'];
     if (!validRoles.includes(role)) {
       return new Response(
-        JSON.stringify({ error: 'Invalid role. Must be admin, manager, or staff' }),
+        JSON.stringify({ error: `Invalid role: ${role}` }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Create user using admin API
     const { data: authData, error: authError } = await supabase.auth.admin.createUser({
       email,
       password,
@@ -57,7 +61,6 @@ serve(async (req) => {
       );
     }
 
-    // Add role
     const { error: roleError } = await supabase
       .from('user_roles')
       .insert({
@@ -79,7 +82,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: true,
-        message: `${role.charAt(0).toUpperCase() + role.slice(1)} user created successfully`,
+        message: `${role} user created successfully`,
         user: {
           id: authData.user.id,
           email: authData.user.email,
