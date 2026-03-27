@@ -166,7 +166,7 @@ export default function AdminProfitReports() {
     rows.push([]);
     rows.push(['EXPENSE BREAKDOWN']);
     expenseBreakdown.forEach((e: { category: string; amount: number; percentage: number }) => {
-      rows.push([EXPENSE_CATEGORY_LABELS[e.category]?.en || e.category, e.amount, `${e.percentage}%`]);
+      rows.push([categoryLabels[e.category]?.en || e.category, e.amount, `${e.percentage}%`]);
     });
     
     const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
