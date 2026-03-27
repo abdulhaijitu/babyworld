@@ -208,7 +208,7 @@ export default function MemberEntryTab() {
           <CardContent className="p-3 text-center">
             <p className="text-2xl font-bold text-green-600">{currentlyInside}</p>
             <p className="text-xs text-muted-foreground flex items-center justify-center gap-1">
-              <Users className="h-3 w-3" /> বর্তমানে ভেতরে
+              <Users className="h-3 w-3" /> Currently Inside
             </p>
           </CardContent>
         </Card>
