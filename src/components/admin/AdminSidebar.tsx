@@ -95,6 +95,7 @@ const allMenuItems: MenuItem[] = [
   ]},
   { id: 'accounts', label: 'Accounts', icon: Wallet, path: '/admin/expenses', requiredRoles: ['super_admin', 'admin', 'manager'], children: [
     { id: 'expenses', label: 'Expenses', icon: Receipt, path: '/admin/expenses' },
+    { id: 'expense-categories', label: 'Expense Categories', icon: Tag, path: '/admin/expense-categories' },
     { id: 'profit', label: 'Profit & Loss', icon: TrendingUp, path: '/admin/profit' },
     { id: 'reports', label: 'Reports', icon: FileBarChart, path: '/admin/reports' },
   ]},
