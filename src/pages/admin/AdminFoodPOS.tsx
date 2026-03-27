@@ -97,11 +97,13 @@ export default function AdminFoodPOS() {
   const printReceipt = (orderNumber: string, cartItems: CartItem[], total: number, customer: string, payment: string) => {
     const now = new Date();
     const timeStr = format(now, 'dd/MM/yyyy hh:mm a');
-    const itemsHtml = cartItems.map(c => `
-      <tr>
-        <td style="padding:2px 0;font-size:12px;">${c.food_item.name}</td>
-        <td style="padding:2px 4px;font-size:12px;text-align:center;">${c.quantity}</td>
-        <td style="padding:2px 0;font-size:12px;text-align:right;">৳${c.food_item.price * c.quantity}</td>
+    const logoUrl = new URL('/src/assets/baby-world-logo.png', window.location.origin).href;
+    const itemsHtml = cartItems.map((c, i) => `
+      <tr style="background:${i % 2 === 0 ? '#f9f9f9' : '#fff'};">
+        <td style="padding:4px 6px;font-size:12px;">${c.food_item.name}</td>
+        <td style="padding:4px 6px;font-size:12px;text-align:center;">${c.quantity}</td>
+        <td style="padding:4px 6px;font-size:12px;text-align:right;">৳${c.food_item.price}</td>
+        <td style="padding:4px 6px;font-size:12px;text-align:right;font-weight:600;">৳${c.food_item.price * c.quantity}</td>
       </tr>
     `).join('');
 
@@ -115,50 +117,76 @@ export default function AdminFoodPOS() {
             @page { margin: 0; size: 80mm auto; }
             body { margin: 0; }
           }
-          body { font-family: 'Courier New', monospace; width: 76mm; margin: 0 auto; padding: 4mm; color: #000; }
-          .center { text-align: center; }
-          .bold { font-weight: bold; }
-          .divider { border-top: 1px dashed #000; margin: 6px 0; }
+          * { box-sizing: border-box; }
+          body {
+            font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
+            width: 76mm; margin: 0 auto; padding: 3mm;
+            color: #1a1a1a; font-size: 12px; line-height: 1.4;
+          }
+          .header { text-align: center; padding-bottom: 8px; }
+          .header img { height: 40px; margin-bottom: 4px; }
+          .header h2 { margin: 0; font-size: 15px; font-weight: 700; letter-spacing: 0.5px; }
+          .header .subtitle { margin: 2px 0 0; font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+          .divider { border: none; border-top: 1px dashed #ccc; margin: 6px 0; }
+          .divider-bold { border: none; border-top: 2px solid #333; margin: 6px 0; }
+          .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 12px; font-size: 11px; }
+          .info-grid .label { color: #888; font-size: 10px; text-transform: uppercase; letter-spacing: 0.3px; }
+          .info-grid .value { font-weight: 600; }
           table { width: 100%; border-collapse: collapse; }
-          .total-row td { font-weight: bold; font-size: 14px; padding-top: 4px; }
+          thead td { padding: 4px 6px; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #666; letter-spacing: 0.3px; border-bottom: 1px solid #ddd; }
+          .total-section { background: #f4f4f4; border-radius: 4px; padding: 8px; margin-top: 4px; }
+          .total-row { display: flex; justify-content: space-between; align-items: center; }
+          .total-label { font-size: 14px; font-weight: 700; }
+          .total-amount { font-size: 18px; font-weight: 800; }
+          .footer { text-align: center; margin-top: 8px; font-size: 9px; color: #999; }
+          .footer .thanks { font-size: 11px; color: #333; font-weight: 600; margin-bottom: 2px; }
+          .payment-badge {
+            display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 10px; font-weight: 700; text-transform: uppercase;
+            ${payment === 'cash' ? 'background:#e8f5e9;color:#2e7d32;' : payment === 'online' ? 'background:#e3f2fd;color:#1565c0;' : 'background:#fff3e0;color:#e65100;'}
+          }
         </style>
       </head>
       <body>
-        <div class="center">
-          <h2 style="margin:0;font-size:16px;">🍽️ Baby World</h2>
-          <p style="margin:2px 0;font-size:11px;">Food Court Receipt</p>
+        <div class="header">
+          <img src="${logoUrl}" alt="Baby World" />
+          <h2>Baby World</h2>
+          <p class="subtitle">Food Court</p>
         </div>
-        <div class="divider"></div>
-        <div style="font-size:11px;">
-          <p style="margin:2px 0;"><strong>Order:</strong> ${orderNumber}</p>
-          <p style="margin:2px 0;"><strong>Date:</strong> ${timeStr}</p>
-          ${customer ? `<p style="margin:2px 0;"><strong>Customer:</strong> ${customer}</p>` : ''}
-          <p style="margin:2px 0;"><strong>Payment:</strong> ${payment === 'pending' ? 'Due' : payment.charAt(0).toUpperCase() + payment.slice(1)}</p>
+        <hr class="divider-bold" />
+        <div class="info-grid">
+          <div><span class="label">Order</span><br/><span class="value">${orderNumber}</span></div>
+          <div><span class="label">Date</span><br/><span class="value">${timeStr}</span></div>
+          ${customer ? `<div><span class="label">Customer</span><br/><span class="value">${customer}</span></div>` : ''}
+          <div><span class="label">Payment</span><br/><span class="payment-badge">${payment === 'pending' ? 'Due' : payment}</span></div>
         </div>
-        <div class="divider"></div>
+        <hr class="divider" />
         <table>
           <thead>
-            <tr style="font-size:11px;font-weight:bold;border-bottom:1px solid #000;">
-              <td style="padding:2px 0;">Item</td>
-              <td style="padding:2px 4px;text-align:center;">Qty</td>
-              <td style="padding:2px 0;text-align:right;">Price</td>
+            <tr>
+              <td>Item</td>
+              <td style="text-align:center;">Qty</td>
+              <td style="text-align:right;">Rate</td>
+              <td style="text-align:right;">Amount</td>
             </tr>
           </thead>
           <tbody>
             ${itemsHtml}
           </tbody>
         </table>
-        <div class="divider"></div>
-        <table>
-          <tr class="total-row">
-            <td>TOTAL</td>
-            <td style="text-align:right;">৳${total}</td>
-          </tr>
-        </table>
-        <div class="divider"></div>
-        <div class="center" style="font-size:10px;margin-top:6px;">
-          <p style="margin:2px 0;">Thank you! 🎉</p>
-          <p style="margin:2px 0;">Baby World Indoor Playground</p>
+        <hr class="divider" />
+        <div class="total-section">
+          <div class="total-row">
+            <span class="total-label">TOTAL</span>
+            <span class="total-amount">৳${total}</span>
+          </div>
+          <div style="text-align:right;font-size:10px;color:#666;margin-top:2px;">${cartItems.reduce((s, c) => s + c.quantity, 0)} item(s)</div>
+        </div>
+        <hr class="divider" />
+        <div class="footer">
+          <p class="thanks">Thank you for your order! 🎉</p>
+          <p>Baby World Indoor Playground</p>
+          <p>27/B, Jannat Tower, Lalbagh, Dhaka</p>
+          <p>📞 09606990128</p>
         </div>
       </body>
       </html>
