@@ -182,18 +182,18 @@ export default function AdminDashboardContent() {
               {isLoading ? <Skeleton className="h-8 w-28" /> : `৳${todayRevenue.toLocaleString()}`}
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="text-xs text-muted-foreground">Tickets + Food Sales</p>
+          <CardContent className="p-3 md:p-6 pt-0">
+            <p className="text-[10px] md:text-xs text-muted-foreground">Tickets + Food</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="pb-2">
-            <CardDescription className="flex items-center gap-1.5">
-              <Ticket className="w-4 h-4" />
+          <CardHeader className="p-3 md:p-6 pb-1 md:pb-2">
+            <CardDescription className="flex items-center gap-1 md:gap-1.5 text-[11px] md:text-sm">
+              <Ticket className="w-3.5 h-3.5 md:w-4 md:h-4" />
               Ticket Sales
             </CardDescription>
-            <CardTitle className="text-2xl">
+            <CardTitle className="text-lg md:text-2xl">
               {isLoading ? <Skeleton className="h-8 w-20" /> : ticketCount}
             </CardTitle>
           </CardHeader>
