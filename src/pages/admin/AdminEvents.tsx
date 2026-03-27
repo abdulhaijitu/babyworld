@@ -180,7 +180,11 @@ export default function AdminEvents() {
         ticket_type: 'group' as const,
         status: 'pending' as const,
         payment_status: 'unpaid',
-        notes: formData.notes.trim() ? `Package: ${formData.package}\n${formData.notes}` : `Package: ${formData.package}`
+        notes: (() => {
+          const selectedPkg = eventPackages.find(p => p.id === formData.package);
+          const pkgInfo = selectedPkg ? `Package: ${selectedPkg.name} (৳${selectedPkg.price.toLocaleString()})` : '';
+          return formData.notes.trim() ? `${pkgInfo}\n${formData.notes}` : pkgInfo;
+        })()
       };
 
       const { error: insertError } = await supabase
