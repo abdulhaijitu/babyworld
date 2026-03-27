@@ -28,7 +28,7 @@ import AdminEmployees from "./pages/admin/AdminEmployees";
 import AdminRoster from "./pages/admin/AdminRoster";
 import AdminBookings from "./pages/admin/AdminBookings";
 import AdminEvents from "./pages/admin/AdminEvents";
-import AdminEventBookings from "./pages/admin/AdminEventBookings";
+
 import AdminEventPackages from "./pages/admin/AdminEventPackages";
 import AdminEventCalendar from "./pages/admin/AdminEventCalendar";
 import AdminSettings from "./pages/admin/AdminSettings";
