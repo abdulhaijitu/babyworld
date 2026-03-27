@@ -114,9 +114,9 @@ export default function AdminAboutContact() {
       if (section === "about") await saveKey("about_content", about);
       if (section === "contact") await saveKey("contact_info", contact);
       if (section === "social") await saveKey("social_links", social);
-      toast.success("সফলভাবে সেভ হয়েছে!");
+      toast.success("Saved successfully!");
     } catch (e) {
-      toast.error("সেভ করতে সমস্যা হয়েছে");
+      toast.error("Failed to save");
       console.error(e);
     } finally {
       setSaving(false);
