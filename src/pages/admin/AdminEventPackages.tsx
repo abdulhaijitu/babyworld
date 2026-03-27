@@ -13,7 +13,7 @@ import {
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
-import { Package, Plus, Pencil, Users, Trash2, RefreshCw, Loader2, ImagePlus, X } from 'lucide-react';
+import { Package, Plus, Pencil, Users, Trash2, RefreshCw, Loader2, ImagePlus, X, GripVertical } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface EventPackage {
@@ -195,6 +195,59 @@ export default function AdminEventPackages() {
     }
   };
 
+  // Drag and drop state
+  const [draggedId, setDraggedId] = useState<string | null>(null);
+  const [dragOverId, setDragOverId] = useState<string | null>(null);
+
+  const handleDragStart = (e: React.DragEvent, id: string) => {
+    setDraggedId(id);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e: React.DragEvent, id: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (id !== draggedId) setDragOverId(id);
+  };
+
+  const handleDragLeave = () => {
+    setDragOverId(null);
+  };
+
+  const handleDrop = async (e: React.DragEvent, targetId: string) => {
+    e.preventDefault();
+    setDragOverId(null);
+    if (!draggedId || draggedId === targetId) return;
+
+    const oldIndex = packages.findIndex(p => p.id === draggedId);
+    const newIndex = packages.findIndex(p => p.id === targetId);
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    const reordered = [...packages];
+    const [moved] = reordered.splice(oldIndex, 1);
+    reordered.splice(newIndex, 0, moved);
+
+    // Optimistic update
+    const updated = reordered.map((p, i) => ({ ...p, sort_order: i }));
+    setPackages(updated);
+
+    // Persist to DB
+    try {
+      const updates = updated.map(p =>
+        supabase.from('event_packages').update({ sort_order: p.sort_order }).eq('id', p.id)
+      );
+      await Promise.all(updates);
+      toast.success('Sort order updated');
+    } catch {
+      toast.error('Sort order update failed');
+      fetchPackages();
+    }
+  };
+
+  const handleDragEnd = () => {
+    setDraggedId(null);
+    setDragOverId(null);
+  };
   return (
     <div className="p-4 md:p-6 lg:p-8 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -224,8 +277,9 @@ export default function AdminEventPackages() {
           <CardContent>
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead className="w-16">Image</TableHead>
+                 <TableRow>
+                   <TableHead className="w-10"></TableHead>
+                   <TableHead className="w-16">Image</TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Price</TableHead>
                   <TableHead>Guests</TableHead>
@@ -238,12 +292,24 @@ export default function AdminEventPackages() {
               <TableBody>
                 {packages.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
-                      No packages found. Create your first package.
-                    </TableCell>
+                     <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                       No packages found. Create your first package.
+                     </TableCell>
                   </TableRow>
-                ) : packages.map(pkg => (
-                  <TableRow key={pkg.id}>
+                 ) : packages.map(pkg => (
+                   <TableRow
+                     key={pkg.id}
+                     draggable
+                     onDragStart={(e) => handleDragStart(e, pkg.id)}
+                     onDragOver={(e) => handleDragOver(e, pkg.id)}
+                     onDragLeave={handleDragLeave}
+                     onDrop={(e) => handleDrop(e, pkg.id)}
+                     onDragEnd={handleDragEnd}
+                     className={`transition-colors ${draggedId === pkg.id ? 'opacity-50' : ''} ${dragOverId === pkg.id ? 'bg-accent' : ''}`}
+                   >
+                     <TableCell className="cursor-grab active:cursor-grabbing">
+                       <GripVertical className="w-4 h-4 text-muted-foreground" />
+                     </TableCell>
                     <TableCell>
                       {pkg.image_url ? (
                         <img src={pkg.image_url} alt={pkg.name} className="w-12 h-12 rounded-lg object-cover shadow-sm border border-border" />
