@@ -1,4 +1,4 @@
-import { LogIn } from 'lucide-react';
+import MemberEntryTab from '@/components/admin/MemberEntryTab';
 import MemberEntryTab from '@/components/admin/MemberEntryTab';
 
 export default function AdminMemberEntry() {
