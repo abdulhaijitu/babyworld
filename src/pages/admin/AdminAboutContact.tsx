@@ -244,7 +244,7 @@ export default function AdminAboutContact() {
           <Card>
             <CardHeader>
               <CardTitle>Social Media Links</CardTitle>
-              <CardDescription>সোশ্যাল মিডিয়া প্রোফাইল লিংক আপডেট করুন</CardDescription>
+              <CardDescription>Update social media profile links</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
