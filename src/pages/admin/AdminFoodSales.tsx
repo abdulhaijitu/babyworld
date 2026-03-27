@@ -76,6 +76,7 @@ interface FoodOrder {
 }
 
 export default function AdminFoodSales() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('items');
   
   // Food Items state
