@@ -136,6 +136,21 @@ export default function AdminFoodPOS() {
       const { error: itemsError } = await supabase.from('food_order_items').insert(items);
       if (itemsError) throw itemsError;
 
+      // Play success sound
+      try {
+        const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.frequency.value = 880;
+        osc.type = 'sine';
+        gain.gain.value = 0.3;
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+        osc.stop(audioCtx.currentTime + 0.3);
+      } catch {}
+
       toast.success(`অর্ডার #${orderNumber} তৈরি হয়েছে!`);
       setCart([]);
       setCustomerName('');
