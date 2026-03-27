@@ -112,7 +112,26 @@ export default function AdminUsers() {
   // Form state
   const [newUserEmail, setNewUserEmail] = useState('');
   const [newUserPassword, setNewUserPassword] = useState('');
+  const [newUserName, setNewUserName] = useState('');
   const [newUserRole, setNewUserRole] = useState<AppRole>('manager');
+
+  // Fetch profiles for email/name lookup
+  const { data: profiles } = useQuery({
+    queryKey: ['all-profiles'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, email, full_name');
+      if (error) throw error;
+      return data as { id: string; email: string | null; full_name: string | null }[];
+    }
+  });
+
+  const profileMap = useMemo(() => {
+    const map = new Map<string, { email: string | null; full_name: string | null }>();
+    profiles?.forEach(p => map.set(p.id, { email: p.email, full_name: p.full_name }));
+    return map;
+  }, [profiles]);
 
   // Fetch all users with roles
   const { data: userRoles, isLoading } = useQuery({
@@ -124,8 +143,13 @@ export default function AdminUsers() {
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return data as UserRoleRecord[];
-    }
+      return (data as UserRoleRecord[]).map(r => ({
+        ...r,
+        email: profileMap.get(r.user_id)?.email || undefined,
+        full_name: profileMap.get(r.user_id)?.full_name || undefined,
+      }));
+    },
+    enabled: !!profiles,
   });
 
   // Create user mutation
