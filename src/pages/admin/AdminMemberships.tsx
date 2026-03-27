@@ -691,6 +691,9 @@ export default function AdminMemberships() {
                             </TableCell>
                             <TableCell>{getStatusBadge(membership.status)}</TableCell>
                             <TableCell>
+                              <span className="font-medium">{visitCounts[membership.id] || 0}</span>
+                            </TableCell>
+                            <TableCell>
                               <Badge variant="secondary">{membership.discount_percent}%</Badge>
                             </TableCell>
                             <TableCell>
