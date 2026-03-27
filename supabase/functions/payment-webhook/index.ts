@@ -169,15 +169,11 @@ serve(async (req) => {
         }
 
         // Bilingual message
-        const smsMessage = `✅ Baby World পেমেন্ট সফল!
-৳${amount} | তারিখ: ${booking.slot_date}
-সময়: ${booking.time_slot}
-ধন্যবাদ ${booking.parent_name}!
-
-Payment Successful!
+        const smsMessage = `✅ Baby World Payment Successful!
 Amount: ৳${amount}
 Date: ${booking.slot_date}
-Slot: ${booking.time_slot}`;
+Slot: ${booking.time_slot}
+Thank you ${booking.parent_name}!`;
 
         await sendPaymentNotification(
           booking.parent_phone,

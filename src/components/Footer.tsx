@@ -104,7 +104,7 @@ export function Footer() {
         <div className="mt-10 sm:mt-12 pt-6 sm:pt-8 border-t border-background/10">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-center sm:text-left">
             <p className="text-xs sm:text-sm opacity-60">
-              © {new Date().getFullYear()} Baby World (<span className="font-bangla">Baby World</span>). {t("footer.rights")}
+              © {new Date().getFullYear()} Baby World. {t("footer.rights")}
             </p>
             <p className="text-xs sm:text-sm opacity-60">{t("footer.ageRange")} • {t("hero.learnPlay")}</p>
           </div>
