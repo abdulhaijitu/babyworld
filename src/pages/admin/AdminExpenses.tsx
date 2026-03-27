@@ -406,7 +406,7 @@ export default function AdminExpenses() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">{'All Categories'}</SelectItem>
-                {EXPENSE_CATEGORIES.map(cat => (
+                {expenseCategories.map(cat => (
                   <SelectItem key={cat.value} value={cat.value}>
                     {cat.label}
                   </SelectItem>
