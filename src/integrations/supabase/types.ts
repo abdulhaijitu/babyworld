@@ -1342,6 +1342,42 @@ export type Database = {
         }
         Relationships: []
       }
+      role_permissions: {
+        Row: {
+          can_create: boolean | null
+          can_delete: boolean | null
+          can_edit: boolean | null
+          can_view: boolean | null
+          created_at: string
+          id: string
+          module: string
+          role: string
+          updated_at: string
+        }
+        Insert: {
+          can_create?: boolean | null
+          can_delete?: boolean | null
+          can_edit?: boolean | null
+          can_view?: boolean | null
+          created_at?: string
+          id?: string
+          module: string
+          role: string
+          updated_at?: string
+        }
+        Update: {
+          can_create?: boolean | null
+          can_delete?: boolean | null
+          can_edit?: boolean | null
+          can_view?: boolean | null
+          created_at?: string
+          id?: string
+          module?: string
+          role?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       roster_shifts: {
         Row: {
           created_at: string
@@ -1749,7 +1785,21 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "user" | "manager" | "staff" | "super_admin"
+      app_role:
+        | "admin"
+        | "user"
+        | "manager"
+        | "staff"
+        | "super_admin"
+        | "management"
+        | "sales_marketing"
+        | "ticket_counterman"
+        | "gateman"
+        | "food_manager"
+        | "food_staff"
+        | "booking_manager"
+        | "accountant"
+        | "hr_manager"
       attendance_status: "present" | "absent" | "late" | "half_day"
       booking_status: "confirmed" | "pending" | "cancelled"
       booking_type: "hourly_play" | "birthday_event" | "private_event"
@@ -1928,7 +1978,22 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "user", "manager", "staff", "super_admin"],
+      app_role: [
+        "admin",
+        "user",
+        "manager",
+        "staff",
+        "super_admin",
+        "management",
+        "sales_marketing",
+        "ticket_counterman",
+        "gateman",
+        "food_manager",
+        "food_staff",
+        "booking_manager",
+        "accountant",
+        "hr_manager",
+      ],
       attendance_status: ["present", "absent", "late", "half_day"],
       booking_status: ["confirmed", "pending", "cancelled"],
       booking_type: ["hourly_play", "birthday_event", "private_event"],
