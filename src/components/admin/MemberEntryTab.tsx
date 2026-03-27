@@ -418,7 +418,7 @@ export default function MemberEntryTab() {
           <CardContent className="p-0">
             <div className="px-4 py-3 border-b">
               <h4 className="font-semibold flex items-center gap-2">
-                <CalendarCheck className="h-4 w-4" /> আজকের ভিজিট লগ
+                <CalendarCheck className="h-4 w-4" /> Today's Visit Log
               </h4>
             </div>
             <Table>
