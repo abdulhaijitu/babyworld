@@ -280,7 +280,7 @@ function SidebarContent({
                     const next: Record<string, boolean> = {};
                     Object.keys(prev).forEach(k => { next[k] = false; });
                     // Also close any group with active children so accordion behavior works
-                    filteredMenuItems.forEach(mi => { if (mi.children) next[mi.id] = false; });
+                    filteredItems.forEach(mi => { if (mi.children) next[mi.id] = false; });
                     next[item.id] = isOpen;
                     return next;
                   })}
