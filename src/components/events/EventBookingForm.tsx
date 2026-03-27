@@ -150,7 +150,7 @@ export function EventBookingForm({ selectedPackage, onSelectPackage }: EventBook
                 <div className="flex flex-col items-center">
                   <div
                     className={cn(
-                      "w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all duration-300",
+                      "w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all duration-300",
                       currentStep >= step.number
                         ? "bg-primary text-primary-foreground"
                         : "bg-muted text-muted-foreground"

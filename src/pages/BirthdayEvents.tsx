@@ -56,7 +56,7 @@ const BirthdayEvents = () => {
           <EventsTrust />
         </main>
         <Footer />
-        <div className="lg:hidden h-4" />
+        <div className="lg:hidden h-20" />
         <WhatsAppButton variant="floating" />
         <MobileBottomNav />
       </div>

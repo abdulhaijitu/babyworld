@@ -63,10 +63,10 @@ export function EventsGallery() {
   };
 
   return (
-    <section className="py-24 bg-background">
-      <div className="container mx-auto">
+    <section className="py-16 sm:py-20 lg:py-24 bg-background">
+      <div className="container mx-auto px-4 sm:px-6">
         {/* Header */}
-        <ScrollFadeIn className="text-center max-w-2xl mx-auto mb-12 space-y-4">
+        <ScrollFadeIn className="text-center max-w-2xl mx-auto mb-8 sm:mb-10 lg:mb-12 space-y-4">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Camera className="w-5 h-5 text-secondary" />
             <span className="text-sm font-semibold text-secondary uppercase tracking-wider">
@@ -82,7 +82,7 @@ export function EventsGallery() {
         </ScrollFadeIn>
 
         {/* Gallery Grid - 3 columns on desktop */}
-        <StaggerContainer className="grid grid-cols-2 md:grid-cols-3 gap-4" staggerDelay={0.08}>
+        <StaggerContainer className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4" staggerDelay={0.08}>
           {galleryImages.map((img, i) => (
             <StaggerItem key={i}>
               <GalleryItem
