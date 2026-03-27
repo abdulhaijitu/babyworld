@@ -55,8 +55,8 @@ const BirthdayEvents = () => {
           <EventsTrust />
         </main>
         <Footer />
-        {/* Extra spacing for bottom nav - events has its own sticky panel */}
         <div className="lg:hidden h-4" />
+        <WhatsAppButton variant="floating" />
         <MobileBottomNav />
       </div>
     </PageTransition>
