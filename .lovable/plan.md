@@ -1,56 +1,47 @@
 
 
-## Plan: Translate All Bengali Text to English
+## Plan: Sidebar Animations & Live Status Badges
 
-### Scope
+### 1. Smooth Animations
 
-~1450 Bengali text instances across **28 files** in 4 categories:
+**File:** `src/components/admin/AdminSidebar.tsx`
 
-### Files to Update
+- Add Framer Motion for sidebar transitions:
+  - **Collapsible groups**: Animate height + opacity when expanding/collapsing (replace raw Radix CollapsibleContent with motion.div)
+  - **Menu items**: Staggered fade-in on initial render (each item appears 30ms after the previous)
+  - **Active indicator**: Animated left-border bar (3px primary color) that slides to the active item using `layoutId`
+  - **Hover effects**: Scale up icon slightly (1.1x) on hover with spring animation
+  - **Collapse/expand**: Animate sidebar width change smoothly (w-16 ↔ w-64) with framer-motion `animate`
+  - **Search bar**: Slide down + fade in when sidebar expands
 
-**Admin Pages (13 files):**
-- `AdminPromotions.tsx` — form labels, select options, buttons, toasts
-- `AdminAboutContact.tsx` — descriptions, toasts, labels
-- `AdminSocialMedia.tsx` — labels, toasts, statuses
-- `AdminSmsCampaigns.tsx` — labels, toasts, statuses
-- `AdminFoodOrders.tsx` — labels, statuses, toasts
-- `AdminFoodPOS.tsx` — labels, buttons, toasts
-- `AdminFoodSales.tsx` — labels, toasts
-- `AdminCoupons.tsx` — labels, toasts
-- `AdminSettings.tsx` — labels, descriptions, toasts
-- `AdminExpenses.tsx` — labels, toasts
-- `AdminEvents.tsx` — labels, toasts
-- `AdminMemberships.tsx` — labels, toasts
-- `AdminMembershipPackages.tsx` — labels, toasts
+### 2. Live Status Badges
 
-**Components (9 files):**
-- `Footer.tsx` — Bengali brand name references
-- `SEOHead.tsx` — entire `bn` section of SEO meta, Bengali in `en` section
-- `NotificationTemplateEditor.tsx` — Bengali SMS templates, preview data
-- `BookingPrintTicket.tsx` — bilingual label objects (keep only English)
-- `ManualBookingForm.tsx` — labels, toasts
-- `PlayFAQ.tsx` — if any Bengali remains
-- `PricingSection.tsx` — if any Bengali remains
-- `BookingSection.tsx` — if any Bengali remains
-- `ContactForm.tsx` — if any Bengali remains
+**New hook:** `src/hooks/useSidebarBadges.ts`
+- Single hook that queries real-time counts from the database:
+  - **Food Orders**: Pending/new orders count today
+  - **Ticketing**: Today's ticket count
+  - **Leads**: New/uncontacted leads count
+  - **Notifications**: Unread notification count
+- Uses Supabase realtime subscription for live updates
+- Returns `Record<string, number>` mapped to menu item IDs
 
-**Hooks (6 files):**
-- `useSendSMS.ts` — SMS message templates, toast messages
-- `usePromotions.ts` — toast messages
-- `useSocialMediaPosts.ts` — toast messages
-- `useSmsCampaigns.ts` — toast messages
-- `useLeads.ts` — toast messages
-- `usePayroll.ts` — toast messages
+**File:** `src/components/admin/AdminSidebar.tsx`
+- Render animated badge pills next to menu labels when count > 0
+- Badge style: small rounded pill with primary background, white text, pulse animation for new items
+- In collapsed mode: show badge as a small dot on the icon corner
+- Badge appears/disappears with scale animation
 
-**Edge Functions (3 files):**
-- `payment-webhook/index.ts` — Bengali SMS text
-- `ticket-payment-notify/index.ts` — Bengali SMS text
-- `food-payment-notify/index.ts` — Bengali SMS text
+### Technical Details
 
-### Approach
-- Replace all Bengali strings with English equivalents
-- Remove bilingual objects (e.g., `{ en: '...', bn: '...' }`) — keep only the English value
-- Remove the entire `bn` section from `SEOHead.tsx`
-- Keep `৳` (BDT currency symbol) as-is
-- No structural/logic changes — text-only replacements
+- Framer Motion is already in the project (used in Navbar, etc.)
+- `layoutId` on the active indicator ensures smooth sliding between items
+- Realtime subscription auto-cleans up on unmount
+- Badges only show for items with count > 0 (no visual clutter)
+- All animations use `duration: 0.2s` to match existing project timing
+
+### Files Changed
+| File | Action |
+|------|--------|
+| `src/hooks/useSidebarBadges.ts` | Create — realtime badge counts |
+| `src/components/admin/AdminSidebar.tsx` | Update — add animations + badge rendering |
 
