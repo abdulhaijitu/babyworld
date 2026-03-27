@@ -358,7 +358,7 @@ export default function MemberEntryTab() {
 
             {activeVisit && (
               <p className="mt-2 text-xs text-primary bg-primary/10 rounded px-3 py-1.5 text-center">
-                ⏰ চেক-ইন: {format(new Date(activeVisit.check_in_at), 'hh:mm a')} — বর্তমানে ভেতরে আছে
+                ⏰ Checked in: {format(new Date(activeVisit.check_in_at), 'hh:mm a')} — Currently inside
               </p>
             )}
           </CardContent>
