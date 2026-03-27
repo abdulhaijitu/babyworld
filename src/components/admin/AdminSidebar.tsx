@@ -83,12 +83,12 @@ const allMenuItems: MenuItem[] = [
   { id: 'users', label: 'Users', icon: Shield, path: '/admin/users', requiredRoles: ['super_admin'] },
   { id: 'settings', label: 'Settings', icon: Settings, path: '/admin/settings/general', requiredRoles: ['super_admin', 'admin'], children: [
     { id: 'settings-general', label: 'General', icon: Settings, path: '/admin/settings/general' },
-    { id: 'settings-business', label: 'Business', icon: Briefcase, path: '/admin/settings/business' },
-    { id: 'settings-pricing', label: 'Pricing', icon: Receipt, path: '/admin/settings/pricing' },
-    { id: 'settings-notifications', label: 'Notifications', icon: MessageSquare, path: '/admin/settings/notifications' },
-    { id: 'settings-email', label: 'Email Configure', icon: Monitor, path: '/admin/settings/email' },
-    { id: 'settings-sms', label: 'SMS Gateway', icon: MessageSquare, path: '/admin/settings/sms' },
-    { id: 'settings-payment', label: 'Payment Gateway', icon: Crown, path: '/admin/settings/payment' },
+    { id: 'settings-business', label: 'Business', icon: Building, path: '/admin/settings/business' },
+    { id: 'settings-pricing', label: 'Pricing', icon: Banknote, path: '/admin/settings/pricing' },
+    { id: 'settings-notifications', label: 'Notifications', icon: Bell, path: '/admin/settings/notifications' },
+    { id: 'settings-email', label: 'Email Configure', icon: Mail, path: '/admin/settings/email' },
+    { id: 'settings-sms', label: 'SMS Gateway', icon: SendHorizonal, path: '/admin/settings/sms' },
+    { id: 'settings-payment', label: 'Payment Gateway', icon: CreditCard, path: '/admin/settings/payment' },
   ]},
 ];
 
