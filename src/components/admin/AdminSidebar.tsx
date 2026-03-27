@@ -301,7 +301,7 @@ function SidebarContent({
                       )}
                     </AnimatePresence>
                     <ChevronDown className={cn(
-                      "h-3.5 w-3.5 shrink-0 transition-transform duration-200",
+                      "h-3 w-3 shrink-0 transition-transform duration-200",
                       (openGroups[item.id] ?? childActive) ? "rotate-180" : ""
                     )} />
                   </CollapsibleTrigger>
