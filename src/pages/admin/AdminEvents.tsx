@@ -78,12 +78,14 @@ interface EventBooking {
   created_at: string;
 }
 
-const eventPackages = [
-  { id: 'basic', name: 'Basic', price: 5000, guests: 10 },
-  { id: 'standard', name: 'Standard', price: 8000, guests: 20 },
-  { id: 'premium', name: 'Premium', price: 12000, guests: 30 },
-  { id: 'deluxe', name: 'Deluxe', price: 18000, guests: 50 },
-];
+interface EventPackage {
+  id: string;
+  name: string;
+  price: number;
+  max_guests: number;
+  duration_hours: number;
+  is_active: boolean;
+}
 
 const timeSlots = [
   '10:00 AM - 1:00 PM',
@@ -95,6 +97,7 @@ export default function AdminEvents() {
   const [events, setEvents] = useState<EventBooking[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [eventPackages, setEventPackages] = useState<EventPackage[]>([]);
   
   // Filters
   const [searchQuery, setSearchQuery] = useState('');
@@ -110,7 +113,7 @@ export default function AdminEvents() {
     slot_date: new Date(),
     time_slot: timeSlots[0],
     booking_type: 'birthday_event' as 'birthday_event' | 'private_event',
-    package: 'standard',
+    package: '',
     notes: ''
   });
   
@@ -138,9 +141,27 @@ export default function AdminEvents() {
     }
   }, []);
 
+  const fetchPackages = useCallback(async () => {
+    try {
+      const { data } = await supabase
+        .from('event_packages')
+        .select('*')
+        .eq('is_active', true)
+        .order('sort_order', { ascending: true });
+      const pkgs = (data || []) as EventPackage[];
+      setEventPackages(pkgs);
+      if (pkgs.length > 0 && !formData.package) {
+        setFormData(prev => ({ ...prev, package: pkgs[0].id }));
+      }
+    } catch (err) {
+      console.error('[Events] Packages error:', err);
+    }
+  }, []);
+
   useEffect(() => {
     fetchEvents();
-  }, [fetchEvents]);
+    fetchPackages();
+  }, [fetchEvents, fetchPackages]);
 
   const handleCreateEvent = async () => {
     if (!formData.parent_name.trim() || !formData.parent_phone.trim()) {
@@ -159,7 +180,11 @@ export default function AdminEvents() {
         ticket_type: 'group' as const,
         status: 'pending' as const,
         payment_status: 'unpaid',
-        notes: formData.notes.trim() ? `Package: ${formData.package}\n${formData.notes}` : `Package: ${formData.package}`
+        notes: (() => {
+          const selectedPkg = eventPackages.find(p => p.id === formData.package);
+          const pkgInfo = selectedPkg ? `Package: ${selectedPkg.name} (৳${selectedPkg.price.toLocaleString()})` : '';
+          return formData.notes.trim() ? `${pkgInfo}\n${formData.notes}` : pkgInfo;
+        })()
       };
 
       const { error: insertError } = await supabase
@@ -187,7 +212,7 @@ export default function AdminEvents() {
       slot_date: new Date(),
       time_slot: timeSlots[0],
       booking_type: 'birthday_event',
-      package: 'standard',
+      package: eventPackages.length > 0 ? eventPackages[0].id : '',
       notes: ''
     });
   };
@@ -355,7 +380,7 @@ export default function AdminEvents() {
                 <p className="font-semibold">{pkg.name}</p>
                 <p className="text-lg font-bold text-primary">৳{pkg.price.toLocaleString()}</p>
                 <p className="text-xs text-muted-foreground flex items-center justify-center gap-1">
-                  <Users className="w-3 h-3" /> {pkg.guests} {'guests'}
+                  <Users className="w-3 h-3" /> {pkg.max_guests} {'guests'}
                 </p>
               </div>
             ))}
@@ -576,7 +601,7 @@ export default function AdminEvents() {
                 <SelectContent>
                   {eventPackages.map(pkg => (
                     <SelectItem key={pkg.id} value={pkg.id}>
-                      {pkg.name} - ৳{pkg.price.toLocaleString()} ({pkg.guests} {'guests'})
+                      {pkg.name} - ৳{pkg.price.toLocaleString()} ({pkg.max_guests} {'guests'})
                     </SelectItem>
                   ))}
                 </SelectContent>
