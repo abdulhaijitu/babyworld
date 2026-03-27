@@ -147,6 +147,7 @@ function SidebarContent({
   const { roles, isSuperAdmin } = useUserRoles();
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
   const [searchQuery, setSearchQuery] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
   const badges = useSidebarBadges();
 
   const menuItems = useMemo(() => {
