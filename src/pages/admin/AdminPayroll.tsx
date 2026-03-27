@@ -62,6 +62,22 @@ export default function AdminPayroll() {
             <SelectContent>{months.map((m, i) => <SelectItem key={i} value={String(i + 1)}>{m}</SelectItem>)}</SelectContent>
           </Select>
           <Input type="number" value={year} onChange={e => setYear(Number(e.target.value))} className="w-[100px]" />
+          {payrolls.length > 0 && (
+            <Button variant="outline" onClick={() => printBulkPayslips(payrolls.map((p: any) => ({
+              employeeName: p.employees?.name || '',
+              employeeRole: p.employees?.role || '',
+              month, year,
+              basicSalary: p.basic_salary,
+              deductions: p.deductions,
+              bonuses: p.bonuses,
+              netSalary: p.net_salary,
+              status: p.status,
+              paidAt: p.paid_at,
+              notes: p.notes,
+            })))}>
+              <FileText className="h-4 w-4 mr-2" />Bulk Print
+            </Button>
+          )}
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
               <Button><Plus className="h-4 w-4 mr-2" />Add Payroll</Button>
