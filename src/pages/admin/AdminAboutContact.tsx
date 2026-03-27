@@ -167,7 +167,7 @@ export default function AdminAboutContact() {
                   <Input value={about.title} onChange={(e) => setAbout({ ...about, title: e.target.value })} />
                 </div>
                 <div className="space-y-2">
-                  <Label>Title (বাংলা)</Label>
+                  <Label>Title (Bangla)</Label>
                   <Input value={about.titleBn} onChange={(e) => setAbout({ ...about, titleBn: e.target.value })} />
                 </div>
               </div>
