@@ -42,16 +42,23 @@ import {
   Legend
 } from 'recharts';
 
-const EXPENSE_CATEGORY_LABELS: Record<string, { en: string; bn: string; color: string }> = {
-  rent: { en: 'Rent', bn: 'ভাড়া', color: '#3b82f6' },
-  staff_salary: { en: 'Staff Salary', bn: 'বেতন', color: '#8b5cf6' },
-  utilities: { en: 'Utilities', bn: 'ইউটিলিটি', color: '#eab308' },
-  food_purchase: { en: 'Food Purchase', bn: 'খাদ্য ক্রয়', color: '#f97316' },
-  toys_equipment: { en: 'Toys & Equipment', bn: 'খেলনা', color: '#ec4899' },
-  maintenance: { en: 'Maintenance', bn: 'রক্ষণাবেক্ষণ', color: '#6b7280' },
-  marketing: { en: 'Marketing', bn: 'মার্কেটিং', color: '#22c55e' },
-  other: { en: 'Other', bn: 'অন্যান্য', color: '#64748b' },
+const TAILWIND_COLOR_MAP: Record<string, string> = {
+  'bg-blue-100': '#3b82f6',
+  'bg-purple-100': '#8b5cf6',
+  'bg-yellow-100': '#eab308',
+  'bg-orange-100': '#f97316',
+  'bg-pink-100': '#ec4899',
+  'bg-gray-100': '#6b7280',
+  'bg-green-100': '#22c55e',
+  'bg-slate-100': '#64748b',
+  'bg-red-100': '#ef4444',
+  'bg-teal-100': '#14b8a6',
 };
+
+function getHexFromColor(colorClass: string): string {
+  const bgClass = colorClass.split(' ')[0];
+  return TAILWIND_COLOR_MAP[bgClass] || '#64748b';
+}
 
 const CHART_COLORS = ['#22c55e', '#3b82f6', '#f97316', '#8b5cf6', '#ec4899', '#eab308', '#6b7280', '#64748b'];
 
