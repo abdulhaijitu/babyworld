@@ -1,47 +1,22 @@
 
 
-## Plan: Sidebar Animations & Live Status Badges
+## Plan: Accordion-Style Sidebar (One Group Open at a Time)
 
-### 1. Smooth Animations
-
-**File:** `src/components/admin/AdminSidebar.tsx`
-
-- Add Framer Motion for sidebar transitions:
-  - **Collapsible groups**: Animate height + opacity when expanding/collapsing (replace raw Radix CollapsibleContent with motion.div)
-  - **Menu items**: Staggered fade-in on initial render (each item appears 30ms after the previous)
-  - **Active indicator**: Animated left-border bar (3px primary color) that slides to the active item using `layoutId`
-  - **Hover effects**: Scale up icon slightly (1.1x) on hover with spring animation
-  - **Collapse/expand**: Animate sidebar width change smoothly (w-16 ↔ w-64) with framer-motion `animate`
-  - **Search bar**: Slide down + fade in when sidebar expands
-
-### 2. Live Status Badges
-
-**New hook:** `src/hooks/useSidebarBadges.ts`
-- Single hook that queries real-time counts from the database:
-  - **Food Orders**: Pending/new orders count today
-  - **Ticketing**: Today's ticket count
-  - **Leads**: New/uncontacted leads count
-  - **Notifications**: Unread notification count
-- Uses Supabase realtime subscription for live updates
-- Returns `Record<string, number>` mapped to menu item IDs
+### What Changes
 
 **File:** `src/components/admin/AdminSidebar.tsx`
-- Render animated badge pills next to menu labels when count > 0
-- Badge style: small rounded pill with primary background, white text, pulse animation for new items
-- In collapsed mode: show badge as a small dot on the icon corner
-- Badge appears/disappears with scale animation
 
-### Technical Details
+Currently, `openGroups` is a `Record<string, boolean>` that allows multiple groups to be open simultaneously. The change is simple:
 
-- Framer Motion is already in the project (used in Navbar, etc.)
-- `layoutId` on the active indicator ensures smooth sliding between items
-- Realtime subscription auto-cleans up on unmount
-- Badges only show for items with count > 0 (no visual clutter)
-- All animations use `duration: 0.2s` to match existing project timing
+1. **Modify `onOpenChange` handler** (line 279): When a group is opened, close all other groups first. When a group is closed, just close it.
+   - Replace: `setOpenGroups(prev => ({ ...prev, [item.id]: open }))`
+   - With: `setOpenGroups(open ? { [item.id]: true } : {})`
 
-### Files Changed
-| File | Action |
-|------|--------|
-| `src/hooks/useSidebarBadges.ts` | Create — realtime badge counts |
-| `src/components/admin/AdminSidebar.tsx` | Update — add animations + badge rendering |
+2. **Update the `useEffect`** (lines 170-176) that auto-opens groups on route change: Instead of merging into existing state, set only the matching group as open.
+   - Replace: `setOpenGroups(prev => ({ ...prev, [item.id]: true }))`
+   - With: `setOpenGroups({ [item.id]: true })`
+
+This gives accordion behavior — clicking a group expands it and collapses any previously open group. The active route's group still auto-opens on navigation.
+
+No new files, no structural changes — just two small logic tweaks in the existing file.
 
