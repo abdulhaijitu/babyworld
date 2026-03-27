@@ -26,6 +26,7 @@ export default function AdminFoodPOS() {
   const [notes, setNotes] = useState('');
   const [paymentType, setPaymentType] = useState<'cash' | 'online' | 'pending'>('cash');
   const [submitting, setSubmitting] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const today = format(new Date(), 'yyyy-MM-dd');
 
