@@ -169,7 +169,7 @@ export default function MemberEntryTab() {
       queryClient.invalidateQueries({ queryKey: ['membership-visits-today'] });
       queryClient.invalidateQueries({ queryKey: ['member-visits', foundMember?.id] });
     },
-    onError: () => toast.error('চেক-ইন ব্যর্থ'),
+    onError: () => toast.error('Check-in failed'),
   });
 
   const checkOutMutation = useMutation({
