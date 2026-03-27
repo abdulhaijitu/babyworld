@@ -5,7 +5,7 @@ import { t } from "@/lib/translations";
 export function AboutSection() {
 
   return (
-    <section id="about" className="py-16 sm:py-20 lg:py-24 bg-card overflow-hidden">
+    <section id="about" className="py-10 sm:py-16 lg:py-24 bg-card overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           {/* Visual */}

@@ -298,7 +298,7 @@ export default function AdminDashboardContent() {
             ) : (
               <div className="space-y-2">
                 {recentFoodOrders.map((order) => (
-                  <div key={order.id} className="flex items-center justify-between p-2.5 rounded-lg bg-muted/50">
+                  <div key={order.id} className="flex items-center justify-between p-2 md:p-2.5 rounded-lg bg-muted/50">
                     <div className="min-w-0">
                       <p className="text-sm font-medium truncate">{order.customer_name || 'Walk-in'}</p>
                       <p className="text-xs text-muted-foreground">#{order.order_number}</p>
