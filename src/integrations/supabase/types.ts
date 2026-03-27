@@ -569,6 +569,51 @@ export type Database = {
         }
         Relationships: []
       }
+      leads: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          email: string | null
+          follow_up_date: string | null
+          id: string
+          interested_in: string | null
+          name: string
+          notes: string | null
+          phone: string
+          source: Database["public"]["Enums"]["lead_source"]
+          status: Database["public"]["Enums"]["lead_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          follow_up_date?: string | null
+          id?: string
+          interested_in?: string | null
+          name: string
+          notes?: string | null
+          phone: string
+          source?: Database["public"]["Enums"]["lead_source"]
+          status?: Database["public"]["Enums"]["lead_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          follow_up_date?: string | null
+          id?: string
+          interested_in?: string | null
+          name?: string
+          notes?: string | null
+          phone?: string
+          source?: Database["public"]["Enums"]["lead_source"]
+          status?: Database["public"]["Enums"]["lead_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       membership_packages: {
         Row: {
           created_at: string
@@ -1265,6 +1310,15 @@ export type Database = {
       food_order_status: "pending" | "served" | "cancelled"
       food_payment_type: "cash" | "online" | "pending"
       gate_entry_type: "entry" | "exit"
+      lead_source:
+        | "facebook"
+        | "instagram"
+        | "walk_in"
+        | "referral"
+        | "website"
+        | "phone"
+        | "other"
+      lead_status: "new" | "contacted" | "interested" | "converted" | "lost"
       membership_status: "active" | "expired" | "cancelled"
       membership_type: "monthly" | "quarterly" | "yearly"
       ride_category: "kids" | "family" | "thrill"
@@ -1419,6 +1473,16 @@ export const Constants = {
       food_order_status: ["pending", "served", "cancelled"],
       food_payment_type: ["cash", "online", "pending"],
       gate_entry_type: ["entry", "exit"],
+      lead_source: [
+        "facebook",
+        "instagram",
+        "walk_in",
+        "referral",
+        "website",
+        "phone",
+        "other",
+      ],
+      lead_status: ["new", "contacted", "interested", "converted", "lost"],
       membership_status: ["active", "expired", "cancelled"],
       membership_type: ["monthly", "quarterly", "yearly"],
       ride_category: ["kids", "family", "thrill"],
