@@ -83,7 +83,7 @@ const App = () => (
                   <Route path="roster" element={<AdminRoster />} />
                   <Route path="bookings" element={<AdminBookings />} />
                   <Route path="events" element={<AdminEvents />} />
-                  <Route path="event-bookings" element={<AdminEventBookings />} />
+                  
                   <Route path="event-packages" element={<AdminEventPackages />} />
                   <Route path="event-calendar" element={<AdminEventCalendar />} />
                   <Route path="reports" element={<AdminReports />} />
