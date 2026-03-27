@@ -252,7 +252,20 @@ export default function AdminFoodSales() {
       price: item.price,
       is_available: item.is_available
     });
+    setImageFile(null);
+    setImagePreview(item.image_url || null);
     setItemDialogOpen(true);
+  };
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('ছবি ৫MB এর কম হতে হবে');
+      return;
+    }
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
   };
 
   const generateOrderNumber = () => {
