@@ -316,7 +316,7 @@ export default function MemberEntryTab() {
                   Validity: {foundMember.valid_from} → {foundMember.valid_till}
                 </p>
                 <Badge variant={remainingDays <= 7 ? 'destructive' : 'secondary'}>
-                  {remainingDays} দিন বাকি
+                  {remainingDays} days remaining
                 </Badge>
                 <p className="text-xs text-muted-foreground">
                   মোট ভিজিট: {memberVisits.length}
