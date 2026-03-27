@@ -1,29 +1,29 @@
 
 
-## প্ল্যান: Member Entry আলাদা পেজ ও সাইডবার সাবমেনু
+## প্ল্যান: সার্চবারে মেম্বার সাজেশন/অটোকমপ্লিট
 
 ### কী হবে
-- Member Entry ট্যাবকে `AdminMemberships.tsx` থেকে আলাদা করে নতুন পেজ `AdminMemberEntry.tsx` বানানো হবে
-- সাইডবারে Membership গ্রুপে "All Members" এর নিচে "Member Entry" সাবমেনু যোগ হবে
+ফোন নম্বর বা নাম টাইপ করার সাথে সাথে ম্যাচিং মেম্বারদের ড্রপডাউন সাজেশন দেখাবে। সাজেশনে ক্লিক করলে সেই মেম্বার সিলেক্ট হবে।
 
-### পরিবর্তন
+### পরিবর্তন: `src/components/admin/MemberEntryTab.tsx`
 
-**১. নতুন পেজ তৈরি: `src/pages/admin/AdminMemberEntry.tsx`**
-- `MemberEntryTab` কম্পোনেন্ট ব্যবহার করে একটি ফুল পেজ তৈরি — হেডার সহ
+**১. নতুন স্টেট ও কুয়েরি যোগ**
+- `searchPhone` ভ্যালু ৩+ ক্যারেক্টার হলে debounced কুয়েরি চালাবে
+- `memberships` টেবিলে `phone` বা `member_name` এ `ilike` সার্চ করবে (সর্বোচ্চ ৫ রেজাল্ট)
+- সাজেশন লিস্ট স্টেটে রাখবে
 
-**২. `src/pages/admin/AdminMemberships.tsx` থেকে Member Entry ট্যাব সরানো**
-- `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent` রিমুভ
-- শুধু All Members কন্টেন্ট রাখা হবে (ট্যাব ছাড়া)
-- `MemberEntryTab` ইম্পোর্ট রিমুভ
+**২. সার্চবারের নিচে সাজেশন ড্রপডাউন**
+- প্রতিটি সাজেশনে দেখাবে: নাম, ফোন, প্যাকেজ টাইপ, স্ট্যাটাস ব্যাজ
+- ক্লিক করলে `setFoundMember(member)` কল হবে ও সাজেশন বন্ধ হবে
+- ইনপুটের বাইরে ক্লিক করলে সাজেশন হাইড হবে
 
-**৩. `src/components/admin/AdminSidebar.tsx` — Membership সাবমেনুতে যোগ**
-```
-Membership
-  ├── Packages        → /admin/membership-packages
-  ├── All Members     → /admin/memberships
-  └── Member Entry    → /admin/member-entry
-```
+**৩. সার্চ লজিক আপডেট**
+- নাম ও ফোন দুটোতেই সার্চ করবে (শুধু ফোনে সীমাবদ্ধ থাকবে না)
+- সব স্ট্যাটাসের মেম্বার দেখাবে তবে active মেম্বার আগে থাকবে
 
-**৪. `src/App.tsx` — নতুন রাউট যোগ**
-- `<Route path="member-entry" element={<AdminMemberEntry />} />`
+### টেকনিক্যাল ডিটেইলস
+- `useQuery` দিয়ে debounced সার্চ (৩০০ms delay)
+- `ilike` দিয়ে partial match: `.or(`phone.ilike.%${q}%,member_name.ilike.%${q}%`)`
+- সাজেশন ড্রপডাউন `absolute` পজিশনে ইনপুটের নিচে বসবে
+- কোনো DB পরিবর্তন লাগবে না
 
