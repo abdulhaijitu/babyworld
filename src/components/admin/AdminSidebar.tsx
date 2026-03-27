@@ -13,6 +13,7 @@ import {
   ChevronDown,
   Menu,
   LogOut,
+  LogIn,
   Clock,
   FileBarChart,
   Shield,
