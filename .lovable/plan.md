@@ -1,64 +1,49 @@
 
 
-## Plan: Food POS System
+## Audit: Foods Sidebar Menu & Relations
 
-### Overview
-বর্তমান Food Orders পেজকে একটি পূর্ণাঙ্গ POS (Point of Sale) ইন্টারফেসে রূপান্তর করবো। এটি হবে একটি ডেডিকেটেড পেজ `/admin/food-pos` যেখানে স্টাফরা দ্রুত অর্ডার নিতে পারবে।
+### Issues Found
 
-### POS Layout (2-Column)
+1. **POS submenu icon is `Plus`** — misleading; `Plus` suggests "add new", not "point of sale". Should use `Monitor` or similar.
 
-```text
-┌──────────────────────────────┬──────────────────────┐
-│  MENU ITEMS                  │  CART / ORDER         │
-│  ┌─────────────────────────┐ │                      │
-│  │ [Snacks] [Drinks] [Meals]│ │  Customer: ________  │
-│  └─────────────────────────┘ │                      │
-│  ┌─────┐ ┌─────┐ ┌─────┐   │  ┌──────────────────┐ │
-│  │ 🍕  │ │ 🍔  │ │ 🌭  │   │  │ Item    Qty  ৳   │ │
-│  │Burger│ │Fries │ │HotDog│  │  │ Burger  2   160  │ │
-│  │ ৳80 │ │ ৳50 │ │ ৳60 │   │  │ Fries   1    50  │ │
-│  └──+──┘ └──+──┘ └──+──┘   │  │ [- qty +] [del]  │ │
-│  ┌─────┐ ┌─────┐           │  └──────────────────┘ │
-│  │ 🥤  │ │ 🧃  │           │                      │
-│  │Cola │ │Juice│            │  Payment: [Cash][Due] │
-│  │ ৳30 │ │ ৳40 │           │  Notes: ____________  │
-│  └──+──┘ └──+──┘           │                      │
-│                              │  ═══════════════════  │
-│                              │  TOTAL: ৳210         │
-│                              │  [  Place Order  ]    │
-│                              │                      │
-│                              │  ── Recent Orders ──  │
-│                              │  FO240520ABC Pending  │
-│                              │  FO240520DEF Served   │
-└──────────────────────────────┴──────────────────────┘
-```
+2. **Duplicate "New Order" in Food Orders page** — `AdminFoodOrders.tsx` has a full "New Order" dialog (with cart, item selection, category tabs) that duplicates the dedicated POS page (`AdminFoodPOS.tsx`). This is confusing and redundant.
 
-### Features
-1. **Left Panel — Menu Grid**: ক্যাটাগরি ট্যাব (All/Snacks/Drinks/Meals), বড় ক্লিকেবল কার্ড (ছবি, নাম, দাম), ট্যাপ করলেই কার্টে যোগ
-2. **Right Panel — Cart & Checkout**: কার্ট আইটেম লিস্ট (+/- কোয়ান্টিটি), কাস্টমার নাম, পেমেন্ট টাইপ, নোটস, টোটাল ও Place Order বাটন
-3. **Recent Orders**: রাইট প্যানেলের নিচে আজকের সাম্প্রতিক অর্ডার (স্ট্যাটাস সহ), ক্লিকে Serve/Cancel করা যাবে
-4. **Quick Actions**: অর্ডার সাবমিটের পর অটো-রিসেট, সাউন্ড/টোস্ট নোটিফিকেশন
-5. **Full-screen feel**: No page header clutter, compact layout optimized for touch/counter use
+3. **Collapsible `defaultOpen` is uncontrolled** — uses `defaultOpen={childActive}` which only works on first render. If user navigates to a Foods child route after sidebar mounts, the Foods group won't auto-expand. Should use controlled `open` state.
+
+4. **`childActive` detection is fragile** — `location.pathname.startsWith(item.path)` where Foods `item.path = '/admin/food'` matches `/admin/food-pos`, `/admin/food-orders` by coincidence. This works but is implicit. A cleaner approach: check if pathname matches any child's path.
+
+5. **Food Sales page label** — Component is `AdminFoodSales` but sidebar label is "Items". Consistent but route is `/admin/food` which is vague. Minor but noted.
+
+### Plan
+
+**File: `src/components/admin/AdminSidebar.tsx`**
+- Change POS icon from `Plus` to `Monitor` (import from lucide)
+- Change Foods submenu order to: POS → Orders → Items (POS first as primary action)
+- Fix `childActive` to check `item.children.some(c => location.pathname === c.path)` instead of relying on `startsWith(item.path)`
+- Convert Collapsible from uncontrolled (`defaultOpen`) to controlled (`open` + `onOpenChange`) using state, so groups auto-expand when navigating
+
+**File: `src/pages/admin/AdminFoodOrders.tsx`**
+- Remove the duplicate "New Order" dialog and button entirely (POS page handles this)
+- Keep page focused on order list/management only
 
 ### Technical Details
 
-**New file**: `src/pages/admin/AdminFoodPOS.tsx`
-- Dedicated POS component, separate from existing AdminFoodOrders (which stays as order history/management)
-- Reuses existing `food_items`, `food_orders`, `food_order_items` tables — no DB changes needed
-- Uses existing cart logic (addToCart, updateCartQty, removeFromCart, handleCreateOrder)
+Sidebar Collapsible fix — track open groups in state:
+```tsx
+const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
+// Auto-open group containing active child
+useEffect(() => {
+  menuItems.forEach(item => {
+    if (item.children?.some(c => location.pathname === c.path)) {
+      setOpenGroups(prev => ({ ...prev, [item.id]: true }));
+    }
+  });
+}, [location.pathname]);
+```
 
-**Route addition** in `App.tsx`:
-- `<Route path="food-pos" element={<AdminFoodPOS />} />`
-
-**Sidebar update** in `AdminSidebar.tsx`:
-- Foods সাবমেনুতে "POS" আইটেম যোগ → `/admin/food-pos`
-
-**No database migrations needed** — existing tables and RLS policies sufficient.
-
-### File Changes Summary
+### Files Changed
 | File | Change |
 |------|--------|
-| `src/pages/admin/AdminFoodPOS.tsx` | New — Full POS interface |
-| `src/App.tsx` | Add `/admin/food-pos` route |
-| `src/components/admin/AdminSidebar.tsx` | Add POS link under Foods menu |
+| `src/components/admin/AdminSidebar.tsx` | Fix icons, submenu order, controlled collapsible |
+| `src/pages/admin/AdminFoodOrders.tsx` | Remove duplicate New Order dialog |
 
