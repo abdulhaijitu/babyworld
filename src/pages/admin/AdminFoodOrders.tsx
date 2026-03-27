@@ -39,9 +39,6 @@ import {
   Eye,
   Filter,
   Calendar,
-  Plus,
-  Minus,
-  Trash2,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format, startOfDay, endOfDay, subDays } from 'date-fns';
