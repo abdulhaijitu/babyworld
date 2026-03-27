@@ -375,19 +375,19 @@ function SidebarContent({
               {active && !collapsed && (
                 <motion.div
                   layoutId="sidebar-active-indicator"
-                  className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-primary"
+                  className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 rounded-r-full bg-primary"
                   transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                 />
               )}
               <motion.div
                 className={cn(
-                  "h-7 w-7 rounded-md flex items-center justify-center shrink-0 transition-colors duration-200 relative",
+                  "h-6 w-6 rounded-md flex items-center justify-center shrink-0 transition-colors duration-200 relative",
                   active ? "bg-primary/15" : "bg-transparent"
                 )}
                 whileHover={{ scale: 1.1 }}
                 transition={{ type: 'spring', stiffness: 400, damping: 17 }}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className="h-3.5 w-3.5" />
                 {collapsed && (
                   <AnimatePresence>
                     {groupBadge > 0 && (
