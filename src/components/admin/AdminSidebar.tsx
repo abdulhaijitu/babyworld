@@ -170,7 +170,7 @@ function SidebarContent({
   useEffect(() => {
     menuItems.forEach(item => {
       if (item.children?.some(c => location.pathname === c.path)) {
-        setOpenGroups(prev => ({ ...prev, [item.id]: true }));
+        setOpenGroups({ [item.id]: true });
       }
     });
   }, [location.pathname, menuItems]);
