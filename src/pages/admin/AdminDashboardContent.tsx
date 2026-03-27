@@ -208,13 +208,13 @@ export default function AdminDashboardContent() {
                 Today's Food Orders
               </CardTitle>
               <Button variant="ghost" size="sm" onClick={() => navigate('/admin/food-orders')}>
-                সব দেখুন <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                View All <ArrowRight className="w-3.5 h-3.5 ml-1" />
               </Button>
             </div>
           </CardHeader>
           <CardContent>
             {!recentFoodOrders || recentFoodOrders.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-6">আজ কোনো ফুড অর্ডার নেই</p>
+              <p className="text-sm text-muted-foreground text-center py-6">No food orders today</p>
             ) : (
               <div className="space-y-2">
                 {recentFoodOrders.map((order) => (
