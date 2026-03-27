@@ -25,12 +25,13 @@ import {
   Star,
   MessageSquare,
   Home,
+  Monitor,
   Plus,
   List
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useUserRoles, type AppRole } from '@/hooks/useUserRoles';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
 import babyWorldLogo from '@/assets/baby-world-logo.png';
@@ -58,10 +59,10 @@ const allMenuItems: MenuItem[] = [
     { id: 'member-entry', label: 'Member Entry', icon: LogIn, path: '/admin/member-entry' },
   ]},
   
-  { id: 'foods', label: 'Foods', icon: UtensilsCrossed, path: '/admin/food', requiredRoles: ['super_admin', 'admin', 'manager', 'staff'], children: [
-    { id: 'food-pos', label: 'POS', icon: Plus, path: '/admin/food-pos' },
-    { id: 'food-items', label: 'Items', icon: List, path: '/admin/food' },
+  { id: 'foods', label: 'Foods', icon: UtensilsCrossed, path: '/admin/food-pos', requiredRoles: ['super_admin', 'admin', 'manager', 'staff'], children: [
+    { id: 'food-pos', label: 'POS', icon: Monitor, path: '/admin/food-pos' },
     { id: 'food-orders', label: 'Orders', icon: Receipt, path: '/admin/food-orders' },
+    { id: 'food-items', label: 'Items', icon: List, path: '/admin/food' },
   ]},
   { id: 'expenses', label: 'Expenses', icon: Receipt, path: '/admin/expenses', requiredRoles: ['super_admin', 'admin', 'manager'] },
   { id: 'employees', label: 'Employees', icon: Users, path: '/admin/employees', requiredRoles: ['super_admin', 'admin'] },
@@ -96,22 +97,29 @@ function SidebarContent({
   const location = useLocation();
   const navigate = useNavigate();
   const { roles, isAdmin, isSuperAdmin, loading: rolesLoading } = useUserRoles();
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
 
   // Filter menu items based on user roles
   const menuItems = useMemo(() => {
     return allMenuItems.filter(item => {
-      // If no roles required, show to everyone
       if (!item.requiredRoles || item.requiredRoles.length === 0) {
         return true;
       }
-      // Super admin sees everything
       if (isSuperAdmin) {
         return true;
       }
-      // Check if user has any of the required roles
       return item.requiredRoles.some(role => roles.includes(role));
     });
   }, [roles, isSuperAdmin]);
+
+  // Auto-open group containing active child route
+  useEffect(() => {
+    menuItems.forEach(item => {
+      if (item.children?.some(c => location.pathname === c.path)) {
+        setOpenGroups(prev => ({ ...prev, [item.id]: true }));
+      }
+    });
+  }, [location.pathname, menuItems]);
 
   const handleNavigate = (path: string) => {
     navigate(path);
@@ -165,9 +173,13 @@ function SidebarContent({
           const active = isActive(item.path);
           
           if (item.children && item.children.length > 0 && !collapsed) {
-            const childActive = item.children.some(c => location.pathname === c.path || location.pathname.startsWith(item.path));
+            const childActive = item.children.some(c => location.pathname === c.path);
             return (
-              <Collapsible key={item.id} defaultOpen={childActive}>
+              <Collapsible
+                key={item.id}
+                open={openGroups[item.id] ?? childActive}
+                onOpenChange={(open) => setOpenGroups(prev => ({ ...prev, [item.id]: open }))}
+              >
                 <CollapsibleTrigger className={cn(
                   "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
                   childActive

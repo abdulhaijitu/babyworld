@@ -39,9 +39,6 @@ import {
   Eye,
   Filter,
   Calendar,
-  Plus,
-  Minus,
-  Trash2,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format, startOfDay, endOfDay, subDays } from 'date-fns';
@@ -82,13 +79,6 @@ interface FoodOrderItem {
   };
 }
 
-interface CartItem {
-  itemId: string;
-  name: string;
-  price: number;
-  quantity: number;
-}
-
 export default function AdminFoodOrders() {
   const [orders, setOrders] = useState<FoodOrder[]>([]);
   const [loading, setLoading] = useState(true);
@@ -102,17 +92,6 @@ export default function AdminFoodOrders() {
   const [selectedOrder, setSelectedOrder] = useState<FoodOrder | null>(null);
   const [orderItems, setOrderItems] = useState<FoodOrderItem[]>([]);
   const [detailLoading, setDetailLoading] = useState(false);
-
-  // New order dialog
-  const [newOrderOpen, setNewOrderOpen] = useState(false);
-  const [foodItems, setFoodItems] = useState<FoodItem[]>([]);
-  const [foodItemsLoading, setFoodItemsLoading] = useState(false);
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [customerName, setCustomerName] = useState('');
-  const [paymentType, setPaymentType] = useState<'cash' | 'pending'>('cash');
-  const [orderNotes, setOrderNotes] = useState('');
-  const [creatingOrder, setCreatingOrder] = useState(false);
-  const [itemSearch, setItemSearch] = useState('');
 
   const getDateRange = useCallback((filter: string) => {
     const now = new Date();
@@ -167,122 +146,9 @@ export default function AdminFoodOrders() {
     }
   }, [dateFilter, statusFilter, paymentFilter, getDateRange]);
 
-  const fetchFoodItems = useCallback(async () => {
-    setFoodItemsLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from('food_items')
-        .select('*')
-        .eq('is_available', true)
-        .order('category')
-        .order('name');
-
-      if (error) throw error;
-      setFoodItems((data || []) as FoodItem[]);
-    } catch (err) {
-      console.error('[FoodOrders] items error:', err);
-    } finally {
-      setFoodItemsLoading(false);
-    }
-  }, []);
-
   useEffect(() => {
     fetchOrders();
   }, [fetchOrders]);
-
-  const handleOpenNewOrder = () => {
-    setNewOrderOpen(true);
-    setCart([]);
-    setCustomerName('');
-    setPaymentType('cash');
-    setOrderNotes('');
-    setItemSearch('');
-    if (foodItems.length === 0) {
-      fetchFoodItems();
-    }
-  };
-
-  const addToCart = (item: FoodItem) => {
-    setCart(prev => {
-      const existing = prev.find(c => c.itemId === item.id);
-      if (existing) {
-        return prev.map(c => c.itemId === item.id ? { ...c, quantity: c.quantity + 1 } : c);
-      }
-      return [...prev, { itemId: item.id, name: item.name, price: item.price, quantity: 1 }];
-    });
-  };
-
-  const updateCartQty = (itemId: string, delta: number) => {
-    setCart(prev => {
-      return prev
-        .map(c => c.itemId === itemId ? { ...c, quantity: c.quantity + delta } : c)
-        .filter(c => c.quantity > 0);
-    });
-  };
-
-  const removeFromCart = (itemId: string) => {
-    setCart(prev => prev.filter(c => c.itemId !== itemId));
-  };
-
-  const cartTotal = cart.reduce((sum, c) => sum + c.price * c.quantity, 0);
-
-  const generateOrderNumber = () => {
-    const prefix = 'FO';
-    const date = format(new Date(), 'yyyyMMdd');
-    const random = Math.random().toString(36).substring(2, 5).toUpperCase();
-    return `${prefix}${date}${random}`;
-  };
-
-  const handleCreateOrder = async () => {
-    if (cart.length === 0) {
-      toast.error('অন্তত একটি আইটেম সিলেক্ট করুন');
-      return;
-    }
-
-    setCreatingOrder(true);
-    try {
-      const orderNumber = generateOrderNumber();
-
-      const { data: orderData, error: orderError } = await supabase
-        .from('food_orders')
-        .insert([{
-          order_number: orderNumber,
-          customer_name: customerName || null,
-          status: 'pending' as const,
-          payment_type: paymentType,
-          subtotal: cartTotal,
-          total: cartTotal,
-          notes: orderNotes || null,
-        }])
-        .select()
-        .single();
-
-      if (orderError) throw orderError;
-
-      const orderItemsData = cart.map(c => ({
-        order_id: orderData.id,
-        food_item_id: c.itemId,
-        quantity: c.quantity,
-        unit_price: c.price,
-        total_price: c.price * c.quantity,
-      }));
-
-      const { error: itemsError } = await supabase
-        .from('food_order_items')
-        .insert(orderItemsData);
-
-      if (itemsError) throw itemsError;
-
-      toast.success(`অর্ডার তৈরি হয়েছে: ${orderNumber}`);
-      setNewOrderOpen(false);
-      fetchOrders();
-    } catch (err) {
-      console.error('[FoodOrders] create error:', err);
-      toast.error('অর্ডার তৈরি ব্যর্থ');
-    } finally {
-      setCreatingOrder(false);
-    }
-  };
 
   const handleUpdateStatus = async (orderId: string, status: 'served' | 'cancelled') => {
     setUpdatingId(orderId);
@@ -356,12 +222,6 @@ export default function AdminFoodOrders() {
     );
   });
 
-  const filteredFoodItems = foodItems.filter(i => {
-    if (!itemSearch) return true;
-    return i.name.toLowerCase().includes(itemSearch.toLowerCase()) ||
-      (i.name_bn && i.name_bn.includes(itemSearch));
-  });
-
   const pendingCount = orders.filter(o => o.status === 'pending').length;
   const servedCount = orders.filter(o => o.status === 'served').length;
   const totalRevenue = orders
@@ -389,10 +249,6 @@ export default function AdminFoodOrders() {
           <p className="text-muted-foreground">অর্ডার ম্যানেজমেন্ট ও ট্র্যাকিং</p>
         </div>
         <div className="flex gap-2">
-          <Button size="sm" onClick={handleOpenNewOrder}>
-            <Plus className="w-4 h-4 mr-2" />
-            New Order
-          </Button>
           <Button variant="outline" size="sm" onClick={fetchOrders} disabled={loading}>
             <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
             Refresh
@@ -668,160 +524,6 @@ export default function AdminFoodOrders() {
         </DialogContent>
       </Dialog>
 
-      {/* New Order Dialog */}
-      <Dialog open={newOrderOpen} onOpenChange={setNewOrderOpen}>
-        <DialogContent className="max-w-lg max-h-[90vh] flex flex-col">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Plus className="h-5 w-5" />
-              New Food Order
-            </DialogTitle>
-          </DialogHeader>
-
-          <div className="flex-1 overflow-y-auto space-y-4 py-2">
-            {/* Customer & Payment */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <Label className="text-sm">Customer Name</Label>
-                <Input
-                  placeholder="ঐচ্ছিক"
-                  value={customerName}
-                  onChange={(e) => setCustomerName(e.target.value)}
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-sm">Payment</Label>
-                <Select value={paymentType} onValueChange={(v) => setPaymentType(v as 'cash' | 'pending')}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="cash">Cash</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            {/* Item Selection with Category Tabs */}
-            <div className="space-y-2">
-              <Label className="text-sm">Add Items</Label>
-              {foodItemsLoading ? (
-                <div className="flex items-center justify-center py-4">
-                  <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
-                </div>
-              ) : (
-                <Tabs defaultValue="snacks">
-                  <TabsList className="w-full">
-                    <TabsTrigger value="snacks" className="flex-1">Snacks ({foodItems.filter(i => i.category === 'snacks').length})</TabsTrigger>
-                    <TabsTrigger value="drinks" className="flex-1">Drinks ({foodItems.filter(i => i.category === 'drinks').length})</TabsTrigger>
-                    <TabsTrigger value="meals" className="flex-1">Meals ({foodItems.filter(i => i.category === 'meals').length})</TabsTrigger>
-                  </TabsList>
-                  {(['snacks', 'drinks', 'meals'] as const).map((cat) => (
-                    <TabsContent key={cat} value={cat} className="mt-2">
-                      <div className="grid grid-cols-2 gap-2 max-h-[160px] overflow-y-auto border rounded-lg p-2">
-                        {foodItems.filter(i => i.category === cat).length === 0 ? (
-                          <p className="col-span-2 text-center text-sm text-muted-foreground py-3">কোনো আইটেম নেই</p>
-                        ) : (
-                          foodItems.filter(i => i.category === cat).map((item) => {
-                            const inCart = cart.find(c => c.itemId === item.id);
-                            return (
-                              <button
-                                key={item.id}
-                                onClick={() => addToCart(item)}
-                                className="flex items-center justify-between p-2 rounded-md border text-left text-sm hover:bg-muted transition-colors"
-                              >
-                                <div className="min-w-0">
-                                  <p className="font-medium truncate">{item.name}</p>
-                                  <p className="text-xs text-muted-foreground">৳{item.price}</p>
-                                </div>
-                                {inCart && (
-                                  <Badge variant="secondary" className="ml-1 shrink-0">{inCart.quantity}</Badge>
-                                )}
-                              </button>
-                            );
-                          })
-                        )}
-                      </div>
-                    </TabsContent>
-                  ))}
-                </Tabs>
-              )}
-            </div>
-
-            {/* Cart */}
-            {cart.length > 0 && (
-              <div className="space-y-2">
-                <Label className="text-sm">Cart ({cart.length} items)</Label>
-                <div className="border rounded-lg divide-y">
-                  {cart.map((c) => (
-                    <div key={c.itemId} className="flex items-center justify-between p-2.5">
-                      <div className="min-w-0 flex-1">
-                        <p className="font-medium text-sm truncate">{c.name}</p>
-                        <p className="text-xs text-muted-foreground">৳{c.price} × {c.quantity} = ৳{c.price * c.quantity}</p>
-                      </div>
-                      <div className="flex items-center gap-1 ml-2">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-7 w-7"
-                          onClick={() => updateCartQty(c.itemId, -1)}
-                        >
-                          <Minus className="h-3 w-3" />
-                        </Button>
-                        <span className="w-6 text-center text-sm font-medium">{c.quantity}</span>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-7 w-7"
-                          onClick={() => updateCartQty(c.itemId, 1)}
-                        >
-                          <Plus className="h-3 w-3" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-7 w-7 text-destructive hover:text-destructive"
-                          onClick={() => removeFromCart(c.itemId)}
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Notes */}
-            <div className="space-y-1.5">
-              <Label className="text-sm">Notes (ঐচ্ছিক)</Label>
-              <Input
-                placeholder="অর্ডার সম্পর্কে নোট..."
-                value={orderNotes}
-                onChange={(e) => setOrderNotes(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <DialogFooter className="border-t pt-3">
-            <div className="flex items-center justify-between w-full">
-              <div className="text-lg font-bold">
-                Total: ৳{cartTotal}
-              </div>
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={() => setNewOrderOpen(false)}>
-                  Cancel
-                </Button>
-                <Button onClick={handleCreateOrder} disabled={creatingOrder || cart.length === 0}>
-                  {creatingOrder && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                  Create Order
-                </Button>
-              </div>
-            </div>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
