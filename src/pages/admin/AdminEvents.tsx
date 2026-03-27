@@ -456,7 +456,7 @@ export default function AdminEvents() {
           ) : filteredEvents.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <PartyPopper className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>{'No events found'}</p>
+              <p>{'No bookings found'}</p>
               {hasActiveFilters && (
                 <Button variant="link" onClick={clearFilters} className="mt-2">
                   {'Clear filters'}
