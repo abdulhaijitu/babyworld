@@ -524,6 +524,44 @@ export type Database = {
         }
         Relationships: []
       }
+      membership_visits: {
+        Row: {
+          check_in_at: string
+          check_out_at: string | null
+          checked_in_by: string | null
+          created_at: string
+          id: string
+          membership_id: string
+          notes: string | null
+        }
+        Insert: {
+          check_in_at?: string
+          check_out_at?: string | null
+          checked_in_by?: string | null
+          created_at?: string
+          id?: string
+          membership_id: string
+          notes?: string | null
+        }
+        Update: {
+          check_in_at?: string
+          check_out_at?: string | null
+          checked_in_by?: string | null
+          created_at?: string
+          id?: string
+          membership_id?: string
+          notes?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "membership_visits_membership_id_fkey"
+            columns: ["membership_id"]
+            isOneToOne: false
+            referencedRelation: "memberships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       memberships: {
         Row: {
           child_count: number
