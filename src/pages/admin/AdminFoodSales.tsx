@@ -178,21 +178,19 @@ export default function AdminFoodSales() {
         setUploadingImage(false);
       }
 
-      const itemData: Record<string, unknown> = {
+      const baseData = {
         name: newItem.name,
         name_bn: newItem.name_bn || null,
         category: newItem.category,
         price: newItem.price,
         is_available: newItem.is_available,
+        ...(image_url !== undefined ? { image_url } : {}),
       };
-      if (image_url !== undefined) {
-        itemData.image_url = image_url;
-      }
 
       if (editingItem) {
         const { error } = await supabase
           .from('food_items')
-          .update(itemData)
+          .update(baseData)
           .eq('id', editingItem.id);
 
         if (error) throw error;
@@ -200,7 +198,7 @@ export default function AdminFoodSales() {
       } else {
         const { error } = await supabase
           .from('food_items')
-          .insert([itemData]);
+          .insert([baseData]);
 
         if (error) throw error;
         toast.success('Item added');
