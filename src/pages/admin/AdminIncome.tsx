@@ -239,14 +239,7 @@ export default function AdminIncome() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <ArrowDownCircle className="w-6 h-6" />
-            Income
-          </h1>
-          <p className="text-muted-foreground">Track all revenue sources — automatic and manual</p>
-        </div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-4">
         <div className="flex items-center gap-2">
           <Input
             type="month"

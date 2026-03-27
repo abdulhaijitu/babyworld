@@ -124,10 +124,6 @@ export default function AdminSeoBranding() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">SEO & Branding</h1>
-        <p className="text-sm text-muted-foreground">সার্চ ইঞ্জিন অপটিমাইজেশন এবং ব্র্যান্ডিং সেটিংস কন্ট্রোল করুন</p>
-      </div>
 
       <Tabs defaultValue="seo" className="w-full">
         <TabsList className="w-full sm:w-auto">

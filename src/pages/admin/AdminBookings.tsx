@@ -341,16 +341,7 @@ export default function AdminBookings() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <CalendarDays className="w-6 h-6" />
-            {'Bookings'}
-          </h1>
-          <p className="text-muted-foreground">
-            {'View and manage all bookings'}
-          </p>
-        </div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-4">
 
         <div className="flex gap-2">
           {/* View Toggle */}

@@ -185,14 +185,6 @@ export default function AdminHeroCards({ embedded = false }: { embedded?: boolea
   return (
     <div className={embedded ? "space-y-6" : "p-4 md:p-6 space-y-6"}>
       <div className="flex items-center justify-between">
-        {!embedded && (
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">Hero Cards</h1>
-            <p className="text-sm text-muted-foreground">
-              Manage the offer and event cards displayed on the homepage hero section.
-            </p>
-          </div>
-        )}
         <div className={embedded ? "ml-auto" : ""}>
           <Button onClick={openCreate} className="gap-2">
             <Plus className="w-4 h-4" /> Add Card

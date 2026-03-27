@@ -376,21 +376,12 @@ export default function AdminTicketing() {
     <TooltipProvider>
     <div className="space-y-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h1 className="text-xl font-bold flex items-center gap-2">
-            <Ticket className="w-5 h-5" />
-            Ticket List
-          </h1>
-          <p className="text-muted-foreground text-sm">Manage tickets</p>
-        </div>
-        <div className="flex items-center gap-2">
+      <div className="flex justify-end gap-2">
           <Button size="sm" onClick={() => navigate('/admin/create-ticket')}>
             <Plus className="w-4 h-4 mr-1" />
             Create Ticket
           </Button>
           <QRScannerDialog />
-        </div>
       </div>
 
         <div className="space-y-4">

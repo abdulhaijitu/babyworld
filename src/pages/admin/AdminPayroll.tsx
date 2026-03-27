@@ -54,8 +54,7 @@ export default function AdminPayroll() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <h1 className="text-2xl font-bold">Payroll</h1>
+      <div className="flex items-center justify-end flex-wrap gap-3">
         <div className="flex items-center gap-3">
           <Select value={String(month)} onValueChange={v => setMonth(Number(v))}>
             <SelectTrigger className="w-[140px]"><SelectValue /></SelectTrigger>

@@ -319,16 +319,7 @@ export default function AdminMemberships() {
     <div className="space-y-6">
       {/* Header */}
       <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Crown className="h-6 w-6 text-primary" />
-            {'Membership Management'}
-          </h1>
-          <p className="text-muted-foreground">
-            {'Manage member subscriptions'}
-          </p>
-        </div>
+      <div className="flex flex-col sm:flex-row justify-end gap-4">
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
             <Button>

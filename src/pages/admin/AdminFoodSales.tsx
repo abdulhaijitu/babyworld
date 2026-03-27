@@ -415,16 +415,7 @@ export default function AdminFoodSales() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <UtensilsCrossed className="w-6 h-6" />
-            {'Food Sales'}
-          </h1>
-          <p className="text-muted-foreground">
-            {'Manage food & snacks'}
-          </p>
-        </div>
+      <div className="flex justify-end">
         <Button onClick={() => navigate('/admin/food-orders')} variant="outline" size="sm">
           <ShoppingCart className="w-4 h-4 mr-2" />
           Orders

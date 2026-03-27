@@ -317,17 +317,6 @@ export default function AdminEvents() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <PartyPopper className="w-6 h-6" />
-            {'Bookings'}
-          </h1>
-          <p className="text-muted-foreground">
-            {'Manage birthday parties & private event bookings'}
-          </p>
-        </div>
-      </div>
 
       <div className="space-y-6">
           {/* New Event Button */}

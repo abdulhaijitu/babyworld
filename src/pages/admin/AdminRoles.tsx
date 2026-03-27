@@ -128,15 +128,6 @@ export default function AdminRoles() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-            <Shield className="h-6 w-6 text-primary" />
-            Role Management
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1">রোল ও পারমিশন কনফিগার করুন</p>
-        </div>
-      </div>
 
       {/* Role Cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">

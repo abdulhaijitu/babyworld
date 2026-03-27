@@ -187,19 +187,7 @@ export default function AdminProfitReports() {
   return (
     <div className="space-y-6 print:p-0">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <BarChart3 className="w-6 h-6 print:hidden" />
-            {'Profit & Loss Report'}
-          </h1>
-          <p className="text-muted-foreground">
-            {'Revenue, expenses and net profit analysis'}
-          </p>
-          <p className="text-sm text-muted-foreground print:block hidden">
-            {format(startDate, 'dd MMM yyyy')} - {format(endDate, 'dd MMM yyyy')}
-          </p>
-        </div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-4">
 
         {/* Date Range & Export Controls */}
         <div className="flex flex-wrap items-center gap-2 print:hidden">

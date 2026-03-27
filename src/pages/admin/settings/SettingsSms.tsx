@@ -27,11 +27,7 @@ export default function SettingsSms() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2"><SendHorizonal className="w-6 h-6" />SMS Gateway</h1>
-          <p className="text-muted-foreground">Configure your SMS API provider</p>
-        </div>
+      <div className="flex justify-end">
         <Button variant="outline" size="sm" onClick={loadSettings}><RefreshCw className="w-4 h-4 mr-2" />Refresh</Button>
       </div>
 

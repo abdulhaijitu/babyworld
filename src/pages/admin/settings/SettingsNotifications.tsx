@@ -22,11 +22,7 @@ export default function SettingsNotifications() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2"><Bell className="w-6 h-6" />Notification Settings</h1>
-          <p className="text-muted-foreground">Configure notification channels and templates</p>
-        </div>
+      <div className="flex justify-end">
         <Button variant="outline" size="sm" onClick={loadSettings}><RefreshCw className="w-4 h-4 mr-2" />Refresh</Button>
       </div>
 
