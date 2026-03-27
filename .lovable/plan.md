@@ -1,55 +1,58 @@
 
 
-## পরিকল্পনা: Settings পেজ ৭-ট্যাব রিস্ট্রাকচার
+## পরিকল্পনা: Settings ট্যাবগুলো সাইডবার সাবমেনু হিসেবে
 
-### বর্তমান অবস্থা
-Settings পেজে ৪টি ট্যাব আছে: Pricing, Business, Notifications, General
-
-### নতুন ট্যাব স্ট্রাকচার (৭টি)
-1. **General** — Theme (Dark Mode) + Security (Change Password) — বর্তমান কোড থেকে
-2. **Business** — Business Information — বর্তমান কোড থেকে
-3. **Pricing** — Hourly Play + Event Package + Package Pricing — বর্তমান কোড থেকে
-4. **Notifications** — SMS/WhatsApp চ্যানেল টগল + Template Editor — বর্তমান কোড থেকে
-5. **Email Configure** (নতুন) — Email notification সেটিংস (SMTP বা email provider কনফিগারেশন, email templates preview)
-6. **SMS Gateway** (নতুন) — SMS API কনফিগারেশন (API Key, Sender ID, API URL ফিল্ড) — বর্তমানে edge function-এ হার্ডকোড করা আছে, এখন settings থেকে কনফিগার করা যাবে
-7. **Payment Gateway** (নতুন) — UddoktaPay কনফিগারেশন (API mode: Sandbox/Live, API URL display, স্ট্যাটাস ইন্ডিকেটর)
+### কী হবে
+বর্তমানে Settings একটি সিঙ্গেল পেজে ৭টি ট্যাব আছে। এগুলো সাইডবারে Settings-এর সাবমেনু হিসেবে দেখাবে, প্রতিটির জন্য আলাদা রাউট থাকবে।
 
 ### পরিবর্তনসমূহ
 
-**ফাইল: `src/pages/admin/AdminSettings.tsx`**
-- TabsList কে ৭টি ট্যাবে আপডেট (স্ক্রলেবল হবে মোবাইলে)
-- ডিফল্ট ট্যাব `general` এ পরিবর্তন
-- ৩টি নতুন `TabsContent` যোগ
+**১. সাইডবার আপডেট (`src/components/admin/AdminSidebar.tsx`)**
 
-**নতুন ট্যাব কন্টেন্ট:**
+`settings` আইটেমে `children` যোগ:
+```
+settings → children:
+  - General         → /admin/settings/general
+  - Business        → /admin/settings/business
+  - Pricing         → /admin/settings/pricing
+  - Notifications   → /admin/settings/notifications
+  - Email Configure → /admin/settings/email
+  - SMS Gateway     → /admin/settings/sms
+  - Payment Gateway → /admin/settings/payment
+```
 
-#### Email Configure ট্যাব
-- Email notification enable/disable toggle
-- Email provider info card (বর্তমানে কোনো SMTP সেট নেই তাই "Not Configured" স্ট্যাটাস দেখাবে)
-- ভবিষ্যতে SMTP সেটআপ করার জন্য placeholder
+**২. ৭টি নতুন পেজ কম্পোনেন্ট তৈরি**
 
-#### SMS Gateway ট্যাব
-- SMS Provider Name (e.g. ReveCloud/Khudebarta)
-- API Key ফিল্ড (masked, শুধু শেষ ৪ ক্যারেক্টার দেখাবে — এটি settings টেবিলে সেভ হবে)
-- Sender ID ফিল্ড
-- API URL ফিল্ড
-- Connection Test বাটন
-- স্ট্যাটাস ব্যাজ (Configured/Not Configured)
-- `settings` টেবিলে `sms_gateway` কী-তে JSON হিসেবে সেভ হবে
+বর্তমান `AdminSettings.tsx` থেকে প্রতিটি `TabsContent`-এর কন্টেন্ট আলাদা ফাইলে সরানো হবে:
+- `src/pages/admin/settings/SettingsGeneral.tsx`
+- `src/pages/admin/settings/SettingsBusiness.tsx`
+- `src/pages/admin/settings/SettingsPricing.tsx`
+- `src/pages/admin/settings/SettingsNotifications.tsx`
+- `src/pages/admin/settings/SettingsEmail.tsx`
+- `src/pages/admin/settings/SettingsSms.tsx`
+- `src/pages/admin/settings/SettingsPayment.tsx`
 
-#### Payment Gateway ট্যাব
-- Gateway Name: UddoktaPay (readonly)
-- Mode সিলেক্ট: Sandbox / Live
-- API URL display
-- Connection status indicator
-- `settings` টেবিলে `payment_gateway` কী-তে JSON হিসেবে সেভ হবে
+প্রতিটি পেজ `useSettings()` হুক ব্যবহার করবে এবং নিজের সেকশনের ফর্ম/কন্টেন্ট রেন্ডার করবে।
 
-**হুক আপডেট: `src/hooks/useSettings.ts`**
-- `smsGateway` ও `paymentGateway` state যোগ
-- `saveSmsGateway()` ও `savePaymentGateway()` ফাংশন যোগ
-- settings লোডে নতুন কী-গুলো পড়া
+**৩. রাউটিং আপডেট (`src/App.tsx`)**
 
-### গুরুত্বপূর্ণ নোট
-- SMS API Key ও Payment API Key সিক্রেট হিসেবে edge function-এ থাকবে, settings-এ শুধু non-sensitive config (provider name, sender ID, mode, API URL) সেভ হবে
-- কোনো ডাটাবেস মাইগ্রেশন লাগবে না — `settings` টেবিলে নতুন key-value পেয়ার ইনসার্ট হবে
+```
+<Route path="settings" element={<Navigate to="/admin/settings/general" />} />
+<Route path="settings/general" element={<SettingsGeneral />} />
+<Route path="settings/business" element={<SettingsBusiness />} />
+<Route path="settings/pricing" element={<SettingsPricing />} />
+<Route path="settings/notifications" element={<SettingsNotifications />} />
+<Route path="settings/email" element={<SettingsEmail />} />
+<Route path="settings/sms" element={<SettingsSms />} />
+<Route path="settings/payment" element={<SettingsPayment />} />
+```
+
+**৪. পুরানো `AdminSettings.tsx` সরলীকরণ**
+
+ফাইলটি `/admin/settings`-এ redirect করবে `/admin/settings/general`-এ, অথবা মুছে ফেলা হবে।
+
+### টেকনিক্যাল নোট
+- `useSettings` হুক শেয়ার্ড থাকবে — প্রতিটি পেজ থেকে প্রয়োজনীয় state ও ফাংশন ব্যবহার করবে
+- Tabs কম্পোনেন্ট আর লাগবে না — প্রতিটি পেজ সরাসরি Card-ভিত্তিক লেআউট হবে
+- সাইডবারে আইকন: Settings (General), Building (Business), Banknote (Pricing), Bell (Notifications), Mail (Email), SendHorizonal (SMS), CreditCard (Payment)
 
