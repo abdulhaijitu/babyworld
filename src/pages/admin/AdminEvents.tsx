@@ -64,6 +64,8 @@ import {
 import { toast } from 'sonner';
 import { format, parseISO } from 'date-fns';
 import { TableRowSkeleton } from '@/components/admin/AdminSkeleton';
+import { BookingsListTab } from '@/components/admin/bookings/BookingsListTab';
+import { TableRowSkeleton } from '@/components/admin/AdminSkeleton';
 
 interface EventBooking {
   id: string;
