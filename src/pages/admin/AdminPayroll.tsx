@@ -10,7 +10,8 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { Plus, DollarSign, CheckCircle } from 'lucide-react';
+import { Plus, DollarSign, CheckCircle, Printer } from 'lucide-react';
+import { printPayslip } from '@/lib/printPayslip';
 
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
