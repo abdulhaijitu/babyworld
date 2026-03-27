@@ -9,7 +9,8 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Gift, Calendar, Save, X, Upload, ImageIcon, Clock } from "lucide-react";
+import { Plus, Pencil, Trash2, Gift, Calendar, Save, X, Clock } from "lucide-react";
+import { ImageDropZone } from "@/components/admin/ImageDropZone";
 import {
   Dialog,
   DialogContent,
@@ -81,29 +82,10 @@ export default function AdminHeroCards({ embedded = false }: { embedded?: boolea
     return data.publicUrl;
   }
 
-  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (!file.type.startsWith("image/")) {
-      toast.error("Please select an image file");
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("Image must be under 5MB");
-      return;
-    }
-    setUploading(true);
-    try {
-      const url = await uploadImage(file);
-      setForm((prev) => ({ ...prev, image_url: url }));
-      toast.success("Image uploaded");
-    } catch (err: any) {
-      toast.error(err.message || "Upload failed");
-    } finally {
-      setUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = "";
-    }
-  }
+  const handleCardImageUploaded = (url: string) => {
+    setForm((prev) => ({ ...prev, image_url: url }));
+    toast.success("Image uploaded");
+  };
 
   const saveMutation = useMutation({
     mutationFn: async (card: CardForm & { id?: string }) => {
@@ -342,56 +324,16 @@ export default function AdminHeroCards({ embedded = false }: { embedded?: boolea
               </div>
             </div>
 
-            {/* Image Upload */}
+            {/* Image Upload with Drag & Drop */}
             <div className="space-y-2">
               <Label>Background Image (optional)</Label>
-              {form.image_url ? (
-                <div className="relative rounded-lg overflow-hidden border border-border">
-                  <img
-                    src={form.image_url}
-                    alt="Card background"
-                    className="w-full h-32 object-cover"
-                  />
-                  <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      onClick={() => fileInputRef.current?.click()}
-                    >
-                      <Upload className="w-3 h-3 mr-1" /> Replace
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      onClick={() => setForm({ ...form, image_url: null })}
-                    >
-                      <X className="w-3 h-3 mr-1" /> Remove
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={uploading}
-                  className="w-full h-24 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center gap-1 text-muted-foreground hover:border-primary hover:text-primary transition-colors"
-                >
-                  {uploading ? (
-                    <span className="text-sm">Uploading...</span>
-                  ) : (
-                    <>
-                      <ImageIcon className="w-6 h-6" />
-                      <span className="text-xs">Click to upload image</span>
-                    </>
-                  )}
-                </button>
-              )}
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleImageUpload}
+              <ImageDropZone
+                imageUrl={form.image_url}
+                onImageUploaded={handleCardImageUploaded}
+                onImageRemoved={() => setForm({ ...form, image_url: null })}
+                uploadFn={uploadImage}
+                height="h-32"
+                label="ব্যাকগ্রাউন্ড ইমেজ আপলোড করুন"
               />
             </div>
 
