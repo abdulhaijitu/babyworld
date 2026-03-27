@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,7 +13,7 @@ import {
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
-import { Package, Plus, Pencil, Users, Trash2, RefreshCw, Loader2 } from 'lucide-react';
+import { Package, Plus, Pencil, Users, Trash2, RefreshCw, Loader2, ImagePlus, X } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface EventPackage {
@@ -25,6 +25,7 @@ interface EventPackage {
   features: string[];
   is_active: boolean;
   sort_order: number;
+  image_url: string | null;
 }
 
 export default function AdminEventPackages() {
@@ -34,6 +35,10 @@ export default function AdminEventPackages() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingPkg, setEditingPkg] = useState<EventPackage | null>(null);
   const [form, setForm] = useState({ name: '', price: '', max_guests: '', duration_hours: '3', features: '', is_active: true });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchPackages = useCallback(async () => {
     setLoading(true);
@@ -49,7 +54,6 @@ export default function AdminEventPackages() {
       })));
     } catch (err: any) {
       toast.error('Failed to load packages');
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -60,6 +64,8 @@ export default function AdminEventPackages() {
   const openCreate = () => {
     setEditingPkg(null);
     setForm({ name: '', price: '', max_guests: '', duration_hours: '3', features: '', is_active: true });
+    setImageFile(null);
+    setImagePreview(null);
     setDialogOpen(true);
   };
 
@@ -73,7 +79,39 @@ export default function AdminEventPackages() {
       features: pkg.features.join('\n'),
       is_active: pkg.is_active,
     });
+    setImageFile(null);
+    setImagePreview(pkg.image_url || null);
     setDialogOpen(true);
+  };
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image must be under 5MB');
+      return;
+    }
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
+
+  const uploadImage = async (packageId: string): Promise<string | null> => {
+    if (!imageFile) return editingPkg?.image_url || null;
+    
+    const ext = imageFile.name.split('.').pop();
+    const filePath = `${packageId}.${ext}`;
+    
+    const { error } = await supabase.storage
+      .from('event-package-images')
+      .upload(filePath, imageFile, { upsert: true });
+    
+    if (error) throw error;
+    
+    const { data: urlData } = supabase.storage
+      .from('event-package-images')
+      .getPublicUrl(filePath);
+    
+    return urlData.publicUrl;
   };
 
   const handleSave = async () => {
@@ -83,7 +121,7 @@ export default function AdminEventPackages() {
     }
     setSaving(true);
     try {
-      const payload = {
+      const payload: any = {
         name: form.name.trim(),
         price: Number(form.price),
         max_guests: Number(form.max_guests) || 10,
@@ -93,13 +131,31 @@ export default function AdminEventPackages() {
       };
 
       if (editingPkg) {
+        if (imageFile) {
+          setUploading(true);
+          payload.image_url = await uploadImage(editingPkg.id);
+          setUploading(false);
+        } else if (!imagePreview && editingPkg.image_url) {
+          payload.image_url = null;
+        }
         const { error } = await supabase.from('event_packages').update(payload).eq('id', editingPkg.id);
         if (error) throw error;
         toast.success('Package updated');
       } else {
         const maxSort = packages.length > 0 ? Math.max(...packages.map(p => p.sort_order)) : 0;
-        const { error } = await supabase.from('event_packages').insert({ ...payload, sort_order: maxSort + 1 });
+        const { data: inserted, error } = await supabase
+          .from('event_packages')
+          .insert({ ...payload, sort_order: maxSort + 1 })
+          .select()
+          .single();
         if (error) throw error;
+        
+        if (imageFile && inserted) {
+          setUploading(true);
+          const imgUrl = await uploadImage(inserted.id);
+          await supabase.from('event_packages').update({ image_url: imgUrl }).eq('id', inserted.id);
+          setUploading(false);
+        }
         toast.success('Package created');
       }
       setDialogOpen(false);
@@ -108,7 +164,14 @@ export default function AdminEventPackages() {
       toast.error(err.message || 'Save failed');
     } finally {
       setSaving(false);
+      setUploading(false);
     }
+  };
+
+  const removeImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const handleDelete = async (id: string) => {
@@ -151,7 +214,6 @@ export default function AdminEventPackages() {
         </div>
       </div>
 
-      {/* Package Cards */}
       {loading ? (
         <div className="flex items-center justify-center py-12"><Loader2 className="w-8 h-8 animate-spin text-muted-foreground" /></div>
       ) : (
@@ -159,6 +221,11 @@ export default function AdminEventPackages() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {packages.filter(p => p.is_active).map(pkg => (
               <Card key={pkg.id} className="relative overflow-hidden">
+                {pkg.image_url && (
+                  <div className="aspect-video w-full overflow-hidden">
+                    <img src={pkg.image_url} alt={pkg.name} className="w-full h-full object-cover" />
+                  </div>
+                )}
                 <CardHeader className="pb-2">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-lg">{pkg.name}</CardTitle>
@@ -186,13 +253,13 @@ export default function AdminEventPackages() {
             ))}
           </div>
 
-          {/* All Packages Table */}
           <Card>
             <CardHeader><CardTitle>All Packages</CardTitle></CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead>Image</TableHead>
                     <TableHead>Name</TableHead>
                     <TableHead>Price</TableHead>
                     <TableHead>Guests</TableHead>
@@ -204,6 +271,15 @@ export default function AdminEventPackages() {
                 <TableBody>
                   {packages.map(pkg => (
                     <TableRow key={pkg.id}>
+                      <TableCell>
+                        {pkg.image_url ? (
+                          <img src={pkg.image_url} alt={pkg.name} className="w-12 h-12 rounded object-cover" />
+                        ) : (
+                          <div className="w-12 h-12 rounded bg-muted flex items-center justify-center">
+                            <ImagePlus className="w-5 h-5 text-muted-foreground" />
+                          </div>
+                        )}
+                      </TableCell>
                       <TableCell className="font-medium">{pkg.name}</TableCell>
                       <TableCell>৳{pkg.price.toLocaleString()}</TableCell>
                       <TableCell>{pkg.max_guests}</TableCell>
@@ -226,11 +302,45 @@ export default function AdminEventPackages() {
 
       {/* Create/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>{editingPkg ? 'Edit Package' : 'New Package'}</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-1">
+            {/* Image Upload */}
+            <div className="space-y-2">
+              <Label>Package Image</Label>
+              {imagePreview ? (
+                <div className="relative">
+                  <img src={imagePreview} alt="Preview" className="w-full h-40 object-cover rounded-lg border" />
+                  <Button
+                    variant="destructive"
+                    size="icon"
+                    className="absolute top-2 right-2 h-7 w-7"
+                    onClick={removeImage}
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full h-32 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center gap-2 text-muted-foreground hover:border-primary hover:text-primary transition-colors"
+                >
+                  <ImagePlus className="w-8 h-8" />
+                  <span className="text-sm">Click to upload image</span>
+                </button>
+              )}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageSelect}
+              />
+            </div>
+
             <div><Label>Package Name</Label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="e.g. Premium" /></div>
             <div className="grid grid-cols-2 gap-4">
               <div><Label>Price (৳)</Label><Input type="number" value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} /></div>
@@ -245,9 +355,9 @@ export default function AdminEventPackages() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
-            <Button onClick={handleSave} disabled={saving}>
-              {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              {editingPkg ? 'Update' : 'Create'}
+            <Button onClick={handleSave} disabled={saving || uploading}>
+              {(saving || uploading) && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              {uploading ? 'Uploading...' : editingPkg ? 'Update' : 'Create'}
             </Button>
           </DialogFooter>
         </DialogContent>
