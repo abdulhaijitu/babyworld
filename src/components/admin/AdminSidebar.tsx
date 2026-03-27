@@ -193,7 +193,7 @@ function SidebarContent({
     >
       {/* Header */}
       <div className={cn(
-        "flex items-center h-16 px-3 border-b border-border",
+        "flex items-center h-12 px-2 border-b border-border",
         collapsed ? "justify-center" : "justify-between"
       )}>
         {!collapsed ? (
@@ -201,19 +201,19 @@ function SidebarContent({
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.2, delay: 0.1 }}
-            className="flex items-center gap-2.5"
+            className="flex items-center gap-2"
           >
-            <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-              <img src={babyWorldLogo} alt="Baby World" className="h-6 w-auto" />
+            <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+              <img src={babyWorldLogo} alt="Baby World" className="h-5 w-auto" />
             </div>
             <div className="flex flex-col">
-              <span className="font-semibold text-sm text-foreground leading-tight">Baby World</span>
-              <span className="text-[11px] text-muted-foreground leading-tight">Admin Dashboard</span>
+              <span className="font-semibold text-xs text-foreground leading-tight">Baby World</span>
+              <span className="text-[10px] text-muted-foreground leading-tight">Admin Dashboard</span>
             </div>
           </motion.div>
         ) : (
-          <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center">
-            <img src={babyWorldLogo} alt="Baby World" className="h-6 w-auto" />
+          <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center">
+            <img src={babyWorldLogo} alt="Baby World" className="h-5 w-auto" />
           </div>
         )}
         {!isMobile && (
