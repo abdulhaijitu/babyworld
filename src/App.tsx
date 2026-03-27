@@ -28,6 +28,9 @@ import AdminEmployees from "./pages/admin/AdminEmployees";
 import AdminRoster from "./pages/admin/AdminRoster";
 import AdminBookings from "./pages/admin/AdminBookings";
 import AdminEvents from "./pages/admin/AdminEvents";
+import AdminEventBookings from "./pages/admin/AdminEventBookings";
+import AdminEventPackages from "./pages/admin/AdminEventPackages";
+import AdminEventCalendar from "./pages/admin/AdminEventCalendar";
 import AdminSettings from "./pages/admin/AdminSettings";
 import AdminReports from "./pages/admin/AdminReports";
 import AdminUsers from "./pages/admin/AdminUsers";
@@ -80,6 +83,9 @@ const App = () => (
                   <Route path="roster" element={<AdminRoster />} />
                   <Route path="bookings" element={<AdminBookings />} />
                   <Route path="events" element={<AdminEvents />} />
+                  <Route path="event-bookings" element={<AdminEventBookings />} />
+                  <Route path="event-packages" element={<AdminEventPackages />} />
+                  <Route path="event-calendar" element={<AdminEventCalendar />} />
                   <Route path="reports" element={<AdminReports />} />
                   <Route path="profit" element={<AdminProfitReports />} />
                   <Route path="expenses" element={<AdminExpenses />} />

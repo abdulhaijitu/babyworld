@@ -67,6 +67,9 @@ const allMenuItems: MenuItem[] = [
   ]},
   { id: 'events-group', label: 'EVENTS', icon: PartyPopper, path: '/admin/events', requiredRoles: ['super_admin', 'admin', 'manager'], children: [
     { id: 'events', label: 'Events', icon: PartyPopper, path: '/admin/events' },
+    { id: 'event-bookings', label: 'Event Bookings', icon: CalendarDays, path: '/admin/event-bookings' },
+    { id: 'event-packages', label: 'Event Packages', icon: Crown, path: '/admin/event-packages' },
+    { id: 'event-calendar', label: 'Event Calendar', icon: CalendarDays, path: '/admin/event-calendar' },
   ]},
   { id: 'expenses', label: 'Expenses', icon: Receipt, path: '/admin/expenses', requiredRoles: ['super_admin', 'admin', 'manager'] },
   { id: 'employees', label: 'Employees', icon: Users, path: '/admin/employees', requiredRoles: ['super_admin', 'admin'] },
