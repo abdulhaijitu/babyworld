@@ -159,14 +159,6 @@ export default function AdminDashboardContent() {
         </Card>
       </div>
 
-      {/* Quick Actions, Visitor Counter & Activity Log */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <QuickActions />
-        <VisitorCounter />
-        <div className="lg:col-span-2">
-          <ActivityLogCard />
-        </div>
-      </div>
 
       {/* Today's Tickets & Recent Food Orders */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
