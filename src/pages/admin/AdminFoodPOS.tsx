@@ -80,7 +80,49 @@ export default function AdminFoodPOS() {
     },
   });
 
-  const cartTotal = useMemo(() => cart.reduce((sum, c) => sum + c.food_item.price * c.quantity, 0), [cart]);
+  const cartSubtotal = useMemo(() => cart.reduce((sum, c) => sum + c.food_item.price * c.quantity, 0), [cart]);
+
+  const discountAmount = useMemo(() => {
+    if (discountMode === 'manual' && manualDiscountValue) {
+      const val = parseFloat(manualDiscountValue);
+      if (isNaN(val) || val <= 0) return 0;
+      if (manualDiscountType === 'percentage') return Math.min(Math.round(cartSubtotal * val / 100), cartSubtotal);
+      return Math.min(val, cartSubtotal);
+    }
+    if (discountMode === 'coupon' && appliedCoupon) {
+      if (appliedCoupon.discount_type === 'percentage') return Math.min(Math.round(cartSubtotal * appliedCoupon.discount_value / 100), cartSubtotal);
+      return Math.min(appliedCoupon.discount_value, cartSubtotal);
+    }
+    return 0;
+  }, [cartSubtotal, discountMode, manualDiscountType, manualDiscountValue, appliedCoupon]);
+
+  const cartTotal = cartSubtotal - discountAmount;
+
+  const applyCoupon = async () => {
+    if (!couponCode.trim()) return;
+    setCouponLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('coupons')
+        .select('*')
+        .eq('code', couponCode.trim().toUpperCase())
+        .eq('is_active', true)
+        .single();
+      if (error || !data) { toast.error('কুপন কোড সঠিক নয়!'); return; }
+      if (data.valid_till && new Date(data.valid_till) < new Date()) { toast.error('কুপন মেয়াদ উত্তীর্ণ!'); return; }
+      if (data.max_uses && data.used_count >= data.max_uses) { toast.error('কুপন সীমা শেষ!'); return; }
+      if (data.min_order_amount && cartSubtotal < Number(data.min_order_amount)) { toast.error(`ন্যূনতম অর্ডার ৳${data.min_order_amount} হতে হবে!`); return; }
+      setAppliedCoupon({ code: data.code, discount_type: data.discount_type, discount_value: Number(data.discount_value) });
+      toast.success(`কুপন "${data.code}" প্রয়োগ হয়েছে!`);
+    } catch { toast.error('কুপন চেক ব্যর্থ'); } finally { setCouponLoading(false); }
+  };
+
+  const clearDiscount = () => {
+    setDiscountMode('none');
+    setManualDiscountValue('');
+    setCouponCode('');
+    setAppliedCoupon(null);
+  };
 
   const addToCart = (item: FoodItem) => {
     setCart(prev => {
