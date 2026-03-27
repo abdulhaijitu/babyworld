@@ -74,6 +74,12 @@ const allMenuItems: MenuItem[] = [
     { id: 'events', label: 'Bookings', icon: PartyPopper, path: '/admin/events' },
     { id: 'event-calendar', label: 'Event Calendar', icon: CalendarDays, path: '/admin/event-calendar' },
   ]},
+  { id: 'marketing', label: 'MARKETING', icon: Megaphone, path: '/admin/leads', requiredRoles: ['super_admin', 'admin', 'manager'], children: [
+    { id: 'leads', label: 'Leads', icon: UserPlus, path: '/admin/leads' },
+    { id: 'promotions', label: 'Promotions', icon: Tag, path: '/admin/promotions' },
+    { id: 'sms-campaigns', label: 'SMS Campaigns', icon: MessageSquare, path: '/admin/sms-campaigns' },
+    { id: 'social-media', label: 'Social Media', icon: Share2, path: '/admin/social-media' },
+  ]},
   { id: 'expenses', label: 'Expenses', icon: Receipt, path: '/admin/expenses', requiredRoles: ['super_admin', 'admin', 'manager'] },
   { id: 'employees', label: 'Employees', icon: Users, path: '/admin/employees', requiredRoles: ['super_admin', 'admin'] },
   { id: 'roster', label: 'Roster', icon: Clock, path: '/admin/roster', requiredRoles: ['super_admin', 'admin', 'manager'] },
