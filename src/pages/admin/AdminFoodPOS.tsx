@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { Minus, Plus, Trash2, ShoppingCart, UtensilsCrossed, CheckCircle, XCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
+import { printFoodReceipt } from '@/lib/printFoodReceipt';
 import type { Tables } from '@/integrations/supabase/types';
 
 type FoodItem = Tables<'food_items'>;
@@ -94,121 +95,17 @@ export default function AdminFoodPOS() {
     setCart(prev => prev.filter(c => c.food_item.id !== itemId));
   };
 
-  const printReceipt = (orderNumber: string, cartItems: CartItem[], total: number, customer: string, payment: string) => {
-    const now = new Date();
-    const timeStr = format(now, 'dd/MM/yyyy hh:mm a');
-    const logoUrl = new URL('/src/assets/baby-world-logo.png', window.location.origin).href;
-    const itemsHtml = cartItems.map((c, i) => `
-      <tr style="background:${i % 2 === 0 ? '#f9f9f9' : '#fff'};">
-        <td style="padding:4px 6px;font-size:12px;">${c.food_item.name}</td>
-        <td style="padding:4px 6px;font-size:12px;text-align:center;">${c.quantity}</td>
-        <td style="padding:4px 6px;font-size:12px;text-align:right;">৳${c.food_item.price}</td>
-        <td style="padding:4px 6px;font-size:12px;text-align:right;font-weight:600;">৳${c.food_item.price * c.quantity}</td>
-      </tr>
-    `).join('');
-
-    const html = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Receipt - ${orderNumber}</title>
-        <style>
-          @media print {
-            @page { margin: 0; size: 80mm auto; }
-            body { margin: 0; }
-          }
-          * { box-sizing: border-box; }
-          body {
-            font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
-            width: 76mm; margin: 0 auto; padding: 3mm;
-            color: #1a1a1a; font-size: 12px; line-height: 1.4;
-          }
-          .header { text-align: center; padding-bottom: 8px; }
-          .header img { height: 40px; margin-bottom: 4px; }
-          .header h2 { margin: 0; font-size: 15px; font-weight: 700; letter-spacing: 0.5px; }
-          .header .subtitle { margin: 2px 0 0; font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
-          .divider { border: none; border-top: 1px dashed #ccc; margin: 6px 0; }
-          .divider-bold { border: none; border-top: 2px solid #333; margin: 6px 0; }
-          .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 12px; font-size: 11px; }
-          .info-grid .label { color: #888; font-size: 10px; text-transform: uppercase; letter-spacing: 0.3px; }
-          .info-grid .value { font-weight: 600; }
-          table { width: 100%; border-collapse: collapse; }
-          thead td { padding: 4px 6px; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #666; letter-spacing: 0.3px; border-bottom: 1px solid #ddd; }
-          .total-section { background: #f4f4f4; border-radius: 4px; padding: 8px; margin-top: 4px; }
-          .total-row { display: flex; justify-content: space-between; align-items: center; }
-          .total-label { font-size: 14px; font-weight: 700; }
-          .total-amount { font-size: 18px; font-weight: 800; }
-          .footer { text-align: center; margin-top: 8px; font-size: 9px; color: #999; }
-          .footer .thanks { font-size: 11px; color: #333; font-weight: 600; margin-bottom: 2px; }
-          .payment-badge {
-            display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 10px; font-weight: 700; text-transform: uppercase;
-            ${payment === 'cash' ? 'background:#e8f5e9;color:#2e7d32;' : payment === 'online' ? 'background:#e3f2fd;color:#1565c0;' : 'background:#fff3e0;color:#e65100;'}
-          }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <img src="${logoUrl}" alt="Baby World" />
-          <h2>Baby World</h2>
-          <p class="subtitle">Food Court</p>
-        </div>
-        <hr class="divider-bold" />
-        <div class="info-grid">
-          <div><span class="label">Order</span><br/><span class="value">${orderNumber}</span></div>
-          <div><span class="label">Date</span><br/><span class="value">${timeStr}</span></div>
-          ${customer ? `<div><span class="label">Customer</span><br/><span class="value">${customer}</span></div>` : ''}
-          <div><span class="label">Payment</span><br/><span class="payment-badge">${payment === 'pending' ? 'Due' : payment}</span></div>
-        </div>
-        <hr class="divider" />
-        <table>
-          <thead>
-            <tr>
-              <td>Item</td>
-              <td style="text-align:center;">Qty</td>
-              <td style="text-align:right;">Rate</td>
-              <td style="text-align:right;">Amount</td>
-            </tr>
-          </thead>
-          <tbody>
-            ${itemsHtml}
-          </tbody>
-        </table>
-        <hr class="divider" />
-        <div class="total-section">
-          <div class="total-row">
-            <span class="total-label">TOTAL</span>
-            <span class="total-amount">৳${total}</span>
-          </div>
-          <div style="text-align:right;font-size:10px;color:#666;margin-top:2px;">${cartItems.reduce((s, c) => s + c.quantity, 0)} item(s)</div>
-        </div>
-        <hr class="divider" />
-        <div class="footer">
-          <p class="thanks">Thank you for your order! 🎉</p>
-          <p>Baby World Indoor Playground</p>
-          <p>27/B, Jannat Tower, Lalbagh, Dhaka</p>
-          <p>📞 09606990128</p>
-        </div>
-      </body>
-      </html>
-    `;
-
-    const printWindow = window.open('', '_blank', 'width=350,height=500');
-    if (printWindow) {
-      printWindow.document.write(html);
-      printWindow.document.close();
-      printWindow.onload = () => {
-        printWindow.print();
-        printWindow.onafterprint = () => printWindow.close();
-      };
-    }
-  };
-
   const handlePlaceOrder = async () => {
     if (cart.length === 0) { toast.error('কার্ট খালি!'); return; }
     setSubmitting(true);
     try {
       const orderNumber = `FO${Date.now().toString(36).toUpperCase()}`;
-      const currentCart = [...cart];
+      const receiptItems = cart.map(c => ({
+        name: c.food_item.name,
+        quantity: c.quantity,
+        unitPrice: c.food_item.price,
+        totalPrice: c.food_item.price * c.quantity,
+      }));
       const currentTotal = cartTotal;
       const currentCustomer = customerName;
       const currentPayment = paymentType;
@@ -246,13 +143,20 @@ export default function AdminFoodPOS() {
       queryClient.invalidateQueries({ queryKey: ['food-orders-today'] });
 
       // Auto print receipt
-      printReceipt(orderNumber, currentCart, currentTotal, currentCustomer, currentPayment);
+      printFoodReceipt({
+        orderNumber,
+        items: receiptItems,
+        total: currentTotal,
+        customerName: currentCustomer,
+        paymentType: currentPayment,
+      });
     } catch (err: any) {
       toast.error(err.message || 'অর্ডার তৈরি ব্যর্থ');
     } finally {
       setSubmitting(false);
     }
   };
+
 
   // Keyboard shortcuts: Enter = place order, Escape = clear cart
   useEffect(() => {
