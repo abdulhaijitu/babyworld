@@ -50,13 +50,14 @@ const allMenuItems: MenuItem[] = [
     { id: 'create-ticket', label: 'Create Ticket', icon: Plus, path: '/admin/create-ticket' },
     { id: 'ticket-list', label: 'Ticket List', icon: List, path: '/admin/ticket-list' },
     { id: 'rides', label: 'Rides', icon: FerrisWheel, path: '/admin/rides' },
+    { id: 'gate-logs', label: 'Gate Logs', icon: Video, path: '/admin/gate-logs' },
   ]},
   { id: 'membership', label: 'Membership', icon: Crown, path: '/admin/membership-packages', requiredRoles: ['super_admin', 'admin', 'manager'], children: [
     { id: 'membership-packages', label: 'Packages', icon: List, path: '/admin/membership-packages' },
     { id: 'memberships', label: 'All Members', icon: Crown, path: '/admin/memberships' },
     { id: 'member-entry', label: 'Member Entry', icon: LogIn, path: '/admin/member-entry' },
   ]},
-  { id: 'gate-logs', label: 'Gate Logs', icon: Video, path: '/admin/gate-logs', requiredRoles: ['super_admin', 'admin', 'manager'] },
+  
   { id: 'food', label: 'Food Sales', icon: UtensilsCrossed, path: '/admin/food', requiredRoles: ['super_admin', 'admin', 'manager', 'staff'] },
   { id: 'expenses', label: 'Expenses', icon: Receipt, path: '/admin/expenses', requiredRoles: ['super_admin', 'admin', 'manager'] },
   { id: 'employees', label: 'Employees', icon: Users, path: '/admin/employees', requiredRoles: ['super_admin', 'admin'] },
