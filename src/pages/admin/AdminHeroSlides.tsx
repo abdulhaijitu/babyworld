@@ -7,7 +7,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Plus, Trash2, Save, X, Upload, ImageIcon, GripVertical, ArrowUp, ArrowDown } from "lucide-react";
+import { Plus, Trash2, Save, X, ArrowUp, ArrowDown } from "lucide-react";
+import { ImageDropZone } from "@/components/admin/ImageDropZone";
 import {
   Dialog,
   DialogContent,
