@@ -73,6 +73,8 @@ interface UserRoleRecord {
   user_id: string;
   role: AppRole;
   created_at: string;
+  email?: string;
+  full_name?: string;
 }
 
 const roleConfig: Record<AppRole, { label: string; icon: React.ElementType; color: string; description: string }> = {
