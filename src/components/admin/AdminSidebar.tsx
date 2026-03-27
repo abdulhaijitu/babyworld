@@ -65,11 +65,13 @@ const allMenuItems: MenuItem[] = [
     { id: 'food-items', label: 'Items', icon: List, path: '/admin/food' },
     { id: 'coupons', label: 'Coupons', icon: Crown, path: '/admin/coupons' },
   ]},
+  { id: 'events-group', label: 'EVENTS', icon: PartyPopper, path: '/admin/events', requiredRoles: ['super_admin', 'admin', 'manager'], children: [
+    { id: 'events', label: 'Events', icon: PartyPopper, path: '/admin/events' },
+  ]},
   { id: 'expenses', label: 'Expenses', icon: Receipt, path: '/admin/expenses', requiredRoles: ['super_admin', 'admin', 'manager'] },
   { id: 'employees', label: 'Employees', icon: Users, path: '/admin/employees', requiredRoles: ['super_admin', 'admin'] },
   { id: 'roster', label: 'Roster', icon: Clock, path: '/admin/roster', requiredRoles: ['super_admin', 'admin', 'manager'] },
   { id: 'bookings', label: 'Bookings', icon: CalendarDays, path: '/admin/bookings', requiredRoles: ['super_admin', 'admin', 'manager', 'staff'] },
-  { id: 'events', label: 'Events', icon: PartyPopper, path: '/admin/events', requiredRoles: ['super_admin', 'admin', 'manager'] },
   
   { id: 'ride-reviews', label: 'Ride Reviews', icon: Star, path: '/admin/ride-reviews', requiredRoles: ['super_admin', 'admin', 'manager'] },
   { id: 'reports', label: 'Reports', icon: FileBarChart, path: '/admin/reports', requiredRoles: ['super_admin', 'admin', 'manager'] },
