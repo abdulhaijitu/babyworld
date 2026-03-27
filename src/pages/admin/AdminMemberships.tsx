@@ -1,9 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { format, differenceInDays } from 'date-fns';
-import { Plus, Search, Crown, Phone, Calendar, User, MoreVertical, CheckCircle, XCircle, Loader2, CreditCard, Banknote, TrendingUp, ChevronLeft, ChevronRight, LogIn } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import MemberEntryTab from '@/components/admin/MemberEntryTab';
+import { Plus, Search, Crown, Phone, Calendar, User, MoreVertical, CheckCircle, XCircle, Loader2, CreditCard, Banknote, TrendingUp, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -320,19 +318,7 @@ export default function AdminMemberships() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <Tabs defaultValue="members" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="members">
-            <Crown className="h-4 w-4 mr-1.5" /> All Members
-          </TabsTrigger>
-          <TabsTrigger value="entry">
-            <LogIn className="h-4 w-4 mr-1.5" /> Member Entry
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="entry">
-          <MemberEntryTab />
-        </TabsContent>
-        <TabsContent value="members" className="space-y-6">
+      <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
@@ -763,8 +749,7 @@ export default function AdminMemberships() {
           )}
         </CardContent>
       </Card>
-        </TabsContent>
-      </Tabs>
+      </div>
     </div>
   );
 }

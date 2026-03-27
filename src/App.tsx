@@ -31,6 +31,7 @@ import AdminSettings from "./pages/admin/AdminSettings";
 import AdminReports from "./pages/admin/AdminReports";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminMemberships from "./pages/admin/AdminMemberships";
+import AdminMemberEntry from "./pages/admin/AdminMemberEntry";
 import AdminMembershipPackages from "./pages/admin/AdminMembershipPackages";
 import AdminExpenses from "./pages/admin/AdminExpenses";
 import AdminProfitReports from "./pages/admin/AdminProfitReports";
@@ -66,6 +67,7 @@ const App = () => (
                   <Route path="ticket-list" element={<AdminTicketing />} />
                   <Route path="membership-packages" element={<AdminMembershipPackages />} />
                   <Route path="memberships" element={<AdminMemberships />} />
+                  <Route path="member-entry" element={<AdminMemberEntry />} />
                   <Route path="gate-logs" element={<AdminGateLogs />} />
                   <Route path="food" element={<AdminFoodSales />} />
                   <Route path="employees" element={<AdminEmployees />} />
