@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { toast } from 'sonner';
-import { Minus, Plus, Trash2, ShoppingCart, UtensilsCrossed, CheckCircle, XCircle } from 'lucide-react';
+import { Minus, Plus, Trash2, ShoppingCart, UtensilsCrossed, CheckCircle, XCircle, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { printFoodReceipt } from '@/lib/printFoodReceipt';
@@ -26,6 +26,7 @@ export default function AdminFoodPOS() {
   const [notes, setNotes] = useState('');
   const [paymentType, setPaymentType] = useState<'cash' | 'online' | 'pending'>('cash');
   const [submitting, setSubmitting] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const today = format(new Date(), 'yyyy-MM-dd');
 
@@ -190,8 +191,16 @@ export default function AdminFoodPOS() {
 
   const categories = ['all', 'snacks', 'drinks', 'meals'] as const;
 
-  const getItemsByCategory = (cat: string) =>
-    cat === 'all' ? foodItems : foodItems.filter(i => i.category === cat);
+  const filteredBySearch = (items: FoodItem[]) => {
+    if (!searchQuery.trim()) return items;
+    const q = searchQuery.toLowerCase();
+    return items.filter(i => i.name.toLowerCase().includes(q) || (i.name_bn && i.name_bn.includes(q)));
+  };
+
+  const getItemsByCategory = (cat: string) => {
+    const byCategory = cat === 'all' ? foodItems : foodItems.filter(i => i.category === cat);
+    return filteredBySearch(byCategory);
+  };
 
   const getCartQty = (itemId: string) => cart.find(c => c.food_item.id === itemId)?.quantity || 0;
 
@@ -199,11 +208,20 @@ export default function AdminFoodPOS() {
     <div className="flex flex-col lg:flex-row h-[calc(100vh-4rem)] lg:h-[calc(100vh-1rem)] gap-0 overflow-hidden">
       {/* Left Panel — Menu */}
       <div className="flex-1 flex flex-col min-w-0 border-r border-border">
-        <div className="px-4 pt-4 pb-2">
-          <h1 className="text-xl font-bold flex items-center gap-2">
+        <div className="px-4 pt-4 pb-2 flex items-center gap-3">
+          <h1 className="text-xl font-bold flex items-center gap-2 shrink-0">
             <UtensilsCrossed className="h-5 w-5 text-primary" />
             Food POS
           </h1>
+          <div className="relative flex-1 max-w-xs">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search items..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              className="pl-8 h-9"
+            />
+          </div>
         </div>
 
         <Tabs defaultValue="all" className="flex-1 flex flex-col px-4 overflow-hidden">
