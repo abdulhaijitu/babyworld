@@ -82,29 +82,10 @@ export default function AdminHeroCards({ embedded = false }: { embedded?: boolea
     return data.publicUrl;
   }
 
-  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (!file.type.startsWith("image/")) {
-      toast.error("Please select an image file");
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("Image must be under 5MB");
-      return;
-    }
-    setUploading(true);
-    try {
-      const url = await uploadImage(file);
-      setForm((prev) => ({ ...prev, image_url: url }));
-      toast.success("Image uploaded");
-    } catch (err: any) {
-      toast.error(err.message || "Upload failed");
-    } finally {
-      setUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = "";
-    }
-  }
+  const handleCardImageUploaded = (url: string) => {
+    setForm((prev) => ({ ...prev, image_url: url }));
+    toast.success("Image uploaded");
+  };
 
   const saveMutation = useMutation({
     mutationFn: async (card: CardForm & { id?: string }) => {
