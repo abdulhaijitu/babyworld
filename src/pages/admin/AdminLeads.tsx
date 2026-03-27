@@ -478,6 +478,17 @@ export default function AdminLeads() {
         </CardContent>
       </Card>
 
+      {/* Bulk Action Bar */}
+      {selectedIds.size > 0 && (
+        <Card>
+          <CardContent className="p-3 flex items-center gap-3 flex-wrap">
+            <span className="text-sm font-medium">{selectedIds.size}টি লিড সিলেক্টেড</span>
+            <BulkMessageDialog leads={selectedLeads} onClose={() => setSelectedIds(new Set())} />
+            <Button variant="ghost" size="sm" onClick={() => setSelectedIds(new Set())}>সিলেকশন বাতিল</Button>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Lead List */}
       <Card>
         <CardContent className="p-0">
@@ -490,6 +501,12 @@ export default function AdminLeads() {
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead className="w-10">
+                      <Checkbox
+                        checked={selectedIds.size === filteredLeads.length && filteredLeads.length > 0}
+                        onCheckedChange={toggleSelectAll}
+                      />
+                    </TableHead>
                     <TableHead>নাম</TableHead>
                     <TableHead>যোগাযোগ</TableHead>
                     <TableHead>সোর্স</TableHead>
@@ -502,7 +519,13 @@ export default function AdminLeads() {
                 </TableHeader>
                 <TableBody>
                   {filteredLeads.map(lead => (
-                    <TableRow key={lead.id}>
+                    <TableRow key={lead.id} className={selectedIds.has(lead.id) ? 'bg-muted/50' : ''}>
+                      <TableCell>
+                        <Checkbox
+                          checked={selectedIds.has(lead.id)}
+                          onCheckedChange={() => toggleSelect(lead.id)}
+                        />
+                      </TableCell>
                       <TableCell className="font-medium">{lead.name}</TableCell>
                       <TableCell>
                         <div className="flex flex-col text-sm">
