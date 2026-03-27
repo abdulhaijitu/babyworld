@@ -465,7 +465,7 @@ export default function AdminUsers() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>User ID</TableHead>
+                  <TableHead>User</TableHead>
                   <TableHead>Role</TableHead>
                   <TableHead>Joined</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
@@ -475,11 +475,18 @@ export default function AdminUsers() {
                 {filteredUsers.map((user) => (
                   <TableRow key={user.id}>
                     <TableCell>
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center shrink-0">
                           <User className="w-4 h-4 text-muted-foreground" />
                         </div>
-                        <span className="font-mono text-sm">{user.user_id.slice(0, 8)}...</span>
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium truncate">
+                            {user.full_name || user.user_id.slice(0, 8) + '...'}
+                          </p>
+                          {user.email && (
+                            <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                          )}
+                        </div>
                       </div>
                     </TableCell>
                     <TableCell>
