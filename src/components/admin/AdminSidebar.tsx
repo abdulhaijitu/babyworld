@@ -57,7 +57,7 @@ const allMenuItems: MenuItem[] = [
     { id: 'memberships', label: 'All Members', icon: Crown, path: '/admin/memberships' },
     { id: 'member-entry', label: 'Member Entry', icon: LogIn, path: '/admin/member-entry' },
   ]},
-  { id: 'gate-logs', label: 'Gate Logs', icon: Video, path: '/admin/gate-logs', requiredRoles: ['super_admin', 'admin', 'manager'] },
+  
   { id: 'food', label: 'Food Sales', icon: UtensilsCrossed, path: '/admin/food', requiredRoles: ['super_admin', 'admin', 'manager', 'staff'] },
   { id: 'expenses', label: 'Expenses', icon: Receipt, path: '/admin/expenses', requiredRoles: ['super_admin', 'admin', 'manager'] },
   { id: 'employees', label: 'Employees', icon: Users, path: '/admin/employees', requiredRoles: ['super_admin', 'admin'] },
