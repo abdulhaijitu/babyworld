@@ -189,6 +189,8 @@ export default function AdminFoodOrders() {
           unitPrice: item.unit_price,
           totalPrice: item.total_price,
         })),
+        subtotal: order.subtotal,
+        discount: order.discount_amount,
         total: order.total,
         customerName: order.customer_name,
         paymentType: order.payment_type,
