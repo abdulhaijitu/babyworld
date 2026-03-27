@@ -28,6 +28,10 @@ import AdminEmployees from "./pages/admin/AdminEmployees";
 import AdminRoster from "./pages/admin/AdminRoster";
 import AdminBookings from "./pages/admin/AdminBookings";
 import AdminEvents from "./pages/admin/AdminEvents";
+import AdminAttendance from "./pages/admin/AdminAttendance";
+import AdminLeaveManagement from "./pages/admin/AdminLeaveManagement";
+import AdminPayroll from "./pages/admin/AdminPayroll";
+import AdminPerformance from "./pages/admin/AdminPerformance";
 
 import AdminEventPackages from "./pages/admin/AdminEventPackages";
 import AdminEventCalendar from "./pages/admin/AdminEventCalendar";
