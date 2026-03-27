@@ -78,12 +78,14 @@ interface EventBooking {
   created_at: string;
 }
 
-const eventPackages = [
-  { id: 'basic', name: 'Basic', price: 5000, guests: 10 },
-  { id: 'standard', name: 'Standard', price: 8000, guests: 20 },
-  { id: 'premium', name: 'Premium', price: 12000, guests: 30 },
-  { id: 'deluxe', name: 'Deluxe', price: 18000, guests: 50 },
-];
+interface EventPackage {
+  id: string;
+  name: string;
+  price: number;
+  max_guests: number;
+  duration_hours: number;
+  is_active: boolean;
+}
 
 const timeSlots = [
   '10:00 AM - 1:00 PM',
