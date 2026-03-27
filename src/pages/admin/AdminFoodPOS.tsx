@@ -158,8 +158,12 @@ export default function AdminFoodPOS() {
         totalPrice: c.food_item.price * c.quantity,
       }));
       const currentTotal = cartTotal;
+      const currentSubtotal = cartSubtotal;
+      const currentDiscount = discountAmount;
       const currentCustomer = customerName;
       const currentPayment = paymentType;
+      const currentCouponCode = appliedCoupon?.code || null;
+      const currentDiscountType = discountMode === 'manual' ? manualDiscountType : (appliedCoupon?.discount_type || null);
 
       const { data: order, error: orderError } = await supabase
         .from('food_orders')
@@ -167,8 +171,11 @@ export default function AdminFoodPOS() {
           order_number: orderNumber,
           customer_name: customerName || null,
           payment_type: paymentType,
-          subtotal: cartTotal,
-          total: cartTotal,
+          subtotal: currentSubtotal,
+          total: currentTotal,
+          discount_amount: currentDiscount,
+          discount_type: currentDiscountType,
+          coupon_code: currentCouponCode,
           notes: notes || null,
           status: 'pending',
         })
