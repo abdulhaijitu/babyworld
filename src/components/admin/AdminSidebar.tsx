@@ -364,11 +364,11 @@ function SidebarContent({
               transition={{ duration: 0.2, delay: index * 0.03 }}
               onClick={() => handleNavigate(item.path)}
               className={cn(
-                "w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 group relative",
+                "w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all duration-200 group relative",
                 active
                   ? "bg-primary/10 text-primary"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground",
-                collapsed && "justify-center px-2"
+                collapsed && "justify-center px-1.5"
               )}
               title={collapsed ? item.label : undefined}
             >
