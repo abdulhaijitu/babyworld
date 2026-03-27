@@ -321,7 +321,7 @@ export default function AdminEvents() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <PartyPopper className="w-6 h-6" />
-            {'Events'}
+            {'Bookings'}
           </h1>
           <p className="text-muted-foreground">
             {'Manage birthday parties & private events'}
