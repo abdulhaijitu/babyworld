@@ -195,7 +195,7 @@ export default function AdminAboutContact() {
           <Card>
             <CardHeader>
               <CardTitle>Contact Information</CardTitle>
-              <CardDescription>ওয়েবসাইটে প্রদর্শিত যোগাযোগের তথ্য</CardDescription>
+              <CardDescription>Contact information displayed on the website</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
