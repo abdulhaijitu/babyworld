@@ -138,16 +138,7 @@ export default function AdminNotificationLogs() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <MessageSquare className="w-6 h-6" />
-            {'Notification Logs'}
-          </h1>
-          <p className="text-muted-foreground">
-            {'SMS and WhatsApp notification history'}
-          </p>
-        </div>
+      <div className="flex justify-end">
         <Button variant="outline" onClick={fetchLogs}>
           <RefreshCw className="w-4 h-4 mr-2" />
           {'Refresh'}

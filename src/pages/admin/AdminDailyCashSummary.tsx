@@ -112,14 +112,7 @@ export default function AdminDailyCashSummary() {
   return (
     <div className="space-y-6 print:p-2">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Banknote className="w-6 h-6 print:hidden" />
-            Daily Cash Summary
-          </h1>
-          <p className="text-muted-foreground">Daily collection overview — Tickets, Food & Memberships</p>
-        </div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-4">
 
         <div className="flex items-center gap-2 print:hidden">
           <Button variant="outline" size="icon" onClick={goToPreviousDay}>

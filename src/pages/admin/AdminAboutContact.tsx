@@ -133,10 +133,6 @@ export default function AdminAboutContact() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">About & Contact Management</h1>
-        <p className="text-sm text-muted-foreground">Manage About, Contact and Social Links content</p>
-      </div>
 
       <Tabs defaultValue="about" className="w-full">
         <TabsList className="w-full sm:w-auto">

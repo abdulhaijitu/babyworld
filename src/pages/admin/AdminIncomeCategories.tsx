@@ -158,14 +158,7 @@ export default function AdminIncomeCategories() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Tags className="w-6 h-6" />
-            Income Categories
-          </h1>
-          <p className="text-muted-foreground">Manage income categories for tracking revenue sources</p>
-        </div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-4">
 
         <Dialog open={dialogOpen} onOpenChange={(open) => { if (!open) closeDialog(); else setDialogOpen(true); }}>
           <DialogTrigger asChild>
