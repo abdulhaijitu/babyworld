@@ -1,31 +1,55 @@
 
 
-## সমস্যা
+## পরিকল্পনা: সাইডবার টপবার ও বটম রিডিজাইন
 
-লাইন 278-এ `open` প্রপের লজিক:
-```
-open={openGroups[item.id] ?? childActive ?? !!searchQuery.trim()}
-```
-
-যখন একটি সাবমেনু অ্যাক্টিভ (যেমন Marketing-এর কোনো পেজে আছেন), তখন `openGroups[item.id]` `undefined` হলে `childActive` `true` রিটার্ন করে — তাই কোলাপস করতে পারে না।
-
-## সমাধান
+### যা পরিবর্তন হবে
 
 **ফাইল:** `src/components/admin/AdminSidebar.tsx`
 
-`openGroups`-এ explicit `false` সেট হলে সেটাকে সম্মান করতে হবে। `??` অপারেটর `undefined/null` চেক করে কিন্তু `false` পাস করে দেয় না — তাই লজিক ঠিকই আছে মনে হলেও সমস্যা হচ্ছে কারণ accordion লজিকে (`setOpenGroups(open ? { [item.id]: true } : {})`) কোলাপস করলে key-টাই মুছে যায়, ফলে `undefined` হয় এবং `childActive`-এ ফলব্যাক হয়।
+#### ১. টপবার রিডিজাইন (লাইন 194-229)
 
-**ফিক্স:** `openGroups`-এ key আছে কিনা চেক করে সিদ্ধান্ত নিতে হবে:
+**বর্তমান:** Logo + Name (বাম), Collapse icon (ডান)
 
-```typescript
-// লাইন 278
-open={item.id in openGroups ? openGroups[item.id] : (childActive || !!searchQuery.trim())}
+**নতুন লেআউট:**
+- **বাম:** Logo + "Baby World" টেক্সট
+- **ডান:** Search আইকন বাটন + Collapse আইকন বাটন
+
+সার্চ আইকনে ক্লিক করলে সার্চ বার টগল হবে (নিচে স্লাইড-ডাউন)। বর্তমান সার্চ বার সরাসরি দেখানোর বদলে আইকন-ট্রিগার্ড হবে।
+
+- একটি `showSearch` state যোগ হবে
+- সার্চ আইকন ক্লিক করলে `showSearch` টগল হবে
+- সার্চ বার `showSearch` true হলেই দেখাবে (AnimatePresence দিয়ে)
+
+#### ২. সার্চ বার সেকশন আপডেট (লাইন 232-255)
+
+বর্তমান কন্ডিশন `!collapsed` থেকে পরিবর্তন হবে `!collapsed && showSearch`-এ। সার্চ ক্লোজ করলে `searchQuery` ক্লিয়ার হবে।
+
+#### ৩. বটম সেকশন রিডিজাইন (লাইন 431-469)
+
+**বর্তমান:** প্রোফাইল কার্ড (অ্যাভাটার + নাম + ইমেইল) + আলাদা Logout বাটন
+
+**নতুন লেআউট (এক লাইনে):**
+- **বাম:** Admin ব্যাজ (অ্যাভাটার + "Admin" লেবেল)
+- **ডান:** Logout আইকন বাটন
+
+```text
+┌─────────────────────────────┐
+│ [AV] Admin        [LogOut]  │
+└─────────────────────────────┘
 ```
 
-এবং `onOpenChange` (লাইন 279) আপডেট:
-```typescript
-onOpenChange={(open) => setOpenGroups(open ? { [item.id]: true } : { [item.id]: false })}
-```
+- প্রোফাইল কার্ড ও আলাদা লগআউট বাটন মুছে একটি সিঙ্গেল row-তে রাখা হবে
+- বামে: ছোট অ্যাভাটার + "Admin" টেক্সট
+- ডানে: LogOut আইকন বাটন (destructive color)
 
-এতে কোলাপস করলে explicit `false` সেট হবে, এবং `in` চেক দিয়ে বোঝা যাবে ইউজার নিজে কোলাপস করেছে — তখন আর `childActive`-এ ফলব্যাক হবে না।
+#### ৪. কোলাপসড স্টেট
+- **টপবার কোলাপসড:** শুধু লোগো দেখাবে, সার্চ ও কোলাপস আইকন লুকানো থাকবে
+- **বটম কোলাপসড:** শুধু অ্যাভাটার দেখাবে, টুলটিপে "Logout" অপশন থাকবে
+
+### টেকনিক্যাল ডিটেইলস
+
+- নতুন state: `const [showSearch, setShowSearch] = useState(false)`
+- টপবার ডান পাশে দুটি `Button variant="ghost" size="icon"`: Search ও ChevronLeft/Right
+- বটম সেকশনে `flex items-center justify-between` লেআউট
+- সার্চ বন্ধ করলে `setSearchQuery('')` কল হবে
 
