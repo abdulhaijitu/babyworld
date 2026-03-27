@@ -229,7 +229,7 @@ export default function MemberEntryTab() {
             <div className="relative flex-1" ref={suggestionsRef}>
               <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="ফোন নম্বর বা নাম দিয়ে মেম্বার খুঁজুন..."
+                placeholder="Search by phone number or name..."
                 className="pl-10"
                 value={searchPhone}
                 onChange={(e) => {
