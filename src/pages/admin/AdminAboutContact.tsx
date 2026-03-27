@@ -176,7 +176,7 @@ export default function AdminAboutContact() {
                 <Textarea rows={3} value={about.description} onChange={(e) => setAbout({ ...about, description: e.target.value })} />
               </div>
               <div className="space-y-2">
-                <Label>Description (বাংলা)</Label>
+                <Label>Description (Bangla)</Label>
                 <Textarea rows={3} value={about.descriptionBn} onChange={(e) => setAbout({ ...about, descriptionBn: e.target.value })} />
               </div>
               <div className="space-y-2">
