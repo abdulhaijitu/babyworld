@@ -47,6 +47,50 @@ export type Database = {
         }
         Relationships: []
       }
+      attendance: {
+        Row: {
+          attendance_date: string
+          check_in: string | null
+          check_out: string | null
+          created_at: string
+          employee_id: string
+          id: string
+          notes: string | null
+          status: Database["public"]["Enums"]["attendance_status"]
+          updated_at: string
+        }
+        Insert: {
+          attendance_date?: string
+          check_in?: string | null
+          check_out?: string | null
+          created_at?: string
+          employee_id: string
+          id?: string
+          notes?: string | null
+          status?: Database["public"]["Enums"]["attendance_status"]
+          updated_at?: string
+        }
+        Update: {
+          attendance_date?: string
+          check_in?: string | null
+          check_out?: string | null
+          created_at?: string
+          employee_id?: string
+          id?: string
+          notes?: string | null
+          status?: Database["public"]["Enums"]["attendance_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bookings: {
         Row: {
           booking_type: Database["public"]["Enums"]["booking_type"]
@@ -147,6 +191,153 @@ export type Database = {
           valid_till?: string | null
         }
         Relationships: []
+      }
+      employee_leaves: {
+        Row: {
+          approved_by: string | null
+          created_at: string
+          employee_id: string
+          end_date: string
+          id: string
+          leave_type: Database["public"]["Enums"]["leave_type"]
+          reason: string | null
+          start_date: string
+          status: Database["public"]["Enums"]["leave_status"]
+          updated_at: string
+        }
+        Insert: {
+          approved_by?: string | null
+          created_at?: string
+          employee_id: string
+          end_date: string
+          id?: string
+          leave_type?: Database["public"]["Enums"]["leave_type"]
+          reason?: string | null
+          start_date: string
+          status?: Database["public"]["Enums"]["leave_status"]
+          updated_at?: string
+        }
+        Update: {
+          approved_by?: string | null
+          created_at?: string
+          employee_id?: string
+          end_date?: string
+          id?: string
+          leave_type?: Database["public"]["Enums"]["leave_type"]
+          reason?: string | null
+          start_date?: string
+          status?: Database["public"]["Enums"]["leave_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "employee_leaves_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      employee_payroll: {
+        Row: {
+          basic_salary: number
+          bonuses: number
+          created_at: string
+          deductions: number
+          employee_id: string
+          id: string
+          month: number
+          net_salary: number
+          notes: string | null
+          paid_at: string | null
+          status: Database["public"]["Enums"]["payroll_status"]
+          updated_at: string
+          year: number
+        }
+        Insert: {
+          basic_salary?: number
+          bonuses?: number
+          created_at?: string
+          deductions?: number
+          employee_id: string
+          id?: string
+          month: number
+          net_salary?: number
+          notes?: string | null
+          paid_at?: string | null
+          status?: Database["public"]["Enums"]["payroll_status"]
+          updated_at?: string
+          year: number
+        }
+        Update: {
+          basic_salary?: number
+          bonuses?: number
+          created_at?: string
+          deductions?: number
+          employee_id?: string
+          id?: string
+          month?: number
+          net_salary?: number
+          notes?: string | null
+          paid_at?: string | null
+          status?: Database["public"]["Enums"]["payroll_status"]
+          updated_at?: string
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "employee_payroll_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      employee_performance: {
+        Row: {
+          created_at: string
+          employee_id: string
+          id: string
+          rating: number
+          review_period: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          reviewer_notes: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          employee_id: string
+          id?: string
+          rating: number
+          review_period: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          employee_id?: string
+          id?: string
+          rating?: number
+          review_period?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "employee_performance_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       employees: {
         Row: {
@@ -1454,6 +1645,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user" | "manager" | "staff" | "super_admin"
+      attendance_status: "present" | "absent" | "late" | "half_day"
       booking_status: "confirmed" | "pending" | "cancelled"
       booking_type: "hourly_play" | "birthday_event" | "private_event"
       campaign_audience:
@@ -1489,8 +1681,11 @@ export type Database = {
         | "phone"
         | "other"
       lead_status: "new" | "contacted" | "interested" | "converted" | "lost"
+      leave_status: "pending" | "approved" | "rejected"
+      leave_type: "sick" | "casual" | "annual"
       membership_status: "active" | "expired" | "cancelled"
       membership_type: "monthly" | "quarterly" | "yearly"
+      payroll_status: "draft" | "paid"
       promo_applicable_to: "ticket" | "food" | "event" | "membership" | "all"
       promo_discount_type: "percentage" | "fixed"
       promo_status: "draft" | "active" | "paused" | "expired"
@@ -1629,6 +1824,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user", "manager", "staff", "super_admin"],
+      attendance_status: ["present", "absent", "late", "half_day"],
       booking_status: ["confirmed", "pending", "cancelled"],
       booking_type: ["hourly_play", "birthday_event", "private_event"],
       campaign_audience: [
@@ -1667,8 +1863,11 @@ export const Constants = {
         "other",
       ],
       lead_status: ["new", "contacted", "interested", "converted", "lost"],
+      leave_status: ["pending", "approved", "rejected"],
+      leave_type: ["sick", "casual", "annual"],
       membership_status: ["active", "expired", "cancelled"],
       membership_type: ["monthly", "quarterly", "yearly"],
+      payroll_status: ["draft", "paid"],
       promo_applicable_to: ["ticket", "food", "event", "membership", "all"],
       promo_discount_type: ["percentage", "fixed"],
       promo_status: ["draft", "active", "paused", "expired"],
