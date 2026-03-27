@@ -212,7 +212,7 @@ export default function AdminEvents() {
       slot_date: new Date(),
       time_slot: timeSlots[0],
       booking_type: 'birthday_event',
-      package: 'standard',
+      package: eventPackages.length > 0 ? eventPackages[0].id : '',
       notes: ''
     });
   };
