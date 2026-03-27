@@ -17,8 +17,8 @@ const Contact = () => {
           <GoogleMap />
         </main>
         <Footer />
-        {/* Safe spacing for mobile bottom nav */}
         <div className="lg:hidden h-20" />
+        <WhatsAppButton variant="floating" />
         <MobileBottomNav />
       </div>
     </PageTransition>
