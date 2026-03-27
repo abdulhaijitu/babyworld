@@ -318,19 +318,7 @@ export default function AdminMemberships() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <Tabs defaultValue="members" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="members">
-            <Crown className="h-4 w-4 mr-1.5" /> All Members
-          </TabsTrigger>
-          <TabsTrigger value="entry">
-            <LogIn className="h-4 w-4 mr-1.5" /> Member Entry
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="entry">
-          <MemberEntryTab />
-        </TabsContent>
-        <TabsContent value="members" className="space-y-6">
+      <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
