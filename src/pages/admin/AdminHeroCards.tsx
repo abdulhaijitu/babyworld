@@ -9,7 +9,8 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Gift, Calendar, Save, X, Upload, ImageIcon, Clock } from "lucide-react";
+import { Plus, Pencil, Trash2, Gift, Calendar, Save, X, Clock } from "lucide-react";
+import { ImageDropZone } from "@/components/admin/ImageDropZone";
 import {
   Dialog,
   DialogContent,
