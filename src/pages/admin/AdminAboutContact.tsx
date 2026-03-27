@@ -158,7 +158,7 @@ export default function AdminAboutContact() {
           <Card>
             <CardHeader>
               <CardTitle>About Section Content</CardTitle>
-              <CardDescription>হোমপেজের About সেকশনের কন্টেন্ট এডিট করুন</CardDescription>
+              <CardDescription>Edit the About section content on the homepage</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
