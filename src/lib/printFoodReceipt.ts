@@ -75,6 +75,10 @@ export function printFoodReceipt(data: ReceiptData) {
     <tbody>${itemsHtml}</tbody></table>
     <hr class="divider" />
     <div class="total-section">
+      ${discount && discount > 0 ? `
+        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;"><span>Subtotal</span><span>৳${displaySubtotal}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:#e65100;margin-bottom:4px;"><span>Discount</span><span>-৳${discount}</span></div>
+      ` : ''}
       <div class="total-row"><span class="total-label">TOTAL</span><span class="total-amount">৳${total}</span></div>
       <div style="text-align:right;font-size:10px;color:#666;margin-top:2px;">${totalQty} item(s)</div>
     </div>
