@@ -45,6 +45,7 @@ import SettingsSms from "./pages/admin/settings/SettingsSms";
 import SettingsPayment from "./pages/admin/settings/SettingsPayment";
 import AdminReports from "./pages/admin/AdminReports";
 import AdminUsers from "./pages/admin/AdminUsers";
+import AdminRoles from "./pages/admin/AdminRoles";
 import AdminMemberships from "./pages/admin/AdminMemberships";
 import AdminMemberEntry from "./pages/admin/AdminMemberEntry";
 import AdminMembershipPackages from "./pages/admin/AdminMembershipPackages";
