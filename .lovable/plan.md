@@ -1,22 +1,29 @@
 
 
-## Plan: Accordion-Style Sidebar (One Group Open at a Time)
+## পরিকল্পনা: সাইডবার টপ, সার্চ ও বটম সেকশন কম্প্যাক্ট করা
 
-### What Changes
+### যা পরিবর্তন হবে
 
-**File:** `src/components/admin/AdminSidebar.tsx`
+**ফাইল:** `src/components/admin/AdminSidebar.tsx`
 
-Currently, `openGroups` is a `Record<string, boolean>` that allows multiple groups to be open simultaneously. The change is simple:
+#### ১. টপ হেডার কম্প্যাক্ট
+- হেডার হাইট `h-16` → `h-12` করা হবে
+- লোগো আইকন `h-9 w-9` → `h-7 w-7`, ইমেজ `h-6` → `h-5`
+- টেক্সট সাইজ ছোট করা: টাইটেল `text-sm` → `text-xs`, সাবটাইটেল `text-[11px]` → `text-[10px]`
+- প্যাডিং `px-3` → `px-2` কমানো
 
-1. **Modify `onOpenChange` handler** (line 279): When a group is opened, close all other groups first. When a group is closed, just close it.
-   - Replace: `setOpenGroups(prev => ({ ...prev, [item.id]: open }))`
-   - With: `setOpenGroups(open ? { [item.id]: true } : {})`
+#### ২. সার্চ বার কম্প্যাক্ট
+- সার্চ ইনপুট হাইট `h-8` → `h-7`
+- প্যাডিং `pt-3 pb-1` → `pt-2 pb-0.5`
+- আইকন সাইজ `h-3.5 w-3.5` → `h-3 w-3`
+- ফন্ট সাইজ `text-sm` → `text-xs`
 
-2. **Update the `useEffect`** (lines 170-176) that auto-opens groups on route change: Instead of merging into existing state, set only the matching group as open.
-   - Replace: `setOpenGroups(prev => ({ ...prev, [item.id]: true }))`
-   - With: `setOpenGroups({ [item.id]: true })`
+#### ৩. বটম প্রোফাইল ও লগআউট কম্প্যাক্ট
+- প্রোফাইল অ্যাভাটার `h-8 w-8` → `h-7 w-7`
+- প্রোফাইল এরিয়া প্যাডিং `px-2 py-2` → `px-2 py-1.5`
+- লগআউট বাটন প্যাডিং `py-2` → `py-1.5`
+- নিচের সেকশন `p-2` → `p-1.5`
 
-This gives accordion behavior — clicking a group expands it and collapses any previously open group. The active route's group still auto-opens on navigation.
-
-No new files, no structural changes — just two small logic tweaks in the existing file.
+### ফলাফল
+মেনু আইটেমগুলোর জন্য আরও বেশি জায়গা পাওয়া যাবে, স্ক্রল কম লাগবে, এবং সামগ্রিক চেহারা আরও ক্লিন ও প্রফেশনাল হবে।
 
