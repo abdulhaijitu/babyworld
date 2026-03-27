@@ -25,6 +25,46 @@ export default function MemberEntryTab() {
   const [searchPhone, setSearchPhone] = useState('');
   const [foundMember, setFoundMember] = useState<any>(null);
   const [searching, setSearching] = useState(false);
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const suggestionsRef = useRef<HTMLDivElement>(null);
+
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchPhone.replace(/\s/g, ''));
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchPhone]);
+
+  // Close suggestions on outside click
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (suggestionsRef.current && !suggestionsRef.current.contains(e.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
+  // Suggestions query
+  const { data: suggestions = [] } = useQuery({
+    queryKey: ['member-suggestions', debouncedSearch],
+    queryFn: async () => {
+      const q = debouncedSearch;
+      if (q.length < 3) return [];
+      const { data, error } = await supabase
+        .from('memberships')
+        .select('*')
+        .or(`phone.ilike.%${q}%,member_name.ilike.%${q}%`)
+        .order('status', { ascending: true })
+        .limit(5);
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: debouncedSearch.length >= 3,
+  });
 
   // Today's stats
   const todayStr = format(new Date(), 'yyyy-MM-dd');
