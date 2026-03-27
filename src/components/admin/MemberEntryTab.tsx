@@ -200,7 +200,7 @@ export default function MemberEntryTab() {
           <CardContent className="p-3 text-center">
             <p className="text-2xl font-bold text-primary">{todayCheckedIn}</p>
             <p className="text-xs text-muted-foreground flex items-center justify-center gap-1">
-              <CalendarCheck className="h-3 w-3" /> আজকের চেক-ইন
+              <CalendarCheck className="h-3 w-3" /> Today's Check-ins
             </p>
           </CardContent>
         </Card>
