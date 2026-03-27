@@ -747,3 +747,4 @@ export default function AdminMemberships() {
       </Tabs>
     </div>
   );
+}
