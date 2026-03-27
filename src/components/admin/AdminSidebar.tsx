@@ -59,6 +59,7 @@ const allMenuItems: MenuItem[] = [
   ]},
   
   { id: 'foods', label: 'Foods', icon: UtensilsCrossed, path: '/admin/food', requiredRoles: ['super_admin', 'admin', 'manager', 'staff'], children: [
+    { id: 'food-pos', label: 'POS', icon: Plus, path: '/admin/food-pos' },
     { id: 'food-items', label: 'Items', icon: List, path: '/admin/food' },
     { id: 'food-orders', label: 'Orders', icon: Receipt, path: '/admin/food-orders' },
   ]},
