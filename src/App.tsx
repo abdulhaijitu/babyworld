@@ -118,9 +118,9 @@ const App = () => (
                   <Route path="rides" element={<AdminRides />} />
                   
                   <Route path="notifications" element={<AdminNotificationLogs />} />
-                  <Route path="hero-slides" element={<AdminHeroSlides />} />
-                  <Route path="hero-cards" element={<AdminHeroCards />} />
                   <Route path="homepage" element={<AdminHomepage />} />
+                  <Route path="about-contact" element={<AdminAboutContact />} />
+                  <Route path="seo-branding" element={<AdminSeoBranding />} />
                   <Route path="users" element={<AdminUsers />} />
                   <Route path="settings" element={<AdminSettings />} />
                 </Route>
