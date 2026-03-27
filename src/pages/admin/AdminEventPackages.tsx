@@ -279,6 +279,7 @@ export default function AdminEventPackages() {
               <TableHeader>
                  <TableRow>
                    <TableHead className="w-10"></TableHead>
+                   <TableHead className="w-10 text-center">#</TableHead>
                    <TableHead className="w-16">Image</TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Price</TableHead>
@@ -292,7 +293,7 @@ export default function AdminEventPackages() {
               <TableBody>
                 {packages.length === 0 ? (
                   <TableRow>
-                     <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                     <TableCell colSpan={10} className="text-center py-8 text-muted-foreground">
                        No packages found. Create your first package.
                      </TableCell>
                   </TableRow>
@@ -310,6 +311,7 @@ export default function AdminEventPackages() {
                      <TableCell className="cursor-grab active:cursor-grabbing">
                        <GripVertical className="w-4 h-4 text-muted-foreground" />
                      </TableCell>
+                     <TableCell className="text-center text-xs text-muted-foreground font-mono">{pkg.sort_order}</TableCell>
                     <TableCell>
                       {pkg.image_url ? (
                         <img src={pkg.image_url} alt={pkg.name} className="w-12 h-12 rounded-lg object-cover shadow-sm border border-border" />
