@@ -152,7 +152,7 @@ export default function AdminDashboardContent() {
                   <Baby className="w-4 h-4" />
                   <span className="text-xs">Children</span>
                 </div>
-                <p className="text-xl font-semibold text-foreground">
+                <p className="text-lg md:text-xl font-semibold text-foreground">
                   {visitorsLoading ? <Skeleton className="h-7 w-10 mx-auto" /> : visitors.insideChildren}
                 </p>
               </div>
@@ -161,7 +161,7 @@ export default function AdminDashboardContent() {
                   <UserCheck className="w-4 h-4" />
                   <span className="text-xs">Guardians</span>
                 </div>
-                <p className="text-xl font-semibold text-foreground">
+                <p className="text-lg md:text-xl font-semibold text-foreground">
                   {visitorsLoading ? <Skeleton className="h-7 w-10 mx-auto" /> : visitors.insideGuardians}
                 </p>
               </div>
