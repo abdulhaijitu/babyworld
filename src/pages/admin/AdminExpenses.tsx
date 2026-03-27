@@ -449,7 +449,6 @@ export default function AdminExpenses() {
                   {expensesData?.expenses?.map((expense: Expense) => {
                     const catInfo = getCategoryInfo(expense.category);
                     const pmInfo = getPaymentMethodInfo(expense.payment_method);
-                    const CatIcon = catInfo.icon;
                     const PmIcon = pmInfo.icon;
 
                     return (
@@ -459,7 +458,6 @@ export default function AdminExpenses() {
                         </TableCell>
                         <TableCell>
                           <Badge className={catInfo.color}>
-                            <CatIcon className="w-3 h-3 mr-1" />
                             {catInfo.label}
                           </Badge>
                         </TableCell>
