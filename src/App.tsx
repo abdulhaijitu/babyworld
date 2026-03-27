@@ -43,6 +43,7 @@ import AdminMemberEntry from "./pages/admin/AdminMemberEntry";
 import AdminMembershipPackages from "./pages/admin/AdminMembershipPackages";
 import AdminExpenses from "./pages/admin/AdminExpenses";
 import AdminExpenseCategories from "./pages/admin/AdminExpenseCategories";
+import AdminDailyCashSummary from "./pages/admin/AdminDailyCashSummary";
 import AdminProfitReports from "./pages/admin/AdminProfitReports";
 import AdminRides from "./pages/admin/AdminRides";
 import AdminRideReviews from "./pages/admin/AdminRideReviews";
