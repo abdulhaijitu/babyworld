@@ -533,7 +533,19 @@ export default function AdminFoodOrders() {
                         <span className="font-medium">৳{item.total_price}</span>
                       </div>
                     ))}
-                    <div className="border-t pt-2 flex justify-between font-semibold">
+                    {selectedOrder.discount_amount > 0 && (
+                      <>
+                        <div className="border-t pt-2 flex justify-between text-sm">
+                          <span>Subtotal</span>
+                          <span>৳{selectedOrder.subtotal}</span>
+                        </div>
+                        <div className="flex justify-between text-sm text-orange-600 dark:text-orange-400">
+                          <span>Discount {selectedOrder.coupon_code ? `(${selectedOrder.coupon_code})` : ''}</span>
+                          <span>-৳{selectedOrder.discount_amount}</span>
+                        </div>
+                      </>
+                    )}
+                    <div className={`${selectedOrder.discount_amount > 0 ? '' : 'border-t pt-2'} flex justify-between font-semibold`}>
                       <span>Total</span>
                       <span>৳{selectedOrder.total}</span>
                     </div>
