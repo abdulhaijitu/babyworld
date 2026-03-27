@@ -81,13 +81,13 @@ export function ActivityLogCard() {
   };
 
   const getActionLabel = (action: string) => {
-    const labels: Record<string, { en: string; bn: string }> = {
-      create: { en: 'Created', bn: 'তৈরি' },
-      update: { en: 'Updated', bn: 'আপডেট' },
-      delete: { en: 'Deleted', bn: 'মুছে ফেলা' },
-      view: { en: 'Viewed', bn: 'দেখা' }
+    const labels: Record<string, string> = {
+      create: 'Created',
+      update: 'Updated',
+      delete: 'Deleted',
+      view: 'Viewed'
     };
-    return labels[action]?.['en'] || action;
+    return labels[action] || action;
   };
 
   const getEntityLabel = (entityType: string) => {
