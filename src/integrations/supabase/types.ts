@@ -1198,6 +1198,60 @@ export type Database = {
         }
         Relationships: []
       }
+      social_media_posts: {
+        Row: {
+          content: string
+          created_at: string
+          created_by: string | null
+          id: string
+          image_url: string | null
+          notes: string | null
+          platform: Database["public"]["Enums"]["social_platform"]
+          post_type: string
+          post_url: string | null
+          published_at: string | null
+          scheduled_at: string | null
+          status: Database["public"]["Enums"]["social_post_status"]
+          tags: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          image_url?: string | null
+          notes?: string | null
+          platform: Database["public"]["Enums"]["social_platform"]
+          post_type?: string
+          post_url?: string | null
+          published_at?: string | null
+          scheduled_at?: string | null
+          status?: Database["public"]["Enums"]["social_post_status"]
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          image_url?: string | null
+          notes?: string | null
+          platform?: Database["public"]["Enums"]["social_platform"]
+          post_type?: string
+          post_url?: string | null
+          published_at?: string | null
+          scheduled_at?: string | null
+          status?: Database["public"]["Enums"]["social_post_status"]
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       ticket_rides: {
         Row: {
           created_at: string
@@ -1442,6 +1496,8 @@ export type Database = {
       promo_status: "draft" | "active" | "paused" | "expired"
       ride_category: "kids" | "family" | "thrill"
       slot_status: "available" | "booked"
+      social_platform: "facebook" | "instagram" | "tiktok" | "youtube"
+      social_post_status: "draft" | "scheduled" | "published" | "failed"
       ticket_source: "online" | "physical"
       ticket_status: "active" | "used" | "cancelled"
       ticket_type: "child_guardian" | "child_only" | "group"
@@ -1618,6 +1674,8 @@ export const Constants = {
       promo_status: ["draft", "active", "paused", "expired"],
       ride_category: ["kids", "family", "thrill"],
       slot_status: ["available", "booked"],
+      social_platform: ["facebook", "instagram", "tiktok", "youtube"],
+      social_post_status: ["draft", "scheduled", "published", "failed"],
       ticket_source: ["online", "physical"],
       ticket_status: ["active", "used", "cancelled"],
       ticket_type: ["child_guardian", "child_only", "group"],
