@@ -242,7 +242,11 @@ export default function AdminUsers() {
 
   // Filter users
   const filteredUsers = userRoles?.filter(user => {
-    const matchesSearch = user.user_id.toLowerCase().includes(searchQuery.toLowerCase());
+    const q = searchQuery.toLowerCase();
+    const matchesSearch = !q || 
+      user.user_id.toLowerCase().includes(q) ||
+      (user.email?.toLowerCase().includes(q)) ||
+      (user.full_name?.toLowerCase().includes(q));
     const matchesRole = roleFilter === 'all' || user.role === roleFilter;
     return matchesSearch && matchesRole;
   });
