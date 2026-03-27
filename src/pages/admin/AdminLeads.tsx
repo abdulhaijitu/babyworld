@@ -192,6 +192,28 @@ function SMSButton({ phone, name }: { phone: string; name: string }) {
   );
 }
 
+function WhatsAppLeadButton({ phone, name }: { phone: string; name: string }) {
+  const message = `প্রিয় ${name},\nBaby World-এ আপনাকে স্বাগতম! আমাদের নতুন অফার ও প্যাকেজ সম্পর্কে জানতে ভিজিট করুন।\n📍 Baby World Indoor Playground\n📞 +880 9606990128`;
+
+  const handleClick = () => {
+    let formattedPhone = phone.replace(/\D/g, '');
+    if (formattedPhone.startsWith('0')) {
+      formattedPhone = '88' + formattedPhone;
+    } else if (!formattedPhone.startsWith('88')) {
+      formattedPhone = '88' + formattedPhone;
+    }
+    const url = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+    toast.success(`${name}-এর WhatsApp খোলা হয়েছে`);
+  };
+
+  return (
+    <Button variant="ghost" size="icon" title="WhatsApp-এ মেসেজ পাঠান" onClick={handleClick} className="text-green-600 hover:text-green-700">
+      <MessageSquare className="h-4 w-4" />
+    </Button>
+  );
+}
+
 export default function AdminLeads() {
   const [statusFilter, setStatusFilter] = useState<LeadStatus | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -375,6 +397,7 @@ export default function AdminLeads() {
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1">
                           <SMSButton phone={lead.phone} name={lead.name} />
+                          <WhatsAppLeadButton phone={lead.phone} name={lead.name} />
                           <Button variant="ghost" size="icon" onClick={() => openEdit(lead)}>
                             <Edit className="h-4 w-4" />
                           </Button>
