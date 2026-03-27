@@ -136,7 +136,7 @@ export default function AdminDashboardContent() {
           </CardHeader>
           <CardContent>
             <p className="text-xs text-muted-foreground">
-              {isLoading ? <Skeleton className="h-3 w-20" /> : `${summary?.today?.foodOrders || 0} অর্ডার`}
+              {isLoading ? <Skeleton className="h-3 w-20" /> : `${summary?.today?.foodOrders || 0} orders`}
             </p>
           </CardContent>
         </Card>
