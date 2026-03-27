@@ -185,7 +185,7 @@ export default function MemberEntryTab() {
       queryClient.invalidateQueries({ queryKey: ['membership-visits-today'] });
       queryClient.invalidateQueries({ queryKey: ['member-visits', foundMember?.id] });
     },
-    onError: () => toast.error('চেক-আউট ব্যর্থ'),
+    onError: () => toast.error('Check-out failed'),
   });
 
   const remainingDays = foundMember
