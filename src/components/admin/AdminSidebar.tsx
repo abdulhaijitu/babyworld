@@ -197,34 +197,55 @@ function SidebarContent({
         "flex items-center h-12 px-2 border-b border-border",
         collapsed ? "justify-center" : "justify-between"
       )}>
-        {!collapsed ? (
-          <motion.div
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.2, delay: 0.1 }}
-            className="flex items-center gap-2"
-          >
-            <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-              <img src={babyWorldLogo} alt="Baby World" className="h-5 w-auto" />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-semibold text-xs text-foreground leading-tight">Baby World</span>
-              <span className="text-[10px] text-muted-foreground leading-tight">Admin Dashboard</span>
-            </div>
-          </motion.div>
-        ) : (
-          <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center">
+        <div className="flex items-center gap-2">
+          <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
             <img src={babyWorldLogo} alt="Baby World" className="h-5 w-auto" />
           </div>
+          {!collapsed && (
+            <motion.span
+              initial={{ opacity: 0, x: -6 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.15 }}
+              className="font-semibold text-xs text-foreground whitespace-nowrap"
+            >
+              Baby World
+            </motion.span>
+          )}
+        </div>
+        {!collapsed && !isMobile && (
+          <div className="flex items-center gap-0.5">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                setShowSearch(prev => {
+                  if (prev) setSearchQuery('');
+                  return !prev;
+                });
+              }}
+              className="h-7 w-7 rounded-md text-muted-foreground hover:text-foreground"
+            >
+              <Search className="h-3.5 w-3.5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => onCollapse(!collapsed)}
+              className="h-7 w-7 rounded-md text-muted-foreground hover:text-foreground"
+            >
+              <ChevronLeft className="h-3.5 w-3.5" />
+            </Button>
+          </div>
         )}
-        {!isMobile && (
+        {collapsed && !isMobile && (
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => onCollapse(!collapsed)}
-            className="h-7 w-7 rounded-md text-muted-foreground hover:text-foreground hidden md:flex"
+            onClick={() => onCollapse(false)}
+            className="absolute left-1/2 -translate-x-1/2 bottom-auto h-7 w-7 rounded-md text-muted-foreground hover:text-foreground hidden md:flex"
+            style={{ position: 'static', transform: 'none' }}
           >
-            {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+            <ChevronRight className="h-3.5 w-3.5" />
           </Button>
         )}
       </div>
