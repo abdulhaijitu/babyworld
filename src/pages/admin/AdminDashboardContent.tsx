@@ -168,7 +168,7 @@ export default function AdminDashboardContent() {
             <div className="flex items-center justify-between">
               <CardTitle className="text-base flex items-center gap-2">
                 <Ticket className="w-4 h-4" />
-                আজকের টিকেট
+                Today's Tickets
               </CardTitle>
               <Button variant="ghost" size="sm" onClick={() => navigate('/admin/ticketing')}>
                 সব দেখুন <ArrowRight className="w-3.5 h-3.5 ml-1" />
