@@ -238,15 +238,15 @@ function SidebarContent({
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="px-3 pt-3 pb-1">
+            <div className="px-2 pt-2 pb-0.5">
               <div className="relative">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground" />
                 <input
                   type="text"
                   placeholder="Search menu..."
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  className="w-full h-8 pl-8 pr-3 rounded-md border border-border bg-muted/50 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring focus:border-ring transition-colors"
+                  className="w-full h-7 pl-7 pr-3 rounded-md border border-border bg-muted/50 text-xs placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring focus:border-ring transition-colors"
                 />
               </div>
             </div>
