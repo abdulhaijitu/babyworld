@@ -118,12 +118,12 @@ export default function AdminFoodOrders() {
 
       // Status filter
       if (statusFilter !== 'all') {
-        query = query.eq('status', statusFilter);
+        query = query.eq('status', statusFilter as 'pending' | 'served' | 'cancelled');
       }
 
       // Payment filter
       if (paymentFilter !== 'all') {
-        query = query.eq('payment_type', paymentFilter);
+        query = query.eq('payment_type', paymentFilter as 'cash' | 'online' | 'pending');
       }
 
       const { data, error } = await query;
