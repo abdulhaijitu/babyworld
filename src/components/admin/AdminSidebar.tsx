@@ -94,6 +94,7 @@ const allMenuItems: MenuItem[] = [
     { id: 'performance', label: 'Performance', icon: Award, path: '/admin/performance' },
   ]},
   { id: 'accounts', label: 'Accounts', icon: Wallet, path: '/admin/expenses', requiredRoles: ['super_admin', 'admin', 'manager'], children: [
+    { id: 'daily-cash', label: 'Daily Cash Summary', icon: Briefcase, path: '/admin/daily-cash' },
     { id: 'expenses', label: 'Expenses', icon: Receipt, path: '/admin/expenses' },
     { id: 'expense-categories', label: 'Expense Categories', icon: Tag, path: '/admin/expense-categories' },
     { id: 'profit', label: 'Profit & Loss', icon: TrendingUp, path: '/admin/profit' },
