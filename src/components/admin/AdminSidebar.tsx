@@ -104,7 +104,11 @@ const allMenuItems: MenuItem[] = [
   ]},
   
   { id: 'notifications', label: 'Notifications', icon: MessageSquare, path: '/admin/notifications', requiredRoles: ['super_admin', 'admin', 'manager'] },
-  { id: 'homepage', label: 'Homepage', icon: Home, path: '/admin/homepage', requiredRoles: ['super_admin', 'admin'] },
+  { id: 'frontend', label: 'Frontend', icon: Monitor, path: '/admin/homepage', requiredRoles: ['super_admin', 'admin'], children: [
+    { id: 'homepage', label: 'Homepage', icon: Home, path: '/admin/homepage' },
+    { id: 'hero-slides', label: 'Hero Slides', icon: List, path: '/admin/hero-slides' },
+    { id: 'hero-cards', label: 'Hero Cards', icon: Tag, path: '/admin/hero-cards' },
+  ]},
   { id: 'users', label: 'Users', icon: Shield, path: '/admin/users', requiredRoles: ['super_admin'] },
   { id: 'settings', label: 'Settings', icon: Settings, path: '/admin/settings', requiredRoles: ['super_admin', 'admin'] },
 ];
