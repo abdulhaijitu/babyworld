@@ -80,7 +80,10 @@ const allMenuItems: MenuItem[] = [
     { id: 'about-contact', label: 'About & Contact', icon: Users, path: '/admin/about-contact' },
     { id: 'seo-branding', label: 'SEO & Branding', icon: FileBarChart, path: '/admin/seo-branding' },
   ]},
-  { id: 'users', label: 'Users', icon: Shield, path: '/admin/users', requiredRoles: ['super_admin'] },
+  { id: 'role-permission', label: 'Role & Permission', icon: Shield, path: '/admin/users', requiredRoles: ['super_admin'], children: [
+    { id: 'users', label: 'Users', icon: Users, path: '/admin/users' },
+    { id: 'roles', label: 'Roles', icon: Shield, path: '/admin/roles' },
+  ]},
   { id: 'settings', label: 'Settings', icon: Settings, path: '/admin/settings/general', requiredRoles: ['super_admin', 'admin'], children: [
     { id: 'settings-general', label: 'General', icon: Settings, path: '/admin/settings/general' },
     { id: 'settings-business', label: 'Business', icon: Building, path: '/admin/settings/business' },

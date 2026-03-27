@@ -45,6 +45,7 @@ import SettingsSms from "./pages/admin/settings/SettingsSms";
 import SettingsPayment from "./pages/admin/settings/SettingsPayment";
 import AdminReports from "./pages/admin/AdminReports";
 import AdminUsers from "./pages/admin/AdminUsers";
+import AdminRoles from "./pages/admin/AdminRoles";
 import AdminMemberships from "./pages/admin/AdminMemberships";
 import AdminMemberEntry from "./pages/admin/AdminMemberEntry";
 import AdminMembershipPackages from "./pages/admin/AdminMembershipPackages";
@@ -129,6 +130,7 @@ const App = () => (
                   <Route path="about-contact" element={<AdminAboutContact />} />
                   <Route path="seo-branding" element={<AdminSeoBranding />} />
                   <Route path="users" element={<AdminUsers />} />
+                  <Route path="roles" element={<AdminRoles />} />
                   <Route path="settings" element={<AdminSettings />} />
                   <Route path="settings/general" element={<SettingsGeneral />} />
                   <Route path="settings/business" element={<SettingsBusiness />} />
