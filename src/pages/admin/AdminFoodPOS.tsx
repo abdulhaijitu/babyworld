@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { toast } from 'sonner';
-import { Minus, Plus, Trash2, ShoppingCart, UtensilsCrossed, CheckCircle, XCircle } from 'lucide-react';
+import { Minus, Plus, Trash2, ShoppingCart, UtensilsCrossed, CheckCircle, XCircle, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { printFoodReceipt } from '@/lib/printFoodReceipt';
