@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { Search, LogIn, LogOut, User, Phone, Crown, Clock, Loader2, Users, CalendarCheck } from 'lucide-react';
@@ -25,6 +25,46 @@ export default function MemberEntryTab() {
   const [searchPhone, setSearchPhone] = useState('');
   const [foundMember, setFoundMember] = useState<any>(null);
   const [searching, setSearching] = useState(false);
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const suggestionsRef = useRef<HTMLDivElement>(null);
+
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchPhone.replace(/\s/g, ''));
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchPhone]);
+
+  // Close suggestions on outside click
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (suggestionsRef.current && !suggestionsRef.current.contains(e.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
+  // Suggestions query
+  const { data: suggestions = [] } = useQuery({
+    queryKey: ['member-suggestions', debouncedSearch],
+    queryFn: async () => {
+      const q = debouncedSearch;
+      if (q.length < 3) return [];
+      const { data, error } = await supabase
+        .from('memberships')
+        .select('*')
+        .or(`phone.ilike.%${q}%,member_name.ilike.%${q}%`)
+        .order('status', { ascending: true })
+        .limit(5);
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: debouncedSearch.length >= 3,
+  });
 
   // Today's stats
   const todayStr = format(new Date(), 'yyyy-MM-dd');
@@ -168,15 +208,50 @@ export default function MemberEntryTab() {
       <Card>
         <CardContent className="p-4">
           <div className="flex gap-2">
-            <div className="relative flex-1">
+            <div className="relative flex-1" ref={suggestionsRef}>
               <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="ফোন নম্বর দিয়ে মেম্বার খুঁজুন..."
+                placeholder="ফোন নম্বর বা নাম দিয়ে মেম্বার খুঁজুন..."
                 className="pl-10"
                 value={searchPhone}
-                onChange={(e) => setSearchPhone(e.target.value)}
+                onChange={(e) => {
+                  setSearchPhone(e.target.value);
+                  setShowSuggestions(true);
+                  setFoundMember(null);
+                }}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                onFocus={() => debouncedSearch.length >= 3 && setShowSuggestions(true)}
               />
+              {/* Suggestions Dropdown */}
+              {showSuggestions && suggestions.length > 0 && (
+                <div className="absolute z-50 top-full left-0 right-0 mt-1 bg-popover border border-border rounded-md shadow-lg overflow-hidden">
+                  {suggestions.map((member: any) => (
+                    <button
+                      key={member.id}
+                      className="w-full text-left px-3 py-2.5 hover:bg-accent flex items-center justify-between gap-2 border-b last:border-b-0 border-border/50 transition-colors"
+                      onClick={() => {
+                        setFoundMember(member);
+                        setSearchPhone(member.phone);
+                        setShowSuggestions(false);
+                      }}
+                    >
+                      <div className="flex items-center gap-2 min-w-0">
+                        <User className="h-4 w-4 text-muted-foreground shrink-0" />
+                        <div className="min-w-0">
+                          <p className="font-medium text-sm truncate">{member.member_name}</p>
+                          <p className="text-xs text-muted-foreground">{member.phone}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <Badge variant="outline" className="capitalize text-xs">{member.membership_type}</Badge>
+                        <Badge className={member.status === 'active' ? 'bg-green-500/10 text-green-600 border-green-200 text-xs' : 'bg-destructive/10 text-destructive border-destructive/20 text-xs'}>
+                          {member.status === 'active' ? 'Active' : member.status}
+                        </Badge>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
             <Button onClick={handleSearch} disabled={searching}>
               {searching ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
