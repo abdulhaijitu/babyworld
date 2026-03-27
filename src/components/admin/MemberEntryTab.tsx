@@ -264,8 +264,8 @@ export default function MemberEntryTab() {
                           <p className="text-xs text-muted-foreground">{member.phone}</p>
                           <p className="text-xs text-muted-foreground">
                             {member.lastVisit
-                              ? `শেষ ভিজিট: ${format(new Date(member.lastVisit), 'dd MMM yyyy')}`
-                              : 'কোনো ভিজিট নেই'}
+                              ? `Last visit: ${format(new Date(member.lastVisit), 'dd MMM yyyy')}`
+                              : 'No visits yet'}
                           </p>
                         </div>
                       </div>
