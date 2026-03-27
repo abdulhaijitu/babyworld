@@ -156,16 +156,43 @@ export default function AdminFoodSales() {
 
     setSavingItem(true);
     try {
+      let image_url: string | null | undefined = undefined;
+
+      // Upload image if selected
+      if (imageFile) {
+        setUploadingImage(true);
+        const ext = imageFile.name.split('.').pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 7)}.${ext}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('food-images')
+          .upload(fileName, imageFile, { cacheControl: '3600', upsert: false });
+
+        if (uploadError) throw uploadError;
+
+        const { data: urlData } = supabase.storage
+          .from('food-images')
+          .getPublicUrl(fileName);
+
+        image_url = urlData.publicUrl;
+        setUploadingImage(false);
+      }
+
+      const itemData: Record<string, unknown> = {
+        name: newItem.name,
+        name_bn: newItem.name_bn || null,
+        category: newItem.category,
+        price: newItem.price,
+        is_available: newItem.is_available,
+      };
+      if (image_url !== undefined) {
+        itemData.image_url = image_url;
+      }
+
       if (editingItem) {
         const { error } = await supabase
           .from('food_items')
-          .update({
-            name: newItem.name,
-            name_bn: newItem.name_bn || null,
-            category: newItem.category,
-            price: newItem.price,
-            is_available: newItem.is_available
-          })
+          .update(itemData)
           .eq('id', editingItem.id);
 
         if (error) throw error;
@@ -173,13 +200,7 @@ export default function AdminFoodSales() {
       } else {
         const { error } = await supabase
           .from('food_items')
-          .insert([{
-            name: newItem.name,
-            name_bn: newItem.name_bn || null,
-            category: newItem.category,
-            price: newItem.price,
-            is_available: newItem.is_available
-          }]);
+          .insert([itemData]);
 
         if (error) throw error;
         toast.success('Item added');
@@ -188,11 +209,14 @@ export default function AdminFoodSales() {
       setItemDialogOpen(false);
       setEditingItem(null);
       setNewItem({ name: '', name_bn: '', category: 'snacks', price: 0, is_available: true });
+      setImageFile(null);
+      setImagePreview(null);
       fetchFoodItems();
     } catch (err) {
       toast.error('Save failed');
     } finally {
       setSavingItem(false);
+      setUploadingImage(false);
     }
   };
 
