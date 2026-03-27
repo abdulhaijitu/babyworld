@@ -1,31 +1,32 @@
 
 
-## Admin Mobile Bottom Navigation Bar
+## পরিকল্পনা: অ্যাডমিন মোবাইল বটম নেভিগেশন বারকে Dock স্টাইলে রূপান্তর
 
-### Problem
-Admin dashboard has no mobile bottom navigation. On mobile (391px viewport), the sidebar is hidden behind a hamburger menu, making key sections hard to reach.
+### সমস্যা
+বর্তমান বটম নেভিগেশন বার সাধারণ ডিজাইন — Dock কম্পোনেন্টের মতো glowing ring effect, spring animation, এবং tooltip নেই।
 
-### Solution
-Create an `AdminMobileBottomNav` component showing 5 quick-access tabs at the bottom on mobile screens (`md:hidden`), similar to the public-facing `MobileBottomNav`.
+### সমাধান
+`AdminMobileBottomNav.tsx` কে Dock কম্পোনেন্টের স্টাইলে আপডেট করা হবে। Dock component আলাদা ফাইলে রাখার দরকার নেই — সরাসরি বটম নেভে Dock-এর ফিচারগুলো যোগ করবো।
 
-**Tabs:** Dashboard, Tickets, Food POS, Events, More (opens sidebar sheet)
+### পরিবর্তন
 
-### Changes
+**`src/components/admin/AdminMobileBottomNav.tsx` আপডেট:**
 
-**1. Create `src/components/admin/AdminMobileBottomNav.tsx`**
-- Fixed bottom bar, visible only on `md:hidden`
-- 5 icons: LayoutDashboard → `/admin`, Ticket → `/admin/create-ticket`, UtensilsCrossed → `/admin/food-pos`, PartyPopper → `/admin/event-packages`, Menu → triggers sidebar sheet open
-- Active state indicator matching current route
-- Backdrop blur background like public nav
-- "More" button opens the existing mobile sidebar Sheet
+1. **Tooltip যোগ** — প্রতিটি ট্যাবে `TooltipProvider`, `Tooltip`, `TooltipTrigger`, `TooltipContent` ব্যবহার
+2. **Hover/Press অ্যানিমেশন** — `motion.div` দিয়ে spring-based scale (1.2x) ও slight rotation (-5°) on hover/press
+3. **Glowing ring effect** — active/hovered আইটেমে `bg-primary/20` গ্লো ring অ্যানিমেশন
+4. **Active indicator** — বর্তমান dot-এর পরিবর্তে animated bar/pill indicator
+5. **Dock-স্টাইল container** — `bg-card/90 backdrop-blur-xl` সহ rounded container, `shadow-lg`
+6. **স্ক্রল হাইড** — বর্তমান scroll hide/show লজিক রাখা হবে
+7. **"More" বাটনেও** একই স্টাইল প্রয়োগ
 
-**2. Update `src/pages/admin/AdminLayout.tsx`**
-- Import and render `<AdminMobileBottomNav />` inside the layout
-- Add bottom padding (`pb-20 md:pb-0`) to the main content area so content isn't hidden behind the nav
-- Pass sidebar open state handler to the bottom nav's "More" button
+### ডিজাইন ডিটেইলস
+- আইকন সাইজ: `w-5 h-5`, hover-এ spring scale `1.2`
+- Glowing ring: `absolute inset-0 rounded-full bg-primary/20 blur-md` (AnimatePresence সহ)
+- Active dot: `layoutId` spring অ্যানিমেশন বজায় থাকবে
+- Container: centered pill shape with `rounded-2xl` এবং `mx-4 mb-2` margin
+- Dependencies: `framer-motion`, `@radix-ui/react-tooltip` ইতোমধ্যে ইনস্টল আছে
 
-### Technical Notes
-- Reuse existing sidebar Sheet mechanism for the "More" menu
-- Use `useLocation` for active tab detection
-- Match the design language of the public `MobileBottomNav` (blur, border-t, shadow)
+### ফাইল
+- `src/components/admin/AdminMobileBottomNav.tsx` — সম্পূর্ণ রিডিজাইন
 
