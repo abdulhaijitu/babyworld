@@ -19,11 +19,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 import {
   RefreshCw, Search, Phone, MoreVertical, CheckCircle, XCircle, Clock,
-  CreditCard, Ban, X, Eye, Banknote, TrendingUp, Ticket
+  CreditCard, Ban, X, Eye, Banknote, TrendingUp, Ticket, List, Calendar as CalendarIcon
 } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { format, parseISO, startOfMonth, endOfMonth, isWithinInterval, startOfWeek, endOfWeek } from 'date-fns';
 import { TableRowSkeleton } from '@/components/admin/AdminSkeleton';
+import { BookingCalendarView } from '@/components/admin/bookings/BookingCalendarView';
 
 interface Booking {
   id: string;
