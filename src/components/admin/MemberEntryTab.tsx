@@ -208,15 +208,50 @@ export default function MemberEntryTab() {
       <Card>
         <CardContent className="p-4">
           <div className="flex gap-2">
-            <div className="relative flex-1">
+            <div className="relative flex-1" ref={suggestionsRef}>
               <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="ফোন নম্বর দিয়ে মেম্বার খুঁজুন..."
+                placeholder="ফোন নম্বর বা নাম দিয়ে মেম্বার খুঁজুন..."
                 className="pl-10"
                 value={searchPhone}
-                onChange={(e) => setSearchPhone(e.target.value)}
+                onChange={(e) => {
+                  setSearchPhone(e.target.value);
+                  setShowSuggestions(true);
+                  setFoundMember(null);
+                }}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                onFocus={() => debouncedSearch.length >= 3 && setShowSuggestions(true)}
               />
+              {/* Suggestions Dropdown */}
+              {showSuggestions && suggestions.length > 0 && (
+                <div className="absolute z-50 top-full left-0 right-0 mt-1 bg-popover border border-border rounded-md shadow-lg overflow-hidden">
+                  {suggestions.map((member: any) => (
+                    <button
+                      key={member.id}
+                      className="w-full text-left px-3 py-2.5 hover:bg-accent flex items-center justify-between gap-2 border-b last:border-b-0 border-border/50 transition-colors"
+                      onClick={() => {
+                        setFoundMember(member);
+                        setSearchPhone(member.phone);
+                        setShowSuggestions(false);
+                      }}
+                    >
+                      <div className="flex items-center gap-2 min-w-0">
+                        <User className="h-4 w-4 text-muted-foreground shrink-0" />
+                        <div className="min-w-0">
+                          <p className="font-medium text-sm truncate">{member.member_name}</p>
+                          <p className="text-xs text-muted-foreground">{member.phone}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <Badge variant="outline" className="capitalize text-xs">{member.membership_type}</Badge>
+                        <Badge className={member.status === 'active' ? 'bg-green-500/10 text-green-600 border-green-200 text-xs' : 'bg-destructive/10 text-destructive border-destructive/20 text-xs'}>
+                          {member.status === 'active' ? 'Active' : member.status}
+                        </Badge>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
             <Button onClick={handleSearch} disabled={searching}>
               {searching ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
