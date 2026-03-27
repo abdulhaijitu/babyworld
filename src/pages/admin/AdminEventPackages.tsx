@@ -13,7 +13,7 @@ import {
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
-import { Package, Plus, Pencil, Users, Trash2, RefreshCw, Loader2, ImagePlus, X } from 'lucide-react';
+import { Package, Plus, Pencil, Users, Trash2, RefreshCw, Loader2, ImagePlus, X, GripVertical } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface EventPackage {
