@@ -142,6 +142,22 @@ export default function AdminMemberships() {
     },
   });
 
+  // Fetch visit counts per membership
+  const { data: visitCounts = {} } = useQuery<Record<string, number>>({
+    queryKey: ['membership-visit-counts'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('membership_visits')
+        .select('membership_id');
+      if (error) throw error;
+      const counts: Record<string, number> = {};
+      (data || []).forEach((v: any) => {
+        counts[v.membership_id] = (counts[v.membership_id] || 0) + 1;
+      });
+      return counts;
+    },
+  });
+
   const { data: paymentLogs = [] } = useQuery({
     queryKey: ['membership-payment-logs'],
     queryFn: async () => {
@@ -627,6 +643,7 @@ export default function AdminMemberships() {
                   <TableHead>{'Plan'}</TableHead>
                   <TableHead>{'Validity'}</TableHead>
                   <TableHead>{'Status'}</TableHead>
+                  <TableHead>{'Visits'}</TableHead>
                   <TableHead>{'Discount'}</TableHead>
                   <TableHead></TableHead>
                 </TableRow>
@@ -673,6 +690,9 @@ export default function AdminMemberships() {
                               </div>
                             </TableCell>
                             <TableCell>{getStatusBadge(membership.status)}</TableCell>
+                            <TableCell>
+                              <span className="font-medium">{visitCounts[membership.id] || 0}</span>
+                            </TableCell>
                             <TableCell>
                               <Badge variant="secondary">{membership.discount_percent}%</Badge>
                             </TableCell>
