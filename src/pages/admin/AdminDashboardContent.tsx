@@ -63,7 +63,7 @@ export default function AdminDashboardContent() {
       <div className="p-4 md:p-6 lg:p-8">
         <div className="text-center py-16">
           <AlertCircle className="w-12 h-12 mx-auto mb-4 text-destructive" />
-          <p className="text-destructive font-medium mb-2">ড্যাশবোর্ড লোড করতে সমস্যা হয়েছে</p>
+          <p className="text-destructive font-medium mb-2">Failed to load dashboard</p>
           <Button onClick={() => refetch()} size="sm">
             <RefreshCw className="w-4 h-4 mr-2" />
             আবার চেষ্টা করুন
