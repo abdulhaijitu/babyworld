@@ -147,6 +147,7 @@ function SidebarContent({
   const { roles, isSuperAdmin } = useUserRoles();
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
   const [searchQuery, setSearchQuery] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
   const badges = useSidebarBadges();
 
   const menuItems = useMemo(() => {
@@ -196,41 +197,62 @@ function SidebarContent({
         "flex items-center h-12 px-2 border-b border-border",
         collapsed ? "justify-center" : "justify-between"
       )}>
-        {!collapsed ? (
-          <motion.div
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.2, delay: 0.1 }}
-            className="flex items-center gap-2"
-          >
-            <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-              <img src={babyWorldLogo} alt="Baby World" className="h-5 w-auto" />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-semibold text-xs text-foreground leading-tight">Baby World</span>
-              <span className="text-[10px] text-muted-foreground leading-tight">Admin Dashboard</span>
-            </div>
-          </motion.div>
-        ) : (
-          <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center">
+        <div className="flex items-center gap-2">
+          <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
             <img src={babyWorldLogo} alt="Baby World" className="h-5 w-auto" />
           </div>
+          {!collapsed && (
+            <motion.span
+              initial={{ opacity: 0, x: -6 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.15 }}
+              className="font-semibold text-xs text-foreground whitespace-nowrap"
+            >
+              Baby World
+            </motion.span>
+          )}
+        </div>
+        {!collapsed && !isMobile && (
+          <div className="flex items-center gap-0.5">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                setShowSearch(prev => {
+                  if (prev) setSearchQuery('');
+                  return !prev;
+                });
+              }}
+              className="h-7 w-7 rounded-md text-muted-foreground hover:text-foreground"
+            >
+              <Search className="h-3.5 w-3.5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => onCollapse(!collapsed)}
+              className="h-7 w-7 rounded-md text-muted-foreground hover:text-foreground"
+            >
+              <ChevronLeft className="h-3.5 w-3.5" />
+            </Button>
+          </div>
         )}
-        {!isMobile && (
+        {collapsed && !isMobile && (
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => onCollapse(!collapsed)}
-            className="h-7 w-7 rounded-md text-muted-foreground hover:text-foreground hidden md:flex"
+            onClick={() => onCollapse(false)}
+            className="absolute left-1/2 -translate-x-1/2 bottom-auto h-7 w-7 rounded-md text-muted-foreground hover:text-foreground hidden md:flex"
+            style={{ position: 'static', transform: 'none' }}
           >
-            {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+            <ChevronRight className="h-3.5 w-3.5" />
           </Button>
         )}
       </div>
 
       {/* Search */}
       <AnimatePresence>
-        {!collapsed && (
+        {!collapsed && showSearch && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
@@ -246,6 +268,7 @@ function SidebarContent({
                   placeholder="Search menu..."
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
+                  autoFocus
                   className="w-full h-7 pl-7 pr-3 rounded-md border border-border bg-muted/50 text-xs placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring focus:border-ring transition-colors"
                 />
               </div>
@@ -428,44 +451,57 @@ function SidebarContent({
         })}
       </nav>
 
-      {/* Bottom: Profile + Logout */}
-      <div className={cn("border-t border-border p-1.5 space-y-1", collapsed && "flex flex-col items-center")}>
-        {!collapsed ? (
-          <div className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-muted/50">
-            <div className="h-7 w-7 rounded-full bg-primary/15 text-primary flex items-center justify-center text-[10px] font-bold shrink-0">
+      {/* Bottom: Admin Badge + Logout */}
+      <div className={cn(
+        "border-t border-border p-1.5",
+        collapsed ? "flex flex-col items-center gap-1" : ""
+      )}>
+        <div className={cn(
+          "flex items-center rounded-md",
+          collapsed ? "justify-center" : "justify-between px-2 py-1.5"
+        )}>
+          {/* Left: Avatar + Admin label */}
+          <div className="flex items-center gap-2">
+            <div className="h-7 w-7 rounded-full bg-primary/15 text-primary flex items-center justify-center text-[10px] font-bold shrink-0 group relative">
               {getInitials(userEmail)}
+              {collapsed && (
+                <div className="absolute left-full ml-2 px-2.5 py-1.5 bg-popover text-popover-foreground text-xs font-medium rounded-md shadow-md border border-border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 pointer-events-none">
+                  {userEmail}
+                  <div className="absolute left-0 top-1/2 -translate-x-1 -translate-y-1/2 w-2 h-2 bg-popover border-l border-b border-border rotate-45" />
+                </div>
+              )}
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-foreground truncate">{userEmail?.split('@')[0]}</p>
-              <p className="text-[10px] text-muted-foreground truncate">{userEmail}</p>
-            </div>
+            {!collapsed && (
+              <span className="text-xs font-medium text-foreground">Admin</span>
+            )}
           </div>
-        ) : (
-          userEmail && (
-            <div className="h-7 w-7 rounded-full bg-primary/15 text-primary flex items-center justify-center text-[10px] font-bold" title={userEmail}>
-              {getInitials(userEmail)}
-            </div>
-          )
-        )}
 
-        <button
-          onClick={onSignOut}
-          className={cn(
-            "w-full flex items-center gap-2.5 rounded-md text-sm font-medium transition-all duration-200 group relative",
-            "text-destructive hover:bg-destructive/10",
-            collapsed ? "justify-center p-1.5" : "px-3 py-1.5"
+          {/* Right: Logout icon */}
+          {!collapsed && (
+            <button
+              onClick={onSignOut}
+              className="h-7 w-7 rounded-md flex items-center justify-center text-destructive hover:bg-destructive/10 transition-colors duration-200"
+              title="Logout"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+            </button>
           )}
-          title={collapsed ? "Logout" : undefined}
-        >
-          <LogOut className="h-4 w-4 shrink-0" />
-          {!collapsed && <span>Logout</span>}
-          {collapsed && (
+        </div>
+
+        {/* Collapsed logout */}
+        {collapsed && (
+          <button
+            onClick={onSignOut}
+            className="h-7 w-7 rounded-md flex items-center justify-center text-destructive hover:bg-destructive/10 transition-colors duration-200 group relative"
+            title="Logout"
+          >
+            <LogOut className="h-3.5 w-3.5" />
             <div className="absolute left-full ml-2 px-2.5 py-1.5 bg-popover text-destructive text-xs font-medium rounded-md shadow-md border border-border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 pointer-events-none">
               Logout
               <div className="absolute left-0 top-1/2 -translate-x-1 -translate-y-1/2 w-2 h-2 bg-popover border-l border-b border-border rotate-45" />
             </div>
-          )}
-        </button>
+          </button>
+        )}
       </div>
     </motion.div>
   );
