@@ -65,10 +65,9 @@ const allMenuItems: MenuItem[] = [
     { id: 'food-items', label: 'Items', icon: List, path: '/admin/food' },
     { id: 'coupons', label: 'Coupons', icon: Crown, path: '/admin/coupons' },
   ]},
-  { id: 'events-group', label: 'EVENTS', icon: PartyPopper, path: '/admin/events', requiredRoles: ['super_admin', 'admin', 'manager'], children: [
-    { id: 'events', label: 'Events', icon: PartyPopper, path: '/admin/events' },
-    { id: 'event-bookings', label: 'Event Bookings', icon: CalendarDays, path: '/admin/event-bookings' },
+  { id: 'events-group', label: 'EVENTS', icon: PartyPopper, path: '/admin/event-packages', requiredRoles: ['super_admin', 'admin', 'manager'], children: [
     { id: 'event-packages', label: 'Event Packages', icon: Crown, path: '/admin/event-packages' },
+    { id: 'events', label: 'Events', icon: PartyPopper, path: '/admin/events' },
     { id: 'event-calendar', label: 'Event Calendar', icon: CalendarDays, path: '/admin/event-calendar' },
   ]},
   { id: 'expenses', label: 'Expenses', icon: Receipt, path: '/admin/expenses', requiredRoles: ['super_admin', 'admin', 'manager'] },
