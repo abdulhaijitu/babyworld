@@ -515,7 +515,7 @@ export default function AdminProfitReports() {
               ) : (
                 <div className="space-y-4">
                   {expenseBreakdown.map((expense: { category: string; amount: number; percentage: number }, index: number) => {
-                    const catInfo = EXPENSE_CATEGORY_LABELS[expense.category];
+                    const catInfo = categoryLabels[expense.category];
                     return (
                       <div key={index} className="space-y-2">
                         <div className="flex justify-between items-center">
