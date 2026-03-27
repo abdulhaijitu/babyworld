@@ -42,6 +42,7 @@ import AdminNotificationLogs from "./pages/admin/AdminNotificationLogs";
 import AdminHeroCards from "./pages/admin/AdminHeroCards";
 import AdminHeroSlides from "./pages/admin/AdminHeroSlides";
 import AdminHomepage from "./pages/admin/AdminHomepage";
+import AdminFoodPOS from "./pages/admin/AdminFoodPOS";
 
 const queryClient = new QueryClient();
 
@@ -72,6 +73,7 @@ const App = () => (
                   <Route path="gate-logs" element={<AdminGateLogs />} />
                   <Route path="food" element={<AdminFoodSales />} />
                   <Route path="food-orders" element={<AdminFoodOrders />} />
+                  <Route path="food-pos" element={<AdminFoodPOS />} />
                   <Route path="employees" element={<AdminEmployees />} />
                   <Route path="roster" element={<AdminRoster />} />
                   <Route path="bookings" element={<AdminBookings />} />
