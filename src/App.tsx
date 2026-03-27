@@ -57,6 +57,8 @@ import AdminLeads from "./pages/admin/AdminLeads";
 import AdminPromotions from "./pages/admin/AdminPromotions";
 import AdminSmsCampaigns from "./pages/admin/AdminSmsCampaigns";
 import AdminSocialMedia from "./pages/admin/AdminSocialMedia";
+import AdminIncome from "./pages/admin/AdminIncome";
+import AdminIncomeCategories from "./pages/admin/AdminIncomeCategories";
 
 const queryClient = new QueryClient();
 

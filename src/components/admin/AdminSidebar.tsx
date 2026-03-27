@@ -93,8 +93,10 @@ const allMenuItems: MenuItem[] = [
     { id: 'payroll', label: 'Payroll', icon: Wallet, path: '/admin/payroll' },
     { id: 'performance', label: 'Performance', icon: Award, path: '/admin/performance' },
   ]},
-  { id: 'accounts', label: 'Accounts', icon: Wallet, path: '/admin/expenses', requiredRoles: ['super_admin', 'admin', 'manager'], children: [
+  { id: 'accounts', label: 'Accounts', icon: Wallet, path: '/admin/daily-cash', requiredRoles: ['super_admin', 'admin', 'manager'], children: [
     { id: 'daily-cash', label: 'Daily Cash Summary', icon: Briefcase, path: '/admin/daily-cash' },
+    { id: 'income', label: 'Income', icon: TrendingUp, path: '/admin/income' },
+    { id: 'income-categories', label: 'Income Categories', icon: Tag, path: '/admin/income-categories' },
     { id: 'expenses', label: 'Expenses', icon: Receipt, path: '/admin/expenses' },
     { id: 'expense-categories', label: 'Expense Categories', icon: Tag, path: '/admin/expense-categories' },
     { id: 'profit', label: 'Profit & Loss', icon: TrendingUp, path: '/admin/profit' },
