@@ -329,7 +329,7 @@ export default function AdminProfitReports() {
                 {isLoading ? (
                   <Skeleton className="h-[300px]" />
                 ) : (
-                  <ResponsiveContainer width="100%" height={300}>
+                  <ResponsiveContainer width="100%" height={220}>
                     <BarChart data={revenueVsExpenseData}>
                       <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                       <XAxis dataKey="name" />
