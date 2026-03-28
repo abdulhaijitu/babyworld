@@ -207,22 +207,22 @@ export default function AdminSocialMedia() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card><CardContent className="p-4 flex items-center gap-3">
-          <FileText className="h-8 w-8 text-primary" />
-          <div><p className="text-2xl font-bold">{stats.total}</p><p className="text-xs text-muted-foreground">Total Posts</p></div>
+      <div className="grid grid-cols-4 gap-2 lg:gap-4">
+        <Card><CardContent className="p-2 lg:p-4 flex items-center gap-2 lg:gap-3">
+          <FileText className="h-5 w-5 lg:h-8 lg:w-8 text-primary hidden lg:block" />
+          <div><p className="text-lg lg:text-2xl font-bold">{stats.total}</p><p className="text-[10px] lg:text-xs text-muted-foreground">Posts</p></div>
         </CardContent></Card>
-        <Card><CardContent className="p-4 flex items-center gap-3">
-          <CheckCircle className="h-8 w-8 text-emerald-500" />
-          <div><p className="text-2xl font-bold">{stats.published}</p><p className="text-xs text-muted-foreground">Published</p></div>
+        <Card><CardContent className="p-2 lg:p-4 flex items-center gap-2 lg:gap-3">
+          <CheckCircle className="h-5 w-5 lg:h-8 lg:w-8 text-emerald-500 hidden lg:block" />
+          <div><p className="text-lg lg:text-2xl font-bold">{stats.published}</p><p className="text-[10px] lg:text-xs text-muted-foreground">Published</p></div>
         </CardContent></Card>
-        <Card><CardContent className="p-4 flex items-center gap-3">
-          <Clock className="h-8 w-8 text-amber-500" />
-          <div><p className="text-2xl font-bold">{stats.scheduled}</p><p className="text-xs text-muted-foreground">Scheduled</p></div>
+        <Card><CardContent className="p-2 lg:p-4 flex items-center gap-2 lg:gap-3">
+          <Clock className="h-5 w-5 lg:h-8 lg:w-8 text-amber-500 hidden lg:block" />
+          <div><p className="text-lg lg:text-2xl font-bold">{stats.scheduled}</p><p className="text-[10px] lg:text-xs text-muted-foreground">Scheduled</p></div>
         </CardContent></Card>
-        <Card><CardContent className="p-4 flex items-center gap-3">
-          <Edit className="h-8 w-8 text-muted-foreground" />
-          <div><p className="text-2xl font-bold">{stats.draft}</p><p className="text-xs text-muted-foreground">Draft</p></div>
+        <Card><CardContent className="p-2 lg:p-4 flex items-center gap-2 lg:gap-3">
+          <Edit className="h-5 w-5 lg:h-8 lg:w-8 text-muted-foreground hidden lg:block" />
+          <div><p className="text-lg lg:text-2xl font-bold">{stats.draft}</p><p className="text-[10px] lg:text-xs text-muted-foreground">Draft</p></div>
         </CardContent></Card>
       </div>
 
@@ -263,92 +263,135 @@ export default function AdminSocialMedia() {
         ) : filtered.length === 0 ? (
           <div className="p-8 text-center text-muted-foreground">No posts found</div>
         ) : (
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Post</TableHead>
-                  <TableHead>Platform</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Schedule</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Tags</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filtered.map(post => {
-                  const platformInfo = PLATFORM_CONFIG[post.platform];
-                  const PlatformIcon = platformInfo.icon;
-                  const typeInfo = POST_TYPE_OPTIONS.find(o => o.value === post.post_type);
+          <>
+            {/* Mobile Card View */}
+            <div className="lg:hidden p-3 space-y-2">
+              {filtered.map(post => {
+                const platformInfo = PLATFORM_CONFIG[post.platform];
+                const PlatformIcon = platformInfo.icon;
+                return (
+                  <div key={post.id} className="border rounded-lg p-2.5 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <p className="font-medium text-sm truncate flex-1">{post.title}</p>
+                      <Badge variant={STATUS_CONFIG[post.status].variant} className="text-[10px] ml-2">
+                        {STATUS_CONFIG[post.status].label}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-1.5">
+                        <PlatformIcon className={`h-3.5 w-3.5 ${platformInfo.color}`} />
+                        <span>{platformInfo.label}</span>
+                        <Badge variant="outline" className="capitalize text-[10px]">{post.post_type}</Badge>
+                      </div>
+                      {post.scheduled_at && <span className="text-muted-foreground">{format(new Date(post.scheduled_at), 'dd MMM')}</span>}
+                    </div>
+                    <div className="flex items-center justify-end gap-1 pt-0.5">
+                      {post.post_url && (
+                        <Button variant="ghost" size="icon" className="h-7 w-7" asChild>
+                          <a href={post.post_url} target="_blank" rel="noopener noreferrer"><ExternalLink className="h-3.5 w-3.5" /></a>
+                        </Button>
+                      )}
+                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(post)}>
+                        <Edit className="h-3.5 w-3.5" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive"
+                        onClick={() => { if (confirm('এই Post ডিলিট করতে চান?')) deletePost.mutate(post.id); }}>
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
 
-                  return (
-                    <TableRow key={post.id}>
-                      <TableCell>
-                        <div className="max-w-[250px]">
-                          <p className="font-medium truncate">{post.title}</p>
-                          <p className="text-xs text-muted-foreground line-clamp-1">{post.content}</p>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1.5">
-                          <PlatformIcon className={`h-4 w-4 ${platformInfo.color}`} />
-                          <span className="text-sm">{platformInfo.label}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className="capitalize">{typeInfo?.label || post.post_type}</Badge>
-                      </TableCell>
-                      <TableCell className="text-sm">
-                        {post.scheduled_at ? (
-                          <span className="flex items-center gap-1">
-                            <Calendar className="h-3 w-3" />
-                            {format(new Date(post.scheduled_at), 'dd MMM yyyy HH:mm')}
-                          </span>
-                        ) : post.published_at ? (
-                          <span className="flex items-center gap-1 text-emerald-600">
-                            <CheckCircle className="h-3 w-3" />
-                            {format(new Date(post.published_at), 'dd MMM yyyy')}
-                          </span>
-                        ) : '-'}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={STATUS_CONFIG[post.status].variant}>
-                          {STATUS_CONFIG[post.status].label}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex gap-1 flex-wrap max-w-[150px]">
-                          {post.tags?.slice(0, 3).map(tag => (
-                            <Badge key={tag} variant="secondary" className="text-xs">{tag}</Badge>
-                          ))}
-                          {(post.tags?.length || 0) > 3 && <Badge variant="secondary" className="text-xs">+{(post.tags?.length || 0) - 3}</Badge>}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-1">
-                          {post.post_url && (
-                            <Button variant="ghost" size="icon" asChild>
-                              <a href={post.post_url} target="_blank" rel="noopener noreferrer">
-                                <ExternalLink className="h-4 w-4" />
-                              </a>
+            {/* Desktop Table View */}
+            <div className="hidden lg:block overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Post</TableHead>
+                    <TableHead>Platform</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead>Schedule</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Tags</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filtered.map(post => {
+                    const platformInfo = PLATFORM_CONFIG[post.platform];
+                    const PlatformIcon = platformInfo.icon;
+                    const typeInfo = POST_TYPE_OPTIONS.find(o => o.value === post.post_type);
+
+                    return (
+                      <TableRow key={post.id}>
+                        <TableCell>
+                          <div className="max-w-[250px]">
+                            <p className="font-medium truncate">{post.title}</p>
+                            <p className="text-xs text-muted-foreground line-clamp-1">{post.content}</p>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-1.5">
+                            <PlatformIcon className={`h-4 w-4 ${platformInfo.color}`} />
+                            <span className="text-sm">{platformInfo.label}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline" className="capitalize">{typeInfo?.label || post.post_type}</Badge>
+                        </TableCell>
+                        <TableCell className="text-sm">
+                          {post.scheduled_at ? (
+                            <span className="flex items-center gap-1">
+                              <Calendar className="h-3 w-3" />
+                              {format(new Date(post.scheduled_at), 'dd MMM yyyy HH:mm')}
+                            </span>
+                          ) : post.published_at ? (
+                            <span className="flex items-center gap-1 text-emerald-600">
+                              <CheckCircle className="h-3 w-3" />
+                              {format(new Date(post.published_at), 'dd MMM yyyy')}
+                            </span>
+                          ) : '-'}
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={STATUS_CONFIG[post.status].variant}>
+                            {STATUS_CONFIG[post.status].label}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex gap-1 flex-wrap max-w-[150px]">
+                            {post.tags?.slice(0, 3).map(tag => (
+                              <Badge key={tag} variant="secondary" className="text-xs">{tag}</Badge>
+                            ))}
+                            {(post.tags?.length || 0) > 3 && <Badge variant="secondary" className="text-xs">+{(post.tags?.length || 0) - 3}</Badge>}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-1">
+                            {post.post_url && (
+                              <Button variant="ghost" size="icon" asChild>
+                                <a href={post.post_url} target="_blank" rel="noopener noreferrer">
+                                  <ExternalLink className="h-4 w-4" />
+                                </a>
+                              </Button>
+                            )}
+                            <Button variant="ghost" size="icon" onClick={() => openEdit(post)}>
+                              <Edit className="h-4 w-4" />
                             </Button>
-                          )}
-                          <Button variant="ghost" size="icon" onClick={() => openEdit(post)}>
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive"
-                            onClick={() => { if (confirm('এই Post ডিলিট করতে চান?')) deletePost.mutate(post.id); }}>
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </div>
+                            <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive"
+                              onClick={() => { if (confirm('এই Post ডিলিট করতে চান?')) deletePost.mutate(post.id); }}>
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+          </>
         )}
       </CardContent></Card>
     </div>

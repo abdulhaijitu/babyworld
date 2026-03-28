@@ -376,17 +376,16 @@ export default function AdminUsers() {
       </div>
 
       {/* Dynamic Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-        {/* Total users card */}
+      <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-2 lg:gap-3">
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-muted">
+          <CardContent className="p-2 lg:p-4">
+            <div className="flex items-center gap-2 lg:gap-3">
+              <div className="p-1.5 lg:p-2 rounded-lg bg-muted hidden lg:block">
                 <Users className="w-5 h-5 text-foreground" />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Total</p>
-                {isLoading ? <Skeleton className="h-6 w-10" /> : <p className="text-xl font-bold">{userRoles?.length || 0}</p>}
+                <p className="text-[10px] lg:text-xs text-muted-foreground">Total</p>
+                {isLoading ? <Skeleton className="h-5 w-8" /> : <p className="text-lg lg:text-xl font-bold">{userRoles?.length || 0}</p>}
               </div>
             </div>
           </CardContent>
@@ -394,18 +393,12 @@ export default function AdminUsers() {
         {activeRoleStats.map(([role, count]) => {
           const config = roleConfig[role as AppRole];
           if (!config) return null;
-          const Icon = config.icon;
           return (
             <Card key={role}>
-              <CardContent className="p-4">
-                <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg ${config.color.split(' ')[0]}`}>
-                    <Icon className={`w-5 h-5 ${config.color.split(' ')[1]}`} />
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground truncate">{config.label}</p>
-                    {isLoading ? <Skeleton className="h-6 w-10" /> : <p className="text-xl font-bold">{count}</p>}
-                  </div>
+              <CardContent className="p-2 lg:p-4">
+                <div>
+                  <p className="text-[10px] lg:text-xs text-muted-foreground truncate">{config.label}</p>
+                  {isLoading ? <Skeleton className="h-5 w-8" /> : <p className="text-lg lg:text-xl font-bold">{count}</p>}
                 </div>
               </CardContent>
             </Card>
@@ -453,67 +446,89 @@ export default function AdminUsers() {
               ))}
             </div>
           ) : filteredUsers && filteredUsers.length > 0 ? (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>User</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead>Joined</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+            <>
+              {/* Mobile Card View */}
+              <div className="lg:hidden space-y-2">
                 {filteredUsers.map((user) => (
-                  <TableRow key={user.id}>
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center shrink-0">
-                          <User className="w-4 h-4 text-muted-foreground" />
+                  <div key={user.id} className="border rounded-lg p-2.5 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 min-w-0 flex-1">
+                        <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center shrink-0">
+                          <User className="w-3.5 h-3.5 text-muted-foreground" />
                         </div>
                         <div className="min-w-0">
-                          <p className="text-sm font-medium truncate">
-                            {user.full_name || user.user_id.slice(0, 8) + '...'}
-                          </p>
-                          {user.email && (
-                            <p className="text-xs text-muted-foreground truncate">{user.email}</p>
-                          )}
+                          <p className="text-sm font-medium truncate">{user.full_name || user.user_id.slice(0, 8) + '...'}</p>
+                          {user.email && <p className="text-[10px] text-muted-foreground truncate">{user.email}</p>}
                         </div>
                       </div>
-                    </TableCell>
-                    <TableCell>
                       {getRoleBadge(user.role)}
-                    </TableCell>
-                    <TableCell>
-                      {format(parseISO(user.created_at), 'MMM d, yyyy')}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex items-center justify-end gap-1">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-muted-foreground hover:text-foreground"
-                          onClick={() => {
-                            setResetPasswordUserId(user.user_id);
-                            setResetNewPassword('');
-                          }}
-                          title="Reset Password"
-                        >
-                          <KeyRound className="w-4 h-4" />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] text-muted-foreground">{format(parseISO(user.created_at), 'MMM d, yyyy')}</span>
+                      <div className="flex items-center gap-1">
+                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { setResetPasswordUserId(user.user_id); setResetNewPassword(''); }}>
+                          <KeyRound className="w-3.5 h-3.5" />
                         </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                          onClick={() => setDeleteConfirmId(user.id)}
-                        >
-                          <Trash2 className="w-4 h-4" />
+                        <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => setDeleteConfirmId(user.id)}>
+                          <Trash2 className="w-3.5 h-3.5" />
                         </Button>
                       </div>
-                    </TableCell>
-                  </TableRow>
+                    </div>
+                  </div>
                 ))}
-              </TableBody>
-            </Table>
+              </div>
+
+              {/* Desktop Table View */}
+              <div className="hidden lg:block">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>User</TableHead>
+                      <TableHead>Role</TableHead>
+                      <TableHead>Joined</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredUsers.map((user) => (
+                      <TableRow key={user.id}>
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center shrink-0">
+                              <User className="w-4 h-4 text-muted-foreground" />
+                            </div>
+                            <div className="min-w-0">
+                              <p className="text-sm font-medium truncate">
+                                {user.full_name || user.user_id.slice(0, 8) + '...'}
+                              </p>
+                              {user.email && (
+                                <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                              )}
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          {getRoleBadge(user.role)}
+                        </TableCell>
+                        <TableCell>
+                          {format(parseISO(user.created_at), 'MMM d, yyyy')}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex items-center justify-end gap-1">
+                            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground" onClick={() => { setResetPasswordUserId(user.user_id); setResetNewPassword(''); }} title="Reset Password">
+                              <KeyRound className="w-4 h-4" />
+                            </Button>
+                            <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => setDeleteConfirmId(user.id)}>
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </>
           ) : (
             <div className="text-center py-12 text-muted-foreground">
               <UserX className="w-12 h-12 mx-auto mb-4 opacity-50" />

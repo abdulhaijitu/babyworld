@@ -82,55 +82,87 @@ export default function AdminLeaveManagement() {
         </Dialog>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card><CardContent className="pt-6"><p className="text-sm text-muted-foreground">Total Requests</p><p className="text-2xl font-bold">{leaves.length}</p></CardContent></Card>
-        <Card><CardContent className="pt-6"><p className="text-sm text-muted-foreground">Pending</p><p className="text-2xl font-bold text-yellow-600">{pendingCount}</p></CardContent></Card>
-        <Card><CardContent className="pt-6"><p className="text-sm text-muted-foreground">Approved</p><p className="text-2xl font-bold text-green-600">{approvedCount}</p></CardContent></Card>
+      <div className="grid grid-cols-3 gap-2 lg:gap-4">
+        <Card><CardContent className="p-2 lg:pt-6 lg:p-4"><p className="text-[10px] lg:text-sm text-muted-foreground">Total</p><p className="text-lg lg:text-2xl font-bold">{leaves.length}</p></CardContent></Card>
+        <Card><CardContent className="p-2 lg:pt-6 lg:p-4"><p className="text-[10px] lg:text-sm text-muted-foreground">Pending</p><p className="text-lg lg:text-2xl font-bold text-yellow-600">{pendingCount}</p></CardContent></Card>
+        <Card><CardContent className="p-2 lg:pt-6 lg:p-4"><p className="text-[10px] lg:text-sm text-muted-foreground">Approved</p><p className="text-lg lg:text-2xl font-bold text-green-600">{approvedCount}</p></CardContent></Card>
       </div>
 
       <Card>
-        <CardHeader><CardTitle>Leave Requests</CardTitle></CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Employee</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Period</TableHead>
-                <TableHead>Days</TableHead>
-                <TableHead>Reason</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                <TableRow><TableCell colSpan={7} className="text-center py-8">Loading...</TableCell></TableRow>
-              ) : leaves.length === 0 ? (
-                <TableRow><TableCell colSpan={7} className="text-center py-8 text-muted-foreground">No leave requests</TableCell></TableRow>
-              ) : leaves.map((l: any) => {
-                const days = differenceInDays(new Date(l.end_date), new Date(l.start_date)) + 1;
-                return (
-                  <TableRow key={l.id}>
-                    <TableCell className="font-medium">{l.employees?.name}</TableCell>
-                    <TableCell className="capitalize">{l.leave_type}</TableCell>
-                    <TableCell>{format(new Date(l.start_date), 'dd MMM')} — {format(new Date(l.end_date), 'dd MMM yyyy')}</TableCell>
-                    <TableCell>{days}</TableCell>
-                    <TableCell className="max-w-[200px] truncate">{l.reason || '—'}</TableCell>
-                    <TableCell><Badge className={statusColors[l.status] || ''}>{l.status}</Badge></TableCell>
-                    <TableCell>
+        <CardHeader className="p-3 lg:p-6"><CardTitle className="text-base lg:text-lg">Leave Requests</CardTitle></CardHeader>
+        <CardContent className="p-3 lg:p-6 pt-0">
+          {isLoading ? (
+            <div className="text-center py-8 text-muted-foreground">Loading...</div>
+          ) : leaves.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground text-sm">No leave requests</div>
+          ) : (
+            <>
+              {/* Mobile Card View */}
+              <div className="lg:hidden space-y-2">
+                {leaves.map((l: any) => {
+                  const days = differenceInDays(new Date(l.end_date), new Date(l.start_date)) + 1;
+                  return (
+                    <div key={l.id} className="border rounded-lg p-2.5 space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium text-sm">{l.employees?.name}</span>
+                        <Badge className={`${statusColors[l.status] || ''} text-[10px]`}>{l.status}</Badge>
+                      </div>
+                      <div className="flex items-center justify-between text-xs text-muted-foreground">
+                        <span className="capitalize">{l.leave_type} · {days}d</span>
+                        <span>{format(new Date(l.start_date), 'dd MMM')} — {format(new Date(l.end_date), 'dd MMM')}</span>
+                      </div>
                       {l.status === 'pending' && (
-                        <div className="flex gap-1">
-                          <Button size="icon" variant="ghost" className="text-green-600 h-8 w-8" onClick={() => updateLeaveStatus.mutate({ id: l.id, status: 'approved' })}><CheckCircle className="h-4 w-4" /></Button>
-                          <Button size="icon" variant="ghost" className="text-red-600 h-8 w-8" onClick={() => updateLeaveStatus.mutate({ id: l.id, status: 'rejected' })}><XCircle className="h-4 w-4" /></Button>
+                        <div className="flex items-center justify-end gap-1 pt-0.5">
+                          <Button size="icon" variant="ghost" className="text-green-600 h-7 w-7" onClick={() => updateLeaveStatus.mutate({ id: l.id, status: 'approved' })}><CheckCircle className="h-3.5 w-3.5" /></Button>
+                          <Button size="icon" variant="ghost" className="text-red-600 h-7 w-7" onClick={() => updateLeaveStatus.mutate({ id: l.id, status: 'rejected' })}><XCircle className="h-3.5 w-3.5" /></Button>
                         </div>
                       )}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Desktop Table View */}
+              <div className="hidden lg:block">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Employee</TableHead>
+                      <TableHead>Type</TableHead>
+                      <TableHead>Period</TableHead>
+                      <TableHead>Days</TableHead>
+                      <TableHead>Reason</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {leaves.map((l: any) => {
+                      const days = differenceInDays(new Date(l.end_date), new Date(l.start_date)) + 1;
+                      return (
+                        <TableRow key={l.id}>
+                          <TableCell className="font-medium">{l.employees?.name}</TableCell>
+                          <TableCell className="capitalize">{l.leave_type}</TableCell>
+                          <TableCell>{format(new Date(l.start_date), 'dd MMM')} — {format(new Date(l.end_date), 'dd MMM yyyy')}</TableCell>
+                          <TableCell>{days}</TableCell>
+                          <TableCell className="max-w-[200px] truncate">{l.reason || '—'}</TableCell>
+                          <TableCell><Badge className={statusColors[l.status] || ''}>{l.status}</Badge></TableCell>
+                          <TableCell>
+                            {l.status === 'pending' && (
+                              <div className="flex gap-1">
+                                <Button size="icon" variant="ghost" className="text-green-600 h-8 w-8" onClick={() => updateLeaveStatus.mutate({ id: l.id, status: 'approved' })}><CheckCircle className="h-4 w-4" /></Button>
+                                <Button size="icon" variant="ghost" className="text-red-600 h-8 w-8" onClick={() => updateLeaveStatus.mutate({ id: l.id, status: 'rejected' })}><XCircle className="h-4 w-4" /></Button>
+                              </div>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </div>
+            </>
+          )}
         </CardContent>
       </Card>
     </div>

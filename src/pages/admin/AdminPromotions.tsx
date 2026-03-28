@@ -207,22 +207,22 @@ export default function AdminPromotions() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card><CardContent className="p-4 flex items-center gap-3">
-          <Tag className="h-8 w-8 text-primary" />
-          <div><p className="text-2xl font-bold">{stats.total}</p><p className="text-xs text-muted-foreground">Total</p></div>
+      <div className="grid grid-cols-4 gap-2 lg:gap-4">
+        <Card><CardContent className="p-2 lg:p-4 flex items-center gap-2 lg:gap-3">
+          <Tag className="h-5 w-5 lg:h-8 lg:w-8 text-primary hidden lg:block" />
+          <div><p className="text-lg lg:text-2xl font-bold">{stats.total}</p><p className="text-[10px] lg:text-xs text-muted-foreground">Total</p></div>
         </CardContent></Card>
-        <Card><CardContent className="p-4 flex items-center gap-3">
-          <Zap className="h-8 w-8 text-emerald-500" />
-          <div><p className="text-2xl font-bold">{stats.active}</p><p className="text-xs text-muted-foreground">Active</p></div>
+        <Card><CardContent className="p-2 lg:p-4 flex items-center gap-2 lg:gap-3">
+          <Zap className="h-5 w-5 lg:h-8 lg:w-8 text-emerald-500 hidden lg:block" />
+          <div><p className="text-lg lg:text-2xl font-bold">{stats.active}</p><p className="text-[10px] lg:text-xs text-muted-foreground">Active</p></div>
         </CardContent></Card>
-        <Card><CardContent className="p-4 flex items-center gap-3">
-          <Edit className="h-8 w-8 text-amber-500" />
-          <div><p className="text-2xl font-bold">{stats.draft}</p><p className="text-xs text-muted-foreground">Draft</p></div>
+        <Card><CardContent className="p-2 lg:p-4 flex items-center gap-2 lg:gap-3">
+          <Edit className="h-5 w-5 lg:h-8 lg:w-8 text-amber-500 hidden lg:block" />
+          <div><p className="text-lg lg:text-2xl font-bold">{stats.draft}</p><p className="text-[10px] lg:text-xs text-muted-foreground">Draft</p></div>
         </CardContent></Card>
-        <Card><CardContent className="p-4 flex items-center gap-3">
-          <Calendar className="h-8 w-8 text-destructive" />
-          <div><p className="text-2xl font-bold">{stats.expired}</p><p className="text-xs text-muted-foreground">Expired</p></div>
+        <Card><CardContent className="p-2 lg:p-4 flex items-center gap-2 lg:gap-3">
+          <Calendar className="h-5 w-5 lg:h-8 lg:w-8 text-destructive hidden lg:block" />
+          <div><p className="text-lg lg:text-2xl font-bold">{stats.expired}</p><p className="text-[10px] lg:text-xs text-muted-foreground">Expired</p></div>
         </CardContent></Card>
       </div>
 
@@ -252,90 +252,131 @@ export default function AdminPromotions() {
         ) : filtered.length === 0 ? (
           <div className="p-8 text-center text-muted-foreground">No promotions found</div>
         ) : (
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Promotion</TableHead>
-                  <TableHead>Code</TableHead>
-                  <TableHead>Discount</TableHead>
-                  <TableHead>Applicable</TableHead>
-                  <TableHead>Duration</TableHead>
-                  <TableHead>Usage</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filtered.map(promo => {
-                  const applicableInfo = APPLICABLE_OPTIONS.find(o => o.value === promo.applicable_to);
-                  return (
-                    <TableRow key={promo.id}>
-                      <TableCell>
-                        <div>
-                          <p className="font-medium">{promo.title}</p>
-                          {promo.description && <p className="text-xs text-muted-foreground line-clamp-1">{promo.description}</p>}
-                          {promo.is_featured && <Badge variant="outline" className="mt-1 text-xs">⭐ Featured</Badge>}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        {promo.promo_code ? (
-                          <Badge variant="secondary" className="font-mono">{promo.promo_code}</Badge>
-                        ) : <span className="text-muted-foreground">-</span>}
-                      </TableCell>
-                      <TableCell>
-                        <span className="flex items-center gap-1 font-semibold">
-                          {promo.discount_type === 'percentage' ? <Percent className="h-3 w-3" /> : <span>৳</span>}
-                          {formatDiscount(promo)}
-                        </span>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className="capitalize">
-                          {applicableInfo?.label || promo.applicable_to}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-sm">
-                        <div className="flex flex-col gap-0.5">
-                          <span>{format(new Date(promo.start_date), 'dd MMM yyyy')}</span>
-                          {promo.end_date && (
-                            <span className="text-muted-foreground">
-                              → {format(new Date(promo.end_date), 'dd MMM yyyy')}
-                            </span>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <span className="text-sm">
-                          {promo.usage_count}{promo.max_uses ? `/${promo.max_uses}` : ''}
-                        </span>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={STATUS_CONFIG[promo.status].variant}>
-                          {STATUS_CONFIG[promo.status].label}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-1">
-                          {(promo.status === 'active' || promo.status === 'paused') && (
-                            <Button variant="ghost" size="icon" onClick={() => toggleStatus(promo)} title={promo.status === 'active' ? 'Pause' : 'Activate'}>
-                              {promo.status === 'active' ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+          <>
+            {/* Mobile Card View */}
+            <div className="lg:hidden p-3 space-y-2">
+              {filtered.map(promo => (
+                <div key={promo.id} className="border rounded-lg p-2.5 space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium text-sm truncate">{promo.title}</p>
+                      {promo.is_featured && <Badge variant="outline" className="text-[10px] mt-0.5">⭐ Featured</Badge>}
+                    </div>
+                    <Badge variant={STATUS_CONFIG[promo.status].variant} className="text-[10px] ml-2">
+                      {STATUS_CONFIG[promo.status].label}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-1.5">
+                      {promo.promo_code && <Badge variant="secondary" className="font-mono text-[10px]">{promo.promo_code}</Badge>}
+                      <span className="font-semibold">{formatDiscount(promo)}</span>
+                    </div>
+                    <span className="text-muted-foreground">{promo.usage_count}{promo.max_uses ? `/${promo.max_uses}` : ''} used</span>
+                  </div>
+                  <div className="flex items-center justify-end gap-1 pt-0.5">
+                    {(promo.status === 'active' || promo.status === 'paused') && (
+                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => toggleStatus(promo)}>
+                        {promo.status === 'active' ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
+                      </Button>
+                    )}
+                    <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(promo)}>
+                      <Edit className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive"
+                      onClick={() => { if (confirm('Delete this promotion?')) deletePromo.mutate(promo.id); }}>
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table View */}
+            <div className="hidden lg:block overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Promotion</TableHead>
+                    <TableHead>Code</TableHead>
+                    <TableHead>Discount</TableHead>
+                    <TableHead>Applicable</TableHead>
+                    <TableHead>Duration</TableHead>
+                    <TableHead>Usage</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filtered.map(promo => {
+                    const applicableInfo = APPLICABLE_OPTIONS.find(o => o.value === promo.applicable_to);
+                    return (
+                      <TableRow key={promo.id}>
+                        <TableCell>
+                          <div>
+                            <p className="font-medium">{promo.title}</p>
+                            {promo.description && <p className="text-xs text-muted-foreground line-clamp-1">{promo.description}</p>}
+                            {promo.is_featured && <Badge variant="outline" className="mt-1 text-xs">⭐ Featured</Badge>}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          {promo.promo_code ? (
+                            <Badge variant="secondary" className="font-mono">{promo.promo_code}</Badge>
+                          ) : <span className="text-muted-foreground">-</span>}
+                        </TableCell>
+                        <TableCell>
+                          <span className="flex items-center gap-1 font-semibold">
+                            {promo.discount_type === 'percentage' ? <Percent className="h-3 w-3" /> : <span>৳</span>}
+                            {formatDiscount(promo)}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline" className="capitalize">
+                            {applicableInfo?.label || promo.applicable_to}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-sm">
+                          <div className="flex flex-col gap-0.5">
+                            <span>{format(new Date(promo.start_date), 'dd MMM yyyy')}</span>
+                            {promo.end_date && (
+                              <span className="text-muted-foreground">
+                                → {format(new Date(promo.end_date), 'dd MMM yyyy')}
+                              </span>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <span className="text-sm">
+                            {promo.usage_count}{promo.max_uses ? `/${promo.max_uses}` : ''}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={STATUS_CONFIG[promo.status].variant}>
+                            {STATUS_CONFIG[promo.status].label}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-1">
+                            {(promo.status === 'active' || promo.status === 'paused') && (
+                              <Button variant="ghost" size="icon" onClick={() => toggleStatus(promo)} title={promo.status === 'active' ? 'Pause' : 'Activate'}>
+                                {promo.status === 'active' ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                              </Button>
+                            )}
+                            <Button variant="ghost" size="icon" onClick={() => openEdit(promo)}>
+                              <Edit className="h-4 w-4" />
                             </Button>
-                          )}
-                          <Button variant="ghost" size="icon" onClick={() => openEdit(promo)}>
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive"
-                            onClick={() => { if (confirm('Delete this promotion?')) deletePromo.mutate(promo.id); }}>
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </div>
+                            <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive"
+                              onClick={() => { if (confirm('Delete this promotion?')) deletePromo.mutate(promo.id); }}>
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+          </>
         )}
       </CardContent></Card>
     </div>
