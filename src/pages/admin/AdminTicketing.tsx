@@ -385,7 +385,7 @@ export default function AdminTicketing() {
     <TooltipProvider>
     <div className="space-y-4">
       {/* Header */}
-      <div className="flex justify-end gap-2">
+      <div className="flex justify-center lg:justify-end gap-2">
           <Button size="sm" onClick={() => navigate('/admin/create-ticket')}>
             <Plus className="w-4 h-4 mr-1" />
             Create Ticket
@@ -396,41 +396,41 @@ export default function AdminTicketing() {
         <div className="space-y-4">
           {/* Stats Cards - compact */}
           {loading ? (
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-4 gap-2 lg:gap-3">
               {[1, 2, 3, 4].map(i => <StatsCardSkeleton key={i} />)}
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-4 gap-2 lg:gap-3">
               <Card>
-                <CardHeader className="p-3 pb-2">
-                  <CardDescription className="flex items-center gap-1 text-xs">
+                <CardHeader className="p-2 pb-1 lg:p-3 lg:pb-2">
+                  <CardDescription className="flex items-center gap-1 text-[10px] lg:text-xs">
                     <CheckCircle className="w-3 h-3" /> Active
                   </CardDescription>
-                  <CardTitle className="text-xl text-green-600">{activeCount}</CardTitle>
+                  <CardTitle className="text-lg lg:text-xl text-green-600">{activeCount}</CardTitle>
                 </CardHeader>
               </Card>
               <Card>
-                <CardHeader className="p-3 pb-2">
-                  <CardDescription className="flex items-center gap-1 text-xs">
+                <CardHeader className="p-2 pb-1 lg:p-3 lg:pb-2">
+                  <CardDescription className="flex items-center gap-1 text-[10px] lg:text-xs">
                     <CalendarDays className="w-3 h-3" /> Today
                   </CardDescription>
-                  <CardTitle className="text-xl">{todayCount}</CardTitle>
+                  <CardTitle className="text-lg lg:text-xl">{todayCount}</CardTitle>
                 </CardHeader>
               </Card>
               <Card className="border-primary/30">
-                <CardHeader className="p-3 pb-2">
-                  <CardDescription className="flex items-center gap-1 text-xs">
+                <CardHeader className="p-2 pb-1 lg:p-3 lg:pb-2">
+                  <CardDescription className="flex items-center gap-1 text-[10px] lg:text-xs">
                     <Users className="w-3 h-3" /> Inside
                   </CardDescription>
-                  <CardTitle className="text-xl text-primary">{insideCount}</CardTitle>
+                  <CardTitle className="text-lg lg:text-xl text-primary">{insideCount}</CardTitle>
                 </CardHeader>
               </Card>
               <Card>
-                <CardHeader className="p-3 pb-2">
-                  <CardDescription className="flex items-center gap-1 text-xs">
+                <CardHeader className="p-2 pb-1 lg:p-3 lg:pb-2">
+                  <CardDescription className="flex items-center gap-1 text-[10px] lg:text-xs">
                     <Clock className="w-3 h-3" /> Used
                   </CardDescription>
-                  <CardTitle className="text-xl text-muted-foreground">{usedCount}</CardTitle>
+                  <CardTitle className="text-lg lg:text-xl text-muted-foreground">{usedCount}</CardTitle>
                 </CardHeader>
               </Card>
             </div>
@@ -441,7 +441,7 @@ export default function AdminTicketing() {
             <CardHeader className="p-3 pb-2">
               {/* Filters - no duplicate title */}
               <div className="flex flex-col gap-2">
-                <div className="relative flex-1">
+                <div className="relative">
                   <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
                     placeholder="Ticket #, name or phone..."
@@ -451,7 +451,7 @@ export default function AdminTicketing() {
                   />
                 </div>
                 
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
                     <SelectTrigger className="w-[100px] h-9 text-sm">
                       <SelectValue />
@@ -466,7 +466,7 @@ export default function AdminTicketing() {
 
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button variant="outline" size="sm" className="h-9 flex-1 min-w-[90px]">
+                      <Button variant="outline" size="sm" className="h-9 min-w-[80px]">
                         <CalendarDays className="w-3.5 h-3.5 mr-1" />
                         {dateFrom ? format(dateFrom, 'dd MMM') : 'From'}
                       </Button>
@@ -483,7 +483,7 @@ export default function AdminTicketing() {
 
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button variant="outline" size="sm" className="h-9 flex-1 min-w-[90px]">
+                      <Button variant="outline" size="sm" className="h-9 min-w-[80px]">
                         <CalendarDays className="w-3.5 h-3.5 mr-1" />
                         {dateTo ? format(dateTo, 'dd MMM') : 'To'}
                       </Button>
@@ -504,15 +504,15 @@ export default function AdminTicketing() {
                       <X className="w-4 h-4" />
                     </Button>
                   )}
-                </div>
 
-                <div className="flex items-center gap-2 ml-auto">
-                  <Badge variant="secondary" className="text-xs">
-                    {filteredTickets.length}
-                  </Badge>
-                  <Button variant="ghost" size="icon" className="h-9 w-9" onClick={fetchTickets} disabled={loading}>
-                    <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-                  </Button>
+                  <div className="flex items-center gap-2 ml-auto">
+                    <Badge variant="secondary" className="text-xs">
+                      {filteredTickets.length}
+                    </Badge>
+                    <Button variant="ghost" size="icon" className="h-9 w-9" onClick={fetchTickets} disabled={loading}>
+                      <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                    </Button>
+                  </div>
                 </div>
               </div>
             </CardHeader>
