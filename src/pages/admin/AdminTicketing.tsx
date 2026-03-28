@@ -564,7 +564,104 @@ export default function AdminTicketing() {
                 </div>
               ) : (
                 <>
-                  <div className="overflow-x-auto">
+                  {/* Mobile Card View */}
+                  <div className="lg:hidden space-y-2">
+                    {paginatedTickets.map((ticket) => (
+                      <div key={ticket.id} className="rounded-lg border bg-card p-3 space-y-2">
+                        {/* Header: Ticket# + Status */}
+                        <div className="flex items-center justify-between">
+                          <span className="font-mono text-xs font-medium">{ticket.ticket_number}</span>
+                          <div className="flex items-center gap-1.5">
+                            {getStatusBadge(ticket.status)}
+                            {ticket.inside_venue && (
+                              <Badge className="bg-primary/10 text-primary text-xs">
+                                <DoorOpen className="w-2.5 h-2.5 mr-0.5" />Inside
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                        
+                        {/* Body: Info */}
+                        <div className="text-sm space-y-0.5">
+                          <div className="font-medium">{ticket.guardian_name} · <span className="text-muted-foreground font-normal">{ticket.guardian_phone}</span></div>
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <span>{format(parseISO(ticket.slot_date), 'dd MMM yyyy')}</span>
+                            <span>·</span>
+                            <span className="font-semibold text-foreground">৳{ticket.total_price || 0}</span>
+                            {(ticket.discount_applied ?? 0) > 0 && (
+                              <span className="text-green-600">-৳{ticket.discount_applied}</span>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <Badge variant="outline" className="capitalize text-xs h-5">
+                              <CreditCard className="w-2.5 h-2.5 mr-0.5" />{ticket.payment_type || 'cash'}
+                            </Badge>
+                            <Badge className={`text-xs h-5 ${(ticket.payment_status || 'unpaid') === 'paid' ? 'bg-green-500/10 text-green-600' : 'bg-amber-500/10 text-amber-600'}`}>
+                              {(ticket.payment_status || 'unpaid') === 'paid' ? 'Paid' : 'Unpaid'}
+                            </Badge>
+                            {formatTime(ticket.in_time) && (
+                              <span className="flex items-center gap-0.5 text-green-600">
+                                <DoorOpen className="w-3 h-3" />{formatTime(ticket.in_time)}
+                              </span>
+                            )}
+                            {formatTime(ticket.out_time) && (
+                              <span className="flex items-center gap-0.5 text-orange-600">
+                                <DoorClosed className="w-3 h-3" />{formatTime(ticket.out_time)}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex gap-1.5 pt-1 border-t">
+                          {ticket.status !== 'cancelled' && (
+                            <>
+                              {!ticket.inside_venue && ticket.status === 'active' && (
+                                <Button 
+                                  size="sm"
+                                  className="h-8 bg-green-600 hover:bg-green-700 text-xs gap-1"
+                                  onClick={() => handleGateEntry(ticket)}
+                                  disabled={gateActionLoading === ticket.id}
+                                >
+                                  {gateActionLoading === ticket.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <DoorOpen className="w-3.5 h-3.5" />}
+                                  Entry
+                                </Button>
+                              )}
+                              {ticket.inside_venue && (
+                                <Button 
+                                  size="sm"
+                                  className="h-8 bg-orange-600 hover:bg-orange-700 text-xs gap-1"
+                                  onClick={() => handleGateExit(ticket)}
+                                  disabled={gateActionLoading === ticket.id}
+                                >
+                                  {gateActionLoading === ticket.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <DoorClosed className="w-3.5 h-3.5" />}
+                                  Exit
+                                </Button>
+                              )}
+                            </>
+                          )}
+                          <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => handlePrintTicket(ticket)}>
+                            <Printer className="w-3.5 h-3.5" />
+                          </Button>
+                          <Button 
+                            size="icon" variant="ghost" className="h-8 w-8"
+                            onClick={() => handleSendSMS(ticket)}
+                            disabled={sendingSMS === ticket.id}
+                          >
+                            {sendingSMS === ticket.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <MessageSquare className="w-3.5 h-3.5" />}
+                          </Button>
+                          {ticket.status === 'active' && !ticket.inside_venue && (
+                            <Button size="icon" variant="ghost" className="h-8 w-8 text-destructive" onClick={() => handleCancelTicket(ticket.id)}>
+                              <XCircle className="w-3.5 h-3.5" />
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Desktop Table View */}
+                  <div className="hidden lg:block overflow-x-auto">
                     <Table>
                       <TableHeader>
                         <TableRow className="text-xs">
@@ -572,9 +669,9 @@ export default function AdminTicketing() {
                           <TableHead className="py-2 px-3">Guardian</TableHead>
                           <TableHead className="py-2 px-3">Date</TableHead>
                           <TableHead className="py-2 px-3">Price</TableHead>
-                          <TableHead className="py-2 px-3 hidden md:table-cell">Payment</TableHead>
-                          <TableHead className="py-2 px-3 hidden md:table-cell">Time</TableHead>
-                          <TableHead className="py-2 px-3 hidden lg:table-cell">Source</TableHead>
+                          <TableHead className="py-2 px-3">Payment</TableHead>
+                          <TableHead className="py-2 px-3">Time</TableHead>
+                          <TableHead className="py-2 px-3">Source</TableHead>
                           <TableHead className="py-2 px-3">Status</TableHead>
                           <TableHead className="py-2 px-3 text-right">Actions</TableHead>
                         </TableRow>
@@ -610,10 +707,10 @@ export default function AdminTicketing() {
                                 </TooltipContent>
                               </Tooltip>
                             </TableCell>
-                            <TableCell className="py-2 px-3 hidden md:table-cell">
+                            <TableCell className="py-2 px-3">
                               {getPaymentBadge(ticket)}
                             </TableCell>
-                            <TableCell className="py-2 px-3 hidden md:table-cell">
+                            <TableCell className="py-2 px-3">
                               <div className="text-xs space-y-0.5">
                                 {formatTime(ticket.in_time) && (
                                   <div className="flex items-center gap-1 text-green-600">
@@ -632,10 +729,9 @@ export default function AdminTicketing() {
                                 )}
                               </div>
                             </TableCell>
-                            <TableCell className="py-2 px-3 hidden lg:table-cell">
+                            <TableCell className="py-2 px-3">
                               <Badge variant="outline" className="capitalize text-xs">{ticket.source}</Badge>
                             </TableCell>
-                            {/* Merged Status + Location column */}
                             <TableCell className="py-2 px-3">
                               <div className="flex flex-col gap-1">
                                 {getStatusBadge(ticket.status)}
@@ -745,7 +841,7 @@ export default function AdminTicketing() {
                     </Table>
                   </div>
 
-                  {/* Pagination footer - compact */}
+                  {/* Pagination footer */}
                   <div className="flex items-center justify-between text-xs text-muted-foreground">
                     <span>
                       {paginatedTickets.length} of {filteredTickets.length}
