@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { format, differenceInDays } from 'date-fns';
-import { Plus, Search, Crown, Phone, Calendar, User, MoreVertical, CheckCircle, XCircle, Loader2, CreditCard, Banknote, TrendingUp, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Plus, Search, Crown, Phone, Calendar, User, MoreVertical, CheckCircle, XCircle, Loader2, CreditCard, Banknote, TrendingUp, ChevronLeft, ChevronRight, Eye, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -37,6 +38,7 @@ export default function AdminMemberships() {
   const [packageFilter, setPackageFilter] = useState<string>('all');
   const [paymentFilter, setPaymentFilter] = useState<string>('all');
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<Membership | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 15;
@@ -168,6 +170,28 @@ export default function AdminMemberships() {
       return data || [];
     },
   });
+
+  // Fetch visit history for selected member
+  const { data: memberVisits = [], isLoading: visitsLoading } = useQuery({
+    queryKey: ['member-visits', selectedMember?.id],
+    queryFn: async () => {
+      if (!selectedMember) return [];
+      const { data, error } = await supabase
+        .from('membership_visits')
+        .select('*')
+        .eq('membership_id', selectedMember.id)
+        .order('check_in_at', { ascending: false })
+        .limit(20);
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: !!selectedMember,
+  });
+
+  // Get payment log for selected member
+  const selectedMemberPayment = selectedMember
+    ? paymentLogs.find(l => (l.details as any)?.membership_id === selectedMember.id)
+    : null;
 
   const updateStatusMutation = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
@@ -624,7 +648,7 @@ export default function AdminMemberships() {
                   return paginatedItems.map((membership) => {
                     const remainingDays = getRemainingDays(membership.valid_till);
                     return (
-                      <div key={membership.id} className="rounded-lg border bg-card p-3 space-y-1.5">
+                      <div key={membership.id} className="rounded-lg border bg-card p-3 space-y-1.5 cursor-pointer hover:bg-muted/50 transition-colors" onClick={() => setSelectedMember(membership)}>
                         <div className="flex items-start justify-between">
                           <div className="flex-1 min-w-0">
                             <p className="font-medium text-sm truncate">{membership.member_name}</p>
@@ -694,7 +718,7 @@ export default function AdminMemberships() {
                       return paginatedItems.map((membership) => {
                         const remainingDays = getRemainingDays(membership.valid_till);
                         return (
-                          <TableRow key={membership.id}>
+                          <TableRow key={membership.id} className="cursor-pointer hover:bg-muted/50" onClick={() => setSelectedMember(membership)}>
                             <TableCell>
                               <div className="flex items-center gap-3">
                                 <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
@@ -800,6 +824,141 @@ export default function AdminMemberships() {
         </CardContent>
       </Card>
       </div>
+
+      {/* Member Detail Dialog */}
+      <Dialog open={!!selectedMember} onOpenChange={(open) => !open && setSelectedMember(null)}>
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+          {selectedMember && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                    <User className="h-4.5 w-4.5 text-primary" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="truncate">{selectedMember.member_name}</p>
+                    <p className="text-sm font-normal text-muted-foreground flex items-center gap-1">
+                      <Phone className="h-3 w-3" /> {selectedMember.phone}
+                    </p>
+                  </div>
+                </DialogTitle>
+              </DialogHeader>
+
+              <div className="space-y-4 mt-2">
+                {/* Status & Plan */}
+                <div className="flex items-center gap-2 flex-wrap">
+                  {getStatusBadge(selectedMember.status)}
+                  <Badge variant="outline">{getTypeBadge(selectedMember.membership_type)}</Badge>
+                  <Badge variant="secondary">{selectedMember.discount_percent}% discount</Badge>
+                </div>
+
+                {/* Info Grid */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-lg border p-2.5 text-center">
+                    <p className="text-lg font-bold">{selectedMember.child_count}</p>
+                    <p className="text-[11px] text-muted-foreground">Children</p>
+                  </div>
+                  <div className="rounded-lg border p-2.5 text-center">
+                    <p className="text-lg font-bold">{visitCounts[selectedMember.id] || 0}</p>
+                    <p className="text-[11px] text-muted-foreground">Total Visits</p>
+                  </div>
+                </div>
+
+                {/* Validity */}
+                <div className="rounded-lg border p-3 space-y-1.5">
+                  <p className="text-xs font-medium text-muted-foreground flex items-center gap-1"><Calendar className="h-3 w-3" /> Validity Period</p>
+                  <p className="text-sm font-medium">{selectedMember.valid_from} → {selectedMember.valid_till}</p>
+                  {selectedMember.status === 'active' && (
+                    <p className={`text-xs ${getRemainingDays(selectedMember.valid_till) <= 7 ? 'text-orange-600 font-medium' : 'text-muted-foreground'}`}>
+                      {getRemainingDays(selectedMember.valid_till)} days remaining
+                    </p>
+                  )}
+                </div>
+
+                {/* Payment Info */}
+                {selectedMemberPayment && (
+                  <div className="rounded-lg border p-3 space-y-1.5">
+                    <p className="text-xs font-medium text-muted-foreground flex items-center gap-1"><CreditCard className="h-3 w-3" /> Payment</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">৳{((selectedMemberPayment.details as any)?.payment_amount || 0).toLocaleString()}</span>
+                      <Badge variant="outline" className="capitalize">{(selectedMemberPayment.details as any)?.payment_type || 'N/A'}</Badge>
+                    </div>
+                  </div>
+                )}
+
+                {/* Notes */}
+                {selectedMember.notes && (
+                  <div className="rounded-lg border p-3 space-y-1">
+                    <p className="text-xs font-medium text-muted-foreground">Notes</p>
+                    <p className="text-sm">{selectedMember.notes}</p>
+                  </div>
+                )}
+
+                <Separator />
+
+                {/* Visit History */}
+                <div className="space-y-2">
+                  <p className="text-sm font-medium flex items-center gap-1.5"><Clock className="h-3.5 w-3.5" /> Recent Visits</p>
+                  {visitsLoading ? (
+                    <div className="space-y-2">
+                      {[1, 2, 3].map(i => <Skeleton key={i} className="h-8 w-full" />)}
+                    </div>
+                  ) : memberVisits.length === 0 ? (
+                    <p className="text-sm text-muted-foreground text-center py-3">No visits recorded</p>
+                  ) : (
+                    <div className="space-y-1.5 max-h-48 overflow-y-auto">
+                      {memberVisits.map((visit: any) => (
+                        <div key={visit.id} className="flex items-center justify-between text-sm rounded border px-2.5 py-1.5">
+                          <span className="text-muted-foreground">{format(new Date(visit.check_in_at), 'dd MMM yyyy, hh:mm a')}</span>
+                          {visit.check_out_at ? (
+                            <Badge variant="secondary" className="text-[10px]">
+                              {format(new Date(visit.check_out_at), 'hh:mm a')}
+                            </Badge>
+                          ) : (
+                            <Badge className="bg-green-500/10 text-green-600 border-green-200 text-[10px]">Inside</Badge>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-2">
+                  {selectedMember.status === 'active' ? (
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => {
+                        updateStatusMutation.mutate({ id: selectedMember.id, status: 'cancelled' });
+                        setSelectedMember(null);
+                      }}
+                    >
+                      <XCircle className="h-4 w-4 mr-1.5" /> Cancel Membership
+                    </Button>
+                  ) : (
+                    <Button
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => {
+                        updateStatusMutation.mutate({ id: selectedMember.id, status: 'active' });
+                        setSelectedMember(null);
+                      }}
+                    >
+                      <CheckCircle className="h-4 w-4 mr-1.5" /> Activate
+                    </Button>
+                  )}
+                </div>
+
+                <p className="text-[10px] text-muted-foreground text-center">
+                  Created: {format(new Date(selectedMember.created_at), 'dd MMM yyyy, hh:mm a')}
+                </p>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
