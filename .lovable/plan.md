@@ -1,38 +1,42 @@
 
 
-## সমস্যা
+## `/admin/gate-logs` মোবাইল রেসপনসিভ অপ্টিমাইজেশন
 
-মোবাইলে দুটি টপ বার ওভারল্যাপ করছে:
-- **AdminSidebar** → `fixed top-0 z-50 h-14` (হ্যামবার্গার + লোগো + "Admin")
-- **AdminLayout** → `sticky top-0 z-30 h-12` (হ্যামবার্গার + পেইজ টাইটেল + নোটিফিকেশন বেল)
+### সমস্যা চিহ্নিত (390px ভিউপোর্ট)
 
-সাইডবারের বারটি (z-50) লেআউটের বারকে (z-30) ঢেকে দিচ্ছে, তাই পেইজ হেডার দেখা যাচ্ছে না।
+1. **স্ট্যাটস কার্ড** — `grid-cols-1 sm:grid-cols-3` → মোবাইলে ৩টি কার্ড আলাদা সারিতে, অনেক জায়গা নষ্ট
+2. **ফিল্টার বার** — `flex-col md:flex-row` → মোবাইলে ৫টি ফিল্টার উলম্বভাবে স্ট্যাক হচ্ছে, অতিরিক্ত স্ক্রল দরকার
+3. **টেবিল** — মোবাইলে ৮ কলামের টেবিল overflow হয়, কিছু কলাম `hidden md:` দিয়ে লুকানো হলেও Time + Type + Ticket + Action এখনও cramped
+4. **কন্টেইনার স্পেসিং** — `space-y-6` মোবাইলে বেশি
+5. **"Refresh" বাটনে টেক্সট** — মোবাইলে জায়গা নষ্ট
 
-## সমাধান
+### পরিবর্তন — `src/pages/admin/AdminGateLogs.tsx`
 
-**AdminSidebar.tsx** থেকে মোবাইল ফিক্সড হেডার (line 567-591) সরিয়ে দেওয়া। কারণ AdminLayout-এ ইতিমধ্যেই হ্যামবার্গার মেনু, পেইজ টাইটেল এবং নোটিফিকেশন বেল সহ একটি টপ বার আছে। Sheet কম্পোনেন্ট রাখা হবে কিন্তু ফিক্সড হেডার div সরানো হবে।
+**1. স্ট্যাটস কার্ড কমপ্যাক্ট**
+- `grid-cols-1 sm:grid-cols-3` → `grid-cols-3 gap-2 lg:gap-4`
+- কার্ড প্যাডিং: `p-2 pb-1 lg:p-4 lg:pb-2`
+- লেবেল: `text-[10px] lg:text-xs`, টাইটেল: `text-lg lg:text-2xl`
 
-### পরিবর্তন — `src/components/admin/AdminSidebar.tsx`
+**2. ফিল্টার বার কমপ্যাক্ট**
+- `flex-col md:flex-row gap-3` → `flex flex-wrap items-center gap-2`
+- From/To বাটন ও Gate/Type সিলেক্ট ছোট করা
+- Search `flex-1 min-w-[120px]`
 
-**Line 554-593** — মোবাইল সেকশন পরিবর্তন:
-
-```tsx
-// আগে (দুটি element: fixed header + Sheet)
-<div className="md:hidden fixed top-0 left-0 right-0 z-50 h-14 bg-card/95 ...">
-  <Sheet>...</Sheet>
-  <div>logo + "Admin"</div>
-</div>
-
-// পরে (শুধু Sheet, কোনো fixed header নেই)
-<Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-  <SheetContent side="left" className="p-0 w-64">
-    <SidebarContent ... />
-  </SheetContent>
-</Sheet>
+**3. মোবাইলে কার্ড ভিউ, ডেস্কটপে টেবিল**
+- `lg:hidden` — প্রতিটি লগ একটি কমপ্যাক্ট কার্ড:
+```text
+┌──────────────────────────────┐
+│ 🟢 Entry   28 Mar 14:32:05  │
+│ TKT-0012 · Rahim · Gate-A   │
+└──────────────────────────────┘
 ```
+- `hidden lg:block` — বর্তমান টেবিল রাখা
 
-SheetTrigger সরানো হবে কারণ AdminLayout-এর হ্যামবার্গার বাটন ইতিমধ্যেই `setMobileMenuOpen(true)` কল করে, যা `externalMobileOpen` prop এর মাধ্যমে Sheet খোলে।
+**4. পেজিনেশন ও স্পেসিং কমপ্যাক্ট**
+- `space-y-6` → `space-y-4 lg:space-y-6`
+- Pagination text: `text-xs`
+- "Refresh" বাটনে মোবাইলে শুধু আইকন
 
 ### ফাইল
-- `src/components/admin/AdminSidebar.tsx` (মোবাইল ফিক্সড হেডার রিমুভ)
+- `src/pages/admin/AdminGateLogs.tsx`
 
