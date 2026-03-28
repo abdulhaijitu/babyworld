@@ -385,7 +385,7 @@ export default function AdminTicketing() {
     <TooltipProvider>
     <div className="space-y-4">
       {/* Header */}
-      <div className="flex justify-end gap-2">
+      <div className="flex justify-center lg:justify-end gap-2">
           <Button size="sm" onClick={() => navigate('/admin/create-ticket')}>
             <Plus className="w-4 h-4 mr-1" />
             Create Ticket
