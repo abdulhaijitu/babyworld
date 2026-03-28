@@ -456,84 +456,107 @@ export default function AdminEvents() {
               )}
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>{'Date & Time'}</TableHead>
-                    <TableHead>{'Customer'}</TableHead>
-                    <TableHead>{'Type'}</TableHead>
-                    <TableHead>{'Status'}</TableHead>
-                    <TableHead>{'Payment'}</TableHead>
-                    <TableHead className="text-right"></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredEvents.map((event) => (
-                    <TableRow key={event.id}>
-                      <TableCell>
-                        <div className="font-medium">
-                          {format(parseISO(event.slot_date), 'dd MMM yyyy', { 
-                            locale: undefined 
-                          })}
-                        </div>
-                        <div className="text-sm text-muted-foreground">{event.time_slot}</div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="font-medium">{event.parent_name}</div>
-                        <a href={`tel:${event.parent_phone}`} className="text-sm text-muted-foreground hover:text-primary flex items-center gap-1">
-                          <Phone className="w-3 h-3" />
-                          {event.parent_phone}
-                        </a>
-                      </TableCell>
-                      <TableCell>{getTypeBadge(event.booking_type)}</TableCell>
-                      <TableCell>{getStatusBadge(event.status)}</TableCell>
-                      <TableCell>{getPaymentBadge(event.payment_status)}</TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                              <MoreVertical className="w-4 h-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => openDetailDialog(event)}>
-                              <Eye className="w-4 h-4 mr-2" />
-                              {'View'}
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem 
-                              onClick={() => handleStatusChange(event.id, 'confirmed')}
-                              disabled={event.status === 'confirmed' || event.status === 'cancelled'}
-                            >
-                              <CheckCircle className="w-4 h-4 mr-2 text-green-600" />
-                              {'Confirm'}
-                            </DropdownMenuItem>
-                            <DropdownMenuItem 
-                              onClick={() => handlePaymentChange(event.id, 'paid')}
-                              disabled={event.payment_status === 'paid'}
-                            >
-                              <Banknote className="w-4 h-4 mr-2 text-green-600" />
-                              {'Mark Paid'}
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem 
-                              onClick={() => handleStatusChange(event.id, 'cancelled')}
-                              disabled={event.status === 'cancelled'}
-                              className="text-destructive"
-                            >
-                              <Ban className="w-4 h-4 mr-2" />
-                              {'Cancel'}
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
+            <>
+              {/* Mobile Card View */}
+              <div className="lg:hidden space-y-2">
+                {filteredEvents.map((event) => (
+                  <div key={event.id} className="border rounded-lg p-2.5 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-medium">{format(parseISO(event.slot_date), 'dd MMM yyyy')}</span>
+                      <div className="flex gap-1">
+                        {getTypeBadge(event.booking_type)}
+                        {getStatusBadge(event.status)}
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground text-xs">{event.time_slot}</span>
+                      <span className="font-medium text-xs">{event.parent_name}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <a href={`tel:${event.parent_phone}`} className="text-muted-foreground hover:text-primary flex items-center gap-1">
+                        <Phone className="w-3 h-3" /> {event.parent_phone}
+                      </a>
+                      {getPaymentBadge(event.payment_status)}
+                    </div>
+                    <div className="flex items-center justify-end gap-1 pt-1 border-t">
+                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openDetailDialog(event)}>
+                        <Eye className="w-3.5 h-3.5" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleStatusChange(event.id, 'confirmed')} disabled={event.status === 'confirmed' || event.status === 'cancelled'}>
+                        <CheckCircle className="w-3.5 h-3.5 text-green-600" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handlePaymentChange(event.id, 'paid')} disabled={event.payment_status === 'paid'}>
+                        <Banknote className="w-3.5 h-3.5 text-green-600" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleStatusChange(event.id, 'cancelled')} disabled={event.status === 'cancelled'}>
+                        <Ban className="w-3.5 h-3.5 text-destructive" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop Table View */}
+              <div className="hidden lg:block overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{'Date & Time'}</TableHead>
+                      <TableHead>{'Customer'}</TableHead>
+                      <TableHead>{'Type'}</TableHead>
+                      <TableHead>{'Status'}</TableHead>
+                      <TableHead>{'Payment'}</TableHead>
+                      <TableHead className="text-right"></TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          )}
+                  </TableHeader>
+                  <TableBody>
+                    {filteredEvents.map((event) => (
+                      <TableRow key={event.id}>
+                        <TableCell>
+                          <div className="font-medium">{format(parseISO(event.slot_date), 'dd MMM yyyy', { locale: undefined })}</div>
+                          <div className="text-sm text-muted-foreground">{event.time_slot}</div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="font-medium">{event.parent_name}</div>
+                          <a href={`tel:${event.parent_phone}`} className="text-sm text-muted-foreground hover:text-primary flex items-center gap-1">
+                            <Phone className="w-3 h-3" /> {event.parent_phone}
+                          </a>
+                        </TableCell>
+                        <TableCell>{getTypeBadge(event.booking_type)}</TableCell>
+                        <TableCell>{getStatusBadge(event.status)}</TableCell>
+                        <TableCell>{getPaymentBadge(event.payment_status)}</TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon">
+                                <MoreVertical className="w-4 h-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => openDetailDialog(event)}>
+                                <Eye className="w-4 h-4 mr-2" /> {'View'}
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem onClick={() => handleStatusChange(event.id, 'confirmed')} disabled={event.status === 'confirmed' || event.status === 'cancelled'}>
+                                <CheckCircle className="w-4 h-4 mr-2 text-green-600" /> {'Confirm'}
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handlePaymentChange(event.id, 'paid')} disabled={event.payment_status === 'paid'}>
+                                <Banknote className="w-4 h-4 mr-2 text-green-600" /> {'Mark Paid'}
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem onClick={() => handleStatusChange(event.id, 'cancelled')} disabled={event.status === 'cancelled'} className="text-destructive">
+                                <Ban className="w-4 h-4 mr-2" /> {'Cancel'}
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </>
+          )
         </CardContent>
       </Card>
       </div>
