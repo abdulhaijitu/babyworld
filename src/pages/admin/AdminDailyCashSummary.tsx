@@ -144,59 +144,31 @@ export default function AdminDailyCashSummary() {
 
       {/* Summary Cards */}
       {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-28" />)}
-        </div>
+        <div className="grid grid-cols-4 gap-2">{[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-16 lg:h-28" />)}</div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Grand Total */}
+        <div className="grid grid-cols-4 gap-2">
           <Card className="border-primary/30 bg-primary/5">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Grand Total</CardTitle>
-              <TrendingUp className="w-4 h-4 text-primary" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-primary">৳{grandTotal.toLocaleString()}</div>
-              <div className="flex gap-3 mt-1 text-xs text-muted-foreground">
-                <span className="flex items-center gap-1"><Banknote className="w-3 h-3" /> ৳{totalCash.toLocaleString()}</span>
-                <span className="flex items-center gap-1"><CreditCard className="w-3 h-3" /> ৳{totalOnline.toLocaleString()}</span>
-              </div>
+            <CardContent className="p-2">
+              <p className="text-lg lg:text-2xl font-bold text-primary">৳{grandTotal.toLocaleString()}</p>
+              <p className="text-[10px] lg:text-xs text-muted-foreground">Grand Total</p>
             </CardContent>
           </Card>
-
-          {/* Ticket Collection */}
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Ticket Sales</CardTitle>
-              <Ticket className="w-4 h-4 text-blue-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">৳{ticketTotal.toLocaleString()}</div>
-              <p className="text-xs text-muted-foreground mt-1">{ticketCount} tickets</p>
+            <CardContent className="p-2">
+              <p className="text-lg lg:text-2xl font-bold">৳{ticketTotal.toLocaleString()}</p>
+              <p className="text-[10px] lg:text-xs text-muted-foreground">Tickets ({ticketCount})</p>
             </CardContent>
           </Card>
-
-          {/* Food Collection */}
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Food Sales</CardTitle>
-              <UtensilsCrossed className="w-4 h-4 text-orange-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">৳{foodTotal.toLocaleString()}</div>
-              <p className="text-xs text-muted-foreground mt-1">{foodCount} orders</p>
+            <CardContent className="p-2">
+              <p className="text-lg lg:text-2xl font-bold">৳{foodTotal.toLocaleString()}</p>
+              <p className="text-[10px] lg:text-xs text-muted-foreground">Food ({foodCount})</p>
             </CardContent>
           </Card>
-
-          {/* Memberships */}
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">New Memberships</CardTitle>
-              <Crown className="w-4 h-4 text-purple-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{membershipCount}</div>
-              <p className="text-xs text-muted-foreground mt-1">Registered today</p>
+            <CardContent className="p-2">
+              <p className="text-lg lg:text-2xl font-bold">{membershipCount}</p>
+              <p className="text-[10px] lg:text-xs text-muted-foreground">Members</p>
             </CardContent>
           </Card>
         </div>

@@ -402,7 +402,7 @@ export default function AdminProfitReports() {
                   {'No data available'}
                 </div>
               ) : (
-                <ResponsiveContainer width="100%" height={400}>
+                <ResponsiveContainer width="100%" height={280}>
                   <AreaChart data={profitTrendData}>
                     <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                     <XAxis dataKey="date" />
