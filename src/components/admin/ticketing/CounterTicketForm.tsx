@@ -678,16 +678,20 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                 />
 
                 {/* Submit */}
-                <Button type="submit" className="w-full" size="default" disabled={isSubmitting}>
-                  {isSubmitting ? (
-                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating...</>
-                  ) : (
-                    <><CheckCircle className="mr-2 h-4 w-4" /> Create Ticket</>
-                  )}
-                </Button>
+                <div className="sticky bottom-0 bg-card pt-3 pb-1 -mx-3 px-3 lg:-mx-4 lg:px-4 border-t lg:border-t-0 lg:relative lg:bg-transparent lg:pt-0 lg:pb-0">
+                  <Button type="submit" className="w-full" size="default" disabled={isSubmitting}>
+                    {isSubmitting ? (
+                      <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating...</>
+                    ) : (
+                      <><CheckCircle className="mr-2 h-4 w-4" /> Create Ticket</>
+                    )}
+                  </Button>
+                </div>
               </div>
             </ScrollArea>
           </div>
+          {/* Bottom spacer for mobile dock */}
+          <div className="h-20 lg:hidden" />
         </div>
       </form>
     </Form>
