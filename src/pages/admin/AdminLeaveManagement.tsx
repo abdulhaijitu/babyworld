@@ -82,10 +82,10 @@ export default function AdminLeaveManagement() {
         </Dialog>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card><CardContent className="pt-6"><p className="text-sm text-muted-foreground">Total Requests</p><p className="text-2xl font-bold">{leaves.length}</p></CardContent></Card>
-        <Card><CardContent className="pt-6"><p className="text-sm text-muted-foreground">Pending</p><p className="text-2xl font-bold text-yellow-600">{pendingCount}</p></CardContent></Card>
-        <Card><CardContent className="pt-6"><p className="text-sm text-muted-foreground">Approved</p><p className="text-2xl font-bold text-green-600">{approvedCount}</p></CardContent></Card>
+      <div className="grid grid-cols-3 gap-2 lg:gap-4">
+        <Card><CardContent className="p-2 lg:pt-6 lg:p-4"><p className="text-[10px] lg:text-sm text-muted-foreground">Total</p><p className="text-lg lg:text-2xl font-bold">{leaves.length}</p></CardContent></Card>
+        <Card><CardContent className="p-2 lg:pt-6 lg:p-4"><p className="text-[10px] lg:text-sm text-muted-foreground">Pending</p><p className="text-lg lg:text-2xl font-bold text-yellow-600">{pendingCount}</p></CardContent></Card>
+        <Card><CardContent className="p-2 lg:pt-6 lg:p-4"><p className="text-[10px] lg:text-sm text-muted-foreground">Approved</p><p className="text-lg lg:text-2xl font-bold text-green-600">{approvedCount}</p></CardContent></Card>
       </div>
 
       <Card>
