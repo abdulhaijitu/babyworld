@@ -368,54 +368,57 @@ export default function AdminEvents() {
       {/* Events Table */}
       <Card>
         <CardHeader>
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <CardTitle>{'Booking List'}</CardTitle>
+          <div className="flex items-center justify-between gap-2">
+            <CardTitle className="text-base lg:text-lg">{'Booking List'}</CardTitle>
             <Button variant="outline" size="sm" onClick={fetchEvents} disabled={loading}>
-              <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-              {'Refresh'}
+              <RefreshCw className={`w-4 h-4 lg:mr-2 ${loading ? 'animate-spin' : ''}`} />
+              <span className="hidden lg:inline">{'Refresh'}</span>
             </Button>
           </div>
           
           {/* Filters */}
-          <div className="flex flex-col md:flex-row gap-3 mt-4">
-            <div className="relative flex-1">
+          <div className="space-y-2 mt-3">
+            <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 placeholder={'Name or phone...'}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
+                className="pl-9 h-8 lg:h-10"
               />
             </div>
-            
-            <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="w-full md:w-[140px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{'All Types'}</SelectItem>
-                <SelectItem value="birthday_event">{'Birthday'}</SelectItem>
-                <SelectItem value="private_event">{'Private'}</SelectItem>
-              </SelectContent>
-            </Select>
-            
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full md:w-[130px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{'All Status'}</SelectItem>
-                <SelectItem value="confirmed">{'Confirmed'}</SelectItem>
-                <SelectItem value="pending">{'Pending'}</SelectItem>
-                <SelectItem value="cancelled">{'Cancelled'}</SelectItem>
-              </SelectContent>
-            </Select>
-            
-            {hasActiveFilters && (
-              <Button variant="ghost" size="icon" onClick={clearFilters}>
-                <X className="w-4 h-4" />
-              </Button>
-            )}
+            <div className="grid grid-cols-2 gap-2 lg:flex lg:gap-3">
+              <Select value={typeFilter} onValueChange={setTypeFilter}>
+                <SelectTrigger className="h-8 lg:h-10 lg:w-[140px] text-xs lg:text-sm">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{'All Types'}</SelectItem>
+                  <SelectItem value="birthday_event">{'Birthday'}</SelectItem>
+                  <SelectItem value="private_event">{'Private'}</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              <div className="flex gap-2">
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="h-8 lg:h-10 lg:w-[130px] text-xs lg:text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">{'All Status'}</SelectItem>
+                    <SelectItem value="confirmed">{'Confirmed'}</SelectItem>
+                    <SelectItem value="pending">{'Pending'}</SelectItem>
+                    <SelectItem value="cancelled">{'Cancelled'}</SelectItem>
+                  </SelectContent>
+                </Select>
+                
+                {hasActiveFilters && (
+                  <Button variant="ghost" size="icon" className="h-8 w-8 lg:h-10 lg:w-10" onClick={clearFilters}>
+                    <X className="w-4 h-4" />
+                  </Button>
+                )}
+              </div>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
