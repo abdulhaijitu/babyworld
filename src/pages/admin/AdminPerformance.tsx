@@ -88,34 +88,58 @@ export default function AdminPerformance() {
       </div>
 
       <Card>
-        <CardHeader><CardTitle>All Reviews</CardTitle></CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Employee</TableHead>
-                <TableHead>Period</TableHead>
-                <TableHead>Rating</TableHead>
-                <TableHead>Notes</TableHead>
-                <TableHead>Date</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                <TableRow><TableCell colSpan={5} className="text-center py-8">Loading...</TableCell></TableRow>
-              ) : reviews.length === 0 ? (
-                <TableRow><TableCell colSpan={5} className="text-center py-8 text-muted-foreground">No reviews yet</TableCell></TableRow>
-              ) : reviews.map((r: any) => (
-                <TableRow key={r.id}>
-                  <TableCell className="font-medium">{r.employees?.name}</TableCell>
-                  <TableCell>{r.review_period}</TableCell>
-                  <TableCell>{renderStars(r.rating)}</TableCell>
-                  <TableCell className="max-w-[250px] truncate">{r.reviewer_notes || '—'}</TableCell>
-                  <TableCell>{format(new Date(r.reviewed_at), 'dd MMM yyyy')}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+        <CardHeader className="p-3 lg:p-6"><CardTitle className="text-base lg:text-lg">All Reviews</CardTitle></CardHeader>
+        <CardContent className="p-3 lg:p-6 pt-0">
+          {isLoading ? (
+            <div className="text-center py-8 text-muted-foreground">Loading...</div>
+          ) : reviews.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground text-sm">No reviews yet</div>
+          ) : (
+            <>
+              {/* Mobile Card View */}
+              <div className="lg:hidden space-y-2">
+                {reviews.map((r: any) => (
+                  <div key={r.id} className="border rounded-lg p-2.5 space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium text-sm">{r.employees?.name}</span>
+                      {renderStars(r.rating)}
+                    </div>
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <span>{r.review_period}</span>
+                      <span>{format(new Date(r.reviewed_at), 'dd MMM yyyy')}</span>
+                    </div>
+                    {r.reviewer_notes && <p className="text-xs text-muted-foreground truncate">{r.reviewer_notes}</p>}
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop Table View */}
+              <div className="hidden lg:block">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Employee</TableHead>
+                      <TableHead>Period</TableHead>
+                      <TableHead>Rating</TableHead>
+                      <TableHead>Notes</TableHead>
+                      <TableHead>Date</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {reviews.map((r: any) => (
+                      <TableRow key={r.id}>
+                        <TableCell className="font-medium">{r.employees?.name}</TableCell>
+                        <TableCell>{r.review_period}</TableCell>
+                        <TableCell>{renderStars(r.rating)}</TableCell>
+                        <TableCell className="max-w-[250px] truncate">{r.reviewer_notes || '—'}</TableCell>
+                        <TableCell>{format(new Date(r.reviewed_at), 'dd MMM yyyy')}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </>
+          )}
         </CardContent>
       </Card>
     </div>

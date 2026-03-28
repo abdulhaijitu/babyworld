@@ -331,92 +331,140 @@ export default function AdminSmsCampaigns() {
         ) : filtered.length === 0 ? (
           <div className="p-8 text-center text-muted-foreground">No campaigns found</div>
         ) : (
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Campaign</TableHead>
-                  <TableHead>Audience</TableHead>
-                  <TableHead>Recipients</TableHead>
-                  <TableHead>Delivery</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filtered.map(campaign => {
-                  const statusInfo = STATUS_CONFIG[campaign.status];
-                  const StatusIcon = statusInfo.icon;
-                  const deliveryPercent = campaign.total_recipients > 0
-                    ? Math.round((campaign.sent_count / campaign.total_recipients) * 100)
-                    : 0;
-                  const isSending = sendingId === campaign.id;
-
-                  return (
-                    <TableRow key={campaign.id}>
-                      <TableCell>
-                        <div>
-                          <p className="font-medium">{campaign.name}</p>
-                          <p className="text-xs text-muted-foreground line-clamp-1 max-w-[200px]">{campaign.message}</p>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{getAudienceLabel(campaign.audience)}</Badge>
-                      </TableCell>
-                      <TableCell className="text-sm">
-                        <span className="flex items-center gap-1">
-                          <Users className="h-3 w-3" />{campaign.total_recipients}
-                        </span>
-                      </TableCell>
-                      <TableCell>
-                        {campaign.status === 'sent' ? (
-                          <div className="space-y-1 min-w-[120px]">
-                            <div className="flex justify-between text-xs">
-                              <span className="text-emerald-600">{campaign.sent_count} success</span>
-                              {campaign.failed_count > 0 && <span className="text-destructive">{campaign.failed_count} failed</span>}
-                            </div>
-                            <Progress value={deliveryPercent} className="h-1.5" />
-                          </div>
-                        ) : '-'}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={statusInfo.variant} className="flex items-center gap-1 w-fit">
-                          <StatusIcon className={`h-3 w-3 ${campaign.status === 'sending' ? 'animate-spin' : ''}`} />
-                          {statusInfo.label}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-sm text-muted-foreground">
-                        <div className="flex flex-col">
-                          <span>{format(new Date(campaign.created_at), 'dd MMM yyyy')}</span>
-                          {campaign.sent_at && <span className="text-xs">Sent: {format(new Date(campaign.sent_at), 'dd MMM HH:mm')}</span>}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-1">
-                          {campaign.status === 'draft' && (
-                            <Button variant="default" size="sm" onClick={() => handleSendCampaign(campaign)} disabled={isSending}>
-                              {isSending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4 mr-1" />}
-                              Send
-                            </Button>
-                          )}
-                          {campaign.status === 'draft' && (
-                            <Button variant="ghost" size="icon" onClick={() => openEdit(campaign)}>
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                          )}
-                          <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive"
-                            onClick={() => { if (confirm('এই Campaign ডিলিট করতে চান?')) deleteCampaign.mutate(campaign.id); }}>
-                            <Trash2 className="h-4 w-4" />
+          <>
+            {/* Mobile Card View */}
+            <div className="lg:hidden p-3 space-y-2">
+              {filtered.map(campaign => {
+                const statusInfo = STATUS_CONFIG[campaign.status];
+                const StatusIcon = statusInfo.icon;
+                const isSending = sendingId === campaign.id;
+                return (
+                  <div key={campaign.id} className="border rounded-lg p-2.5 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <p className="font-medium text-sm truncate flex-1">{campaign.name}</p>
+                      <Badge variant={statusInfo.variant} className="flex items-center gap-1 text-[10px] ml-2">
+                        <StatusIcon className={`h-3 w-3 ${campaign.status === 'sending' ? 'animate-spin' : ''}`} />
+                        {statusInfo.label}
+                      </Badge>
+                    </div>
+                    <p className="text-xs text-muted-foreground line-clamp-1">{campaign.message}</p>
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="text-[10px]">{getAudienceLabel(campaign.audience)}</Badge>
+                        <span className="text-muted-foreground flex items-center gap-0.5"><Users className="h-3 w-3" />{campaign.total_recipients}</span>
+                      </div>
+                      <span className="text-muted-foreground">{format(new Date(campaign.created_at), 'dd MMM')}</span>
+                    </div>
+                    <div className="flex items-center justify-end gap-1 pt-0.5">
+                      {campaign.status === 'draft' && (
+                        <>
+                          <Button variant="default" size="sm" className="h-7 text-xs" onClick={() => handleSendCampaign(campaign)} disabled={isSending}>
+                            {isSending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Send className="h-3 w-3 mr-1" />}
+                            Send
                           </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </div>
+                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(campaign)}>
+                            <Edit className="h-3.5 w-3.5" />
+                          </Button>
+                        </>
+                      )}
+                      <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive"
+                        onClick={() => { if (confirm('এই Campaign ডিলিট করতে চান?')) deleteCampaign.mutate(campaign.id); }}>
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Desktop Table View */}
+            <div className="hidden lg:block overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Campaign</TableHead>
+                    <TableHead>Audience</TableHead>
+                    <TableHead>Recipients</TableHead>
+                    <TableHead>Delivery</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filtered.map(campaign => {
+                    const statusInfo = STATUS_CONFIG[campaign.status];
+                    const StatusIcon = statusInfo.icon;
+                    const deliveryPercent = campaign.total_recipients > 0
+                      ? Math.round((campaign.sent_count / campaign.total_recipients) * 100)
+                      : 0;
+                    const isSending = sendingId === campaign.id;
+
+                    return (
+                      <TableRow key={campaign.id}>
+                        <TableCell>
+                          <div>
+                            <p className="font-medium">{campaign.name}</p>
+                            <p className="text-xs text-muted-foreground line-clamp-1 max-w-[200px]">{campaign.message}</p>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline">{getAudienceLabel(campaign.audience)}</Badge>
+                        </TableCell>
+                        <TableCell className="text-sm">
+                          <span className="flex items-center gap-1">
+                            <Users className="h-3 w-3" />{campaign.total_recipients}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          {campaign.status === 'sent' ? (
+                            <div className="space-y-1 min-w-[120px]">
+                              <div className="flex justify-between text-xs">
+                                <span className="text-emerald-600">{campaign.sent_count} success</span>
+                                {campaign.failed_count > 0 && <span className="text-destructive">{campaign.failed_count} failed</span>}
+                              </div>
+                              <Progress value={deliveryPercent} className="h-1.5" />
+                            </div>
+                          ) : '-'}
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={statusInfo.variant} className="flex items-center gap-1 w-fit">
+                            <StatusIcon className={`h-3 w-3 ${campaign.status === 'sending' ? 'animate-spin' : ''}`} />
+                            {statusInfo.label}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-sm text-muted-foreground">
+                          <div className="flex flex-col">
+                            <span>{format(new Date(campaign.created_at), 'dd MMM yyyy')}</span>
+                            {campaign.sent_at && <span className="text-xs">Sent: {format(new Date(campaign.sent_at), 'dd MMM HH:mm')}</span>}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-1">
+                            {campaign.status === 'draft' && (
+                              <Button variant="default" size="sm" onClick={() => handleSendCampaign(campaign)} disabled={isSending}>
+                                {isSending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4 mr-1" />}
+                                Send
+                              </Button>
+                            )}
+                            {campaign.status === 'draft' && (
+                              <Button variant="ghost" size="icon" onClick={() => openEdit(campaign)}>
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            )}
+                            <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive"
+                              onClick={() => { if (confirm('এই Campaign ডিলিট করতে চান?')) deleteCampaign.mutate(campaign.id); }}>
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+          </>
         )}
       </CardContent></Card>
 

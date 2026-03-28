@@ -154,7 +154,7 @@ export default function AdminReports() {
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <TabsList className="grid w-full sm:w-auto grid-cols-5">
+          <TabsList className="flex w-full sm:w-auto overflow-x-auto">
             <TabsTrigger value="overview" className="gap-2">
               <TrendingUp className="w-4 h-4 hidden sm:inline" />
               {'Overview'}

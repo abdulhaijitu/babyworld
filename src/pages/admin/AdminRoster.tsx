@@ -299,7 +299,7 @@ export default function AdminRoster() {
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-7 gap-2">
+            <div className="grid grid-cols-3 lg:grid-cols-7 gap-2">
               {weekDays.map((day) => {
                 const dayShifts = getShiftsForDate(day);
                 const isToday = isSameDay(day, new Date());
