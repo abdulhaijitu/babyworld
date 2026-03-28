@@ -1,51 +1,50 @@
 
 
-## অডিট ও ফিক্স: `/admin/create-ticket` মোবাইল UI/UX
+## ফিক্স: মোবাইলে স্ক্রলিং সম্পূর্ণ সরানো
 
-### সমস্যা চিহ্নিত
-
-1. **ডুপ্লিকেট ফর্ম** — `AdminCreateTicket.tsx`-এ `<CounterTicketForm />` দুইবার রেন্ডার হচ্ছে (লাইন 31 ও 33) — পুরো ফর্ম ডবল দেখাচ্ছে
-2. **`maxHeight: '75vh'` সমস্যা** — মোবাইলে দুটো কলাম (Rides + Form) প্রতিটিতে `75vh` ম্যাক্স হাইট → মোবাইলে কন্টেন্ট কাটা যায়, স্ক্রল অদ্ভুত লাগে
-3. **Rides সেকশন মোবাইলে অতিরিক্ত জায়গা নেয়** — ফর্ম ফিল্ড দেখতে অনেক স্ক্রল করতে হয়
-4. **বটম নেভ ওভারল্যাপ** — মোবাইল ডকের জন্য বটম স্পেসার নেই
-5. **Visit history টেবিল** — ৩৯০px-এ ছোট টেক্সট, অনুভূমিক ওভারফ্লো সম্ভব
+### সমস্যা
+মোবাইল ভিউতে (390px) Rides কলামে `max-h-[40vh]` এবং Form কলামে `ScrollArea` আছে — ফলে দুটো আলাদা স্ক্রলযোগ্য এরিয়া তৈরি হচ্ছে।
 
 ### সমাধান
+মোবাইলে কোনো `max-height` বা `ScrollArea` থাকবে না — সবকিছু ন্যাচারাল ফ্লোতে দেখাবে। শুধু ডেস্কটপে (`lg:`) স্ক্রল রাখা হবে।
 
-**`AdminCreateTicket.tsx`**
-- ডুপ্লিকেট `<CounterTicketForm />` সরানো (লাইন 33)
+### পরিবর্তন — `CounterTicketForm.tsx`
 
-**`CounterTicketForm.tsx`**
-- মোবাইলে `maxHeight: '75vh'` সরানো — `lg:max-h-[75vh]` শুধু ডেস্কটপে
-- মোবাইলে Rides সেকশনের হাইট সীমিত করা (`max-h-[40vh]` মোবাইলে, `lg:max-h-none lg:flex-1`)
-- বটম স্পেসার (`h-20`) যোগ করা মোবাইল ডকের জন্য
-- Visit history টেবিলে `overflow-x-auto` যোগ
-- Submit বাটন মোবাইলে sticky bottom করা যাতে সবসময় দেখা যায়
+1. **Left column (Rides)** — লাইন 377:
+   - `max-h-[40vh] lg:max-h-[75vh]` → `lg:max-h-[75vh]`
+   - `overflow-hidden` শুধু `lg:overflow-hidden`
+   - `ScrollArea` মোবাইলে সাধারণ `div`, ডেস্কটপে `ScrollArea` — অথবা সহজ সমাধান: `ScrollArea`-তে মোবাইলে `max-h` না থাকলে এটি স্বাভাবিকভাবে সব দেখাবে, তাই শুধু parent-এর `max-h` সরালেই হবে
+
+2. **Right column (Form)** — লাইন 463:
+   - `lg:max-h-[75vh]` রাখা, মোবাইলে কোনো height constraint নেই — ঠিক আছে
+   - `ScrollArea` → মোবাইলে সাধারণ `div` হিসেবে কাজ করবে কারণ parent-এ `max-h` নেই
+
+3. **Sticky submit button** — লাইন 681:
+   - মোবাইলে sticky সরানো — `lg:sticky lg:bottom-0` অথবা সম্পূর্ণ সরানো কারণ স্ক্রল নেই
+
+মূলত একটাই কাজ: **মোবাইলে `max-h-[40vh]` সরানো** এবং **`flex flex-col` থেকে `flex-col` সরানো** যাতে কন্টেন্ট ন্যাচারাল হাইট নেয়।
 
 ### টেকনিক্যাল ডিটেইলস
 
 ```text
-মোবাইল লেআউট (আগে):
-┌─ Rides (75vh scroll) ─┐
-│  ...long list...       │
-└────────────────────────┘
-┌─ Form (75vh scroll) ──┐
-│  ...fields...          │
-└────────────────────────┘
-← ফর্ম দেখতে অনেক স্ক্রল
+আগে (মোবাইল):
+┌─ Rides [40vh scroll] ──┐
+│  ▼ scrollable           │
+└─────────────────────────┘
+┌─ Form [scroll area] ───┐
+│  ▼ scrollable           │
+└─────────────────────────┘
 
-মোবাইল লেআউট (পরে):
-┌─ Rides (40vh max) ────┐
-│  compact list          │
-└────────────────────────┘
-┌─ Form (auto height) ──┐
-│  fields + pricing      │
-│  [Create Ticket] sticky│
-└────────────────────────┘
-┌─ spacer (h-20) ───────┐
+পরে (মোবাইল):
+┌─ Rides (full height) ──┐
+│  all rides visible      │
+├─ Form (full height) ───┤
+│  all fields visible     │
+│  [Create Ticket]        │
+└─────────────────────────┘
+← পেইজ-লেভেল স্ক্রল only
 ```
 
-### ফাইল তালিকা
-- `src/pages/admin/AdminCreateTicket.tsx` — ডুপ্লিকেট ফর্ম সরানো
-- `src/components/admin/ticketing/CounterTicketForm.tsx` — মোবাইল রেসপন্সিভ ফিক্স
+### ফাইল
+- `src/components/admin/ticketing/CounterTicketForm.tsx` — ৩-৪টি লাইন পরিবর্তন
 
