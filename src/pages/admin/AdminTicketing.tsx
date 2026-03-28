@@ -440,77 +440,78 @@ export default function AdminTicketing() {
           <Card>
             <CardHeader className="p-3 pb-2">
               {/* Filters - no duplicate title */}
-              <div className="flex flex-wrap items-center gap-2">
-                <div className="relative flex-1 min-w-[140px]">
+              <div className="space-y-1.5">
+                <div className="relative">
                   <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
                     placeholder="Search..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-8 h-9 text-sm"
+                    className="pl-8 h-8 text-sm"
                   />
                 </div>
+                <div className="flex items-center gap-1.5">
+                  <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger className="w-[68px] h-8 text-xs px-2">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All</SelectItem>
+                      <SelectItem value="active">Active</SelectItem>
+                      <SelectItem value="used">Used</SelectItem>
+                      <SelectItem value="cancelled">Cancelled</SelectItem>
+                    </SelectContent>
+                  </Select>
 
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-[80px] h-9 text-xs">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All</SelectItem>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="used">Used</SelectItem>
-                    <SelectItem value="cancelled">Cancelled</SelectItem>
-                  </SelectContent>
-                </Select>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" size="sm" className="h-8 px-1.5 text-[11px]">
+                        <CalendarDays className="w-3 h-3 mr-0.5" />
+                        {dateFrom ? format(dateFrom, 'dd/MM') : 'From'}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar 
+                        mode="single" 
+                        selected={dateFrom} 
+                        onSelect={setDateFrom}
+                        className="p-3 pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
 
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" size="sm" className="h-9 px-2 min-w-[70px] text-xs">
-                      <CalendarDays className="w-3 h-3 mr-1" />
-                      {dateFrom ? format(dateFrom, 'dd MMM') : 'From'}
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" size="sm" className="h-8 px-1.5 text-[11px]">
+                        <CalendarDays className="w-3 h-3 mr-0.5" />
+                        {dateTo ? format(dateTo, 'dd/MM') : 'To'}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar 
+                        mode="single" 
+                        selected={dateTo} 
+                        onSelect={setDateTo}
+                        disabled={(date) => dateFrom ? date < dateFrom : false}
+                        className="p-3 pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  
+                  {hasActiveFilters && (
+                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={clearFilters}>
+                      <X className="w-3.5 h-3.5" />
                     </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar 
-                      mode="single" 
-                      selected={dateFrom} 
-                      onSelect={setDateFrom}
-                      className="p-3 pointer-events-auto"
-                    />
-                  </PopoverContent>
-                </Popover>
+                  )}
 
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" size="sm" className="h-9 px-2 min-w-[70px] text-xs">
-                      <CalendarDays className="w-3 h-3 mr-1" />
-                      {dateTo ? format(dateTo, 'dd MMM') : 'To'}
+                  <div className="flex items-center gap-1 ml-auto">
+                    <Badge variant="secondary" className="text-[11px] px-1.5 py-0">
+                      {filteredTickets.length}
+                    </Badge>
+                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={fetchTickets} disabled={loading}>
+                      <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
                     </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar 
-                      mode="single" 
-                      selected={dateTo} 
-                      onSelect={setDateTo}
-                      disabled={(date) => dateFrom ? date < dateFrom : false}
-                      className="p-3 pointer-events-auto"
-                    />
-                  </PopoverContent>
-                </Popover>
-                
-                {hasActiveFilters && (
-                  <Button variant="ghost" size="icon" className="h-9 w-9" onClick={clearFilters}>
-                    <X className="w-4 h-4" />
-                  </Button>
-                )}
-
-                <div className="flex items-center gap-1.5 ml-auto">
-                  <Badge variant="secondary" className="text-xs">
-                    {filteredTickets.length}
-                  </Badge>
-                  <Button variant="ghost" size="icon" className="h-9 w-9" onClick={fetchTickets} disabled={loading}>
-                    <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-                  </Button>
+                  </div>
                 </div>
               </div>
             </CardHeader>
