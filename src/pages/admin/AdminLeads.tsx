@@ -164,8 +164,8 @@ function SMSButton({ phone, name }: { phone: string; name: string }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" title="SMS পাঠান">
-          <Send className="h-4 w-4" />
+        <Button variant="ghost" size="icon" title="SMS পাঠান" className="h-7 w-7">
+          <Send className="h-3.5 w-3.5" />
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-md">
@@ -210,8 +210,8 @@ function WhatsAppLeadButton({ phone, name }: { phone: string; name: string }) {
   };
 
   return (
-    <Button variant="ghost" size="icon" title="WhatsApp-এ মেসেজ পাঠান" onClick={handleClick} className="text-green-600 hover:text-green-700">
-      <MessageSquare className="h-4 w-4" />
+    <Button variant="ghost" size="icon" title="WhatsApp-এ মেসেজ পাঠান" onClick={handleClick} className="h-7 w-7 text-green-600 hover:text-green-700">
+      <MessageSquare className="h-3.5 w-3.5" />
     </Button>
   );
 }
@@ -391,7 +391,7 @@ export default function AdminLeads() {
   const selectedLeads = filteredLeads.filter(l => selectedIds.has(l.id));
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 overflow-hidden">
       <div className="flex items-center justify-end gap-3">
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
@@ -400,7 +400,7 @@ export default function AdminLeads() {
               <span className="hidden lg:inline">নতুন লিড</span>
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+          <DialogContent className="max-w-[95vw] sm:max-w-2xl max-h-[85vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{editingLead ? 'লিড এডিট করুন' : 'নতুন লিড যোগ করুন'}</DialogTitle>
             </DialogHeader>
@@ -470,7 +470,7 @@ export default function AdminLeads() {
       {/* Bulk Action Bar */}
       {selectedIds.size > 0 && (
         <Card>
-          <CardContent className="p-3 flex items-center gap-3 flex-wrap">
+          <CardContent className="p-2 flex items-center gap-2 flex-wrap">
             <span className="text-sm font-medium">{selectedIds.size}টি লিড সিলেক্টেড</span>
             <BulkMessageDialog leads={selectedLeads} onClose={() => setSelectedIds(new Set())} />
             <Button variant="ghost" size="sm" onClick={() => setSelectedIds(new Set())}>সিলেকশন বাতিল</Button>
@@ -520,7 +520,7 @@ export default function AdminLeads() {
                               <span className="ml-1">· F/U: {format(new Date(lead.follow_up_date), 'dd MMM')}</span>
                             )}
                           </span>
-                          <div className="flex gap-0.5">
+                          <div className="flex gap-0.5 flex-shrink-0">
                             <SMSButton phone={lead.phone} name={lead.name} />
                             <WhatsAppLeadButton phone={lead.phone} name={lead.name} />
                             <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(lead)}>
