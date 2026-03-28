@@ -1,48 +1,38 @@
 
 
-## `/admin/rides` মোবাইল রেসপনসিভ অপ্টিমাইজেশন
+## সমস্যা
 
-### সমস্যা চিহ্নিত (390px ভিউপোর্ট)
+মোবাইলে দুটি টপ বার ওভারল্যাপ করছে:
+- **AdminSidebar** → `fixed top-0 z-50 h-14` (হ্যামবার্গার + লোগো + "Admin")
+- **AdminLayout** → `sticky top-0 z-30 h-12` (হ্যামবার্গার + পেইজ টাইটেল + নোটিফিকেশন বেল)
 
-1. **স্ট্যাটস কার্ড** — `grid-cols-2 sm:grid-cols-3 md:grid-cols-5` → মোবাইলে ২ কলাম, ৫টি কার্ডের শেষটি একা থাকে
-2. **কন্ট্রোল বার** — Show entries + Category + Search তিনটি আলাদা ব্লকে, জায়গা নষ্ট
-3. **টেবিল** — ৮টি কলাম (SL, Image, Name, Type, Price, Offer, Status, Action) মোবাইলে overflow হয়, পড়া কঠিন
-4. **পেজিনেশন** — Previous/Next টেক্সট সহ বাটন মোবাইলে অনেক জায়গা নেয়
-5. **ডায়ালগ** — `max-w-xl` মোবাইলে ভালো কাজ করে তবে ফর্ম স্ক্রলিং ইস্যু থাকতে পারে
+সাইডবারের বারটি (z-50) লেআউটের বারকে (z-30) ঢেকে দিচ্ছে, তাই পেইজ হেডার দেখা যাচ্ছে না।
 
-### পরিবর্তন — `src/pages/admin/AdminRides.tsx`
+## সমাধান
 
-**1. স্ট্যাটস কার্ড কমপ্যাক্ট (লাইন 334-365)**
-- `grid-cols-2 sm:grid-cols-3 md:grid-cols-5` → `grid-cols-5 gap-2 lg:gap-4`
-- কার্ড প্যাডিং: `p-2 pb-1 lg:p-4 lg:pb-2`
-- ফন্ট সাইজ: আইকন+লেবেল `text-[10px] lg:text-xs`, টাইটেল `text-lg lg:text-2xl`
+**AdminSidebar.tsx** থেকে মোবাইল ফিক্সড হেডার (line 567-591) সরিয়ে দেওয়া। কারণ AdminLayout-এ ইতিমধ্যেই হ্যামবার্গার মেনু, পেইজ টাইটেল এবং নোটিফিকেশন বেল সহ একটি টপ বার আছে। Sheet কম্পোনেন্ট রাখা হবে কিন্তু ফিক্সড হেডার div সরানো হবে।
 
-**2. কন্ট্রোল বার কমপ্যাক্ট (লাইন 374-402)**
-- `flex flex-col sm:flex-row` → `flex flex-wrap items-center gap-2`
-- Show entries শুধু সিলেক্ট রাখা (Show/entries টেক্সট মোবাইলে `hidden lg:inline`)
-- Category সিলেক্ট `w-[90px]`
-- Search `flex-1 min-w-[120px]`
+### পরিবর্তন — `src/components/admin/AdminSidebar.tsx`
 
-**3. মোবাইলে কার্ড ভিউ, ডেস্কটপে টেবিল (লাইন 414-484)**
-- `lg:` breakpoint এ টেবিল দেখানো
-- মোবাইলে প্রতিটি রাইড একটি কমপ্যাক্ট কার্ড: Image + Name + Type + Price + Status + Action বাটন
-- কার্ড লেআউট: `flex items-center gap-3` — বাম দিকে ইমেজ, মাঝে তথ্য, ডানে অ্যাকশন
+**Line 554-593** — মোবাইল সেকশন পরিবর্তন:
 
-```text
-মোবাইল কার্ড:
-┌─────────────────────────────┐
-│ [IMG] Ferris Wheel    [✏][🗑]│
-│       Paid · ৳200  ● Active │
-└─────────────────────────────┘
+```tsx
+// আগে (দুটি element: fixed header + Sheet)
+<div className="md:hidden fixed top-0 left-0 right-0 z-50 h-14 bg-card/95 ...">
+  <Sheet>...</Sheet>
+  <div>logo + "Admin"</div>
+</div>
+
+// পরে (শুধু Sheet, কোনো fixed header নেই)
+<Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+  <SheetContent side="left" className="p-0 w-64">
+    <SidebarContent ... />
+  </SheetContent>
+</Sheet>
 ```
 
-**4. পেজিনেশন কমপ্যাক্ট (লাইন 488-518)**
-- Previous/Next → শুধু আইকন `<` `>` মোবাইলে
-- "Showing X to Y" → `text-xs`
-
-**5. মূল কন্টেইনার (লাইন 324)**
-- `space-y-6` → `space-y-4 lg:space-y-6`
+SheetTrigger সরানো হবে কারণ AdminLayout-এর হ্যামবার্গার বাটন ইতিমধ্যেই `setMobileMenuOpen(true)` কল করে, যা `externalMobileOpen` prop এর মাধ্যমে Sheet খোলে।
 
 ### ফাইল
-- `src/pages/admin/AdminRides.tsx`
+- `src/components/admin/AdminSidebar.tsx` (মোবাইল ফিক্সড হেডার রিমুভ)
 
