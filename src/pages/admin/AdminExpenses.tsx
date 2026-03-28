@@ -216,15 +216,14 @@ export default function AdminExpenses() {
   const totalExpenses = expensesData?.expenses?.reduce((sum: number, e: Expense) => sum + Number(e.amount), 0) || 0;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-4">
-
+      <div className="flex items-center justify-end gap-2">
         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
           <DialogTrigger asChild>
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              {'Add Expense'}
+            <Button size="sm">
+              <Plus className="w-4 h-4 lg:mr-2" />
+              <span className="hidden lg:inline">Add Expense</span>
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-md">
