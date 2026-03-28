@@ -374,7 +374,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* LEFT COLUMN — Rides & Socks */}
-          <div className="border rounded-lg bg-card overflow-hidden flex flex-col max-h-[40vh] lg:max-h-[75vh]">
+          <div className="border rounded-lg bg-card lg:overflow-hidden flex flex-col lg:max-h-[75vh]">
             <div className="p-3 border-b space-y-2">
               <div className="flex items-center justify-between">
                 <h3 className="font-semibold text-sm flex items-center gap-2">
@@ -678,7 +678,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                 />
 
                 {/* Submit */}
-                <div className="sticky bottom-0 bg-card pt-3 pb-1 -mx-3 px-3 lg:-mx-4 lg:px-4 border-t lg:border-t-0 lg:relative lg:bg-transparent lg:pt-0 lg:pb-0">
+                <div className="pt-3">
                   <Button type="submit" className="w-full" size="default" disabled={isSubmitting}>
                     {isSubmitting ? (
                       <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating...</>
