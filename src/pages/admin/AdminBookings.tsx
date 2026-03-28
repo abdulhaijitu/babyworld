@@ -339,75 +339,71 @@ export default function AdminBookings() {
   const hasActiveFilters = searchQuery || statusFilter !== 'all' || paymentFilter !== 'all' || dateFilter || dateRangeFilter !== 'all';
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 lg:space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-4">
-
-        <div className="flex gap-2">
-          {/* View Toggle */}
-          <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as 'list' | 'calendar')} className="w-auto">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="list" className="gap-1">
-                <List className="w-4 h-4" />
-                {'List'}
-              </TabsTrigger>
-              <TabsTrigger value="calendar" className="gap-1">
-                <CalendarIcon className="w-4 h-4" />
-                {'Calendar'}
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-          
-          <Button onClick={() => setManualBookingOpen(true)}>
-            <Plus className="w-4 h-4 mr-2" />
-            {'New Booking'}
-          </Button>
-          <BookingExport bookings={filteredBookings} />
-          <Button variant="outline" size="sm" onClick={fetchBookings} disabled={loading}>
-            <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-            {'Refresh'}
-          </Button>
-        </div>
+      <div className="flex items-center justify-end gap-2">
+        {/* View Toggle */}
+        <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as 'list' | 'calendar')} className="w-auto">
+          <TabsList className="h-8">
+            <TabsTrigger value="list" className="gap-1 h-7 px-2 text-xs">
+              <List className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">List</span>
+            </TabsTrigger>
+            <TabsTrigger value="calendar" className="gap-1 h-7 px-2 text-xs">
+              <CalendarIcon className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Calendar</span>
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+        
+        <Button size="sm" onClick={() => setManualBookingOpen(true)} className="h-8">
+          <Plus className="w-4 h-4 lg:mr-2" />
+          <span className="hidden lg:inline">New Booking</span>
+        </Button>
+        <BookingExport bookings={filteredBookings} />
+        <Button variant="outline" size="sm" onClick={fetchBookings} disabled={loading} className="h-8">
+          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+        </Button>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 gap-2 lg:gap-4">
         <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
-          <CardHeader className="pb-2">
-            <CardDescription>{"Today's Revenue"}</CardDescription>
-            <CardTitle className="text-2xl">৳{todayRevenue.toLocaleString()}</CardTitle>
+          <CardHeader className="p-2 lg:p-4 pb-1 lg:pb-2">
+            <CardDescription className="text-[10px] lg:text-sm truncate">Today Rev.</CardDescription>
+            <CardTitle className="text-lg lg:text-2xl">৳{todayRevenue.toLocaleString()}</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="hidden lg:block p-4 pt-0">
             <div className="flex items-center text-muted-foreground text-sm">
               <Banknote className="w-4 h-4 mr-1" />
-              {todayBookings.filter(b => b.payment_status === 'paid').length} {'payments'}
+              {todayBookings.filter(b => b.payment_status === 'paid').length} payments
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>{'Total Bookings'}</CardDescription>
-            <CardTitle className="text-2xl">{bookings.length}</CardTitle>
+          <CardHeader className="p-2 lg:p-4 pb-1 lg:pb-2">
+            <CardDescription className="text-[10px] lg:text-sm truncate">Total</CardDescription>
+            <CardTitle className="text-lg lg:text-2xl">{bookings.length}</CardTitle>
           </CardHeader>
         </Card>
 
         <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>{"Today's Bookings"}</CardDescription>
-            <CardTitle className="text-2xl">{todayBookings.length}</CardTitle>
+          <CardHeader className="p-2 lg:p-4 pb-1 lg:pb-2">
+            <CardDescription className="text-[10px] lg:text-sm truncate">Today</CardDescription>
+            <CardTitle className="text-lg lg:text-2xl">{todayBookings.length}</CardTitle>
           </CardHeader>
         </Card>
 
         <Card className="bg-gradient-to-br from-green-500/10 to-green-500/5 border-green-500/20">
-          <CardHeader className="pb-2">
-            <CardDescription>{'Total Revenue'}</CardDescription>
-            <CardTitle className="text-2xl">৳{totalRevenue.toLocaleString()}</CardTitle>
+          <CardHeader className="p-2 lg:p-4 pb-1 lg:pb-2">
+            <CardDescription className="text-[10px] lg:text-sm truncate">Total Rev.</CardDescription>
+            <CardTitle className="text-lg lg:text-2xl">৳{totalRevenue.toLocaleString()}</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="hidden lg:block p-4 pt-0">
             <div className="flex items-center text-muted-foreground text-sm">
               <TrendingUp className="w-4 h-4 mr-1" />
-              {paidBookings.length} {'paid'}
+              {paidBookings.length} paid
             </div>
           </CardContent>
         </Card>
