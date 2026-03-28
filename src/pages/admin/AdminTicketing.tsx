@@ -903,7 +903,8 @@ export default function AdminTicketing() {
           )}
         </DialogContent>
       </Dialog>
+      {/* Bottom spacer for mobile dock */}
+      <div className="h-20 lg:hidden" />
     </div>
-    </TooltipProvider>
   );
 }
