@@ -157,17 +157,17 @@ export default function AdminIncomeCategories() {
   const isPending = createMutation.isPending || updateMutation.isPending;
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-4">
+    <div className="space-y-4 overflow-hidden">
+      <div className="flex items-center justify-end gap-2">
 
         <Dialog open={dialogOpen} onOpenChange={(open) => { if (!open) closeDialog(); else setDialogOpen(true); }}>
           <DialogTrigger asChild>
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              Add Category
+            <Button size="sm">
+              <Plus className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">Add Category</span>
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-md">
+          <DialogContent className="max-w-[95vw] sm:max-w-md">
             <DialogHeader>
               <DialogTitle>{editingCategory ? 'Edit Category' : 'Add New Category'}</DialogTitle>
               <DialogDescription>
