@@ -65,7 +65,7 @@ const defaultForm: PackageFormState = {
 
 function PackageFormFields({ form, setForm }: { form: PackageFormState; setForm: (f: PackageFormState) => void }) {
   return (
-    <div className="px-6 space-y-6 pb-2">
+    <div className="px-4 sm:px-6 space-y-6 pb-2">
       {/* Section: PACKAGE INFORMATION */}
       <div>
         <div className="flex items-center gap-2 mb-1">
@@ -73,7 +73,7 @@ function PackageFormFields({ form, setForm }: { form: PackageFormState; setForm:
         </div>
         <Separator className="mb-4" />
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">Package Name *</Label>
             <Input
@@ -96,7 +96,7 @@ function PackageFormFields({ form, setForm }: { form: PackageFormState; setForm:
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">Validity</Label>
             <div className="relative">
@@ -123,7 +123,7 @@ function PackageFormFields({ form, setForm }: { form: PackageFormState; setForm:
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">Allowed Person (Guardian)</Label>
             <select
@@ -150,7 +150,7 @@ function PackageFormFields({ form, setForm }: { form: PackageFormState; setForm:
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">Entrance Method</Label>
             <select
@@ -177,7 +177,7 @@ function PackageFormFields({ form, setForm }: { form: PackageFormState; setForm:
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
           <div className="flex items-end pb-1 gap-2">
             <Switch
               checked={form.is_active}
@@ -367,27 +367,89 @@ export default function AdminMembershipPackages() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 lg:space-y-6">
       {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-end">
-        <Button className="gap-2" onClick={() => setCreateOpen(true)}>
-          <Plus className="h-4 w-4" /> Create Package
+      <div className="flex items-center gap-3 justify-between sm:justify-end">
+        <div className="relative flex-1 sm:flex-none w-full sm:max-w-sm">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search packages..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-9"
+          />
+        </div>
+        <Button className="gap-2 shrink-0" size="sm" onClick={() => setCreateOpen(true)}>
+          <Plus className="h-4 w-4" /> <span className="hidden sm:inline">Create Package</span><span className="sm:hidden">New</span>
         </Button>
       </div>
 
-      {/* Search */}
-      <div className="relative max-w-sm">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder="Search packages..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="pl-9"
-        />
+      {/* Mobile Card View */}
+      <div className="lg:hidden space-y-3">
+        {filtered.length === 0 ? (
+          <div className="text-center text-muted-foreground py-8 text-sm">No packages found</div>
+        ) : (
+          filtered.map((pkg) => (
+            <div key={pkg.id} className="rounded-lg border bg-card p-3">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-semibold text-sm truncate">{pkg.name}</span>
+                    <Badge
+                      variant={pkg.is_active ? 'default' : 'secondary'}
+                      className={`text-[10px] px-1.5 py-0 ${pkg.is_active ? 'bg-emerald-500/15 text-emerald-600 border-emerald-200' : ''}`}
+                    >
+                      {pkg.is_active ? 'Active' : 'Inactive'}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center gap-1.5 mt-1 text-xs text-muted-foreground flex-wrap">
+                    <span className="font-semibold text-foreground">৳{pkg.price.toLocaleString()}</span>
+                    <span>·</span>
+                    <span>{pkg.duration_days} Days</span>
+                    <span>·</span>
+                    <span>G:{(pkg as any).max_guardians ?? 2} K:{pkg.max_children}</span>
+                    {pkg.discount_percent > 0 && (
+                      <>
+                        <span>·</span>
+                        <span>{pkg.discount_percent}% off</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0">
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => startEdit(pkg)}>
+                      <Edit2 className="h-4 w-4 mr-2" /> Edit
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => toggleActive(pkg)}>
+                      <ToggleLeft className="h-4 w-4 mr-2" />
+                      {pkg.is_active ? 'Deactivate' : 'Activate'}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="text-destructive focus:text-destructive"
+                      onClick={() => {
+                        if (confirm('Are you sure you want to delete this package?')) {
+                          deleteMutation.mutate(pkg.id);
+                        }
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" /> Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
-      {/* Table */}
-      <div className="rounded-lg border bg-card">
+      {/* Desktop Table */}
+      <div className="hidden lg:block rounded-lg border bg-card">
         <Table>
           <TableHeader>
             <TableRow className="bg-muted/50">
@@ -471,8 +533,8 @@ export default function AdminMembershipPackages() {
 
       {/* Edit Dialog */}
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
-        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto p-0">
-          <DialogHeader className="px-6 pt-6 pb-2">
+        <DialogContent className="sm:max-w-2xl max-h-[85vh] overflow-y-auto p-0">
+          <DialogHeader className="px-4 sm:px-6 pt-6 pb-2">
             <DialogTitle className="flex items-center gap-2 text-xl">
               <Package className="h-5 w-5 text-primary" />
               Edit Package
@@ -481,7 +543,7 @@ export default function AdminMembershipPackages() {
 
           <PackageFormFields form={editForm} setForm={setEditForm} />
 
-          <div className="px-6 pb-6 pt-2">
+          <div className="px-4 sm:px-6 pb-6 pt-2">
             <Separator className="mb-4" />
             <div className="grid grid-cols-2 gap-3">
               <Button variant="outline" className="w-full" onClick={() => setEditOpen(false)}>
@@ -497,8 +559,8 @@ export default function AdminMembershipPackages() {
 
       {/* Create Dialog */}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto p-0">
-          <DialogHeader className="px-6 pt-6 pb-2">
+        <DialogContent className="sm:max-w-2xl max-h-[85vh] overflow-y-auto p-0">
+          <DialogHeader className="px-4 sm:px-6 pt-6 pb-2">
             <DialogTitle className="flex items-center gap-2 text-xl">
               <Package className="h-5 w-5 text-primary" />
               Create New Package
@@ -507,7 +569,7 @@ export default function AdminMembershipPackages() {
 
           <PackageFormFields form={createForm} setForm={setCreateForm} />
 
-          <div className="px-6 pb-6 pt-2">
+          <div className="px-4 sm:px-6 pb-6 pt-2">
             <Separator className="mb-4" />
             <div className="grid grid-cols-2 gap-3">
               <Button variant="outline" className="w-full" onClick={() => setCreateOpen(false)}>
