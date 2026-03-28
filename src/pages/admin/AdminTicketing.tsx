@@ -113,6 +113,13 @@ export default function AdminTicketing() {
   const [sendingSMS, setSendingSMS] = useState<string | null>(null);
   const [gateActionLoading, setGateActionLoading] = useState<string | null>(null);
   const [displayCount, setDisplayCount] = useState(PAGE_SIZE);
+  const [showTopButton, setShowTopButton] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setShowTopButton(window.scrollY > 300);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const fetchTickets = useCallback(async () => {
     setLoading(true);
