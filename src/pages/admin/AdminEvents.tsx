@@ -556,7 +556,7 @@ export default function AdminEvents() {
                 </Table>
               </div>
             </>
-          )
+          )}
         </CardContent>
       </Card>
       </div>
