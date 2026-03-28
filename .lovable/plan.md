@@ -1,67 +1,130 @@
 
 
-## `/admin/events` মোবাইল রেসপনসিভ অপ্টিমাইজেশন
+## সকল /admin পেইজের মোবাইল রেসপনসিভ অপ্টিমাইজেশন
 
-তিনটি সাব-পেইজ আছে: Events (bookings list), Event Packages, Event Calendar। সবগুলোতে মোবাইল সমস্যা আছে।
+### বিল্ড এরর ফিক্স (জরুরি)
+`AdminEvents.tsx` লাইন 560-এ এখনও "Unterminated regular expression" এরর আছে। ফাইলটি ভালো করে পরীক্ষা করে সিনট্যাক্স ঠিক করতে হবে।
 
-### সমস্যা চিহ্নিত (390px ভিউপোর্ট)
+### অডিট ফলাফল
 
-**AdminEvents.tsx:**
-1. স্ট্যাটস `grid-cols-2 lg:grid-cols-4` — মোবাইলে ২x২ হয়ে অনেক জায়গা নেয়
-2. ফিল্টার `flex-col md:flex-row` — মোবাইলে ভার্টিক্যালি স্ট্যাক হয়ে স্পেস নেয়
-3. ৬-কলাম টেবিল 390px-এ cramped, ড্রপডাউন অ্যাকশন কাজ করে না ভালো
-4. New Event বাটন টেক্সটসহ — মোবাইলে আইকন-অনলি হলে ভালো
+**ইতিমধ্যে রেসপনসিভ (পরিবর্তন দরকার নেই):**
+- AdminDashboardContent, AdminBookings, AdminMemberships, AdminEvents, AdminEventPackages, AdminEventCalendar, AdminTicketing, AdminFoodPOS, AdminCreateTicket, AdminMemberEntry, AdminSettings, AdminLayout
 
-**AdminEventPackages.tsx:**
-1. ১০-কলাম টেবিল (drag, #, image, name, price, guests, duration, features, status, actions) — মোবাইলে সম্পূর্ণ ভাঙা
-2. কোনো মোবাইল কার্ড ভিউ নেই
-
-**AdminEventCalendar.tsx:**
-1. `grid-cols-1 lg:grid-cols-3` — মোবাইলে ক্যালেন্ডার + ইভেন্ট তালিকা ভার্টিক্যালি স্ট্যাক, ঠিক আছে কিন্তু ক্যালেন্ডার হেডার বাটন টাইট
-2. সামগ্রিকভাবে এটি তুলনামূলক ভালো
+**পরিবর্তন দরকার (১৮টি পেইজ):**
 
 ---
 
-### পরিকল্পনা
+### গ্রুপ ১: HR পেইজসমূহ
 
-**ফাইল ১: `src/pages/admin/AdminEvents.tsx`**
+**১. AdminEmployees.tsx (682 lines)**
+- স্ট্যাটস `grid-cols-2 md:grid-cols-4` → `grid-cols-4` কমপ্যাক্ট
+- টেবিল (8 col) → মোবাইলে কার্ড ভিউ `lg:hidden`
+- হেডার বাটন মোবাইলে আইকন-অনলি
 
-1. **স্ট্যাটস** — `grid-cols-4` সবসময়, `p-2`, `text-lg` ভ্যালু, `text-[10px]` লেবেল
-2. **হেডার** — New Event বাটন মোবাইলে আইকন-অনলি, Refresh আইকন-অনলি
-3. **ফিল্টার** — সার্চ ফুল-উইডথ উপরে, নিচে type + status `grid-cols-2 gap-2` এ `h-8` ছোট ট্রিগার
-4. **মোবাইল কার্ড ভিউ** (`lg:hidden`):
-```text
-┌─────────────────────────────────┐
-│ 25 Mar 2026  [Birthday][Confirmed]│
-│ 10:00-1:00 · Parent Name         │
-│ 📞 01700...            [Paid]    │
-│    [👁] [✓Confirm] [💰Paid] [✗] │
-└─────────────────────────────────┘
-```
-5. ডেস্কটপে বর্তমান টেবিল রাখা (`hidden lg:block`)
+**২. AdminAttendance.tsx (280 lines)**
+- স্ট্যাটস `grid-cols-1 md:grid-cols-4` → `grid-cols-4` কমপ্যাক্ট
+- টেবিল (5 col) → মোবাইলে কার্ড ভিউ
+- হেডার বাটন মোবাইলে আইকন-অনলি
 
-**ফাইল ২: `src/pages/admin/AdminEventPackages.tsx`**
+**৩. AdminPayroll.tsx (170 lines)**
+- স্ট্যাটস `grid-cols-1 md:grid-cols-3` → `grid-cols-3` কমপ্যাক্ট
+- টেবিল (7 col) → মোবাইলে কার্ড ভিউ
+- হেডার বাটন/সিলেক্ট মোবাইলে কমপ্যাক্ট
 
-1. **মোবাইল কার্ড ভিউ** (`lg:hidden`) — প্রতিটি প্যাকেজ কার্ড:
-```text
-┌─────────────────────────────────┐
-│ [img] Package Name    [Active]  │
-│ ৳5,000 · 30 guests · 3h        │
-│ [feature] [feature] [+2]       │
-│         [✏️ Edit] [🗑 Delete]   │
-└─────────────────────────────────┘
-```
-2. ডেস্কটপে বর্তমান টেবিল রাখা (`hidden lg:block`)
-3. হেডার বাটন — Refresh মোবাইলে আইকন-অনলি
+**৪. AdminLeaveManagement.tsx**
+- একই প্যাটার্ন: স্ট্যাটস কমপ্যাক্ট, টেবিল → কার্ড
+**৫. AdminPerformance.tsx**
+- একই প্যাটার্ন
+**৬. AdminRoster.tsx**
+- একই প্যাটার্ন
 
-**ফাইল ৩: `src/pages/admin/AdminEventCalendar.tsx`**
+---
 
-1. ক্যালেন্ডার হেডার — "Today" বাটন মোবাইলে ছোট (`text-xs h-7`)
-2. ইভেন্ট কার্ড — ছোট প্যাডিং `p-2`
-3. সামগ্রিকভাবে ছোট পরিবর্তন — এটি ইতিমধ্যে যুক্তিসঙ্গতভাবে রেসপনসিভ
+### গ্রুপ ২: Accounts পেইজসমূহ
 
-### ফাইল
-- `src/pages/admin/AdminEvents.tsx`
-- `src/pages/admin/AdminEventPackages.tsx`
-- `src/pages/admin/AdminEventCalendar.tsx`
+**৭. AdminExpenses.tsx (620 lines)**
+- ফিল্টার `flex-wrap` → কমপ্যাক্ট গ্রিড
+- টেবিল (7 col) → মোবাইলে কার্ড ভিউ
+
+**৮. AdminIncome.tsx (493 lines)**
+- স্ট্যাটস `grid-cols-1 sm:grid-cols-2 lg:grid-cols-4` → `grid-cols-4` কমপ্যাক্ট
+- টেবিল → মোবাইলে কার্ড ভিউ
+
+**৯. AdminDailyCashSummary.tsx (367 lines)**
+- টেবিলগুলো → মোবাইলে কার্ড ভিউ
+
+**১০. AdminProfitReports.tsx (585 lines)**
+- চার্ট কন্টেইনার মোবাইলে উচ্চতা কমানো
+- স্ট্যাটস কমপ্যাক্ট
+
+---
+
+### গ্রুপ ৩: Marketing পেইজসমূহ
+
+**১১. AdminLeads.tsx (583 lines)**
+- স্ট্যাটস `grid-cols-2 md:grid-cols-4` → `grid-cols-4` কমপ্যাক্ট
+- ফিল্টার ট্যাবস মোবাইলে স্ক্রলেবল করা
+- টেবিল (9 col!) → মোবাইলে কার্ড ভিউ
+
+**১২. AdminPromotions.tsx (343 lines)**
+- টেবিল → মোবাইলে কার্ড ভিউ
+
+**১৩. AdminSmsCampaigns.tsx (433 lines)**
+- টেবিল → মোবাইলে কার্ড ভিউ
+
+**১৪. AdminSocialMedia.tsx (356 lines)**
+- টেবিল → মোবাইলে কার্ড ভিউ
+
+---
+
+### গ্রুপ ৪: Food পেইজসমূহ
+
+**১৫. AdminFoodOrders.tsx (592 lines)**
+- টেবিল → মোবাইলে কার্ড ভিউ
+- ফিল্টার কমপ্যাক্ট
+
+**১৬. AdminFoodSales.tsx (831 lines)**
+- টেবিলগুলো → মোবাইলে কার্ড ভিউ
+
+---
+
+### গ্রুপ ৫: অন্যান্য
+
+**১৭. AdminUsers.tsx (586 lines)**
+- টেবিল → মোবাইলে কার্ড ভিউ
+
+**১৮. AdminRides.tsx (587 lines)**
+- টেবিল → মোবাইলে কার্ড ভিউ
+
+**১৯. AdminGateLogs.tsx (477 lines)**
+- টেবিল → মোবাইলে কার্ড ভিউ
+
+**২০. AdminRoles.tsx**
+- পারমিশন টেবিল মোবাইলে হরাইজন্টাল স্ক্রল
+
+**২১. AdminCoupons.tsx (367 lines)**
+- টেবিল → মোবাইলে কার্ড ভিউ
+
+**২২. AdminReports.tsx (282 lines)**
+- ট্যাবস `grid-cols-5` → মোবাইলে স্ক্রলেবল
+
+---
+
+### প্রতিটি পেইজে একই প্যাটার্ন প্রয়োগ
+
+1. **স্ট্যাটস**: `grid-cols-N` (N = আইটেম সংখ্যা) সবসময়, `p-2`, `text-lg` ভ্যালু, `text-[10px]` লেবেল
+2. **হেডার বাটন**: মোবাইলে টেক্সট `hidden lg:inline`, শুধু আইকন
+3. **ফিল্টার**: সার্চ ফুল-উইডথ, সিলেক্ট `h-8` কমপ্যাক্ট গ্রিড
+4. **ডেটা ভিউ**: `lg:hidden` কার্ড + `hidden lg:block` টেবিল
+5. **ডায়ালগ**: `max-w-md`, `overflow-y-auto`, মোবাইলে `grid-cols-1`
+
+### ফাইল (মোট ২০+ ফাইল)
+বড় পরিবর্তনের কারণে এটি কয়েক ধাপে করা হবে।
+
+### ধাপ বিভাজন
+- **ধাপ ১**: বিল্ড এরর ফিক্স + AdminLeads, AdminEmployees, AdminAttendance, AdminPayroll
+- **ধাপ ২**: AdminExpenses, AdminIncome, AdminDailyCashSummary, AdminProfitReports
+- **ধাপ ৩**: AdminFoodOrders, AdminFoodSales, AdminGateLogs
+- **ধাপ ৪**: AdminPromotions, AdminSmsCampaigns, AdminSocialMedia, AdminCoupons
+- **ধাপ ৫**: AdminUsers, AdminRides, AdminRoles, AdminReports + অন্যান্য ছোট পেইজ
 
