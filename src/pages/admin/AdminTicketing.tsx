@@ -441,7 +441,7 @@ export default function AdminTicketing() {
             <CardHeader className="p-3 pb-2">
               {/* Filters - no duplicate title */}
               <div className="flex flex-col gap-2">
-                <div className="relative flex-1">
+                <div className="relative">
                   <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
                     placeholder="Ticket #, name or phone..."
@@ -451,7 +451,7 @@ export default function AdminTicketing() {
                   />
                 </div>
                 
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
                     <SelectTrigger className="w-[100px] h-9 text-sm">
                       <SelectValue />
@@ -466,7 +466,7 @@ export default function AdminTicketing() {
 
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button variant="outline" size="sm" className="h-9 flex-1 min-w-[90px]">
+                      <Button variant="outline" size="sm" className="h-9 min-w-[80px]">
                         <CalendarDays className="w-3.5 h-3.5 mr-1" />
                         {dateFrom ? format(dateFrom, 'dd MMM') : 'From'}
                       </Button>
@@ -483,7 +483,7 @@ export default function AdminTicketing() {
 
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button variant="outline" size="sm" className="h-9 flex-1 min-w-[90px]">
+                      <Button variant="outline" size="sm" className="h-9 min-w-[80px]">
                         <CalendarDays className="w-3.5 h-3.5 mr-1" />
                         {dateTo ? format(dateTo, 'dd MMM') : 'To'}
                       </Button>
@@ -504,15 +504,15 @@ export default function AdminTicketing() {
                       <X className="w-4 h-4" />
                     </Button>
                   )}
-                </div>
 
-                <div className="flex items-center gap-2 ml-auto">
-                  <Badge variant="secondary" className="text-xs">
-                    {filteredTickets.length}
-                  </Badge>
-                  <Button variant="ghost" size="icon" className="h-9 w-9" onClick={fetchTickets} disabled={loading}>
-                    <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-                  </Button>
+                  <div className="flex items-center gap-2 ml-auto">
+                    <Badge variant="secondary" className="text-xs">
+                      {filteredTickets.length}
+                    </Badge>
+                    <Button variant="ghost" size="icon" className="h-9 w-9" onClick={fetchTickets} disabled={loading}>
+                      <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                    </Button>
+                  </div>
                 </div>
               </div>
             </CardHeader>
