@@ -98,7 +98,7 @@ export default function AdminLayout() {
   }
 
   return (
-    <div className="flex min-h-screen bg-background w-full">
+    <div className="flex min-h-screen bg-background w-full overflow-x-hidden">
       <AdminSidebar 
         collapsed={collapsed}
         onCollapse={setCollapsed}
