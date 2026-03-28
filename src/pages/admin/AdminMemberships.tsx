@@ -615,26 +615,83 @@ export default function AdminMemberships() {
               <p>{'No memberships found'}</p>
             </div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{'Member'}</TableHead>
-                  <TableHead>{'Plan'}</TableHead>
-                  <TableHead>{'Validity'}</TableHead>
-                  <TableHead>{'Status'}</TableHead>
-                  <TableHead>{'Visits'}</TableHead>
-                  <TableHead>{'Discount'}</TableHead>
-                  <TableHead></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+            <>
+              {/* Mobile Card View */}
+              <div className="lg:hidden space-y-2 p-3">
                 {(() => {
-                  const totalPages = Math.ceil(filteredMemberships.length / itemsPerPage);
                   const startIndex = (currentPage - 1) * itemsPerPage;
                   const paginatedItems = filteredMemberships.slice(startIndex, startIndex + itemsPerPage);
-                  return (
-                    <>
-                      {paginatedItems.map((membership) => {
+                  return paginatedItems.map((membership) => {
+                    const remainingDays = getRemainingDays(membership.valid_till);
+                    return (
+                      <div key={membership.id} className="rounded-lg border bg-card p-3 space-y-1.5">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-sm truncate">{membership.member_name}</p>
+                          </div>
+                          <div className="flex items-center gap-1.5 ml-2 shrink-0">
+                            {getStatusBadge(membership.status)}
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-7 w-7">
+                                  <MoreVertical className="h-3.5 w-3.5" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                {membership.status === 'active' && (
+                                  <DropdownMenuItem onClick={() => updateStatusMutation.mutate({ id: membership.id, status: 'cancelled' })}>
+                                    <XCircle className="h-4 w-4 mr-2" /> Cancel
+                                  </DropdownMenuItem>
+                                )}
+                                {membership.status !== 'active' && (
+                                  <DropdownMenuItem onClick={() => updateStatusMutation.mutate({ id: membership.id, status: 'active' })}>
+                                    <CheckCircle className="h-4 w-4 mr-2" /> Activate
+                                  </DropdownMenuItem>
+                                )}
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground flex-wrap">
+                          <span className="flex items-center gap-0.5"><Phone className="h-3 w-3" />{membership.phone}</span>
+                          <span>·</span>
+                          <Badge variant="outline" className="text-[10px] px-1.5 py-0">{getTypeBadge(membership.membership_type)}</Badge>
+                          <span>·</span>
+                          <span>{visitCounts[membership.id] || 0} visits</span>
+                        </div>
+                        <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+                          <span>{membership.valid_from} → {membership.valid_till}</span>
+                          {membership.status === 'active' && (
+                            <span className={`font-medium ${remainingDays <= 7 ? 'text-orange-600' : ''}`}>
+                              {remainingDays}d left
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  });
+                })()}
+              </div>
+
+              {/* Desktop Table View */}
+              <div className="hidden lg:block">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{'Member'}</TableHead>
+                      <TableHead>{'Plan'}</TableHead>
+                      <TableHead>{'Validity'}</TableHead>
+                      <TableHead>{'Status'}</TableHead>
+                      <TableHead>{'Visits'}</TableHead>
+                      <TableHead>{'Discount'}</TableHead>
+                      <TableHead></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {(() => {
+                      const startIndex = (currentPage - 1) * itemsPerPage;
+                      const paginatedItems = filteredMemberships.slice(startIndex, startIndex + itemsPerPage);
+                      return paginatedItems.map((membership) => {
                         const remainingDays = getRemainingDays(membership.valid_till);
                         return (
                           <TableRow key={membership.id}>
@@ -704,20 +761,20 @@ export default function AdminMemberships() {
                             </TableCell>
                           </TableRow>
                         );
-                      })}
-                    </>
-                  );
-                })()}
-              </TableBody>
-            </Table>
+                      });
+                    })()}
+                  </TableBody>
+                </Table>
+              </div>
+            </>
           )}
           {/* Pagination */}
           {filteredMemberships.length > itemsPerPage && (
-            <div className="flex items-center justify-between px-4 py-3 border-t">
-              <p className="text-sm text-muted-foreground">
+            <div className="flex items-center justify-between px-3 sm:px-4 py-3 border-t">
+              <p className="hidden sm:block text-sm text-muted-foreground">
                 Showing {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, filteredMemberships.length)} of {filteredMemberships.length}
               </p>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 mx-auto sm:mx-0">
                 <Button
                   variant="outline"
                   size="sm"
