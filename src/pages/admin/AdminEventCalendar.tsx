@@ -128,7 +128,7 @@ export default function AdminEventCalendar() {
             ) : (
               <div className="space-y-3">
                 {selectedEvents.map(event => (
-                  <div key={event.id} className="p-3 border rounded-lg space-y-2">
+                  <div key={event.id} className="p-2 lg:p-3 border rounded-lg space-y-1.5 lg:space-y-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         {event.booking_type === 'birthday_event' ? (
