@@ -496,32 +496,28 @@ export default function AdminRides() {
 
           {/* Pagination */}
           {filteredRides.length > 0 && (
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-4 text-sm">
+            <div className="flex items-center justify-between gap-2 mt-4 text-xs lg:text-sm">
               <p className="text-muted-foreground">
-                Showing {showingFrom} to {showingTo} of {filteredRides.length} entries
+                {showingFrom}-{showingTo} / {filteredRides.length}
               </p>
               <div className="flex items-center gap-1">
-                <Button variant="outline" size="sm" disabled={safePage <= 1} onClick={() => setCurrentPage(p => p - 1)} className="h-8">
+                <Button variant="outline" size="sm" disabled={safePage <= 1} onClick={() => setCurrentPage(p => p - 1)} className="h-8 px-2">
                   <ChevronLeft className="w-4 h-4" />
-                  Previous
+                  <span className="hidden lg:inline">Previous</span>
                 </Button>
                 {Array.from({ length: totalPages }, (_, i) => i + 1)
                   .filter(p => p === 1 || p === totalPages || Math.abs(p - safePage) <= 1)
                   .map((p, i, arr) => (
                     <span key={p}>
                       {i > 0 && arr[i - 1] !== p - 1 && <span className="px-1 text-muted-foreground">…</span>}
-                      <Button
-                        variant={p === safePage ? "default" : "outline"}
-                        size="sm" className="h-8 w-8 p-0"
-                        onClick={() => setCurrentPage(p)}
-                      >
+                      <Button variant={p === safePage ? "default" : "outline"} size="sm" className="h-8 w-8 p-0" onClick={() => setCurrentPage(p)}>
                         {p}
                       </Button>
                     </span>
                   ))
                 }
-                <Button variant="outline" size="sm" disabled={safePage >= totalPages} onClick={() => setCurrentPage(p => p + 1)} className="h-8">
-                  Next
+                <Button variant="outline" size="sm" disabled={safePage >= totalPages} onClick={() => setCurrentPage(p => p + 1)} className="h-8 px-2">
+                  <span className="hidden lg:inline">Next</span>
                   <ChevronRight className="w-4 h-4" />
                 </Button>
               </div>
