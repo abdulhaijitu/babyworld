@@ -346,63 +346,51 @@ export default function AdminExpenses() {
 
       {/* Summary Card */}
       <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-lg">
-            {'Total Expenses'}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-3xl font-bold text-destructive">৳{totalExpenses.toLocaleString()}</div>
-          <p className="text-sm text-muted-foreground">
-            {format(startDate, 'dd MMM', { locale: undefined })} - {format(endDate, 'dd MMM yyyy', { locale: undefined })}
+        <CardContent className="p-3">
+          <p className="text-[10px] lg:text-xs text-muted-foreground">Total Expenses</p>
+          <div className="text-2xl lg:text-3xl font-bold text-destructive">৳{totalExpenses.toLocaleString()}</div>
+          <p className="text-[10px] lg:text-sm text-muted-foreground">
+            {format(startDate, 'dd MMM')} - {format(endDate, 'dd MMM yyyy')}
           </p>
         </CardContent>
       </Card>
 
       {/* Filters */}
       <Card>
-        <CardContent className="pt-6">
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-muted-foreground" />
-              <span className="text-sm font-medium">{'Filter:'}</span>
+        <CardContent className="p-3">
+          <div className="space-y-2">
+            <div className="grid grid-cols-2 gap-2 lg:flex lg:items-center lg:gap-3">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" size="sm" className="h-8 text-xs lg:text-sm w-full lg:w-auto">
+                    <CalendarIcon className="w-3 h-3 mr-1 lg:w-4 lg:h-4 lg:mr-2" />
+                    {format(startDate, 'dd MMM')} - {format(endDate, 'dd MMM')}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="range"
+                    selected={{ from: startDate, to: endDate }}
+                    onSelect={(range) => {
+                      if (range?.from) setStartDate(range.from);
+                      if (range?.to) setEndDate(range.to);
+                    }}
+                    numberOfMonths={1}
+                  />
+                </PopoverContent>
+              </Popover>
+              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <SelectTrigger className="h-8 text-xs lg:text-sm lg:w-[180px]">
+                  <SelectValue placeholder="All Categories" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  {expenseCategories.map(cat => (
+                    <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-
-            {/* Date Range */}
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline" size="sm">
-                  <CalendarIcon className="w-4 h-4 mr-2" />
-                  {format(startDate, 'dd MMM')} - {format(endDate, 'dd MMM')}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="range"
-                  selected={{ from: startDate, to: endDate }}
-                  onSelect={(range) => {
-                    if (range?.from) setStartDate(range.from);
-                    if (range?.to) setEndDate(range.to);
-                  }}
-                  numberOfMonths={2}
-                />
-              </PopoverContent>
-            </Popover>
-
-            {/* Category Filter */}
-            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder={'All Categories'} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{'All Categories'}</SelectItem>
-                {expenseCategories.map(cat => (
-                  <SelectItem key={cat.value} value={cat.value}>
-                    {cat.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
           </div>
         </CardContent>
       </Card>
