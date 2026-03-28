@@ -238,60 +238,17 @@ export default function AdminIncome() {
   const isPending = createMutation.isPending || updateMutation.isPending;
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-4">
-        <div className="flex items-center gap-2">
-          <Input
-            type="month"
-            value={dateFilter}
-            onChange={(e) => setDateFilter(e.target.value)}
-            className="w-44"
-          />
-        </div>
+    <div className="space-y-4">
+      <div className="flex items-center justify-end gap-2">
+        <Input type="month" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} className="w-36 lg:w-44 h-8 lg:h-10 text-xs lg:text-sm" />
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Income</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">৳{grandTotal.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">Auto + Manual combined</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Ticket Revenue</CardTitle>
-            <Ticket className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">৳{(ticketRevenue || 0).toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">Auto-tracked from tickets</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Food & Membership</CardTitle>
-            <UtensilsCrossed className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">৳{((foodRevenue || 0) + (membershipRevenue || 0)).toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">Auto-tracked</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Other Income</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">৳{manualTotal.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">Manual entries</p>
-          </CardContent>
-        </Card>
+      {/* Summary Cards - always 4 cols */}
+      <div className="grid grid-cols-4 gap-2">
+        <Card><CardContent className="p-2"><p className="text-lg lg:text-2xl font-bold">৳{grandTotal.toLocaleString()}</p><p className="text-[10px] lg:text-xs text-muted-foreground">Total</p></CardContent></Card>
+        <Card><CardContent className="p-2"><p className="text-lg lg:text-2xl font-bold">৳{(ticketRevenue || 0).toLocaleString()}</p><p className="text-[10px] lg:text-xs text-muted-foreground">Ticket</p></CardContent></Card>
+        <Card><CardContent className="p-2"><p className="text-lg lg:text-2xl font-bold">৳{((foodRevenue || 0) + (membershipRevenue || 0)).toLocaleString()}</p><p className="text-[10px] lg:text-xs text-muted-foreground">Food+Mem</p></CardContent></Card>
+        <Card><CardContent className="p-2"><p className="text-lg lg:text-2xl font-bold">৳{manualTotal.toLocaleString()}</p><p className="text-[10px] lg:text-xs text-muted-foreground">Manual</p></CardContent></Card>
       </div>
 
       {/* Manual Income Section */}
