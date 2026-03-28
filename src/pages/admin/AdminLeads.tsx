@@ -470,7 +470,7 @@ export default function AdminLeads() {
       {/* Bulk Action Bar */}
       {selectedIds.size > 0 && (
         <Card>
-          <CardContent className="p-3 flex items-center gap-3 flex-wrap">
+          <CardContent className="p-2 flex items-center gap-2 flex-wrap">
             <span className="text-sm font-medium">{selectedIds.size}টি লিড সিলেক্টেড</span>
             <BulkMessageDialog leads={selectedLeads} onClose={() => setSelectedIds(new Set())} />
             <Button variant="ghost" size="sm" onClick={() => setSelectedIds(new Set())}>সিলেকশন বাতিল</Button>
