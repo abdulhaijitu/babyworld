@@ -563,32 +563,19 @@ export function AdminSidebar({ collapsed, onCollapse, onSignOut, userEmail, mobi
         />
       </aside>
 
-      {/* Mobile Trigger & Sheet */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 h-14 bg-card/95 backdrop-blur-sm border-b border-border flex items-center px-4">
-        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-9 w-9">
-              <Menu className="h-5 w-5" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="p-0 w-64">
-            <SidebarContent
-              collapsed={false}
-              onCollapse={onCollapse}
-              onSignOut={onSignOut}
-              userEmail={userEmail}
-              isMobile={true}
-              onMobileClose={() => setMobileOpen(false)}
-            />
-          </SheetContent>
-        </Sheet>
-        <div className="flex items-center gap-2 ml-3">
-          <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-            <img src={babyWorldLogo} alt="Baby World" className="h-5 w-auto" />
-          </div>
-          <span className="font-semibold text-sm text-foreground">Admin</span>
-        </div>
-      </div>
+      {/* Mobile Sheet */}
+      <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+        <SheetContent side="left" className="p-0 w-64">
+          <SidebarContent
+            collapsed={false}
+            onCollapse={onCollapse}
+            onSignOut={onSignOut}
+            userEmail={userEmail}
+            isMobile={true}
+            onMobileClose={() => setMobileOpen(false)}
+          />
+        </SheetContent>
+      </Sheet>
     </>
   );
 }
