@@ -376,17 +376,16 @@ export default function AdminUsers() {
       </div>
 
       {/* Dynamic Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-        {/* Total users card */}
+      <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-2 lg:gap-3">
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-muted">
+          <CardContent className="p-2 lg:p-4">
+            <div className="flex items-center gap-2 lg:gap-3">
+              <div className="p-1.5 lg:p-2 rounded-lg bg-muted hidden lg:block">
                 <Users className="w-5 h-5 text-foreground" />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Total</p>
-                {isLoading ? <Skeleton className="h-6 w-10" /> : <p className="text-xl font-bold">{userRoles?.length || 0}</p>}
+                <p className="text-[10px] lg:text-xs text-muted-foreground">Total</p>
+                {isLoading ? <Skeleton className="h-5 w-8" /> : <p className="text-lg lg:text-xl font-bold">{userRoles?.length || 0}</p>}
               </div>
             </div>
           </CardContent>
@@ -394,18 +393,12 @@ export default function AdminUsers() {
         {activeRoleStats.map(([role, count]) => {
           const config = roleConfig[role as AppRole];
           if (!config) return null;
-          const Icon = config.icon;
           return (
             <Card key={role}>
-              <CardContent className="p-4">
-                <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg ${config.color.split(' ')[0]}`}>
-                    <Icon className={`w-5 h-5 ${config.color.split(' ')[1]}`} />
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground truncate">{config.label}</p>
-                    {isLoading ? <Skeleton className="h-6 w-10" /> : <p className="text-xl font-bold">{count}</p>}
-                  </div>
+              <CardContent className="p-2 lg:p-4">
+                <div>
+                  <p className="text-[10px] lg:text-xs text-muted-foreground truncate">{config.label}</p>
+                  {isLoading ? <Skeleton className="h-5 w-8" /> : <p className="text-lg lg:text-xl font-bold">{count}</p>}
                 </div>
               </CardContent>
             </Card>
