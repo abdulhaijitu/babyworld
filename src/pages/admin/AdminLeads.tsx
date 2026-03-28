@@ -210,8 +210,8 @@ function WhatsAppLeadButton({ phone, name }: { phone: string; name: string }) {
   };
 
   return (
-    <Button variant="ghost" size="icon" title="WhatsApp-এ মেসেজ পাঠান" onClick={handleClick} className="text-green-600 hover:text-green-700">
-      <MessageSquare className="h-4 w-4" />
+    <Button variant="ghost" size="icon" title="WhatsApp-এ মেসেজ পাঠান" onClick={handleClick} className="h-7 w-7 text-green-600 hover:text-green-700">
+      <MessageSquare className="h-3.5 w-3.5" />
     </Button>
   );
 }
