@@ -124,7 +124,7 @@ export default function AdminLayout() {
             >
               <Menu className="h-4 w-4" />
             </Button>
-            <img src={babyWorldLogo} alt="Baby World" className="md:hidden h-7 w-auto" />
+            <img src={babyWorldLogo} alt="Baby World" className="md:hidden h-7 w-auto cursor-pointer" onClick={() => navigate('/admin')} />
             <h1 className="text-sm md:text-base font-semibold truncate">{pageTitle}</h1>
           </div>
           <NotificationBell />
