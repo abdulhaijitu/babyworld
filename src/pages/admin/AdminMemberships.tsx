@@ -648,7 +648,7 @@ export default function AdminMemberships() {
                   return paginatedItems.map((membership) => {
                     const remainingDays = getRemainingDays(membership.valid_till);
                     return (
-                      <div key={membership.id} className="rounded-lg border bg-card p-3 space-y-1.5">
+                      <div key={membership.id} className="rounded-lg border bg-card p-3 space-y-1.5 cursor-pointer hover:bg-muted/50 transition-colors" onClick={() => setSelectedMember(membership)}>
                         <div className="flex items-start justify-between">
                           <div className="flex-1 min-w-0">
                             <p className="font-medium text-sm truncate">{membership.member_name}</p>
