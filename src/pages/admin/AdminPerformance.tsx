@@ -82,9 +82,9 @@ export default function AdminPerformance() {
         </Dialog>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card><CardContent className="pt-6"><p className="text-sm text-muted-foreground">Total Reviews</p><p className="text-2xl font-bold">{reviews.length}</p></CardContent></Card>
-        <Card><CardContent className="pt-6 flex items-center gap-2"><div><p className="text-sm text-muted-foreground">Avg Rating</p><p className="text-2xl font-bold">{avgRating}</p></div><Star className="h-6 w-6 fill-yellow-400 text-yellow-400" /></CardContent></Card>
+      <div className="grid grid-cols-2 gap-2 lg:gap-4">
+        <Card><CardContent className="p-2 lg:pt-6 lg:p-4"><p className="text-[10px] lg:text-sm text-muted-foreground">Total Reviews</p><p className="text-lg lg:text-2xl font-bold">{reviews.length}</p></CardContent></Card>
+        <Card><CardContent className="p-2 lg:pt-6 lg:p-4 flex items-center gap-2"><div><p className="text-[10px] lg:text-sm text-muted-foreground">Avg Rating</p><p className="text-lg lg:text-2xl font-bold">{avgRating}</p></div><Star className="h-4 w-4 lg:h-6 lg:w-6 fill-yellow-400 text-yellow-400" /></CardContent></Card>
       </div>
 
       <Card>
