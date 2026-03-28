@@ -551,7 +551,7 @@ export default function AdminMemberships() {
       {/* Filters */}
       <Card>
         <CardContent className="p-4">
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="space-y-3 sm:space-y-0 sm:flex sm:flex-row sm:gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
@@ -561,39 +561,41 @@ export default function AdminMemberships() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder={'Status'} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{'All Status'}</SelectItem>
-                <SelectItem value="active">{'Active'}</SelectItem>
-                <SelectItem value="expired">{'Expired'}</SelectItem>
-                <SelectItem value="cancelled">{'Cancelled'}</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={packageFilter} onValueChange={setPackageFilter}>
-              <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder={'Package'} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{'All Package'}</SelectItem>
-                <SelectItem value="monthly">{'Monthly'}</SelectItem>
-                <SelectItem value="quarterly">{'Quarterly'}</SelectItem>
-                <SelectItem value="yearly">{'Yearly'}</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={paymentFilter} onValueChange={setPaymentFilter}>
-              <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder={'Payment'} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{'All Payment'}</SelectItem>
-                <SelectItem value="cash">{'Cash'}</SelectItem>
-                <SelectItem value="online">{'Online'}</SelectItem>
-                <SelectItem value="pending">{'Pending'}</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="grid grid-cols-3 gap-2 sm:flex sm:gap-4">
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-full sm:w-[140px]">
+                  <SelectValue placeholder={'Status'} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{'All Status'}</SelectItem>
+                  <SelectItem value="active">{'Active'}</SelectItem>
+                  <SelectItem value="expired">{'Expired'}</SelectItem>
+                  <SelectItem value="cancelled">{'Cancelled'}</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={packageFilter} onValueChange={setPackageFilter}>
+                <SelectTrigger className="w-full sm:w-[140px]">
+                  <SelectValue placeholder={'Package'} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{'All Package'}</SelectItem>
+                  <SelectItem value="monthly">{'Monthly'}</SelectItem>
+                  <SelectItem value="quarterly">{'Quarterly'}</SelectItem>
+                  <SelectItem value="yearly">{'Yearly'}</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={paymentFilter} onValueChange={setPaymentFilter}>
+                <SelectTrigger className="w-full sm:w-[140px]">
+                  <SelectValue placeholder={'Payment'} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{'All Payment'}</SelectItem>
+                  <SelectItem value="cash">{'Cash'}</SelectItem>
+                  <SelectItem value="online">{'Online'}</SelectItem>
+                  <SelectItem value="pending">{'Pending'}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </CardContent>
       </Card>
