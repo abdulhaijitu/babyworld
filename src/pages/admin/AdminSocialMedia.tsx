@@ -207,22 +207,22 @@ export default function AdminSocialMedia() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card><CardContent className="p-4 flex items-center gap-3">
-          <FileText className="h-8 w-8 text-primary" />
-          <div><p className="text-2xl font-bold">{stats.total}</p><p className="text-xs text-muted-foreground">Total Posts</p></div>
+      <div className="grid grid-cols-4 gap-2 lg:gap-4">
+        <Card><CardContent className="p-2 lg:p-4 flex items-center gap-2 lg:gap-3">
+          <FileText className="h-5 w-5 lg:h-8 lg:w-8 text-primary hidden lg:block" />
+          <div><p className="text-lg lg:text-2xl font-bold">{stats.total}</p><p className="text-[10px] lg:text-xs text-muted-foreground">Posts</p></div>
         </CardContent></Card>
-        <Card><CardContent className="p-4 flex items-center gap-3">
-          <CheckCircle className="h-8 w-8 text-emerald-500" />
-          <div><p className="text-2xl font-bold">{stats.published}</p><p className="text-xs text-muted-foreground">Published</p></div>
+        <Card><CardContent className="p-2 lg:p-4 flex items-center gap-2 lg:gap-3">
+          <CheckCircle className="h-5 w-5 lg:h-8 lg:w-8 text-emerald-500 hidden lg:block" />
+          <div><p className="text-lg lg:text-2xl font-bold">{stats.published}</p><p className="text-[10px] lg:text-xs text-muted-foreground">Published</p></div>
         </CardContent></Card>
-        <Card><CardContent className="p-4 flex items-center gap-3">
-          <Clock className="h-8 w-8 text-amber-500" />
-          <div><p className="text-2xl font-bold">{stats.scheduled}</p><p className="text-xs text-muted-foreground">Scheduled</p></div>
+        <Card><CardContent className="p-2 lg:p-4 flex items-center gap-2 lg:gap-3">
+          <Clock className="h-5 w-5 lg:h-8 lg:w-8 text-amber-500 hidden lg:block" />
+          <div><p className="text-lg lg:text-2xl font-bold">{stats.scheduled}</p><p className="text-[10px] lg:text-xs text-muted-foreground">Scheduled</p></div>
         </CardContent></Card>
-        <Card><CardContent className="p-4 flex items-center gap-3">
-          <Edit className="h-8 w-8 text-muted-foreground" />
-          <div><p className="text-2xl font-bold">{stats.draft}</p><p className="text-xs text-muted-foreground">Draft</p></div>
+        <Card><CardContent className="p-2 lg:p-4 flex items-center gap-2 lg:gap-3">
+          <Edit className="h-5 w-5 lg:h-8 lg:w-8 text-muted-foreground hidden lg:block" />
+          <div><p className="text-lg lg:text-2xl font-bold">{stats.draft}</p><p className="text-[10px] lg:text-xs text-muted-foreground">Draft</p></div>
         </CardContent></Card>
       </div>
 
