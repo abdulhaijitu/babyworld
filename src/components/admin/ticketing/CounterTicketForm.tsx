@@ -374,7 +374,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* LEFT COLUMN — Rides & Socks */}
-          <div className="border rounded-lg bg-card overflow-hidden flex flex-col" style={{ maxHeight: '75vh' }}>
+          <div className="border rounded-lg bg-card overflow-hidden flex flex-col max-h-[40vh] lg:max-h-[75vh]">
             <div className="p-3 border-b space-y-2">
               <div className="flex items-center justify-between">
                 <h3 className="font-semibold text-sm flex items-center gap-2">
