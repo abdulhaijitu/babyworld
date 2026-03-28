@@ -393,6 +393,7 @@ export default function AdminRides() {
               <p>No rides found</p>
             </div>
           ) : (
+            <>
             {/* Mobile Card View */}
             <div className="lg:hidden space-y-2">
               {paginatedRides.map((ride, idx) => (
