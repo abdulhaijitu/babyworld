@@ -4,8 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Table,
   TableBody,
@@ -24,7 +22,6 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -33,27 +30,14 @@ import {
   RefreshCw,
   Loader2,
   Search,
-  ShoppingCart,
   Check,
   X,
   Eye,
-  Filter,
-  Calendar,
   Printer,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format, startOfDay, endOfDay, subDays } from 'date-fns';
 import { printFoodReceipt } from '@/lib/printFoodReceipt';
-import { TableRowSkeleton } from '@/components/admin/AdminSkeleton';
-
-interface FoodItem {
-  id: string;
-  name: string;
-  name_bn: string | null;
-  category: 'snacks' | 'drinks' | 'meals';
-  price: number;
-  is_available: boolean;
-}
 
 interface FoodOrder {
   id: string;
@@ -93,7 +77,6 @@ export default function AdminFoodOrders() {
   const [dateFilter, setDateFilter] = useState<string>('today');
   const [updatingId, setUpdatingId] = useState<string | null>(null);
 
-  // Order detail dialog
   const [selectedOrder, setSelectedOrder] = useState<FoodOrder | null>(null);
   const [orderItems, setOrderItems] = useState<FoodOrderItem[]>([]);
   const [detailLoading, setDetailLoading] = useState(false);
@@ -224,26 +207,26 @@ export default function AdminFoodOrders() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'pending':
-        return <Badge variant="outline" className="text-yellow-600 border-yellow-300 bg-yellow-50 dark:bg-yellow-900/20">Pending</Badge>;
+        return <Badge variant="outline" className="text-yellow-600 border-yellow-300 bg-yellow-50 dark:bg-yellow-900/20 text-[10px] lg:text-xs">Pending</Badge>;
       case 'served':
-        return <Badge className="bg-green-500/10 text-green-600 border-green-300">Served</Badge>;
+        return <Badge className="bg-green-500/10 text-green-600 border-green-300 text-[10px] lg:text-xs">Served</Badge>;
       case 'cancelled':
-        return <Badge variant="destructive">Cancelled</Badge>;
+        return <Badge variant="destructive" className="text-[10px] lg:text-xs">Cancelled</Badge>;
       default:
-        return <Badge variant="secondary">{status}</Badge>;
+        return <Badge variant="secondary" className="text-[10px] lg:text-xs">{status}</Badge>;
     }
   };
 
   const getPaymentBadge = (type: string) => {
     switch (type) {
       case 'cash':
-        return <Badge variant="outline" className="text-blue-600 border-blue-300">Cash</Badge>;
+        return <Badge variant="outline" className="text-blue-600 border-blue-300 text-[10px] lg:text-xs">Cash</Badge>;
       case 'online':
-        return <Badge variant="outline" className="text-purple-600 border-purple-300">Online</Badge>;
+        return <Badge variant="outline" className="text-purple-600 border-purple-300 text-[10px] lg:text-xs">Online</Badge>;
       case 'pending':
-        return <Badge variant="outline" className="text-orange-600 border-orange-300">Pending</Badge>;
+        return <Badge variant="outline" className="text-orange-600 border-orange-300 text-[10px] lg:text-xs">Pending</Badge>;
       default:
-        return <Badge variant="secondary">{type}</Badge>;
+        return <Badge variant="secondary" className="text-[10px] lg:text-xs">{type}</Badge>;
     }
   };
 
@@ -262,17 +245,8 @@ export default function AdminFoodOrders() {
     .filter(o => o.status === 'served')
     .reduce((sum, o) => sum + o.total, 0);
 
-  const getCategoryLabel = (cat: string) => {
-    switch (cat) {
-      case 'snacks': return 'Snacks';
-      case 'drinks': return 'Drinks';
-      case 'meals': return 'Meals';
-      default: return cat;
-    }
-  };
-
   return (
-    <div className="space-y-6">
+    <div className="space-y-3 lg:space-y-6">
       {/* Header */}
       <div className="flex justify-end">
         <Button variant="outline" size="sm" onClick={fetchOrders} disabled={loading}>
@@ -281,197 +255,228 @@ export default function AdminFoodOrders() {
         </Button>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      {/* Stats — always 3-col */}
+      <div className="grid grid-cols-3 gap-2 lg:gap-4">
         <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Pending Orders</CardDescription>
-            <CardTitle className="text-2xl text-yellow-600">{pendingCount}</CardTitle>
+          <CardHeader className="p-2 lg:p-4 pb-1 lg:pb-2">
+            <CardDescription className="text-[10px] lg:text-sm">Pending</CardDescription>
+            <CardTitle className="text-lg lg:text-2xl text-yellow-600">{pendingCount}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Served</CardDescription>
-            <CardTitle className="text-2xl text-green-600">{servedCount}</CardTitle>
+          <CardHeader className="p-2 lg:p-4 pb-1 lg:pb-2">
+            <CardDescription className="text-[10px] lg:text-sm">Served</CardDescription>
+            <CardTitle className="text-lg lg:text-2xl text-green-600">{servedCount}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Revenue (Served)</CardDescription>
-            <CardTitle className="text-2xl">৳{totalRevenue.toLocaleString()}</CardTitle>
+          <CardHeader className="p-2 lg:p-4 pb-1 lg:pb-2">
+            <CardDescription className="text-[10px] lg:text-sm">Revenue</CardDescription>
+            <CardTitle className="text-lg lg:text-2xl">৳{totalRevenue.toLocaleString()}</CardTitle>
           </CardHeader>
         </Card>
       </div>
 
       {/* Filters */}
       <Card>
-        <CardContent className="pt-6">
-          <div className="flex flex-col sm:flex-row gap-3">
+        <CardContent className="p-3 lg:p-6">
+          <div className="space-y-2 lg:space-y-0 lg:flex lg:gap-3">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search order number or customer..."
+                placeholder="Search order or customer..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-9"
               />
             </div>
-            <Select value={dateFilter} onValueChange={setDateFilter}>
-              <SelectTrigger className="w-full sm:w-[140px]">
-                <Calendar className="w-4 h-4 mr-2" />
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="today">Today</SelectItem>
-                <SelectItem value="yesterday">Yesterday</SelectItem>
-                <SelectItem value="week">Last 7 Days</SelectItem>
-                <SelectItem value="month">Last 30 Days</SelectItem>
-                <SelectItem value="all">All Time</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full sm:w-[130px]">
-                <Filter className="w-4 h-4 mr-2" />
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="served">Served</SelectItem>
-                <SelectItem value="cancelled">Cancelled</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={paymentFilter} onValueChange={setPaymentFilter}>
-              <SelectTrigger className="w-full sm:w-[130px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Payment</SelectItem>
-                <SelectItem value="cash">Cash</SelectItem>
-                <SelectItem value="online">Online</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="grid grid-cols-3 gap-2 lg:flex lg:gap-3">
+              <Select value={dateFilter} onValueChange={setDateFilter}>
+                <SelectTrigger className="w-full lg:w-[140px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="today">Today</SelectItem>
+                  <SelectItem value="yesterday">Yesterday</SelectItem>
+                  <SelectItem value="week">7 Days</SelectItem>
+                  <SelectItem value="month">30 Days</SelectItem>
+                  <SelectItem value="all">All</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-full lg:w-[130px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="served">Served</SelectItem>
+                  <SelectItem value="cancelled">Cancelled</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={paymentFilter} onValueChange={setPaymentFilter}>
+                <SelectTrigger className="w-full lg:w-[130px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Pay</SelectItem>
+                  <SelectItem value="cash">Cash</SelectItem>
+                  <SelectItem value="online">Online</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Orders Table */}
+      {/* Orders */}
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">
+        <CardHeader className="p-3 lg:p-6 pb-2 lg:pb-4">
+          <CardTitle className="text-base lg:text-lg">
             Orders ({filteredOrders.length})
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Order #</TableHead>
-                  <TableHead>Customer</TableHead>
-                  <TableHead>Total</TableHead>
-                  <TableHead className="hidden lg:table-cell">Discount</TableHead>
-                  <TableHead>Payment</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Time</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {loading ? (
-                  <>
-                    <TableRowSkeleton />
-                    <TableRowSkeleton />
-                    <TableRowSkeleton />
-                  </>
-                ) : filteredOrders.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
-                      No orders found
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  filteredOrders.map((order) => (
-                    <TableRow key={order.id}>
-                      <TableCell className="font-mono text-sm font-medium">
-                        {order.order_number}
-                      </TableCell>
-                      <TableCell>{order.customer_name || '—'}</TableCell>
-                      <TableCell className="font-semibold">৳{order.total}</TableCell>
-                      <TableCell className="hidden lg:table-cell">
-                        {order.discount_amount > 0 ? (
-                          <div className="space-y-0.5">
-                            <span className="text-sm text-orange-600 dark:text-orange-400 font-medium">-৳{order.discount_amount}</span>
-                            {order.coupon_code && (
-                              <Badge variant="outline" className="text-xs block w-fit">{order.coupon_code}</Badge>
+        <CardContent className="p-3 lg:p-6 pt-0">
+          {loading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            </div>
+          ) : filteredOrders.length === 0 ? (
+            <p className="text-center py-8 text-muted-foreground text-sm">No orders found</p>
+          ) : (
+            <>
+              {/* Mobile Card View */}
+              <div className="lg:hidden space-y-2">
+                {filteredOrders.map((order) => (
+                  <div key={order.id} className="border rounded-lg p-2.5 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono text-xs font-medium">{order.order_number}</span>
+                      <div className="flex items-center gap-1.5">
+                        {getStatusBadge(order.status)}
+                        <span className="text-[10px] text-muted-foreground">
+                          {format(new Date(order.created_at), 'hh:mm a')}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-muted-foreground truncate max-w-[120px]">
+                        {order.customer_name || '—'}
+                      </span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-semibold">৳{order.total}</span>
+                        {getPaymentBadge(order.payment_type)}
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-end gap-1 pt-0.5">
+                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleViewOrder(order)}>
+                        <Eye className="h-3.5 w-3.5" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handlePrintOrder(order)}>
+                        <Printer className="h-3.5 w-3.5" />
+                      </Button>
+                      {order.status === 'pending' && (
+                        <>
+                          <Button
+                            variant="ghost" size="icon"
+                            className="h-7 w-7 text-green-600 hover:text-green-700 hover:bg-green-50"
+                            onClick={() => handleUpdateStatus(order.id, 'served')}
+                            disabled={updatingId === order.id}
+                          >
+                            {updatingId === order.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Check className="h-3.5 w-3.5" />}
+                          </Button>
+                          <Button
+                            variant="ghost" size="icon"
+                            className="h-7 w-7 text-destructive hover:text-destructive hover:bg-destructive/10"
+                            onClick={() => handleUpdateStatus(order.id, 'cancelled')}
+                            disabled={updatingId === order.id}
+                          >
+                            <X className="h-3.5 w-3.5" />
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop Table View */}
+              <div className="hidden lg:block overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Order #</TableHead>
+                      <TableHead>Customer</TableHead>
+                      <TableHead>Total</TableHead>
+                      <TableHead>Discount</TableHead>
+                      <TableHead>Payment</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Time</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredOrders.map((order) => (
+                      <TableRow key={order.id}>
+                        <TableCell className="font-mono text-sm font-medium">
+                          {order.order_number}
+                        </TableCell>
+                        <TableCell>{order.customer_name || '—'}</TableCell>
+                        <TableCell className="font-semibold">৳{order.total}</TableCell>
+                        <TableCell>
+                          {order.discount_amount > 0 ? (
+                            <div className="space-y-0.5">
+                              <span className="text-sm text-orange-600 dark:text-orange-400 font-medium">-৳{order.discount_amount}</span>
+                              {order.coupon_code && (
+                                <Badge variant="outline" className="text-xs block w-fit">{order.coupon_code}</Badge>
+                              )}
+                            </div>
+                          ) : (
+                            <span className="text-muted-foreground text-xs">—</span>
+                          )}
+                        </TableCell>
+                        <TableCell>{getPaymentBadge(order.payment_type)}</TableCell>
+                        <TableCell>{getStatusBadge(order.status)}</TableCell>
+                        <TableCell className="text-sm text-muted-foreground">
+                          {format(new Date(order.created_at), 'hh:mm a')}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex items-center justify-end gap-1">
+                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleViewOrder(order)}>
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handlePrintOrder(order)}>
+                              <Printer className="h-4 w-4" />
+                            </Button>
+                            {order.status === 'pending' && (
+                              <>
+                                <Button
+                                  variant="ghost" size="icon"
+                                  className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50"
+                                  onClick={() => handleUpdateStatus(order.id, 'served')}
+                                  disabled={updatingId === order.id}
+                                >
+                                  {updatingId === order.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
+                                </Button>
+                                <Button
+                                  variant="ghost" size="icon"
+                                  className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+                                  onClick={() => handleUpdateStatus(order.id, 'cancelled')}
+                                  disabled={updatingId === order.id}
+                                >
+                                  <X className="h-4 w-4" />
+                                </Button>
+                              </>
                             )}
                           </div>
-                        ) : (
-                          <span className="text-muted-foreground text-xs">—</span>
-                        )}
-                      </TableCell>
-                      <TableCell>{getPaymentBadge(order.payment_type)}</TableCell>
-                      <TableCell>{getStatusBadge(order.status)}</TableCell>
-                      <TableCell className="text-sm text-muted-foreground">
-                        {format(new Date(order.created_at), 'hh:mm a')}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end gap-1">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={() => handleViewOrder(order)}
-                            title="View details"
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={() => handlePrintOrder(order)}
-                            title="Print receipt"
-                          >
-                            <Printer className="h-4 w-4" />
-                          </Button>
-                          {order.status === 'pending' && (
-                            <>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50"
-                                onClick={() => handleUpdateStatus(order.id, 'served')}
-                                disabled={updatingId === order.id}
-                                title="Mark as served"
-                              >
-                                {updatingId === order.id ? (
-                                  <Loader2 className="h-4 w-4 animate-spin" />
-                                ) : (
-                                  <Check className="h-4 w-4" />
-                                )}
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
-                                onClick={() => handleUpdateStatus(order.id, 'cancelled')}
-                                disabled={updatingId === order.id}
-                                title="Cancel order"
-                              >
-                                <X className="h-4 w-4" />
-                              </Button>
-                            </>
-                          )}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </>
+          )}
         </CardContent>
       </Card>
 
@@ -582,7 +587,6 @@ export default function AdminFoodOrders() {
           )}
         </DialogContent>
       </Dialog>
-
     </div>
   );
 }
