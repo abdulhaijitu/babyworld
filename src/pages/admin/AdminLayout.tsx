@@ -109,7 +109,7 @@ export default function AdminLayout() {
       />
       
       <main className={cn(
-        "flex-1 transition-all duration-300 min-h-screen",
+        "flex-1 transition-all duration-300 min-h-screen min-w-0 overflow-x-hidden",
         "md:pt-0 pt-0",
         "pb-20 md:pb-0"
       )}>
