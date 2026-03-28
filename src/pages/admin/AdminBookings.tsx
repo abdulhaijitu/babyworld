@@ -432,70 +432,66 @@ export default function AdminBookings() {
             </div>
             
             {/* Filters */}
-            <div className="flex flex-col md:flex-row gap-3 mt-4">
-              <div className="relative flex-1">
+            <div className="space-y-2 mt-3">
+              <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   placeholder={'Name or phone...'}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9"
+                  className="pl-9 h-8"
                 />
               </div>
-              
-              <Select value={dateRangeFilter} onValueChange={setDateRangeFilter}>
-                <SelectTrigger className="w-full md:w-[130px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{'All Time'}</SelectItem>
-                  <SelectItem value="today">{'Today'}</SelectItem>
-                  <SelectItem value="week">{'This Week'}</SelectItem>
-                  <SelectItem value="month">{'This Month'}</SelectItem>
-                </SelectContent>
-              </Select>
-              
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-full md:w-[120px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{'All'}</SelectItem>
-                  <SelectItem value="confirmed">{'Confirmed'}</SelectItem>
-                  <SelectItem value="pending">{'Pending'}</SelectItem>
-                  <SelectItem value="cancelled">{'Cancelled'}</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="grid grid-cols-4 gap-2 items-center">
+                <Select value={dateRangeFilter} onValueChange={setDateRangeFilter}>
+                  <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Time</SelectItem>
+                    <SelectItem value="today">Today</SelectItem>
+                    <SelectItem value="week">This Week</SelectItem>
+                    <SelectItem value="month">This Month</SelectItem>
+                  </SelectContent>
+                </Select>
+                
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All</SelectItem>
+                    <SelectItem value="confirmed">Confirmed</SelectItem>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="cancelled">Cancelled</SelectItem>
+                  </SelectContent>
+                </Select>
 
-              <Select value={paymentFilter} onValueChange={setPaymentFilter}>
-                <SelectTrigger className="w-full md:w-[120px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{'Payment'}</SelectItem>
-                  <SelectItem value="paid">{'Paid'}</SelectItem>
-                  <SelectItem value="unpaid">{'Unpaid'}</SelectItem>
-                  <SelectItem value="refunded">{'Refunded'}</SelectItem>
-                </SelectContent>
-              </Select>
+                <Select value={paymentFilter} onValueChange={setPaymentFilter}>
+                  <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Payment</SelectItem>
+                    <SelectItem value="paid">Paid</SelectItem>
+                    <SelectItem value="unpaid">Unpaid</SelectItem>
+                    <SelectItem value="refunded">Refunded</SelectItem>
+                  </SelectContent>
+                </Select>
 
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" className="w-full md:w-auto">
-                    <CalendarDays className="w-4 h-4 mr-2" />
-                    {dateFilter ? format(dateFilter, 'dd MMM') : ('Date')}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                  <Calendar mode="single" selected={dateFilter} onSelect={setDateFilter} />
-                </PopoverContent>
-              </Popover>
-              
-              {hasActiveFilters && (
-                <Button variant="ghost" size="icon" onClick={clearFilters}>
-                  <X className="w-4 h-4" />
-                </Button>
-              )}
+                <div className="flex gap-1">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" size="sm" className="h-8 flex-1 text-xs px-2">
+                        <CalendarDays className="w-3.5 h-3.5 mr-1" />
+                        {dateFilter ? format(dateFilter, 'dd/MM') : 'Date'}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0">
+                      <Calendar mode="single" selected={dateFilter} onSelect={setDateFilter} />
+                    </PopoverContent>
+                  </Popover>
+                  {hasActiveFilters && (
+                    <Button variant="ghost" size="icon" onClick={clearFilters} className="h-8 w-8 shrink-0">
+                      <X className="w-3.5 h-3.5" />
+                    </Button>
+                  )}
+                </div>
+              </div>
             </div>
           </CardHeader>
           <CardContent>
