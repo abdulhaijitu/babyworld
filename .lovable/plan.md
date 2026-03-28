@@ -1,52 +1,67 @@
 
 
-## `/admin/bookings` মোবাইল রেসপনসিভ অপ্টিমাইজেশন
+## `/admin/events` মোবাইল রেসপনসিভ অপ্টিমাইজেশন
 
-### সমস্যা (390px ভিউপোর্ট)
+তিনটি সাব-পেইজ আছে: Events (bookings list), Event Packages, Event Calendar। সবগুলোতে মোবাইল সমস্যা আছে।
 
-1. **স্ট্যাটস গ্রিড** — `grid-cols-2 lg:grid-cols-4` মোবাইলে ২x২ হয়ে অনেক জায়গা নেয়
-2. **হেডার বাটন** — New Booking, Export, Refresh, View Toggle একসাথে 390px-এ overflow
-3. **ফিল্টার** — ৪টি সিলেক্ট + ক্যালেন্ডার পপওভার মোবাইলে ভার্টিক্যালি স্ট্যাক হয়ে অনেক স্পেস নেয়
-4. **টেবিল** — ৬ কলাম 390px-এ cramped, ড্রপডাউন অ্যাকশন দেখা যায় না
-5. **BookingsListTab** — একই সমস্যা (আলাদা কম্পোনেন্ট, একই প্যাটার্ন)
+### সমস্যা চিহ্নিত (390px ভিউপোর্ট)
+
+**AdminEvents.tsx:**
+1. স্ট্যাটস `grid-cols-2 lg:grid-cols-4` — মোবাইলে ২x২ হয়ে অনেক জায়গা নেয়
+2. ফিল্টার `flex-col md:flex-row` — মোবাইলে ভার্টিক্যালি স্ট্যাক হয়ে স্পেস নেয়
+3. ৬-কলাম টেবিল 390px-এ cramped, ড্রপডাউন অ্যাকশন কাজ করে না ভালো
+4. New Event বাটন টেক্সটসহ — মোবাইলে আইকন-অনলি হলে ভালো
+
+**AdminEventPackages.tsx:**
+1. ১০-কলাম টেবিল (drag, #, image, name, price, guests, duration, features, status, actions) — মোবাইলে সম্পূর্ণ ভাঙা
+2. কোনো মোবাইল কার্ড ভিউ নেই
+
+**AdminEventCalendar.tsx:**
+1. `grid-cols-1 lg:grid-cols-3` — মোবাইলে ক্যালেন্ডার + ইভেন্ট তালিকা ভার্টিক্যালি স্ট্যাক, ঠিক আছে কিন্তু ক্যালেন্ডার হেডার বাটন টাইট
+2. সামগ্রিকভাবে এটি তুলনামূলক ভালো
+
+---
 
 ### পরিকল্পনা
 
-**ফাইল ১: `src/pages/admin/AdminBookings.tsx`**
+**ফাইল ১: `src/pages/admin/AdminEvents.tsx`**
 
-**1. স্ট্যাটস ৪-কলাম কমপ্যাক্ট**
-- `grid-cols-2 lg:grid-cols-4` → `grid-cols-4` সবসময়
-- মোবাইলে `p-2`, ফন্ট `text-lg`, লেবেল `text-[10px]`
-- `CardContent` সেকশন মোবাইলে হাইড (`hidden lg:block`)
-
-**2. হেডার বাটন কমপ্যাক্ট**
-- মোবাইলে বাটন টেক্সট হাইড, শুধু আইকন দেখানো
-- View Toggle ছোট করা
-
-**3. ফিল্টার ২-রো গ্রিড**
-- সার্চ ফুল-উইডথ উপরে
-- নিচে ৪টি ফিল্টার `grid grid-cols-4 gap-2` এ কমপ্যাক্ট, `h-8` ছোট ট্রিগার
-
-**4. মোবাইলে কার্ড ভিউ, ডেস্কটপে টেবিল**
-- `lg:hidden` — প্রতিটি বুকিং কমপ্যাক্ট কার্ড:
+1. **স্ট্যাটস** — `grid-cols-4` সবসময়, `p-2`, `text-lg` ভ্যালু, `text-[10px]` লেবেল
+2. **হেডার** — New Event বাটন মোবাইলে আইকন-অনলি, Refresh আইকন-অনলি
+3. **ফিল্টার** — সার্চ ফুল-উইডথ উপরে, নিচে type + status `grid-cols-2 gap-2` এ `h-8` ছোট ট্রিগার
+4. **মোবাইল কার্ড ভিউ** (`lg:hidden`):
 ```text
 ┌─────────────────────────────────┐
-│ 25 Mar 2026  [Confirmed] [Paid]│
-│ 10:00-11:00 · Parent Name      │
-│ 📞 01700... · Child+Guardian   │
-│    [👁] [🖨] [💬] [✓] [✗]     │
+│ 25 Mar 2026  [Birthday][Confirmed]│
+│ 10:00-1:00 · Parent Name         │
+│ 📞 01700...            [Paid]    │
+│    [👁] [✓Confirm] [💰Paid] [✗] │
 └─────────────────────────────────┘
 ```
-- `hidden lg:block` — বর্তমান টেবিল রাখা
+5. ডেস্কটপে বর্তমান টেবিল রাখা (`hidden lg:block`)
 
-**ফাইল ২: `src/components/admin/bookings/BookingsListTab.tsx`**
+**ফাইল ২: `src/pages/admin/AdminEventPackages.tsx`**
 
-একই প্যাটার্ন প্রয়োগ:
-- স্ট্যাটস `grid-cols-4` কমপ্যাক্ট
-- ফিল্টার `grid-cols-3 gap-2`
-- মোবাইল কার্ড ভিউ `lg:hidden`
+1. **মোবাইল কার্ড ভিউ** (`lg:hidden`) — প্রতিটি প্যাকেজ কার্ড:
+```text
+┌─────────────────────────────────┐
+│ [img] Package Name    [Active]  │
+│ ৳5,000 · 30 guests · 3h        │
+│ [feature] [feature] [+2]       │
+│         [✏️ Edit] [🗑 Delete]   │
+└─────────────────────────────────┘
+```
+2. ডেস্কটপে বর্তমান টেবিল রাখা (`hidden lg:block`)
+3. হেডার বাটন — Refresh মোবাইলে আইকন-অনলি
+
+**ফাইল ৩: `src/pages/admin/AdminEventCalendar.tsx`**
+
+1. ক্যালেন্ডার হেডার — "Today" বাটন মোবাইলে ছোট (`text-xs h-7`)
+2. ইভেন্ট কার্ড — ছোট প্যাডিং `p-2`
+3. সামগ্রিকভাবে ছোট পরিবর্তন — এটি ইতিমধ্যে যুক্তিসঙ্গতভাবে রেসপনসিভ
 
 ### ফাইল
-- `src/pages/admin/AdminBookings.tsx`
-- `src/components/admin/bookings/BookingsListTab.tsx`
+- `src/pages/admin/AdminEvents.tsx`
+- `src/pages/admin/AdminEventPackages.tsx`
+- `src/pages/admin/AdminEventCalendar.tsx`
 
