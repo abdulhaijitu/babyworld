@@ -65,7 +65,7 @@ const defaultForm: PackageFormState = {
 
 function PackageFormFields({ form, setForm }: { form: PackageFormState; setForm: (f: PackageFormState) => void }) {
   return (
-    <div className="px-6 space-y-6 pb-2">
+    <div className="px-4 sm:px-6 space-y-6 pb-2">
       {/* Section: PACKAGE INFORMATION */}
       <div>
         <div className="flex items-center gap-2 mb-1">
@@ -73,7 +73,7 @@ function PackageFormFields({ form, setForm }: { form: PackageFormState; setForm:
         </div>
         <Separator className="mb-4" />
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">Package Name *</Label>
             <Input
@@ -96,7 +96,7 @@ function PackageFormFields({ form, setForm }: { form: PackageFormState; setForm:
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">Validity</Label>
             <div className="relative">
@@ -123,7 +123,7 @@ function PackageFormFields({ form, setForm }: { form: PackageFormState; setForm:
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">Allowed Person (Guardian)</Label>
             <select
@@ -150,7 +150,7 @@ function PackageFormFields({ form, setForm }: { form: PackageFormState; setForm:
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-muted-foreground">Entrance Method</Label>
             <select
@@ -177,7 +177,7 @@ function PackageFormFields({ form, setForm }: { form: PackageFormState; setForm:
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
           <div className="flex items-end pb-1 gap-2">
             <Switch
               checked={form.is_active}
@@ -533,8 +533,8 @@ export default function AdminMembershipPackages() {
 
       {/* Edit Dialog */}
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
-        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto p-0">
-          <DialogHeader className="px-6 pt-6 pb-2">
+        <DialogContent className="sm:max-w-2xl max-h-[85vh] overflow-y-auto p-0">
+          <DialogHeader className="px-4 sm:px-6 pt-6 pb-2">
             <DialogTitle className="flex items-center gap-2 text-xl">
               <Package className="h-5 w-5 text-primary" />
               Edit Package
@@ -543,7 +543,7 @@ export default function AdminMembershipPackages() {
 
           <PackageFormFields form={editForm} setForm={setEditForm} />
 
-          <div className="px-6 pb-6 pt-2">
+          <div className="px-4 sm:px-6 pb-6 pt-2">
             <Separator className="mb-4" />
             <div className="grid grid-cols-2 gap-3">
               <Button variant="outline" className="w-full" onClick={() => setEditOpen(false)}>
@@ -559,8 +559,8 @@ export default function AdminMembershipPackages() {
 
       {/* Create Dialog */}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto p-0">
-          <DialogHeader className="px-6 pt-6 pb-2">
+        <DialogContent className="sm:max-w-2xl max-h-[85vh] overflow-y-auto p-0">
+          <DialogHeader className="px-4 sm:px-6 pt-6 pb-2">
             <DialogTitle className="flex items-center gap-2 text-xl">
               <Package className="h-5 w-5 text-primary" />
               Create New Package
@@ -569,7 +569,7 @@ export default function AdminMembershipPackages() {
 
           <PackageFormFields form={createForm} setForm={setCreateForm} />
 
-          <div className="px-6 pb-6 pt-2">
+          <div className="px-4 sm:px-6 pb-6 pt-2">
             <Separator className="mb-4" />
             <div className="grid grid-cols-2 gap-3">
               <Button variant="outline" className="w-full" onClick={() => setCreateOpen(false)}>
