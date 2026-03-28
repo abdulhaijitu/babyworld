@@ -520,7 +520,7 @@ export default function AdminLeads() {
                               <span className="ml-1">· F/U: {format(new Date(lead.follow_up_date), 'dd MMM')}</span>
                             )}
                           </span>
-                          <div className="flex gap-0.5">
+                          <div className="flex gap-0.5 flex-shrink-0">
                             <SMSButton phone={lead.phone} name={lead.name} />
                             <WhatsAppLeadButton phone={lead.phone} name={lead.name} />
                             <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(lead)}>
