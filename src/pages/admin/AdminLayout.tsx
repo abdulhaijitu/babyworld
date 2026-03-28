@@ -127,7 +127,7 @@ export default function AdminLayout() {
             <img src={babyWorldLogo} alt="Baby World" className="md:hidden h-7 w-auto cursor-pointer" onClick={() => navigate('/admin')} />
           </div>
           <div className="flex items-center gap-2">
-            <h1 className="text-sm md:text-base font-semibold truncate">{pageTitle}</h1>
+            <h1 className="text-[13px] md:text-base font-semibold truncate max-w-[180px] sm:max-w-none">{pageTitle}</h1>
             <NotificationBell />
           </div>
         </div>
