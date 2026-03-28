@@ -157,17 +157,17 @@ export default function AdminIncomeCategories() {
   const isPending = createMutation.isPending || updateMutation.isPending;
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-4">
+    <div className="space-y-4 overflow-hidden">
+      <div className="flex items-center justify-end gap-2">
 
         <Dialog open={dialogOpen} onOpenChange={(open) => { if (!open) closeDialog(); else setDialogOpen(true); }}>
           <DialogTrigger asChild>
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              Add Category
+            <Button size="sm">
+              <Plus className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">Add Category</span>
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-md">
+          <DialogContent className="max-w-[95vw] sm:max-w-md">
             <DialogHeader>
               <DialogTitle>{editingCategory ? 'Edit Category' : 'Add New Category'}</DialogTitle>
               <DialogDescription>
@@ -253,59 +253,52 @@ export default function AdminIncomeCategories() {
               <p>No categories found</p>
             </div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Label</TableHead>
-                  <TableHead>System Name</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Color</TableHead>
-                  <TableHead>Status</TableHead>
-                  {isAdmin && <TableHead className="text-right">Actions</TableHead>}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+            <>
+              {/* Mobile card view */}
+              <div className="lg:hidden divide-y divide-border">
                 {categories?.map((cat) => (
-                  <TableRow key={cat.id}>
-                    <TableCell className="font-medium">{cat.label}</TableCell>
-                    <TableCell className="font-mono text-sm text-muted-foreground">{cat.name}</TableCell>
-                    <TableCell>
-                      {cat.is_system ? (
-                        <Badge variant="secondary" className="gap-1">
-                          <Lock className="w-3 h-3" />
-                          System
-                        </Badge>
-                      ) : (
-                        <Badge variant="outline">Manual</Badge>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={cat.color}>{cat.label}</Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Switch
-                        checked={cat.is_active}
-                        onCheckedChange={(checked) => toggleMutation.mutate({ id: cat.id, is_active: checked })}
-                      />
-                    </TableCell>
-                    {isAdmin && (
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end gap-1">
-                          <Button variant="ghost" size="icon" onClick={() => openEdit(cat)}>
-                            <Pencil className="w-4 h-4" />
+                  <div key={cat.id} className="p-3 space-y-2">
+                    <div className="flex items-center justify-between gap-2 min-w-0">
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium truncate">{cat.label}</p>
+                        <p className="text-xs font-mono text-muted-foreground truncate">{cat.name}</p>
+                      </div>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <Switch
+                          checked={cat.is_active}
+                          onCheckedChange={(checked) => toggleMutation.mutate({ id: cat.id, is_active: checked })}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-1.5 min-w-0 flex-wrap">
+                        {cat.is_system ? (
+                          <Badge variant="secondary" className="gap-1 text-[10px] px-1.5 py-0.5">
+                            <Lock className="w-2.5 h-2.5" />
+                            System
+                          </Badge>
+                        ) : (
+                          <Badge variant="outline" className="text-[10px] px-1.5 py-0.5">Manual</Badge>
+                        )}
+                        <Badge className={`${cat.color} text-[10px] px-1.5 py-0.5`}>{cat.label}</Badge>
+                      </div>
+                      {isAdmin && (
+                        <div className="flex items-center gap-0.5 flex-shrink-0">
+                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(cat)}>
+                            <Pencil className="w-3.5 h-3.5" />
                           </Button>
                           {!cat.is_system && (
                             <AlertDialog>
                               <AlertDialogTrigger asChild>
-                                <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
-                                  <Trash2 className="w-4 h-4" />
+                                <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive">
+                                  <Trash2 className="w-3.5 h-3.5" />
                                 </Button>
                               </AlertDialogTrigger>
                               <AlertDialogContent>
                                 <AlertDialogHeader>
                                   <AlertDialogTitle>Delete Category?</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    This will permanently delete "{cat.label}". Existing incomes with this category won't be affected.
+                                    This will permanently delete "{cat.label}".
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
@@ -321,12 +314,90 @@ export default function AdminIncomeCategories() {
                             </AlertDialog>
                           )}
                         </div>
-                      </TableCell>
-                    )}
-                  </TableRow>
+                      )}
+                    </div>
+                  </div>
                 ))}
-              </TableBody>
-            </Table>
+              </div>
+
+              {/* Desktop table view */}
+              <div className="hidden lg:block">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Label</TableHead>
+                      <TableHead>System Name</TableHead>
+                      <TableHead>Type</TableHead>
+                      <TableHead>Color</TableHead>
+                      <TableHead>Status</TableHead>
+                      {isAdmin && <TableHead className="text-right">Actions</TableHead>}
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {categories?.map((cat) => (
+                      <TableRow key={cat.id}>
+                        <TableCell className="font-medium">{cat.label}</TableCell>
+                        <TableCell className="font-mono text-sm text-muted-foreground">{cat.name}</TableCell>
+                        <TableCell>
+                          {cat.is_system ? (
+                            <Badge variant="secondary" className="gap-1">
+                              <Lock className="w-3 h-3" />
+                              System
+                            </Badge>
+                          ) : (
+                            <Badge variant="outline">Manual</Badge>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={cat.color}>{cat.label}</Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Switch
+                            checked={cat.is_active}
+                            onCheckedChange={(checked) => toggleMutation.mutate({ id: cat.id, is_active: checked })}
+                          />
+                        </TableCell>
+                        {isAdmin && (
+                          <TableCell className="text-right">
+                            <div className="flex items-center justify-end gap-1">
+                              <Button variant="ghost" size="icon" onClick={() => openEdit(cat)}>
+                                <Pencil className="w-4 h-4" />
+                              </Button>
+                              {!cat.is_system && (
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
+                                      <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>Delete Category?</AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        This will permanently delete "{cat.label}". Existing incomes with this category won't be affected.
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction
+                                        onClick={() => deleteMutation.mutate(cat.id)}
+                                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                      >
+                                        Delete
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              )}
+                            </div>
+                          </TableCell>
+                        )}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </>
           )}
         </CardContent>
       </Card>
