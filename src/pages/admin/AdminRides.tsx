@@ -493,6 +493,7 @@ export default function AdminRides() {
                 </TableBody>
               </Table>
             </div>
+            </>
           )}
 
           {/* Pagination */}
