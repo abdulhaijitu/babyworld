@@ -47,7 +47,8 @@ import {
   DoorOpen,
   DoorClosed,
   CreditCard,
-  Users
+  Users,
+  ArrowUp
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
