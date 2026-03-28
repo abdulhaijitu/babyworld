@@ -548,8 +548,8 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                       {showHistory ? <ChevronUp className="h-3.5 w-3.5 ml-auto" /> : <ChevronDown className="h-3.5 w-3.5 ml-auto" />}
                     </button>
                     {showHistory && (
-                      <div className="border-t max-h-36 overflow-y-auto">
-                        <table className="w-full text-[11px]">
+                    <div className="border-t max-h-36 overflow-y-auto overflow-x-auto">
+                        <table className="w-full text-[11px] min-w-[340px]">
                           <thead className="bg-muted/50 sticky top-0">
                             <tr>
                               <th className="text-left px-2 py-1 font-medium text-muted-foreground">Date</th>
