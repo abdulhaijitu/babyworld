@@ -94,9 +94,9 @@ export default function AdminReports() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 overflow-hidden">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-3">
         <div className="flex items-center gap-2 flex-wrap">
           <Select value={dateRange} onValueChange={(v) => setDateRange(v as DateRangeType)}>
             <SelectTrigger className="w-[140px]">
@@ -184,8 +184,8 @@ export default function AdminReports() {
               onClick={() => setShowPrintPreview(true)}
               disabled={!data}
             >
-              <Printer className="w-4 h-4 mr-2" />
-              {'Print'}
+              <Printer className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">{'Print'}</span>
             </Button>
             <Button 
               variant="outline" 
@@ -193,8 +193,8 @@ export default function AdminReports() {
               onClick={() => exportToCSV('summary')}
               disabled={!data}
             >
-              <Download className="w-4 h-4 mr-2" />
-              {'Export'}
+              <Download className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">{'Export'}</span>
             </Button>
           </div>
         </div>

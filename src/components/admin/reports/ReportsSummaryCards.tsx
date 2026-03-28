@@ -75,15 +75,15 @@ export function ReportsSummaryCards({ data, isLoading }: ReportsSummaryCardsProp
         const Icon = card.icon;
         return (
           <Card key={index} className="hover:shadow-md transition-shadow">
-            <CardContent className="p-4">
-              <div className="flex items-start justify-between mb-2">
-                <div className={`p-2 rounded-lg ${card.color}`}>
-                  <Icon className="w-4 h-4" />
+            <CardContent className="p-2 sm:p-4">
+              <div className="flex items-start justify-between mb-1 sm:mb-2">
+                <div className={`p-1.5 sm:p-2 rounded-lg ${card.color}`}>
+                  <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
               </div>
-              <p className="text-xs text-muted-foreground mb-1">{card.title}</p>
-              <p className="text-lg font-bold">{card.value}</p>
-              <p className="text-xs text-muted-foreground">{card.subtitle}</p>
+              <p className="text-[10px] sm:text-xs text-muted-foreground mb-0.5 sm:mb-1">{card.title}</p>
+              <p className="text-base sm:text-lg font-bold">{card.value}</p>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">{card.subtitle}</p>
             </CardContent>
           </Card>
         );
