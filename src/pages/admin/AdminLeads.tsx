@@ -400,7 +400,7 @@ export default function AdminLeads() {
               <span className="hidden lg:inline">নতুন লিড</span>
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+          <DialogContent className="max-w-[95vw] sm:max-w-2xl max-h-[85vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{editingLead ? 'লিড এডিট করুন' : 'নতুন লিড যোগ করুন'}</DialogTitle>
             </DialogHeader>
