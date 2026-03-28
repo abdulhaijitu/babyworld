@@ -905,6 +905,26 @@ export default function AdminTicketing() {
           )}
         </DialogContent>
       </Dialog>
+      {/* Back to Top floating button - mobile only */}
+      <AnimatePresence>
+        {showTopButton && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.2 }}
+            className="fixed bottom-24 right-4 z-50 lg:hidden"
+          >
+            <Button
+              size="icon"
+              className="rounded-full shadow-lg h-10 w-10"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            >
+              <ArrowUp className="h-5 w-5" />
+            </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* Bottom spacer for mobile dock */}
       <div className="h-20 lg:hidden" />
     </div>
