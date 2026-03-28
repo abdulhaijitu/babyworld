@@ -503,47 +503,47 @@ export default function AdminMemberships() {
       </div>
 
       {/* Compact Stats Row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2">
+      <div className="grid grid-cols-4 lg:grid-cols-7 gap-1.5 sm:gap-2">
         <Card>
-          <CardContent className="p-2 text-center">
-            <p className="text-lg font-bold">{stats.total}</p>
-            <p className="text-xs text-muted-foreground">Total</p>
+          <CardContent className="p-1.5 sm:p-2 text-center">
+            <p className="text-base sm:text-lg font-bold">{stats.total}</p>
+            <p className="text-[10px] sm:text-xs text-muted-foreground">Total</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-2 text-center">
-            <p className="text-lg font-bold text-primary">{stats.active}</p>
-            <p className="text-xs text-muted-foreground">Active</p>
+          <CardContent className="p-1.5 sm:p-2 text-center">
+            <p className="text-base sm:text-lg font-bold text-primary">{stats.active}</p>
+            <p className="text-[10px] sm:text-xs text-muted-foreground">Active</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-2 text-center">
-            <p className="text-lg font-bold text-muted-foreground">{stats.expired}</p>
-            <p className="text-xs text-muted-foreground">Expired</p>
+          <CardContent className="p-1.5 sm:p-2 text-center">
+            <p className="text-base sm:text-lg font-bold text-muted-foreground">{stats.expired}</p>
+            <p className="text-[10px] sm:text-xs text-muted-foreground">Expired</p>
           </CardContent>
         </Card>
         <Card className="border-primary/20">
-          <CardContent className="p-2 text-center">
-            <p className="text-lg font-bold text-primary">৳{paymentStats.totalCollected.toLocaleString()}</p>
-            <p className="text-xs text-muted-foreground">Collected</p>
+          <CardContent className="p-1.5 sm:p-2 text-center">
+            <p className="text-base sm:text-lg font-bold text-primary">৳{paymentStats.totalCollected.toLocaleString()}</p>
+            <p className="text-[10px] sm:text-xs text-muted-foreground">Collected</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-2 text-center">
-            <p className="text-lg font-bold">৳{paymentStats.cashTotal.toLocaleString()}</p>
-            <p className="text-xs text-muted-foreground flex items-center justify-center gap-1"><Banknote className="h-3 w-3" /> Cash</p>
+          <CardContent className="p-1.5 sm:p-2 text-center">
+            <p className="text-base sm:text-lg font-bold">৳{paymentStats.cashTotal.toLocaleString()}</p>
+            <p className="text-[10px] sm:text-xs text-muted-foreground flex items-center justify-center gap-0.5"><Banknote className="h-2.5 w-2.5 sm:h-3 sm:w-3" /> Cash</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-2 text-center">
-            <p className="text-lg font-bold">৳{paymentStats.onlineTotal.toLocaleString()}</p>
-            <p className="text-xs text-muted-foreground flex items-center justify-center gap-1"><CreditCard className="h-3 w-3" /> Online</p>
+          <CardContent className="p-1.5 sm:p-2 text-center">
+            <p className="text-base sm:text-lg font-bold">৳{paymentStats.onlineTotal.toLocaleString()}</p>
+            <p className="text-[10px] sm:text-xs text-muted-foreground flex items-center justify-center gap-0.5"><CreditCard className="h-2.5 w-2.5 sm:h-3 sm:w-3" /> Online</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-2 text-center">
-            <p className="text-lg font-bold text-destructive">৳{paymentStats.pendingAmount.toLocaleString()}</p>
-            <p className="text-xs text-muted-foreground">Pending</p>
+          <CardContent className="p-1.5 sm:p-2 text-center">
+            <p className="text-base sm:text-lg font-bold text-destructive">৳{paymentStats.pendingAmount.toLocaleString()}</p>
+            <p className="text-[10px] sm:text-xs text-muted-foreground">Pending</p>
           </CardContent>
         </Card>
       </div>
