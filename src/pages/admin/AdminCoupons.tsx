@@ -4,14 +4,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Plus, Pencil, Trash2, Tag, Copy } from 'lucide-react';
+import { Plus, Pencil, Trash2, Copy, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 
 interface Coupon {
@@ -135,11 +135,11 @@ export default function AdminCoupons() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3 lg:space-y-6">
       <div className="flex items-center justify-end">
         <Dialog open={dialogOpen} onOpenChange={(open) => { if (!open) resetForm(); setDialogOpen(open); }}>
           <DialogTrigger asChild>
-            <Button className="gap-2"><Plus className="h-4 w-4" /> New Coupon</Button>
+            <Button size="sm" className="gap-1.5"><Plus className="h-4 w-4" /> New Coupon</Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
@@ -224,80 +224,142 @@ export default function AdminCoupons() {
 
       <Card>
         <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Code</TableHead>
-                <TableHead>Discount</TableHead>
-                <TableHead className="hidden sm:table-cell">Min Order</TableHead>
-                <TableHead className="hidden md:table-cell">Usage</TableHead>
-                <TableHead className="hidden md:table-cell">Expiry</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                <TableRow><TableCell colSpan={7} className="text-center py-8 text-muted-foreground">Loading...</TableCell></TableRow>
-              ) : coupons.length === 0 ? (
-                <TableRow><TableCell colSpan={7} className="text-center py-8 text-muted-foreground">No coupons found</TableCell></TableRow>
-              ) : coupons.map(coupon => {
-                const expired = coupon.valid_till && new Date(coupon.valid_till) < new Date();
-                const limitReached = coupon.max_uses && coupon.used_count >= coupon.max_uses;
-                return (
-                  <TableRow key={coupon.id}>
-                    <TableCell>
-                      <div className="flex items-center gap-1.5">
-                        <code className="font-mono font-bold text-sm">{coupon.code}</code>
-                        <Button size="icon" variant="ghost" className="h-6 w-6" onClick={() => copyCode(coupon.code)}>
-                          <Copy className="h-3 w-3" />
-                        </Button>
+          {isLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            </div>
+          ) : coupons.length === 0 ? (
+            <p className="text-center py-8 text-muted-foreground text-sm">No coupons found</p>
+          ) : (
+            <>
+              {/* Mobile Card View */}
+              <div className="lg:hidden p-3 space-y-2">
+                {coupons.map(coupon => {
+                  const expired = coupon.valid_till && new Date(coupon.valid_till) < new Date();
+                  const limitReached = coupon.max_uses && coupon.used_count >= coupon.max_uses;
+                  return (
+                    <div key={coupon.id} className="border rounded-lg p-2.5 space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <code className="font-mono font-bold text-sm">{coupon.code}</code>
+                          <Button size="icon" variant="ghost" className="h-6 w-6" onClick={() => copyCode(coupon.code)}>
+                            <Copy className="h-3 w-3" />
+                          </Button>
+                        </div>
+                        <span className="font-semibold text-sm">
+                          {coupon.discount_type === 'percentage' ? `${coupon.discount_value}%` : `৳${coupon.discount_value}`}
+                        </span>
                       </div>
-                    </TableCell>
-                    <TableCell>
-                      <span className="font-semibold">
-                        {coupon.discount_type === 'percentage' ? `${coupon.discount_value}%` : `৳${coupon.discount_value}`}
-                      </span>
-                    </TableCell>
-                    <TableCell className="hidden sm:table-cell">৳{coupon.min_order_amount}</TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      {coupon.used_count}{coupon.max_uses ? `/${coupon.max_uses}` : ''}
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell text-xs">
-                      {coupon.valid_till ? format(new Date(coupon.valid_till), 'dd/MM/yy hh:mm a') : '—'}
-                    </TableCell>
-                    <TableCell>
-                      {expired ? (
-                        <Badge variant="destructive" className="text-xs">Expiry শেষ</Badge>
-                      ) : limitReached ? (
-                        <Badge variant="secondary" className="text-xs">Limit reached</Badge>
-                      ) : (
-                        <Switch
-                          checked={coupon.is_active}
-                          onCheckedChange={v => toggleActive.mutate({ id: coupon.id, is_active: v })}
-                        />
-                      )}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-1">
-                        <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => openEdit(coupon)}>
-                          <Pencil className="h-3.5 w-3.5" />
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="h-7 w-7 text-destructive"
-                          onClick={() => { if (confirm('Delete this coupon?')) deleteMutation.mutate(coupon.id); }}
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
+                      <div className="flex items-center justify-between text-xs text-muted-foreground">
+                        <span>Min ৳{coupon.min_order_amount} · Used {coupon.used_count}{coupon.max_uses ? `/${coupon.max_uses}` : ''}</span>
+                        <span>{coupon.valid_till ? format(new Date(coupon.valid_till), 'dd/MM/yy') : 'No expiry'}</span>
                       </div>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
+                      <div className="flex items-center justify-between pt-0.5">
+                        <div>
+                          {expired ? (
+                            <Badge variant="destructive" className="text-[10px]">Expired</Badge>
+                          ) : limitReached ? (
+                            <Badge variant="secondary" className="text-[10px]">Limit reached</Badge>
+                          ) : (
+                            <Switch
+                              checked={coupon.is_active}
+                              onCheckedChange={v => toggleActive.mutate({ id: coupon.id, is_active: v })}
+                              className="scale-75"
+                            />
+                          )}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => openEdit(coupon)}>
+                            <Pencil className="h-3.5 w-3.5" />
+                          </Button>
+                          <Button
+                            size="icon" variant="ghost"
+                            className="h-7 w-7 text-destructive"
+                            onClick={() => { if (confirm('Delete this coupon?')) deleteMutation.mutate(coupon.id); }}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Desktop Table View */}
+              <div className="hidden lg:block">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Code</TableHead>
+                      <TableHead>Discount</TableHead>
+                      <TableHead>Min Order</TableHead>
+                      <TableHead>Usage</TableHead>
+                      <TableHead>Expiry</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {coupons.map(coupon => {
+                      const expired = coupon.valid_till && new Date(coupon.valid_till) < new Date();
+                      const limitReached = coupon.max_uses && coupon.used_count >= coupon.max_uses;
+                      return (
+                        <TableRow key={coupon.id}>
+                          <TableCell>
+                            <div className="flex items-center gap-1.5">
+                              <code className="font-mono font-bold text-sm">{coupon.code}</code>
+                              <Button size="icon" variant="ghost" className="h-6 w-6" onClick={() => copyCode(coupon.code)}>
+                                <Copy className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <span className="font-semibold">
+                              {coupon.discount_type === 'percentage' ? `${coupon.discount_value}%` : `৳${coupon.discount_value}`}
+                            </span>
+                          </TableCell>
+                          <TableCell>৳{coupon.min_order_amount}</TableCell>
+                          <TableCell>
+                            {coupon.used_count}{coupon.max_uses ? `/${coupon.max_uses}` : ''}
+                          </TableCell>
+                          <TableCell className="text-xs">
+                            {coupon.valid_till ? format(new Date(coupon.valid_till), 'dd/MM/yy hh:mm a') : '—'}
+                          </TableCell>
+                          <TableCell>
+                            {expired ? (
+                              <Badge variant="destructive" className="text-xs">Expired</Badge>
+                            ) : limitReached ? (
+                              <Badge variant="secondary" className="text-xs">Limit reached</Badge>
+                            ) : (
+                              <Switch
+                                checked={coupon.is_active}
+                                onCheckedChange={v => toggleActive.mutate({ id: coupon.id, is_active: v })}
+                              />
+                            )}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex justify-end gap-1">
+                              <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => openEdit(coupon)}>
+                                <Pencil className="h-3.5 w-3.5" />
+                              </Button>
+                              <Button
+                                size="icon" variant="ghost"
+                                className="h-7 w-7 text-destructive"
+                                onClick={() => { if (confirm('Delete this coupon?')) deleteMutation.mutate(coupon.id); }}
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </div>
+            </>
+          )}
         </CardContent>
       </Card>
     </div>
