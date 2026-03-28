@@ -374,7 +374,7 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* LEFT COLUMN — Rides & Socks */}
-          <div className="border rounded-lg bg-card overflow-hidden flex flex-col" style={{ maxHeight: '75vh' }}>
+          <div className="border rounded-lg bg-card overflow-hidden flex flex-col max-h-[40vh] lg:max-h-[75vh]">
             <div className="p-3 border-b space-y-2">
               <div className="flex items-center justify-between">
                 <h3 className="font-semibold text-sm flex items-center gap-2">
@@ -460,9 +460,9 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
           </div>
 
           {/* RIGHT COLUMN — Form & Pricing */}
-          <div className="border rounded-lg bg-card overflow-hidden flex flex-col" style={{ maxHeight: '75vh' }}>
+          <div className="border rounded-lg bg-card overflow-hidden flex flex-col lg:max-h-[75vh]">
             <ScrollArea className="flex-1">
-              <div className="p-4 space-y-4">
+              <div className="p-3 lg:p-4 space-y-4">
                 {/* Entry No & Customer Name */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
@@ -548,8 +548,8 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                       {showHistory ? <ChevronUp className="h-3.5 w-3.5 ml-auto" /> : <ChevronDown className="h-3.5 w-3.5 ml-auto" />}
                     </button>
                     {showHistory && (
-                      <div className="border-t max-h-36 overflow-y-auto">
-                        <table className="w-full text-[11px]">
+                    <div className="border-t max-h-36 overflow-y-auto overflow-x-auto">
+                        <table className="w-full text-[11px] min-w-[340px]">
                           <thead className="bg-muted/50 sticky top-0">
                             <tr>
                               <th className="text-left px-2 py-1 font-medium text-muted-foreground">Date</th>
@@ -678,16 +678,20 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
                 />
 
                 {/* Submit */}
-                <Button type="submit" className="w-full" size="default" disabled={isSubmitting}>
-                  {isSubmitting ? (
-                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating...</>
-                  ) : (
-                    <><CheckCircle className="mr-2 h-4 w-4" /> Create Ticket</>
-                  )}
-                </Button>
+                <div className="sticky bottom-0 bg-card pt-3 pb-1 -mx-3 px-3 lg:-mx-4 lg:px-4 border-t lg:border-t-0 lg:relative lg:bg-transparent lg:pt-0 lg:pb-0">
+                  <Button type="submit" className="w-full" size="default" disabled={isSubmitting}>
+                    {isSubmitting ? (
+                      <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating...</>
+                    ) : (
+                      <><CheckCircle className="mr-2 h-4 w-4" /> Create Ticket</>
+                    )}
+                  </Button>
+                </div>
               </div>
             </ScrollArea>
           </div>
+          {/* Bottom spacer for mobile dock */}
+          <div className="h-20 lg:hidden" />
         </div>
       </form>
     </Form>

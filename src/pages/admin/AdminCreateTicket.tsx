@@ -30,8 +30,6 @@ export default function AdminCreateTicket() {
     <div className="space-y-6">
       <CounterTicketForm onSuccess={handleTicketCreated} />
 
-      <CounterTicketForm onSuccess={handleTicketCreated} />
-
       <TicketSuccessDialog
         open={showSuccessDialog}
         onClose={() => {
