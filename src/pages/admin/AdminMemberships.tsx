@@ -718,7 +718,7 @@ export default function AdminMemberships() {
                       return paginatedItems.map((membership) => {
                         const remainingDays = getRemainingDays(membership.valid_till);
                         return (
-                          <TableRow key={membership.id}>
+                          <TableRow key={membership.id} className="cursor-pointer hover:bg-muted/50" onClick={() => setSelectedMember(membership)}>
                             <TableCell>
                               <div className="flex items-center gap-3">
                                 <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
