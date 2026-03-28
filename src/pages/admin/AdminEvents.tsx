@@ -319,47 +319,47 @@ export default function AdminEvents() {
       {/* Header */}
 
       <div className="space-y-6">
-          {/* New Event Button */}
+      {/* New Event Button */}
           <div className="flex justify-end">
-            <Button onClick={() => setCreateOpen(true)}>
-              <Plus className="w-4 h-4 mr-2" />
-              {'New Event'}
+            <Button onClick={() => setCreateOpen(true)} size="sm">
+              <Plus className="w-4 h-4 lg:mr-2" />
+              <span className="hidden lg:inline">{'New Event'}</span>
             </Button>
           </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 gap-2 lg:gap-4">
         <Card className="bg-gradient-to-br from-pink-500/10 to-pink-500/5 border-pink-500/20">
-          <CardHeader className="pb-2">
-            <CardDescription>{'Birthday Parties'}</CardDescription>
-            <CardTitle className="text-2xl flex items-center gap-2">
-              <Cake className="w-5 h-5 text-pink-500" />
+          <CardHeader className="p-2 lg:p-4 pb-2">
+            <CardTitle className="text-lg lg:text-2xl flex items-center gap-1 lg:gap-2">
+              <Cake className="w-4 h-4 lg:w-5 lg:h-5 text-pink-500" />
               {birthdayCount}
             </CardTitle>
+            <CardDescription className="text-[10px] lg:text-sm">{'Birthday'}</CardDescription>
           </CardHeader>
         </Card>
 
         <Card className="bg-gradient-to-br from-purple-500/10 to-purple-500/5 border-purple-500/20">
-          <CardHeader className="pb-2">
-            <CardDescription>{'Private Events'}</CardDescription>
-            <CardTitle className="text-2xl flex items-center gap-2">
-              <Gift className="w-5 h-5 text-purple-500" />
+          <CardHeader className="p-2 lg:p-4 pb-2">
+            <CardTitle className="text-lg lg:text-2xl flex items-center gap-1 lg:gap-2">
+              <Gift className="w-4 h-4 lg:w-5 lg:h-5 text-purple-500" />
               {privateCount}
             </CardTitle>
+            <CardDescription className="text-[10px] lg:text-sm">{'Private'}</CardDescription>
           </CardHeader>
         </Card>
 
         <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>{'Confirmed'}</CardDescription>
-            <CardTitle className="text-2xl text-green-600">{confirmedCount}</CardTitle>
+          <CardHeader className="p-2 lg:p-4 pb-2">
+            <CardTitle className="text-lg lg:text-2xl text-green-600">{confirmedCount}</CardTitle>
+            <CardDescription className="text-[10px] lg:text-sm">{'Confirmed'}</CardDescription>
           </CardHeader>
         </Card>
 
         <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>{'Pending'}</CardDescription>
-            <CardTitle className="text-2xl text-yellow-600">{pendingCount}</CardTitle>
+          <CardHeader className="p-2 lg:p-4 pb-2">
+            <CardTitle className="text-lg lg:text-2xl text-yellow-600">{pendingCount}</CardTitle>
+            <CardDescription className="text-[10px] lg:text-sm">{'Pending'}</CardDescription>
           </CardHeader>
         </Card>
       </div>
