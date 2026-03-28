@@ -207,22 +207,22 @@ export default function AdminPromotions() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card><CardContent className="p-4 flex items-center gap-3">
-          <Tag className="h-8 w-8 text-primary" />
-          <div><p className="text-2xl font-bold">{stats.total}</p><p className="text-xs text-muted-foreground">Total</p></div>
+      <div className="grid grid-cols-4 gap-2 lg:gap-4">
+        <Card><CardContent className="p-2 lg:p-4 flex items-center gap-2 lg:gap-3">
+          <Tag className="h-5 w-5 lg:h-8 lg:w-8 text-primary hidden lg:block" />
+          <div><p className="text-lg lg:text-2xl font-bold">{stats.total}</p><p className="text-[10px] lg:text-xs text-muted-foreground">Total</p></div>
         </CardContent></Card>
-        <Card><CardContent className="p-4 flex items-center gap-3">
-          <Zap className="h-8 w-8 text-emerald-500" />
-          <div><p className="text-2xl font-bold">{stats.active}</p><p className="text-xs text-muted-foreground">Active</p></div>
+        <Card><CardContent className="p-2 lg:p-4 flex items-center gap-2 lg:gap-3">
+          <Zap className="h-5 w-5 lg:h-8 lg:w-8 text-emerald-500 hidden lg:block" />
+          <div><p className="text-lg lg:text-2xl font-bold">{stats.active}</p><p className="text-[10px] lg:text-xs text-muted-foreground">Active</p></div>
         </CardContent></Card>
-        <Card><CardContent className="p-4 flex items-center gap-3">
-          <Edit className="h-8 w-8 text-amber-500" />
-          <div><p className="text-2xl font-bold">{stats.draft}</p><p className="text-xs text-muted-foreground">Draft</p></div>
+        <Card><CardContent className="p-2 lg:p-4 flex items-center gap-2 lg:gap-3">
+          <Edit className="h-5 w-5 lg:h-8 lg:w-8 text-amber-500 hidden lg:block" />
+          <div><p className="text-lg lg:text-2xl font-bold">{stats.draft}</p><p className="text-[10px] lg:text-xs text-muted-foreground">Draft</p></div>
         </CardContent></Card>
-        <Card><CardContent className="p-4 flex items-center gap-3">
-          <Calendar className="h-8 w-8 text-destructive" />
-          <div><p className="text-2xl font-bold">{stats.expired}</p><p className="text-xs text-muted-foreground">Expired</p></div>
+        <Card><CardContent className="p-2 lg:p-4 flex items-center gap-2 lg:gap-3">
+          <Calendar className="h-5 w-5 lg:h-8 lg:w-8 text-destructive hidden lg:block" />
+          <div><p className="text-lg lg:text-2xl font-bold">{stats.expired}</p><p className="text-[10px] lg:text-xs text-muted-foreground">Expired</p></div>
         </CardContent></Card>
       </div>
 
