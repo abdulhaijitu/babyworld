@@ -9,6 +9,7 @@ import { AdminMobileBottomNav } from '@/components/admin/AdminMobileBottomNav';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import babyWorldLogo from '@/assets/baby-world-logo.png';
 
 const routeTitleMap: Record<string, string> = {
   '/admin': 'Dashboard',
