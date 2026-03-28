@@ -362,7 +362,7 @@ export default function AdminProfitReports() {
                     {'No expenses recorded'}
                   </div>
                 ) : (
-                  <ResponsiveContainer width="100%" height={300}>
+                  <ResponsiveContainer width="100%" height={220}>
                     <RechartsPieChart>
                       <Pie
                         data={expensePieData}
