@@ -1,130 +1,33 @@
 
 
-## সকল /admin পেইজের মোবাইল রেসপনসিভ অপ্টিমাইজেশন
+## /admin/leads পেইজের হরিজন্টাল স্ক্রলিং ফিক্স
 
-### বিল্ড এরর ফিক্স (জরুরি)
-`AdminEvents.tsx` লাইন 560-এ এখনও "Unterminated regular expression" এরর আছে। ফাইলটি ভালো করে পরীক্ষা করে সিনট্যাক্স ঠিক করতে হবে।
+### সমস্যা চিহ্নিত
 
-### অডিট ফলাফল
+কোড অডিটে নিম্নলিখিত সমস্যাগুলো পাওয়া গেছে যেগুলো ৩৯১px ভিউপোর্টে হরিজন্টাল ওভারফ্লো সৃষ্টি করতে পারে:
 
-**ইতিমধ্যে রেসপনসিভ (পরিবর্তন দরকার নেই):**
-- AdminDashboardContent, AdminBookings, AdminMemberships, AdminEvents, AdminEventPackages, AdminEventCalendar, AdminTicketing, AdminFoodPOS, AdminCreateTicket, AdminMemberEntry, AdminSettings, AdminLayout
+1. **AdminLayout.tsx (line 101)**: মূল কন্টেইনারে `overflow-x-hidden` নেই — চাইল্ড এলিমেন্টের যেকোনো ওভারফ্লো পুরো পেইজে স্ক্রল তৈরি করে
+2. **AdminLayout.tsx (line 111)**: `<main>` এলিমেন্টে `overflow-hidden` নেই
+3. **AdminLeads.tsx (line 394)**: মূল `<div>` এ `overflow-hidden` নেই
+4. **AdminLeads.tsx (line 455)**: `TabsList` এর `w-max` ক্লাস ScrollArea-র বাইরে ফুটো হতে পারে
+5. **AdminLeads.tsx (line 473)**: বাল্ক অ্যাকশন বারের `flex-wrap` ছোট স্ক্রিনে যথেষ্ট নয়
+6. **AdminLeads.tsx (line 167, 213)**: SMS ও WhatsApp বাটনগুলোতে মোবাইলে ছোট সাইজ (`h-7 w-7`) দরকার
 
-**পরিবর্তন দরকার (১৮টি পেইজ):**
+### পরিবর্তন পরিকল্পনা
 
----
+**ফাইল ১: `src/pages/admin/AdminLayout.tsx`**
+- Line 101: মূল `div`-এ `overflow-x-hidden` যোগ
+- Line 111: `<main>`-এ `min-w-0 overflow-x-hidden` যোগ — এটি flex child-এর ওভারফ্লো ঠেকাবে
 
-### গ্রুপ ১: HR পেইজসমূহ
+**ফাইল ২: `src/pages/admin/AdminLeads.tsx`**
+- Line 394: root div-এ `overflow-hidden` যোগ
+- Line 453-465: ScrollArea-র ভেতর TabsList ঠিকমতো কন্টেইন করা — `whitespace-nowrap` নিশ্চিত করা
+- Line 473-478: বাল্ক অ্যাকশন বারে বাটনগুলো ছোট করা, টেক্সট `text-xs` ও `gap-2`
+- Line 493-546: মোবাইল কার্ড ভিউতে সমস্ত টেক্সট `truncate` ও `min-w-0` নিশ্চিত করা
+- Line 523-541: অ্যাকশন বাটনগুলো `flex-shrink-0` দিয়ে wrap-proof করা
+- Line 403: ডায়ালগ `max-w-2xl` → `max-w-[95vw] sm:max-w-2xl` করা
 
-**১. AdminEmployees.tsx (682 lines)**
-- স্ট্যাটস `grid-cols-2 md:grid-cols-4` → `grid-cols-4` কমপ্যাক্ট
-- টেবিল (8 col) → মোবাইলে কার্ড ভিউ `lg:hidden`
-- হেডার বাটন মোবাইলে আইকন-অনলি
-
-**২. AdminAttendance.tsx (280 lines)**
-- স্ট্যাটস `grid-cols-1 md:grid-cols-4` → `grid-cols-4` কমপ্যাক্ট
-- টেবিল (5 col) → মোবাইলে কার্ড ভিউ
-- হেডার বাটন মোবাইলে আইকন-অনলি
-
-**৩. AdminPayroll.tsx (170 lines)**
-- স্ট্যাটস `grid-cols-1 md:grid-cols-3` → `grid-cols-3` কমপ্যাক্ট
-- টেবিল (7 col) → মোবাইলে কার্ড ভিউ
-- হেডার বাটন/সিলেক্ট মোবাইলে কমপ্যাক্ট
-
-**৪. AdminLeaveManagement.tsx**
-- একই প্যাটার্ন: স্ট্যাটস কমপ্যাক্ট, টেবিল → কার্ড
-**৫. AdminPerformance.tsx**
-- একই প্যাটার্ন
-**৬. AdminRoster.tsx**
-- একই প্যাটার্ন
-
----
-
-### গ্রুপ ২: Accounts পেইজসমূহ
-
-**৭. AdminExpenses.tsx (620 lines)**
-- ফিল্টার `flex-wrap` → কমপ্যাক্ট গ্রিড
-- টেবিল (7 col) → মোবাইলে কার্ড ভিউ
-
-**৮. AdminIncome.tsx (493 lines)**
-- স্ট্যাটস `grid-cols-1 sm:grid-cols-2 lg:grid-cols-4` → `grid-cols-4` কমপ্যাক্ট
-- টেবিল → মোবাইলে কার্ড ভিউ
-
-**৯. AdminDailyCashSummary.tsx (367 lines)**
-- টেবিলগুলো → মোবাইলে কার্ড ভিউ
-
-**১০. AdminProfitReports.tsx (585 lines)**
-- চার্ট কন্টেইনার মোবাইলে উচ্চতা কমানো
-- স্ট্যাটস কমপ্যাক্ট
-
----
-
-### গ্রুপ ৩: Marketing পেইজসমূহ
-
-**১১. AdminLeads.tsx (583 lines)**
-- স্ট্যাটস `grid-cols-2 md:grid-cols-4` → `grid-cols-4` কমপ্যাক্ট
-- ফিল্টার ট্যাবস মোবাইলে স্ক্রলেবল করা
-- টেবিল (9 col!) → মোবাইলে কার্ড ভিউ
-
-**১২. AdminPromotions.tsx (343 lines)**
-- টেবিল → মোবাইলে কার্ড ভিউ
-
-**১৩. AdminSmsCampaigns.tsx (433 lines)**
-- টেবিল → মোবাইলে কার্ড ভিউ
-
-**১৪. AdminSocialMedia.tsx (356 lines)**
-- টেবিল → মোবাইলে কার্ড ভিউ
-
----
-
-### গ্রুপ ৪: Food পেইজসমূহ
-
-**১৫. AdminFoodOrders.tsx (592 lines)**
-- টেবিল → মোবাইলে কার্ড ভিউ
-- ফিল্টার কমপ্যাক্ট
-
-**১৬. AdminFoodSales.tsx (831 lines)**
-- টেবিলগুলো → মোবাইলে কার্ড ভিউ
-
----
-
-### গ্রুপ ৫: অন্যান্য
-
-**১৭. AdminUsers.tsx (586 lines)**
-- টেবিল → মোবাইলে কার্ড ভিউ
-
-**১৮. AdminRides.tsx (587 lines)**
-- টেবিল → মোবাইলে কার্ড ভিউ
-
-**১৯. AdminGateLogs.tsx (477 lines)**
-- টেবিল → মোবাইলে কার্ড ভিউ
-
-**২০. AdminRoles.tsx**
-- পারমিশন টেবিল মোবাইলে হরাইজন্টাল স্ক্রল
-
-**২১. AdminCoupons.tsx (367 lines)**
-- টেবিল → মোবাইলে কার্ড ভিউ
-
-**২২. AdminReports.tsx (282 lines)**
-- ট্যাবস `grid-cols-5` → মোবাইলে স্ক্রলেবল
-
----
-
-### প্রতিটি পেইজে একই প্যাটার্ন প্রয়োগ
-
-1. **স্ট্যাটস**: `grid-cols-N` (N = আইটেম সংখ্যা) সবসময়, `p-2`, `text-lg` ভ্যালু, `text-[10px]` লেবেল
-2. **হেডার বাটন**: মোবাইলে টেক্সট `hidden lg:inline`, শুধু আইকন
-3. **ফিল্টার**: সার্চ ফুল-উইডথ, সিলেক্ট `h-8` কমপ্যাক্ট গ্রিড
-4. **ডেটা ভিউ**: `lg:hidden` কার্ড + `hidden lg:block` টেবিল
-5. **ডায়ালগ**: `max-w-md`, `overflow-y-auto`, মোবাইলে `grid-cols-1`
-
-### ফাইল (মোট ২০+ ফাইল)
-বড় পরিবর্তনের কারণে এটি কয়েক ধাপে করা হবে।
-
-### ধাপ বিভাজন
-- **ধাপ ১**: বিল্ড এরর ফিক্স + AdminLeads, AdminEmployees, AdminAttendance, AdminPayroll
-- **ধাপ ২**: AdminExpenses, AdminIncome, AdminDailyCashSummary, AdminProfitReports
-- **ধাপ ৩**: AdminFoodOrders, AdminFoodSales, AdminGateLogs
-- **ধাপ ৪**: AdminPromotions, AdminSmsCampaigns, AdminSocialMedia, AdminCoupons
-- **ধাপ ৫**: AdminUsers, AdminRides, AdminRoles, AdminReports + অন্যান্য ছোট পেইজ
+### প্রভাব
+- AdminLayout-এর ফিক্স সব /admin পেইজে কাজ করবে
+- শুধুমাত্র ২টি ফাইলে পরিবর্তন
 
