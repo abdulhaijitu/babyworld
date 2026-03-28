@@ -185,64 +185,32 @@ export default function AdminProfitReports() {
   };
 
   return (
-    <div className="space-y-6 print:p-0">
+    <div className="space-y-4 print:p-0">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-4">
-
-        {/* Date Range & Export Controls */}
-        <div className="flex flex-wrap items-center gap-2 print:hidden">
-          <Button variant="outline" size="sm" onClick={setThisWeek}>
-            {'This Week'}
-          </Button>
-          <Button variant="outline" size="sm" onClick={setThisMonth}>
-            {'This Month'}
-          </Button>
-          <Button variant="outline" size="sm" onClick={setLastMonth}>
-            {'Last Month'}
-          </Button>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline" size="sm">
-                <CalendarIcon className="w-4 h-4 mr-2" />
-                {format(startDate, 'dd MMM')} - {format(endDate, 'dd MMM')}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="end">
-              <Calendar
-                mode="range"
-                selected={{ from: startDate, to: endDate }}
-                onSelect={(range) => {
-                  if (range?.from) setStartDate(range.from);
-                  if (range?.to) setEndDate(range.to);
-                }}
-                numberOfMonths={2}
-              />
-            </PopoverContent>
-          </Popover>
-          
-          {/* Export Buttons */}
-          <div className="flex gap-1 ml-2">
-            <Button variant="outline" size="sm" onClick={exportToCSV} disabled={!profitData}>
-              <Download className="w-4 h-4 mr-1" />
-              CSV
+      <div className="flex flex-wrap items-center justify-end gap-1 lg:gap-2 print:hidden">
+        <Button variant="outline" size="sm" className="h-7 lg:h-8 text-xs" onClick={setThisWeek}>Week</Button>
+        <Button variant="outline" size="sm" className="h-7 lg:h-8 text-xs" onClick={setThisMonth}>Month</Button>
+        <Button variant="outline" size="sm" className="h-7 lg:h-8 text-xs" onClick={setLastMonth}>Last</Button>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" size="sm" className="h-7 lg:h-8 text-xs">
+              <CalendarIcon className="w-3 h-3 mr-1" />
+              {format(startDate, 'dd MMM')} - {format(endDate, 'dd MMM')}
             </Button>
-            <Button variant="outline" size="sm" onClick={handlePrint}>
-              <Printer className="w-4 h-4 mr-1" />
-              {'Print'}
-            </Button>
-          </div>
-        </div>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="end">
+            <Calendar mode="range" selected={{ from: startDate, to: endDate }} onSelect={(range) => { if (range?.from) setStartDate(range.from); if (range?.to) setEndDate(range.to); }} numberOfMonths={1} />
+          </PopoverContent>
+        </Popover>
+        <Button variant="outline" size="sm" className="h-7 lg:h-8" onClick={exportToCSV} disabled={!profitData}><Download className="w-3 h-3 lg:mr-1" /><span className="hidden lg:inline text-xs">CSV</span></Button>
+        <Button variant="outline" size="sm" className="h-7 lg:h-8" onClick={handlePrint}><Printer className="w-3 h-3 lg:mr-1" /><span className="hidden lg:inline text-xs">Print</span></Button>
       </div>
 
       {/* Summary Cards */}
       {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[1, 2, 3, 4].map(i => (
-            <Skeleton key={i} className="h-32" />
-          ))}
-        </div>
+        <div className="grid grid-cols-4 gap-2">{[1, 2, 3, 4].map(i => (<Skeleton key={i} className="h-16 lg:h-32" />))}</div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
           {/* Total Revenue */}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
