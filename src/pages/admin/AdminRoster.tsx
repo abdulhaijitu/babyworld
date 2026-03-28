@@ -242,23 +242,23 @@ export default function AdminRoster() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-2 lg:gap-4">
         <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>{'Shifts This Week'}</CardDescription>
-            <CardTitle className="text-2xl">{totalShifts}</CardTitle>
+          <CardHeader className="p-2 pb-1 lg:p-4 lg:pb-2">
+            <CardDescription className="text-[10px] lg:text-xs">{'Shifts'}</CardDescription>
+            <CardTitle className="text-lg lg:text-2xl">{totalShifts}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>{'Employees'}</CardDescription>
-            <CardTitle className="text-2xl">{uniqueEmployees}</CardTitle>
+          <CardHeader className="p-2 pb-1 lg:p-4 lg:pb-2">
+            <CardDescription className="text-[10px] lg:text-xs">{'Employees'}</CardDescription>
+            <CardTitle className="text-lg lg:text-2xl">{uniqueEmployees}</CardTitle>
           </CardHeader>
         </Card>
-        <Card className="hidden sm:block">
-          <CardHeader className="pb-2">
-            <CardDescription>{'Active Staff'}</CardDescription>
-            <CardTitle className="text-2xl">{employees.length}</CardTitle>
+        <Card>
+          <CardHeader className="p-2 pb-1 lg:p-4 lg:pb-2">
+            <CardDescription className="text-[10px] lg:text-xs">{'Active Staff'}</CardDescription>
+            <CardTitle className="text-lg lg:text-2xl">{employees.length}</CardTitle>
           </CardHeader>
         </Card>
       </div>
