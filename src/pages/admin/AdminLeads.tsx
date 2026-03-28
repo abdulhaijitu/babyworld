@@ -391,7 +391,7 @@ export default function AdminLeads() {
   const selectedLeads = filteredLeads.filter(l => selectedIds.has(l.id));
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 overflow-hidden">
       <div className="flex items-center justify-end gap-3">
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
