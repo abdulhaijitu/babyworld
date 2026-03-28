@@ -252,27 +252,19 @@ export default function AdminIncome() {
       </div>
 
       {/* Manual Income Section */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h2 className="text-lg font-semibold">Manual Income Entries</h2>
+      <div className="flex items-center justify-between gap-2">
+        <h2 className="text-sm lg:text-lg font-semibold">Manual Income</h2>
         <div className="flex items-center gap-2">
           <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-            <SelectTrigger className="w-40">
-              <SelectValue placeholder="All Categories" />
-            </SelectTrigger>
+            <SelectTrigger className="w-28 lg:w-40 h-8 text-xs lg:text-sm"><SelectValue placeholder="All" /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
-              {manualCategories.map(c => (
-                <SelectItem key={c.name} value={c.name}>{c.label}</SelectItem>
-              ))}
+              <SelectItem value="all">All</SelectItem>
+              {manualCategories.map(c => (<SelectItem key={c.name} value={c.name}>{c.label}</SelectItem>))}
             </SelectContent>
           </Select>
-
           <Dialog open={dialogOpen} onOpenChange={(open) => { if (!open) closeDialog(); else setDialogOpen(true); }}>
             <DialogTrigger asChild>
-              <Button>
-                <Plus className="w-4 h-4 mr-2" />
-                Add Income
-              </Button>
+              <Button size="sm"><Plus className="w-4 h-4 lg:mr-2" /><span className="hidden lg:inline">Add Income</span></Button>
             </DialogTrigger>
             <DialogContent className="max-w-md">
               <DialogHeader>
