@@ -321,7 +321,7 @@ export default function AdminRides() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 lg:space-y-6">
       {/* Header */}
       <div className="flex justify-end">
         <Button onClick={() => { resetForm(); setCreateOpen(true); }}>
@@ -330,38 +330,22 @@ export default function AdminRides() {
         </Button>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription className="flex items-center gap-1"><FerrisWheel className="w-3.5 h-3.5" /> Total Rides</CardDescription>
-            <CardTitle className="text-2xl">{totalRides}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription className="flex items-center gap-1"><Activity className="w-3.5 h-3.5" /> Active</CardDescription>
-            <CardTitle className="text-2xl text-green-600">{activeRides}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription className="flex items-center gap-1"><Ban className="w-3.5 h-3.5" /> Inactive</CardDescription>
-            <CardTitle className="text-2xl text-destructive">{inactiveRides}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription className="flex items-center gap-1"><DollarSign className="w-3.5 h-3.5" /> Paid</CardDescription>
-            <CardTitle className="text-2xl">{paidRides}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription className="flex items-center gap-1"><Gift className="w-3.5 h-3.5" /> Free</CardDescription>
-            <CardTitle className="text-2xl">{freeRides}</CardTitle>
-          </CardHeader>
-        </Card>
+      {/* Stats Cards — always 5 cols */}
+      <div className="grid grid-cols-5 gap-2 lg:gap-4">
+        {[
+          { icon: FerrisWheel, label: 'Total', value: totalRides, color: '' },
+          { icon: Activity, label: 'Active', value: activeRides, color: 'text-green-600' },
+          { icon: Ban, label: 'Inactive', value: inactiveRides, color: 'text-destructive' },
+          { icon: DollarSign, label: 'Paid', value: paidRides, color: '' },
+          { icon: Gift, label: 'Free', value: freeRides, color: '' },
+        ].map(({ icon: Icon, label, value, color }) => (
+          <Card key={label}>
+            <CardHeader className="p-2 pb-1 lg:p-4 lg:pb-2">
+              <CardDescription className="flex items-center gap-1 text-[10px] lg:text-xs"><Icon className="w-3 h-3 lg:w-3.5 lg:h-3.5" /> <span className="hidden sm:inline">{label}</span><span className="sm:hidden">{label.slice(0,3)}</span></CardDescription>
+              <CardTitle className={cn("text-lg lg:text-2xl", color)}>{value}</CardTitle>
+            </CardHeader>
+          </Card>
+        ))}
       </div>
 
       {/* Rides Table */}
