@@ -9,6 +9,7 @@ import { AdminMobileBottomNav } from '@/components/admin/AdminMobileBottomNav';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import babyWorldLogo from '@/assets/baby-world-logo.png';
 
 const routeTitleMap: Record<string, string> = {
   '/admin': 'Dashboard',
@@ -123,6 +124,7 @@ export default function AdminLayout() {
             >
               <Menu className="h-4 w-4" />
             </Button>
+            <img src={babyWorldLogo} alt="Baby World" className="md:hidden h-7 w-auto" />
             <h1 className="text-sm md:text-base font-semibold truncate">{pageTitle}</h1>
           </div>
           <NotificationBell />
