@@ -494,139 +494,141 @@ export default function AdminBookings() {
               </div>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-3 lg:p-6 pt-0">
             {error ? (
               <div className="text-center py-8">
                 <AlertCircle className="w-12 h-12 mx-auto mb-4 text-destructive" />
                 <p className="text-destructive">{error}</p>
-                <Button onClick={fetchBookings} className="mt-4" size="sm">
-                  {'Try Again'}
-                </Button>
+                <Button onClick={fetchBookings} className="mt-4" size="sm">Try Again</Button>
               </div>
             ) : loading ? (
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{'Date'}</TableHead>
-                    <TableHead>{'Parent'}</TableHead>
-                    <TableHead>{'Status'}</TableHead>
-                    <TableHead>{'Payment'}</TableHead>
-                    <TableHead></TableHead>
+                    <TableHead>Date</TableHead><TableHead>Parent</TableHead><TableHead>Status</TableHead><TableHead>Payment</TableHead><TableHead></TableHead>
                   </TableRow>
                 </TableHeader>
-                <tbody>
-                  {[1,2,3,4,5].map(i => <TableRowSkeleton key={i} />)}
-                </tbody>
+                <tbody>{[1,2,3,4,5].map(i => <TableRowSkeleton key={i} />)}</tbody>
               </Table>
             ) : filteredBookings.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
                 <Ticket className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>{'No bookings found'}</p>
-                {hasActiveFilters && (
-                  <Button variant="link" onClick={clearFilters} className="mt-2">
-                    {'Clear filters'}
-                  </Button>
-                )}
+                <p>No bookings found</p>
+                {hasActiveFilters && <Button variant="link" onClick={clearFilters} className="mt-2">Clear filters</Button>}
               </div>
             ) : (
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>{'Date & Time'}</TableHead>
-                      <TableHead>{'Parent'}</TableHead>
-                      <TableHead>{'Ticket'}</TableHead>
-                      <TableHead>{'Status'}</TableHead>
-                      <TableHead>{'Payment'}</TableHead>
-                      <TableHead className="text-right"></TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredBookings.map((booking) => (
-                      <TableRow key={booking.id}>
-                        <TableCell>
-                          <div className="font-medium">
-                            {format(parseISO(booking.slot_date), 'dd MMM yyyy', { 
-                              locale: undefined 
-                            })}
-                          </div>
-                          <div className="text-sm text-muted-foreground">{booking.time_slot}</div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="font-medium">{booking.parent_name}</div>
-                          <a href={`tel:${booking.parent_phone}`} className="text-sm text-muted-foreground hover:text-primary flex items-center gap-1">
-                            <Phone className="w-3 h-3" />
-                            {booking.parent_phone}
-                          </a>
-                        </TableCell>
-                        <TableCell>{getTicketTypeBadge(booking.ticket_type)}</TableCell>
-                        <TableCell>{getStatusBadge(booking.status)}</TableCell>
-                        <TableCell>{getPaymentBadge(booking.payment_status)}</TableCell>
-                        <TableCell className="text-right">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon">
-                                <MoreVertical className="w-4 h-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => openDetailDialog(booking)}>
-                                <Eye className="w-4 h-4 mr-2" />
-                                {'View Details'}
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => openPrintDialog(booking)}>
-                                <Printer className="w-4 h-4 mr-2" />
-                                {'Print Ticket'}
-                              </DropdownMenuItem>
-                              <DropdownMenuItem 
-                                onClick={() => handleSendSMS(booking)}
-                                disabled={sendingSMS || booking.status === 'cancelled'}
-                              >
-                                <MessageSquare className="w-4 h-4 mr-2" />
-                                {'Send SMS'}
-                              </DropdownMenuItem>
-                              <DropdownMenuItem 
-                                onClick={() => handleWhatsApp(booking)}
-                                disabled={booking.status === 'cancelled'}
-                              >
-                                <Phone className="w-4 h-4 mr-2" />
-                                {'WhatsApp'}
-                              </DropdownMenuItem>
-                              <DropdownMenuItem 
-                                onClick={() => {
-                                  setPaymentBooking(booking);
-                                  setPaymentOpen(true);
-                                }}
-                                disabled={booking.payment_status === 'paid' || booking.status === 'cancelled'}
-                              >
-                                <Wallet className="w-4 h-4 mr-2" />
-                                {'Collect Payment'}
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem 
-                                onClick={() => handleStatusChange(booking.id, 'confirmed')}
-                                disabled={booking.status === 'confirmed' || booking.status === 'cancelled'}
-                              >
-                                <CheckCircle className="w-4 h-4 mr-2 text-green-600" />
-                                {'Confirm'}
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem 
-                                onClick={() => openCancelDialog(booking)}
-                                disabled={booking.status === 'cancelled'}
-                                className="text-destructive"
-                              >
-                                <Ban className="w-4 h-4 mr-2" />
-                                {'Cancel'}
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
+              <>
+                {/* Mobile Card View */}
+                <div className="lg:hidden space-y-2">
+                  {filteredBookings.map((booking) => (
+                    <div key={booking.id} className="border rounded-lg p-2.5 space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-medium">{format(parseISO(booking.slot_date), 'dd MMM yyyy')}</span>
+                        <div className="flex gap-1">
+                          {getStatusBadge(booking.status)}
+                          {getPaymentBadge(booking.payment_status)}
+                        </div>
+                      </div>
+                      <div className="text-sm">
+                        <span className="text-muted-foreground text-xs">{booking.time_slot}</span>
+                        <span className="mx-1.5 text-muted-foreground">·</span>
+                        <span className="font-medium">{booking.parent_name}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <a href={`tel:${booking.parent_phone}`} className="flex items-center gap-0.5 hover:text-primary">
+                          <Phone className="w-3 h-3" />{booking.parent_phone}
+                        </a>
+                        <span>·</span>
+                        {getTicketTypeBadge(booking.ticket_type)}
+                      </div>
+                      <div className="flex items-center justify-end gap-1 pt-1 border-t">
+                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openDetailDialog(booking)}>
+                          <Eye className="w-3.5 h-3.5" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openPrintDialog(booking)}>
+                          <Printer className="w-3.5 h-3.5" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleWhatsApp(booking)} disabled={booking.status === 'cancelled'}>
+                          <MessageSquare className="w-3.5 h-3.5" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleStatusChange(booking.id, 'confirmed')} disabled={booking.status === 'confirmed' || booking.status === 'cancelled'}>
+                          <CheckCircle className="w-3.5 h-3.5 text-green-600" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => openCancelDialog(booking)} disabled={booking.status === 'cancelled'}>
+                          <Ban className="w-3.5 h-3.5" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Desktop Table View */}
+                <div className="hidden lg:block overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Date & Time</TableHead>
+                        <TableHead>Parent</TableHead>
+                        <TableHead>Ticket</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Payment</TableHead>
+                        <TableHead className="text-right"></TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredBookings.map((booking) => (
+                        <TableRow key={booking.id}>
+                          <TableCell>
+                            <div className="font-medium">{format(parseISO(booking.slot_date), 'dd MMM yyyy')}</div>
+                            <div className="text-sm text-muted-foreground">{booking.time_slot}</div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="font-medium">{booking.parent_name}</div>
+                            <a href={`tel:${booking.parent_phone}`} className="text-sm text-muted-foreground hover:text-primary flex items-center gap-1">
+                              <Phone className="w-3 h-3" />{booking.parent_phone}
+                            </a>
+                          </TableCell>
+                          <TableCell>{getTicketTypeBadge(booking.ticket_type)}</TableCell>
+                          <TableCell>{getStatusBadge(booking.status)}</TableCell>
+                          <TableCell>{getPaymentBadge(booking.payment_status)}</TableCell>
+                          <TableCell className="text-right">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon"><MoreVertical className="w-4 h-4" /></Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => openDetailDialog(booking)}>
+                                  <Eye className="w-4 h-4 mr-2" />View Details
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => openPrintDialog(booking)}>
+                                  <Printer className="w-4 h-4 mr-2" />Print Ticket
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleSendSMS(booking)} disabled={sendingSMS || booking.status === 'cancelled'}>
+                                  <MessageSquare className="w-4 h-4 mr-2" />Send SMS
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleWhatsApp(booking)} disabled={booking.status === 'cancelled'}>
+                                  <Phone className="w-4 h-4 mr-2" />WhatsApp
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => { setPaymentBooking(booking); setPaymentOpen(true); }} disabled={booking.payment_status === 'paid' || booking.status === 'cancelled'}>
+                                  <Wallet className="w-4 h-4 mr-2" />Collect Payment
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={() => handleStatusChange(booking.id, 'confirmed')} disabled={booking.status === 'confirmed' || booking.status === 'cancelled'}>
+                                  <CheckCircle className="w-4 h-4 mr-2 text-green-600" />Confirm
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={() => openCancelDialog(booking)} disabled={booking.status === 'cancelled'} className="text-destructive">
+                                  <Ban className="w-4 h-4 mr-2" />Cancel
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </>
             )}
           </CardContent>
         </Card>
