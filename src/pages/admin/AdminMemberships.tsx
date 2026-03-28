@@ -38,6 +38,7 @@ export default function AdminMemberships() {
   const [packageFilter, setPackageFilter] = useState<string>('all');
   const [paymentFilter, setPaymentFilter] = useState<string>('all');
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<Membership | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 15;
