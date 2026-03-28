@@ -1,37 +1,36 @@
 
 
-## পরিবর্তন
+## `/admin/membership-packages` মোবাইল রেসপনসিভ অপ্টিমাইজেশন
 
-মোবাইলে পেইজ টাইটেল বাম দিকের গ্রুপ (হ্যামবার্গার + লোগো) থেকে সরিয়ে ডানে বেল আইকনের বামে রাখা হবে।
+### সমস্যা চিহ্নিত (390px ভিউপোর্ট)
 
-### ফাইল: `src/pages/admin/AdminLayout.tsx` (line 117-131)
+1. **টেবিল** — ৮ কলাম (SL, Name, Validity, Allowed Person, Price, Discount, Status, Action) 390px-এ overflow/cramped হয়
+2. **ফর্ম ডায়ালগ** — `max-w-2xl` ও `grid-cols-2` মোবাইলে ইনপুট খুব ছোট হয়ে যায়, সাফিক্স ব্যাজ ওভারল্যাপ করে
+3. **কন্টেইনার স্পেসিং** — `space-y-6` মোবাইলে বেশি
+4. **সার্চ বার** — `max-w-sm` মোবাইলে ফুল-উইডথ হওয়া উচিত
 
-বর্তমান লেআউট:
+### পরিবর্তন — `src/pages/admin/AdminMembershipPackages.tsx`
+
+**1. মোবাইলে কার্ড ভিউ, ডেস্কটপে টেবিল**
+- `lg:hidden` — প্রতিটি প্যাকেজ একটি কমপ্যাক্ট কার্ড:
+```text
+┌────────────────────────────────┐
+│ Monthly Package    [Active] ⋮  │
+│ ৳2,500 · 30 Days · G:2 K:1   │
+└────────────────────────────────┘
 ```
-[☰ Logo Title]          [🔔]
-```
+- `hidden lg:block` — বর্তমান টেবিল রাখা
 
-নতুন লেআউট (মোবাইল):
-```
-[☰ Logo]      [Title 🔔]
-```
+**2. ফর্ম ডায়ালগ মোবাইল অপ্টিমাইজ**
+- `grid-cols-2` → `grid-cols-1 sm:grid-cols-2` সব ফর্ম গ্রিডে
+- ডায়ালগ `max-w-2xl` → `sm:max-w-2xl` (মোবাইলে ফুল-উইডথ)
+- প্যাডিং `px-6` → `px-4 sm:px-6`
 
-ডেস্কটপে টাইটেল বামেই থাকবে (হ্যামবার্গার ও লোগো hidden হয়ে যায়)।
+**3. হেডার ও সার্চ কমপ্যাক্ট**
+- `space-y-6` → `space-y-4 lg:space-y-6`
+- সার্চ `max-w-sm` → `w-full sm:max-w-sm`
+- Create বাটন মোবাইলে ছোট
 
-**পরিবর্তন:**
-- `<h1>` কে বাম গ্রুপ থেকে সরিয়ে ডান গ্রুপে `<NotificationBell />` এর আগে রাখা
-- ডান গ্রুপে `flex items-center gap-2` দেওয়া
-
-```tsx
-<div className="flex items-center justify-between gap-2 px-3 md:px-6 h-12 border-b ...">
-  <div className="flex items-center gap-2">
-    <Button ... className="md:hidden h-8 w-8" ...><Menu /></Button>
-    <img ... className="md:hidden h-7 w-auto cursor-pointer" />
-  </div>
-  <div className="flex items-center gap-2">
-    <h1 className="text-sm md:text-base font-semibold truncate">{pageTitle}</h1>
-    <NotificationBell />
-  </div>
-</div>
-```
+### ফাইল
+- `src/pages/admin/AdminMembershipPackages.tsx`
 
