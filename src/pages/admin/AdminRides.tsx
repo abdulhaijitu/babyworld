@@ -393,17 +393,58 @@ export default function AdminRides() {
               <p>No rides found</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            {/* Mobile Card View */}
+            <div className="lg:hidden space-y-2">
+              {paginatedRides.map((ride, idx) => (
+                <div key={ride.id} className={cn("flex items-center gap-3 p-2.5 rounded-lg border bg-card", !ride.is_active && 'opacity-50')}>
+                  {ride.image_url ? (
+                    <img src={ride.image_url} alt={ride.name} className="w-11 h-11 rounded-lg object-cover flex-shrink-0" />
+                  ) : (
+                    <div className="w-11 h-11 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
+                      <ImageIcon className="w-5 h-5 text-muted-foreground" />
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-sm truncate">{ride.name}</p>
+                    <div className="flex items-center gap-2 mt-0.5 text-xs">
+                      <span className={cn("font-semibold", (ride.ride_type || 'Paid') === 'Paid' ? 'text-green-600' : 'text-blue-600')}>
+                        {ride.ride_type || 'Paid'}
+                      </span>
+                      <span className="text-muted-foreground">·</span>
+                      <span className="font-medium">৳{ride.price}</span>
+                      {ride.offer_price > 0 && <span className="font-medium text-orange-600">৳{ride.offer_price}</span>}
+                      <Badge variant="outline" className={cn(
+                        "text-[10px] px-1.5 py-0 border-0",
+                        ride.is_active ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                      )}>
+                        {ride.is_active ? 'Active' : 'Off'}
+                      </Badge>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-0.5 flex-shrink-0">
+                    <Button variant="ghost" size="icon" className="h-7 w-7 text-amber-600" onClick={() => handleEdit(ride)}>
+                      <Edit className="w-3.5 h-3.5" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => handleDelete(ride)}>
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table View */}
+            <div className="hidden lg:block overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[50px]">SL</TableHead>
                     <TableHead className="w-[60px]">Image</TableHead>
                     <TableHead>Name</TableHead>
-                     <TableHead>Type</TableHead>
-                     <TableHead>Regular Price</TableHead>
-                     <TableHead>Offer Price</TableHead>
-                     <TableHead>Status</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead>Regular Price</TableHead>
+                    <TableHead>Offer Price</TableHead>
+                    <TableHead>Status</TableHead>
                     <TableHead className="text-right">Action</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -422,10 +463,7 @@ export default function AdminRides() {
                       </TableCell>
                       <TableCell><p className="font-medium">{ride.name}</p></TableCell>
                       <TableCell>
-                        <span className={cn(
-                          "text-sm font-semibold",
-                          (ride.ride_type || 'Paid') === 'Paid' ? 'text-green-600' : 'text-blue-600'
-                        )}>
+                        <span className={cn("text-sm font-semibold", (ride.ride_type || 'Paid') === 'Paid' ? 'text-green-600' : 'text-blue-600')}>
                           {ride.ride_type || 'Paid'}
                         </span>
                       </TableCell>
@@ -434,27 +472,17 @@ export default function AdminRides() {
                       <TableCell>
                         <Badge variant="outline" className={cn(
                           "text-xs font-semibold border-0",
-                          ride.is_active
-                            ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-                            : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                          ride.is_active ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
                         )}>
                           {ride.is_active ? 'Active' : 'Inactive'}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-1">
-                          <Button
-                            variant="ghost" size="icon"
-                            className="h-8 w-8 text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-900/20"
-                            onClick={() => handleEdit(ride)}
-                          >
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-900/20" onClick={() => handleEdit(ride)}>
                             <Edit className="w-4 h-4" />
                           </Button>
-                          <Button
-                            variant="ghost" size="icon"
-                            className="h-8 w-8 text-destructive hover:text-destructive hover:bg-red-50 dark:hover:bg-red-900/20"
-                            onClick={() => handleDelete(ride)}
-                          >
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive hover:bg-red-50 dark:hover:bg-red-900/20" onClick={() => handleDelete(ride)}>
                             <Trash2 className="w-4 h-4" />
                           </Button>
                         </div>
