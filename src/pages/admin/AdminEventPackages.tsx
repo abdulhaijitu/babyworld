@@ -250,15 +250,15 @@ export default function AdminEventPackages() {
   };
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-4">
-        <div className="flex gap-2">
+      <div className="flex items-center justify-end gap-2">
           <Button variant="outline" size="sm" onClick={fetchPackages} disabled={loading}>
-            <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} /> Refresh
+            <RefreshCw className={`w-4 h-4 lg:mr-2 ${loading ? 'animate-spin' : ''}`} />
+            <span className="hidden lg:inline">Refresh</span>
           </Button>
-          <Button onClick={openCreate}>
-            <Plus className="w-4 h-4 mr-2" /> New Package
+          <Button size="sm" onClick={openCreate}>
+            <Plus className="w-4 h-4 lg:mr-2" />
+            <span className="hidden lg:inline">New Package</span>
           </Button>
-        </div>
       </div>
 
       {loading ? (
