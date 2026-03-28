@@ -354,34 +354,32 @@ export default function AdminRides() {
           <CardTitle>Ride List</CardTitle>
         </CardHeader>
         <CardContent>
-          {/* Controls: Show entries + Category Filter + Search */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-            <div className="flex items-center gap-3 text-sm">
-              <div className="flex items-center gap-2">
-                <span className="text-muted-foreground">Show</span>
-                <Select value={String(entriesPerPage)} onValueChange={(v) => { setEntriesPerPage(Number(v)); setCurrentPage(1); }}>
-                  <SelectTrigger className="w-[70px] h-8"><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="10">10</SelectItem>
-                    <SelectItem value="25">25</SelectItem>
-                    <SelectItem value="50">50</SelectItem>
-                  </SelectContent>
-                </Select>
-                <span className="text-muted-foreground">entries</span>
-              </div>
-              <Select value={filterCategory} onValueChange={(v) => { setFilterCategory(v); setCurrentPage(1); }}>
-                <SelectTrigger className="w-[120px] h-8"><SelectValue placeholder="Category" /></SelectTrigger>
+          {/* Controls: compact single row */}
+          <div className="flex flex-wrap items-center gap-2 mb-4">
+            <div className="flex items-center gap-1.5 text-sm">
+              <span className="text-muted-foreground hidden lg:inline">Show</span>
+              <Select value={String(entriesPerPage)} onValueChange={(v) => { setEntriesPerPage(Number(v)); setCurrentPage(1); }}>
+                <SelectTrigger className="w-[60px] h-8 text-xs"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  <SelectItem value="kids">Kids</SelectItem>
-                  <SelectItem value="family">Family</SelectItem>
-                  <SelectItem value="thrill">Thrill</SelectItem>
+                  <SelectItem value="10">10</SelectItem>
+                  <SelectItem value="25">25</SelectItem>
+                  <SelectItem value="50">50</SelectItem>
                 </SelectContent>
               </Select>
+              <span className="text-muted-foreground hidden lg:inline">entries</span>
             </div>
-            <div className="relative w-full sm:w-64">
+            <Select value={filterCategory} onValueChange={(v) => { setFilterCategory(v); setCurrentPage(1); }}>
+              <SelectTrigger className="w-[90px] h-8 text-xs"><SelectValue placeholder="Category" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="kids">Kids</SelectItem>
+                <SelectItem value="family">Family</SelectItem>
+                <SelectItem value="thrill">Thrill</SelectItem>
+              </SelectContent>
+            </Select>
+            <div className="relative flex-1 min-w-[120px]">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input placeholder="Search rides..." value={searchQuery} onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }} className="pl-8 h-8" />
+              <Input placeholder="Search..." value={searchQuery} onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }} className="pl-8 h-8" />
             </div>
           </div>
 
