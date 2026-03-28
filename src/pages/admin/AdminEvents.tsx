@@ -319,47 +319,47 @@ export default function AdminEvents() {
       {/* Header */}
 
       <div className="space-y-6">
-          {/* New Event Button */}
+      {/* New Event Button */}
           <div className="flex justify-end">
-            <Button onClick={() => setCreateOpen(true)}>
-              <Plus className="w-4 h-4 mr-2" />
-              {'New Event'}
+            <Button onClick={() => setCreateOpen(true)} size="sm">
+              <Plus className="w-4 h-4 lg:mr-2" />
+              <span className="hidden lg:inline">{'New Event'}</span>
             </Button>
           </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 gap-2 lg:gap-4">
         <Card className="bg-gradient-to-br from-pink-500/10 to-pink-500/5 border-pink-500/20">
-          <CardHeader className="pb-2">
-            <CardDescription>{'Birthday Parties'}</CardDescription>
-            <CardTitle className="text-2xl flex items-center gap-2">
-              <Cake className="w-5 h-5 text-pink-500" />
+          <CardHeader className="p-2 lg:p-4 pb-2">
+            <CardTitle className="text-lg lg:text-2xl flex items-center gap-1 lg:gap-2">
+              <Cake className="w-4 h-4 lg:w-5 lg:h-5 text-pink-500" />
               {birthdayCount}
             </CardTitle>
+            <CardDescription className="text-[10px] lg:text-sm">{'Birthday'}</CardDescription>
           </CardHeader>
         </Card>
 
         <Card className="bg-gradient-to-br from-purple-500/10 to-purple-500/5 border-purple-500/20">
-          <CardHeader className="pb-2">
-            <CardDescription>{'Private Events'}</CardDescription>
-            <CardTitle className="text-2xl flex items-center gap-2">
-              <Gift className="w-5 h-5 text-purple-500" />
+          <CardHeader className="p-2 lg:p-4 pb-2">
+            <CardTitle className="text-lg lg:text-2xl flex items-center gap-1 lg:gap-2">
+              <Gift className="w-4 h-4 lg:w-5 lg:h-5 text-purple-500" />
               {privateCount}
             </CardTitle>
+            <CardDescription className="text-[10px] lg:text-sm">{'Private'}</CardDescription>
           </CardHeader>
         </Card>
 
         <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>{'Confirmed'}</CardDescription>
-            <CardTitle className="text-2xl text-green-600">{confirmedCount}</CardTitle>
+          <CardHeader className="p-2 lg:p-4 pb-2">
+            <CardTitle className="text-lg lg:text-2xl text-green-600">{confirmedCount}</CardTitle>
+            <CardDescription className="text-[10px] lg:text-sm">{'Confirmed'}</CardDescription>
           </CardHeader>
         </Card>
 
         <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>{'Pending'}</CardDescription>
-            <CardTitle className="text-2xl text-yellow-600">{pendingCount}</CardTitle>
+          <CardHeader className="p-2 lg:p-4 pb-2">
+            <CardTitle className="text-lg lg:text-2xl text-yellow-600">{pendingCount}</CardTitle>
+            <CardDescription className="text-[10px] lg:text-sm">{'Pending'}</CardDescription>
           </CardHeader>
         </Card>
       </div>
@@ -368,54 +368,57 @@ export default function AdminEvents() {
       {/* Events Table */}
       <Card>
         <CardHeader>
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <CardTitle>{'Booking List'}</CardTitle>
+          <div className="flex items-center justify-between gap-2">
+            <CardTitle className="text-base lg:text-lg">{'Booking List'}</CardTitle>
             <Button variant="outline" size="sm" onClick={fetchEvents} disabled={loading}>
-              <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-              {'Refresh'}
+              <RefreshCw className={`w-4 h-4 lg:mr-2 ${loading ? 'animate-spin' : ''}`} />
+              <span className="hidden lg:inline">{'Refresh'}</span>
             </Button>
           </div>
           
           {/* Filters */}
-          <div className="flex flex-col md:flex-row gap-3 mt-4">
-            <div className="relative flex-1">
+          <div className="space-y-2 mt-3">
+            <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 placeholder={'Name or phone...'}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
+                className="pl-9 h-8 lg:h-10"
               />
             </div>
-            
-            <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="w-full md:w-[140px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{'All Types'}</SelectItem>
-                <SelectItem value="birthday_event">{'Birthday'}</SelectItem>
-                <SelectItem value="private_event">{'Private'}</SelectItem>
-              </SelectContent>
-            </Select>
-            
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full md:w-[130px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{'All Status'}</SelectItem>
-                <SelectItem value="confirmed">{'Confirmed'}</SelectItem>
-                <SelectItem value="pending">{'Pending'}</SelectItem>
-                <SelectItem value="cancelled">{'Cancelled'}</SelectItem>
-              </SelectContent>
-            </Select>
-            
-            {hasActiveFilters && (
-              <Button variant="ghost" size="icon" onClick={clearFilters}>
-                <X className="w-4 h-4" />
-              </Button>
-            )}
+            <div className="grid grid-cols-2 gap-2 lg:flex lg:gap-3">
+              <Select value={typeFilter} onValueChange={setTypeFilter}>
+                <SelectTrigger className="h-8 lg:h-10 lg:w-[140px] text-xs lg:text-sm">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{'All Types'}</SelectItem>
+                  <SelectItem value="birthday_event">{'Birthday'}</SelectItem>
+                  <SelectItem value="private_event">{'Private'}</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              <div className="flex gap-2">
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="h-8 lg:h-10 lg:w-[130px] text-xs lg:text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">{'All Status'}</SelectItem>
+                    <SelectItem value="confirmed">{'Confirmed'}</SelectItem>
+                    <SelectItem value="pending">{'Pending'}</SelectItem>
+                    <SelectItem value="cancelled">{'Cancelled'}</SelectItem>
+                  </SelectContent>
+                </Select>
+                
+                {hasActiveFilters && (
+                  <Button variant="ghost" size="icon" className="h-8 w-8 lg:h-10 lg:w-10" onClick={clearFilters}>
+                    <X className="w-4 h-4" />
+                  </Button>
+                )}
+              </div>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
@@ -453,84 +456,107 @@ export default function AdminEvents() {
               )}
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>{'Date & Time'}</TableHead>
-                    <TableHead>{'Customer'}</TableHead>
-                    <TableHead>{'Type'}</TableHead>
-                    <TableHead>{'Status'}</TableHead>
-                    <TableHead>{'Payment'}</TableHead>
-                    <TableHead className="text-right"></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredEvents.map((event) => (
-                    <TableRow key={event.id}>
-                      <TableCell>
-                        <div className="font-medium">
-                          {format(parseISO(event.slot_date), 'dd MMM yyyy', { 
-                            locale: undefined 
-                          })}
-                        </div>
-                        <div className="text-sm text-muted-foreground">{event.time_slot}</div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="font-medium">{event.parent_name}</div>
-                        <a href={`tel:${event.parent_phone}`} className="text-sm text-muted-foreground hover:text-primary flex items-center gap-1">
-                          <Phone className="w-3 h-3" />
-                          {event.parent_phone}
-                        </a>
-                      </TableCell>
-                      <TableCell>{getTypeBadge(event.booking_type)}</TableCell>
-                      <TableCell>{getStatusBadge(event.status)}</TableCell>
-                      <TableCell>{getPaymentBadge(event.payment_status)}</TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                              <MoreVertical className="w-4 h-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => openDetailDialog(event)}>
-                              <Eye className="w-4 h-4 mr-2" />
-                              {'View'}
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem 
-                              onClick={() => handleStatusChange(event.id, 'confirmed')}
-                              disabled={event.status === 'confirmed' || event.status === 'cancelled'}
-                            >
-                              <CheckCircle className="w-4 h-4 mr-2 text-green-600" />
-                              {'Confirm'}
-                            </DropdownMenuItem>
-                            <DropdownMenuItem 
-                              onClick={() => handlePaymentChange(event.id, 'paid')}
-                              disabled={event.payment_status === 'paid'}
-                            >
-                              <Banknote className="w-4 h-4 mr-2 text-green-600" />
-                              {'Mark Paid'}
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem 
-                              onClick={() => handleStatusChange(event.id, 'cancelled')}
-                              disabled={event.status === 'cancelled'}
-                              className="text-destructive"
-                            >
-                              <Ban className="w-4 h-4 mr-2" />
-                              {'Cancel'}
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
+            <>
+              {/* Mobile Card View */}
+              <div className="lg:hidden space-y-2">
+                {filteredEvents.map((event) => (
+                  <div key={event.id} className="border rounded-lg p-2.5 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-medium">{format(parseISO(event.slot_date), 'dd MMM yyyy')}</span>
+                      <div className="flex gap-1">
+                        {getTypeBadge(event.booking_type)}
+                        {getStatusBadge(event.status)}
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground text-xs">{event.time_slot}</span>
+                      <span className="font-medium text-xs">{event.parent_name}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <a href={`tel:${event.parent_phone}`} className="text-muted-foreground hover:text-primary flex items-center gap-1">
+                        <Phone className="w-3 h-3" /> {event.parent_phone}
+                      </a>
+                      {getPaymentBadge(event.payment_status)}
+                    </div>
+                    <div className="flex items-center justify-end gap-1 pt-1 border-t">
+                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openDetailDialog(event)}>
+                        <Eye className="w-3.5 h-3.5" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleStatusChange(event.id, 'confirmed')} disabled={event.status === 'confirmed' || event.status === 'cancelled'}>
+                        <CheckCircle className="w-3.5 h-3.5 text-green-600" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handlePaymentChange(event.id, 'paid')} disabled={event.payment_status === 'paid'}>
+                        <Banknote className="w-3.5 h-3.5 text-green-600" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleStatusChange(event.id, 'cancelled')} disabled={event.status === 'cancelled'}>
+                        <Ban className="w-3.5 h-3.5 text-destructive" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop Table View */}
+              <div className="hidden lg:block overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{'Date & Time'}</TableHead>
+                      <TableHead>{'Customer'}</TableHead>
+                      <TableHead>{'Type'}</TableHead>
+                      <TableHead>{'Status'}</TableHead>
+                      <TableHead>{'Payment'}</TableHead>
+                      <TableHead className="text-right"></TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          )}
+                  </TableHeader>
+                  <TableBody>
+                    {filteredEvents.map((event) => (
+                      <TableRow key={event.id}>
+                        <TableCell>
+                          <div className="font-medium">{format(parseISO(event.slot_date), 'dd MMM yyyy', { locale: undefined })}</div>
+                          <div className="text-sm text-muted-foreground">{event.time_slot}</div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="font-medium">{event.parent_name}</div>
+                          <a href={`tel:${event.parent_phone}`} className="text-sm text-muted-foreground hover:text-primary flex items-center gap-1">
+                            <Phone className="w-3 h-3" /> {event.parent_phone}
+                          </a>
+                        </TableCell>
+                        <TableCell>{getTypeBadge(event.booking_type)}</TableCell>
+                        <TableCell>{getStatusBadge(event.status)}</TableCell>
+                        <TableCell>{getPaymentBadge(event.payment_status)}</TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon">
+                                <MoreVertical className="w-4 h-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => openDetailDialog(event)}>
+                                <Eye className="w-4 h-4 mr-2" /> {'View'}
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem onClick={() => handleStatusChange(event.id, 'confirmed')} disabled={event.status === 'confirmed' || event.status === 'cancelled'}>
+                                <CheckCircle className="w-4 h-4 mr-2 text-green-600" /> {'Confirm'}
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handlePaymentChange(event.id, 'paid')} disabled={event.payment_status === 'paid'}>
+                                <Banknote className="w-4 h-4 mr-2 text-green-600" /> {'Mark Paid'}
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem onClick={() => handleStatusChange(event.id, 'cancelled')} disabled={event.status === 'cancelled'} className="text-destructive">
+                                <Ban className="w-4 h-4 mr-2" /> {'Cancel'}
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </>
+          )
         </CardContent>
       </Card>
       </div>

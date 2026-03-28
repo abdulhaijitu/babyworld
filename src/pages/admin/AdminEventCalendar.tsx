@@ -75,15 +75,15 @@ export default function AdminEventCalendar() {
         <Card className="lg:col-span-2">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>{format(currentMonth, 'MMMM yyyy')}</CardTitle>
-              <div className="flex gap-2">
-                <Button variant="outline" size="icon" onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}>
+              <CardTitle className="text-base lg:text-lg">{format(currentMonth, 'MMMM yyyy')}</CardTitle>
+              <div className="flex gap-1 lg:gap-2">
+                <Button variant="outline" size="icon" className="h-7 w-7 lg:h-9 lg:w-9" onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}>
                   <ChevronLeft className="w-4 h-4" />
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => { setCurrentMonth(new Date()); setSelectedDate(new Date()); }}>
+                <Button variant="outline" size="sm" className="h-7 text-xs lg:h-9 lg:text-sm" onClick={() => { setCurrentMonth(new Date()); setSelectedDate(new Date()); }}>
                   Today
                 </Button>
-                <Button variant="outline" size="icon" onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}>
+                <Button variant="outline" size="icon" className="h-7 w-7 lg:h-9 lg:w-9" onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}>
                   <ChevronRight className="w-4 h-4" />
                 </Button>
               </div>
@@ -128,7 +128,7 @@ export default function AdminEventCalendar() {
             ) : (
               <div className="space-y-3">
                 {selectedEvents.map(event => (
-                  <div key={event.id} className="p-3 border rounded-lg space-y-2">
+                  <div key={event.id} className="p-2 lg:p-3 border rounded-lg space-y-1.5 lg:space-y-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         {event.booking_type === 'birthday_event' ? (

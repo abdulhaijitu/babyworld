@@ -250,15 +250,15 @@ export default function AdminEventPackages() {
   };
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-4">
-        <div className="flex gap-2">
+      <div className="flex items-center justify-end gap-2">
           <Button variant="outline" size="sm" onClick={fetchPackages} disabled={loading}>
-            <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} /> Refresh
+            <RefreshCw className={`w-4 h-4 lg:mr-2 ${loading ? 'animate-spin' : ''}`} />
+            <span className="hidden lg:inline">Refresh</span>
           </Button>
-          <Button onClick={openCreate}>
-            <Plus className="w-4 h-4 mr-2" /> New Package
+          <Button size="sm" onClick={openCreate}>
+            <Plus className="w-4 h-4 lg:mr-2" />
+            <span className="hidden lg:inline">New Package</span>
           </Button>
-        </div>
       </div>
 
       {loading ? (
@@ -269,84 +269,140 @@ export default function AdminEventPackages() {
             <CardTitle className="text-lg">All Packages ({packages.length})</CardTitle>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                 <TableRow>
-                   <TableHead className="w-10"></TableHead>
-                   <TableHead className="w-10 text-center">#</TableHead>
-                   <TableHead className="w-16">Image</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Price</TableHead>
-                  <TableHead>Guests</TableHead>
-                  <TableHead>Duration</TableHead>
-                  <TableHead className="min-w-[200px]">Features</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {packages.length === 0 ? (
-                  <TableRow>
-                     <TableCell colSpan={10} className="text-center py-8 text-muted-foreground">
-                       No packages found. Create your first package.
-                     </TableCell>
-                  </TableRow>
-                 ) : packages.map(pkg => (
-                   <TableRow
-                     key={pkg.id}
-                     draggable
-                     onDragStart={(e) => handleDragStart(e, pkg.id)}
-                     onDragOver={(e) => handleDragOver(e, pkg.id)}
-                     onDragLeave={handleDragLeave}
-                     onDrop={(e) => handleDrop(e, pkg.id)}
-                     onDragEnd={handleDragEnd}
-                     className={`transition-colors ${draggedId === pkg.id ? 'opacity-50' : ''} ${dragOverId === pkg.id ? 'bg-accent' : ''}`}
-                   >
-                     <TableCell className="cursor-grab active:cursor-grabbing">
-                       <GripVertical className="w-4 h-4 text-muted-foreground" />
-                     </TableCell>
-                     <TableCell className="text-center text-xs text-muted-foreground font-mono">{pkg.sort_order}</TableCell>
-                    <TableCell>
-                      {pkg.image_url ? (
-                        <img src={pkg.image_url} alt={pkg.name} className="w-12 h-12 rounded-lg object-cover shadow-sm border border-border" />
-                      ) : (
-                        <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center border border-border">
-                          <ImagePlus className="w-5 h-5 text-muted-foreground" />
-                        </div>
-                      )}
-                    </TableCell>
-                    <TableCell className="font-semibold">{pkg.name}</TableCell>
-                    <TableCell className="font-bold text-primary">৳{pkg.price.toLocaleString()}</TableCell>
-                    <TableCell>
-                      <span className="flex items-center gap-1"><Users className="w-3.5 h-3.5 text-muted-foreground" /> {pkg.max_guests}</span>
-                    </TableCell>
-                    <TableCell>{pkg.duration_hours}h</TableCell>
-                    <TableCell>
-                      <div className="flex flex-wrap gap-1">
-                        {pkg.features.slice(0, 3).map((f, i) => (
-                          <Badge key={i} variant="secondary" className="text-[10px] px-1.5 py-0 font-normal">{f}</Badge>
-                        ))}
-                        {pkg.features.length > 3 && (
-                          <Badge variant="outline" className="text-[10px] px-1.5 py-0 font-normal">+{pkg.features.length - 3}</Badge>
-                        )}
+            {/* Mobile Card View */}
+            <div className="lg:hidden space-y-2">
+              {packages.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">No packages found. Create your first package.</div>
+              ) : packages.map(pkg => (
+                <div key={pkg.id} className="border rounded-lg p-2.5 space-y-2">
+                  <div className="flex items-start gap-2.5">
+                    {pkg.image_url ? (
+                      <img src={pkg.image_url} alt={pkg.name} className="w-14 h-14 rounded-lg object-cover border border-border flex-shrink-0" />
+                    ) : (
+                      <div className="w-14 h-14 rounded-lg bg-muted flex items-center justify-center border border-border flex-shrink-0">
+                        <ImagePlus className="w-5 h-5 text-muted-foreground" />
                       </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Switch checked={pkg.is_active} onCheckedChange={() => toggleActive(pkg.id, pkg.is_active)} />
-                        <Badge variant={pkg.is_active ? 'default' : 'outline'} className="text-[10px]">
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <span className="font-semibold text-sm truncate">{pkg.name}</span>
+                        <Badge variant={pkg.is_active ? 'default' : 'outline'} className="text-[10px] ml-1 flex-shrink-0">
                           {pkg.is_active ? 'Active' : 'Inactive'}
                         </Badge>
                       </div>
-                    </TableCell>
-                    <TableCell className="text-right space-x-1">
-                      <Button variant="ghost" size="icon" onClick={() => openEdit(pkg)}><Pencil className="w-4 h-4" /></Button>
-                      <Button variant="ghost" size="icon" onClick={() => handleDelete(pkg.id)} className="text-destructive hover:text-destructive"><Trash2 className="w-4 h-4" /></Button>
-                    </TableCell>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
+                        <span className="font-bold text-primary">৳{pkg.price.toLocaleString()}</span>
+                        <span>·</span>
+                        <span className="flex items-center gap-0.5"><Users className="w-3 h-3" />{pkg.max_guests}</span>
+                        <span>·</span>
+                        <span>{pkg.duration_hours}h</span>
+                      </div>
+                    </div>
+                  </div>
+                  {pkg.features.length > 0 && (
+                    <div className="flex flex-wrap gap-1">
+                      {pkg.features.slice(0, 3).map((f, i) => (
+                        <Badge key={i} variant="secondary" className="text-[10px] px-1.5 py-0 font-normal">{f}</Badge>
+                      ))}
+                      {pkg.features.length > 3 && (
+                        <Badge variant="outline" className="text-[10px] px-1.5 py-0 font-normal">+{pkg.features.length - 3}</Badge>
+                      )}
+                    </div>
+                  )}
+                  <div className="flex items-center justify-end gap-1 pt-1 border-t">
+                    <Switch checked={pkg.is_active} onCheckedChange={() => toggleActive(pkg.id, pkg.is_active)} />
+                    <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(pkg)}>
+                      <Pencil className="w-3.5 h-3.5" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive" onClick={() => handleDelete(pkg.id)}>
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table View */}
+            <div className="hidden lg:block">
+              <Table>
+                <TableHeader>
+                   <TableRow>
+                     <TableHead className="w-10"></TableHead>
+                     <TableHead className="w-10 text-center">#</TableHead>
+                     <TableHead className="w-16">Image</TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Price</TableHead>
+                    <TableHead>Guests</TableHead>
+                    <TableHead>Duration</TableHead>
+                    <TableHead className="min-w-[200px]">Features</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {packages.length === 0 ? (
+                    <TableRow>
+                       <TableCell colSpan={10} className="text-center py-8 text-muted-foreground">
+                         No packages found. Create your first package.
+                       </TableCell>
+                    </TableRow>
+                   ) : packages.map(pkg => (
+                     <TableRow
+                       key={pkg.id}
+                       draggable
+                       onDragStart={(e) => handleDragStart(e, pkg.id)}
+                       onDragOver={(e) => handleDragOver(e, pkg.id)}
+                       onDragLeave={handleDragLeave}
+                       onDrop={(e) => handleDrop(e, pkg.id)}
+                       onDragEnd={handleDragEnd}
+                       className={`transition-colors ${draggedId === pkg.id ? 'opacity-50' : ''} ${dragOverId === pkg.id ? 'bg-accent' : ''}`}
+                     >
+                       <TableCell className="cursor-grab active:cursor-grabbing">
+                         <GripVertical className="w-4 h-4 text-muted-foreground" />
+                       </TableCell>
+                       <TableCell className="text-center text-xs text-muted-foreground font-mono">{pkg.sort_order}</TableCell>
+                      <TableCell>
+                        {pkg.image_url ? (
+                          <img src={pkg.image_url} alt={pkg.name} className="w-12 h-12 rounded-lg object-cover shadow-sm border border-border" />
+                        ) : (
+                          <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center border border-border">
+                            <ImagePlus className="w-5 h-5 text-muted-foreground" />
+                          </div>
+                        )}
+                      </TableCell>
+                      <TableCell className="font-semibold">{pkg.name}</TableCell>
+                      <TableCell className="font-bold text-primary">৳{pkg.price.toLocaleString()}</TableCell>
+                      <TableCell>
+                        <span className="flex items-center gap-1"><Users className="w-3.5 h-3.5 text-muted-foreground" /> {pkg.max_guests}</span>
+                      </TableCell>
+                      <TableCell>{pkg.duration_hours}h</TableCell>
+                      <TableCell>
+                        <div className="flex flex-wrap gap-1">
+                          {pkg.features.slice(0, 3).map((f, i) => (
+                            <Badge key={i} variant="secondary" className="text-[10px] px-1.5 py-0 font-normal">{f}</Badge>
+                          ))}
+                          {pkg.features.length > 3 && (
+                            <Badge variant="outline" className="text-[10px] px-1.5 py-0 font-normal">+{pkg.features.length - 3}</Badge>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Switch checked={pkg.is_active} onCheckedChange={() => toggleActive(pkg.id, pkg.is_active)} />
+                          <Badge variant={pkg.is_active ? 'default' : 'outline'} className="text-[10px]">
+                            {pkg.is_active ? 'Active' : 'Inactive'}
+                          </Badge>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right space-x-1">
+                        <Button variant="ghost" size="icon" onClick={() => openEdit(pkg)}><Pencil className="w-4 h-4" /></Button>
+                        <Button variant="ghost" size="icon" onClick={() => handleDelete(pkg.id)} className="text-destructive hover:text-destructive"><Trash2 className="w-4 h-4" /></Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </CardContent>
         </Card>
       )}
