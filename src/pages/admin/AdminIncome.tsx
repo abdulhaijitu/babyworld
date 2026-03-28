@@ -238,84 +238,33 @@ export default function AdminIncome() {
   const isPending = createMutation.isPending || updateMutation.isPending;
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-4">
-        <div className="flex items-center gap-2">
-          <Input
-            type="month"
-            value={dateFilter}
-            onChange={(e) => setDateFilter(e.target.value)}
-            className="w-44"
-          />
-        </div>
+    <div className="space-y-4">
+      <div className="flex items-center justify-end gap-2">
+        <Input type="month" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} className="w-36 lg:w-44 h-8 lg:h-10 text-xs lg:text-sm" />
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Income</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">৳{grandTotal.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">Auto + Manual combined</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Ticket Revenue</CardTitle>
-            <Ticket className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">৳{(ticketRevenue || 0).toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">Auto-tracked from tickets</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Food & Membership</CardTitle>
-            <UtensilsCrossed className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">৳{((foodRevenue || 0) + (membershipRevenue || 0)).toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">Auto-tracked</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Other Income</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">৳{manualTotal.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">Manual entries</p>
-          </CardContent>
-        </Card>
+      {/* Summary Cards - always 4 cols */}
+      <div className="grid grid-cols-4 gap-2">
+        <Card><CardContent className="p-2"><p className="text-lg lg:text-2xl font-bold">৳{grandTotal.toLocaleString()}</p><p className="text-[10px] lg:text-xs text-muted-foreground">Total</p></CardContent></Card>
+        <Card><CardContent className="p-2"><p className="text-lg lg:text-2xl font-bold">৳{(ticketRevenue || 0).toLocaleString()}</p><p className="text-[10px] lg:text-xs text-muted-foreground">Ticket</p></CardContent></Card>
+        <Card><CardContent className="p-2"><p className="text-lg lg:text-2xl font-bold">৳{((foodRevenue || 0) + (membershipRevenue || 0)).toLocaleString()}</p><p className="text-[10px] lg:text-xs text-muted-foreground">Food+Mem</p></CardContent></Card>
+        <Card><CardContent className="p-2"><p className="text-lg lg:text-2xl font-bold">৳{manualTotal.toLocaleString()}</p><p className="text-[10px] lg:text-xs text-muted-foreground">Manual</p></CardContent></Card>
       </div>
 
       {/* Manual Income Section */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h2 className="text-lg font-semibold">Manual Income Entries</h2>
+      <div className="flex items-center justify-between gap-2">
+        <h2 className="text-sm lg:text-lg font-semibold">Manual Income</h2>
         <div className="flex items-center gap-2">
           <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-            <SelectTrigger className="w-40">
-              <SelectValue placeholder="All Categories" />
-            </SelectTrigger>
+            <SelectTrigger className="w-28 lg:w-40 h-8 text-xs lg:text-sm"><SelectValue placeholder="All" /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
-              {manualCategories.map(c => (
-                <SelectItem key={c.name} value={c.name}>{c.label}</SelectItem>
-              ))}
+              <SelectItem value="all">All</SelectItem>
+              {manualCategories.map(c => (<SelectItem key={c.name} value={c.name}>{c.label}</SelectItem>))}
             </SelectContent>
           </Select>
-
           <Dialog open={dialogOpen} onOpenChange={(open) => { if (!open) closeDialog(); else setDialogOpen(true); }}>
             <DialogTrigger asChild>
-              <Button>
-                <Plus className="w-4 h-4 mr-2" />
-                Add Income
-              </Button>
+              <Button size="sm"><Plus className="w-4 h-4 lg:mr-2" /><span className="hidden lg:inline">Add Income</span></Button>
             </DialogTrigger>
             <DialogContent className="max-w-md">
               <DialogHeader>
@@ -412,79 +361,64 @@ export default function AdminIncome() {
       <Card>
         <CardContent className="p-0">
           {incomesLoading ? (
-            <div className="p-6 space-y-4">
-              {[1, 2, 3].map((i) => (
-                <Skeleton key={i} className="h-12 w-full" />
-              ))}
-            </div>
+            <div className="p-6 space-y-4">{[1, 2, 3].map((i) => (<Skeleton key={i} className="h-12 w-full" />))}</div>
           ) : incomes?.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground">
-              <ArrowDownCircle className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>No manual income entries this month</p>
-            </div>
+            <div className="text-center py-12 text-muted-foreground"><ArrowDownCircle className="w-12 h-12 mx-auto mb-4 opacity-50" /><p>No manual income entries this month</p></div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Category</TableHead>
-                  <TableHead>Description</TableHead>
-                  <TableHead>Payment</TableHead>
-                  <TableHead className="text-right">Amount</TableHead>
-                  {isAdmin && <TableHead className="text-right">Actions</TableHead>}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+            <>
+              {/* Mobile Card View */}
+              <div className="lg:hidden divide-y">
                 {incomes?.map((inc) => (
-                  <TableRow key={inc.id}>
-                    <TableCell className="whitespace-nowrap">{format(new Date(inc.income_date), 'dd MMM yyyy')}</TableCell>
-                    <TableCell>
-                      <Badge className={categoryColorMap[inc.category] || 'bg-gray-100 text-gray-800'}>
-                        {categoryLabelMap[inc.category] || inc.category}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{inc.description}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className="capitalize">{inc.payment_method}</Badge>
-                    </TableCell>
-                    <TableCell className="text-right font-medium">৳{Number(inc.amount).toLocaleString()}</TableCell>
+                  <div key={inc.id} className="p-2.5 space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-muted-foreground">{format(new Date(inc.income_date), 'dd MMM yyyy')}</span>
+                      <Badge className={`${categoryColorMap[inc.category] || 'bg-gray-100 text-gray-800'} text-[10px] px-1.5 py-0`}>{categoryLabelMap[inc.category] || inc.category}</Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm truncate mr-2">{inc.description}</span>
+                      <span className="font-semibold text-sm whitespace-nowrap">৳{Number(inc.amount).toLocaleString()}</span>
+                    </div>
                     {isAdmin && (
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end gap-1">
-                          <Button variant="ghost" size="icon" onClick={() => openEdit(inc)}>
-                            <Pencil className="w-4 h-4" />
-                          </Button>
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>Delete Income?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  This will permanently delete this income entry of ৳{Number(inc.amount).toLocaleString()}.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction
-                                  onClick={() => deleteMutation.mutate(inc.id)}
-                                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                                >
-                                  Delete
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
-                        </div>
-                      </TableCell>
+                      <div className="flex items-center justify-end gap-1 pt-1">
+                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(inc)}><Pencil className="w-3.5 h-3.5" /></Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild><Button variant="ghost" size="icon" className="h-7 w-7 text-destructive"><Trash2 className="w-3.5 h-3.5" /></Button></AlertDialogTrigger>
+                          <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete Income?</AlertDialogTitle><AlertDialogDescription>This will permanently delete ৳{Number(inc.amount).toLocaleString()}.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => deleteMutation.mutate(inc.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent>
+                        </AlertDialog>
+                      </div>
                     )}
-                  </TableRow>
+                  </div>
                 ))}
-              </TableBody>
-            </Table>
+              </div>
+              {/* Desktop Table */}
+              <div className="hidden lg:block">
+                <Table>
+                  <TableHeader><TableRow><TableHead>Date</TableHead><TableHead>Category</TableHead><TableHead>Description</TableHead><TableHead>Payment</TableHead><TableHead className="text-right">Amount</TableHead>{isAdmin && <TableHead className="text-right">Actions</TableHead>}</TableRow></TableHeader>
+                  <TableBody>
+                    {incomes?.map((inc) => (
+                      <TableRow key={inc.id}>
+                        <TableCell className="whitespace-nowrap">{format(new Date(inc.income_date), 'dd MMM yyyy')}</TableCell>
+                        <TableCell><Badge className={categoryColorMap[inc.category] || 'bg-gray-100 text-gray-800'}>{categoryLabelMap[inc.category] || inc.category}</Badge></TableCell>
+                        <TableCell>{inc.description}</TableCell>
+                        <TableCell><Badge variant="outline" className="capitalize">{inc.payment_method}</Badge></TableCell>
+                        <TableCell className="text-right font-medium">৳{Number(inc.amount).toLocaleString()}</TableCell>
+                        {isAdmin && (
+                          <TableCell className="text-right">
+                            <div className="flex items-center justify-end gap-1">
+                              <Button variant="ghost" size="icon" onClick={() => openEdit(inc)}><Pencil className="w-4 h-4" /></Button>
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild><Button variant="ghost" size="icon" className="text-destructive hover:text-destructive"><Trash2 className="w-4 h-4" /></Button></AlertDialogTrigger>
+                                <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete Income?</AlertDialogTitle><AlertDialogDescription>৳{Number(inc.amount).toLocaleString()} permanently delete.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => deleteMutation.mutate(inc.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent>
+                              </AlertDialog>
+                            </div>
+                          </TableCell>
+                        )}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </>
           )}
         </CardContent>
       </Card>

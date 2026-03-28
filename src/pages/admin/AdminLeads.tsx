@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Checkbox } from '@/components/ui/checkbox';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { 
   Plus, Search, Phone, Mail, Calendar, Trash2, Edit, UserPlus, 
   Filter, Users, UserCheck, UserX, MessageSquare, Send, Loader2, Megaphone
@@ -232,12 +233,10 @@ function BulkMessageDialog({ leads, onClose }: { leads: Lead[]; onClose: () => v
 
   const handleBulkWhatsApp = () => {
     const phones = leads.map(l => formatPhone(l.phone));
-    // Open first one, show instructions for rest
     if (phones.length > 0) {
       const url = `https://wa.me/${phones[0]}?text=${encodeURIComponent(message)}`;
       window.open(url, '_blank');
     }
-    // For bulk WhatsApp, we open each in sequence
     leads.forEach((lead, i) => {
       if (i === 0) return;
       setTimeout(() => {
@@ -392,13 +391,16 @@ export default function AdminLeads() {
   const selectedLeads = filteredLeads.filter(l => selectedIds.has(l.id));
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4">
+    <div className="space-y-4">
+      <div className="flex items-center justify-end gap-3">
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={openNew}><Plus className="h-4 w-4 mr-2" />নতুন লিড</Button>
+            <Button onClick={openNew} size="sm">
+              <Plus className="h-4 w-4 lg:mr-2" />
+              <span className="hidden lg:inline">নতুন লিড</span>
+            </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{editingLead ? 'লিড এডিট করুন' : 'নতুন লিড যোগ করুন'}</DialogTitle>
             </DialogHeader>
@@ -407,69 +409,60 @@ export default function AdminLeads() {
         </Dialog>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {/* Stats Cards - always 4 cols compact */}
+      <div className="grid grid-cols-4 gap-2">
         <Card>
-          <CardContent className="p-4 flex items-center gap-3">
-            <Users className="h-8 w-8 text-primary" />
-            <div>
-              <p className="text-2xl font-bold">{stats.total}</p>
-              <p className="text-xs text-muted-foreground">মোট লিড</p>
-            </div>
+          <CardContent className="p-2">
+            <p className="text-lg lg:text-2xl font-bold">{stats.total}</p>
+            <p className="text-[10px] lg:text-xs text-muted-foreground">মোট লিড</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4 flex items-center gap-3">
-            <UserPlus className="h-8 w-8 text-blue-500" />
-            <div>
-              <p className="text-2xl font-bold">{stats.new}</p>
-              <p className="text-xs text-muted-foreground">নতুন</p>
-            </div>
+          <CardContent className="p-2">
+            <p className="text-lg lg:text-2xl font-bold text-blue-600">{stats.new}</p>
+            <p className="text-[10px] lg:text-xs text-muted-foreground">নতুন</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4 flex items-center gap-3">
-            <MessageSquare className="h-8 w-8 text-green-500" />
-            <div>
-              <p className="text-2xl font-bold">{stats.interested}</p>
-              <p className="text-xs text-muted-foreground">আগ্রহী</p>
-            </div>
+          <CardContent className="p-2">
+            <p className="text-lg lg:text-2xl font-bold text-green-600">{stats.interested}</p>
+            <p className="text-[10px] lg:text-xs text-muted-foreground">আগ্রহী</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4 flex items-center gap-3">
-            <UserCheck className="h-8 w-8 text-emerald-500" />
-            <div>
-              <p className="text-2xl font-bold">{stats.converted}</p>
-              <p className="text-xs text-muted-foreground">কনভার্টেড</p>
-            </div>
+          <CardContent className="p-2">
+            <p className="text-lg lg:text-2xl font-bold text-emerald-600">{stats.converted}</p>
+            <p className="text-[10px] lg:text-xs text-muted-foreground">কনভার্টেড</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Filters */}
       <Card>
-        <CardContent className="p-4">
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className="relative flex-1">
+        <CardContent className="p-3">
+          <div className="space-y-2">
+            <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="নাম বা ফোন দিয়ে খুঁজুন..."
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                className="pl-10"
+                className="pl-10 h-8 lg:h-10"
               />
             </div>
-            <Tabs value={statusFilter} onValueChange={v => setStatusFilter(v as LeadStatus | 'all')}>
-              <TabsList>
-                <TabsTrigger value="all">সব</TabsTrigger>
-                <TabsTrigger value="new">New</TabsTrigger>
-                <TabsTrigger value="contacted">Contacted</TabsTrigger>
-                <TabsTrigger value="interested">Interested</TabsTrigger>
-                <TabsTrigger value="converted">Converted</TabsTrigger>
-                <TabsTrigger value="lost">Lost</TabsTrigger>
-              </TabsList>
-            </Tabs>
+            <ScrollArea className="w-full">
+              <Tabs value={statusFilter} onValueChange={v => setStatusFilter(v as LeadStatus | 'all')}>
+                <TabsList className="w-max">
+                  <TabsTrigger value="all" className="text-xs px-2 lg:px-3">সব</TabsTrigger>
+                  <TabsTrigger value="new" className="text-xs px-2 lg:px-3">New</TabsTrigger>
+                  <TabsTrigger value="contacted" className="text-xs px-2 lg:px-3">Contacted</TabsTrigger>
+                  <TabsTrigger value="interested" className="text-xs px-2 lg:px-3">Interested</TabsTrigger>
+                  <TabsTrigger value="converted" className="text-xs px-2 lg:px-3">Converted</TabsTrigger>
+                  <TabsTrigger value="lost" className="text-xs px-2 lg:px-3">Lost</TabsTrigger>
+                </TabsList>
+              </Tabs>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
           </div>
         </CardContent>
       </Card>
@@ -493,88 +486,150 @@ export default function AdminLeads() {
           ) : filteredLeads.length === 0 ? (
             <div className="p-8 text-center text-muted-foreground">কোনো লিড পাওয়া যায়নি</div>
           ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-10">
+            <>
+              {/* Mobile Card View */}
+              <div className="lg:hidden divide-y">
+                {filteredLeads.map(lead => (
+                  <div key={lead.id} className="p-2.5 space-y-1.5">
+                    <div className="flex items-start gap-2">
                       <Checkbox
-                        checked={selectedIds.size === filteredLeads.length && filteredLeads.length > 0}
-                        onCheckedChange={toggleSelectAll}
+                        checked={selectedIds.has(lead.id)}
+                        onCheckedChange={() => toggleSelect(lead.id)}
+                        className="mt-0.5"
                       />
-                    </TableHead>
-                    <TableHead>নাম</TableHead>
-                    <TableHead>যোগাযোগ</TableHead>
-                    <TableHead>সোর্স</TableHead>
-                    <TableHead>আগ্রহ</TableHead>
-                    <TableHead>স্ট্যাটাস</TableHead>
-                    <TableHead>ফলো-আপ</TableHead>
-                    <TableHead>তারিখ</TableHead>
-                    <TableHead className="text-right">অ্যাকশন</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredLeads.map(lead => (
-                    <TableRow key={lead.id} className={selectedIds.has(lead.id) ? 'bg-muted/50' : ''}>
-                      <TableCell>
-                        <Checkbox
-                          checked={selectedIds.has(lead.id)}
-                          onCheckedChange={() => toggleSelect(lead.id)}
-                        />
-                      </TableCell>
-                      <TableCell className="font-medium">{lead.name}</TableCell>
-                      <TableCell>
-                        <div className="flex flex-col text-sm">
-                          <span className="flex items-center gap-1"><Phone className="h-3 w-3" />{lead.phone}</span>
-                          {lead.email && <span className="flex items-center gap-1 text-muted-foreground"><Mail className="h-3 w-3" />{lead.email}</span>}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-1">
+                          <span className="font-medium text-sm truncate">{lead.name}</span>
+                          <Badge className={`${STATUS_CONFIG[lead.status].color} text-[10px] px-1.5 py-0`}>
+                            {STATUS_CONFIG[lead.status].label}
+                          </Badge>
                         </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className="capitalize">{lead.source.replace('_', ' ')}</Badge>
-                      </TableCell>
-                      <TableCell className="text-sm">{lead.interested_in || '-'}</TableCell>
-                      <TableCell>
-                        <Badge className={STATUS_CONFIG[lead.status].color}>
-                          {STATUS_CONFIG[lead.status].label}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-sm">
-                        {lead.follow_up_date ? (
-                          <span className="flex items-center gap-1">
-                            <Calendar className="h-3 w-3" />
-                            {format(new Date(lead.follow_up_date), 'dd MMM yyyy')}
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
+                          <a href={`tel:${lead.phone}`} className="flex items-center gap-0.5 hover:text-primary">
+                            <Phone className="h-3 w-3" />{lead.phone}
+                          </a>
+                          <Badge variant="outline" className="text-[10px] px-1 py-0 capitalize">{lead.source.replace('_', ' ')}</Badge>
+                        </div>
+                        {lead.interested_in && (
+                          <p className="text-[10px] text-muted-foreground mt-0.5">{lead.interested_in}</p>
+                        )}
+                        <div className="flex items-center justify-between mt-1">
+                          <span className="text-[10px] text-muted-foreground">
+                            {format(new Date(lead.created_at), 'dd MMM yyyy')}
+                            {lead.follow_up_date && (
+                              <span className="ml-1">· F/U: {format(new Date(lead.follow_up_date), 'dd MMM')}</span>
+                            )}
                           </span>
-                        ) : '-'}
-                      </TableCell>
-                      <TableCell className="text-sm text-muted-foreground">
-                        {format(new Date(lead.created_at), 'dd MMM yyyy')}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-1">
-                          <SMSButton phone={lead.phone} name={lead.name} />
-                          <WhatsAppLeadButton phone={lead.phone} name={lead.name} />
-                          <Button variant="ghost" size="icon" onClick={() => openEdit(lead)}>
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="text-destructive hover:text-destructive"
-                            onClick={() => {
-                              if (confirm('এই লিড ডিলিট করতে চান?')) {
-                                deleteLead.mutate(lead.id);
-                              }
-                            }}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
+                          <div className="flex gap-0.5">
+                            <SMSButton phone={lead.phone} name={lead.name} />
+                            <WhatsAppLeadButton phone={lead.phone} name={lead.name} />
+                            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(lead)}>
+                              <Edit className="h-3.5 w-3.5" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7 text-destructive hover:text-destructive"
+                              onClick={() => {
+                                if (confirm('এই লিড ডিলিট করতে চান?')) {
+                                  deleteLead.mutate(lead.id);
+                                }
+                              }}
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </Button>
+                          </div>
                         </div>
-                      </TableCell>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop Table View */}
+              <div className="hidden lg:block overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-10">
+                        <Checkbox
+                          checked={selectedIds.size === filteredLeads.length && filteredLeads.length > 0}
+                          onCheckedChange={toggleSelectAll}
+                        />
+                      </TableHead>
+                      <TableHead>নাম</TableHead>
+                      <TableHead>যোগাযোগ</TableHead>
+                      <TableHead>সোর্স</TableHead>
+                      <TableHead>আগ্রহ</TableHead>
+                      <TableHead>স্ট্যাটাস</TableHead>
+                      <TableHead>ফলো-আপ</TableHead>
+                      <TableHead>তারিখ</TableHead>
+                      <TableHead className="text-right">অ্যাকশন</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredLeads.map(lead => (
+                      <TableRow key={lead.id} className={selectedIds.has(lead.id) ? 'bg-muted/50' : ''}>
+                        <TableCell>
+                          <Checkbox
+                            checked={selectedIds.has(lead.id)}
+                            onCheckedChange={() => toggleSelect(lead.id)}
+                          />
+                        </TableCell>
+                        <TableCell className="font-medium">{lead.name}</TableCell>
+                        <TableCell>
+                          <div className="flex flex-col text-sm">
+                            <span className="flex items-center gap-1"><Phone className="h-3 w-3" />{lead.phone}</span>
+                            {lead.email && <span className="flex items-center gap-1 text-muted-foreground"><Mail className="h-3 w-3" />{lead.email}</span>}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline" className="capitalize">{lead.source.replace('_', ' ')}</Badge>
+                        </TableCell>
+                        <TableCell className="text-sm">{lead.interested_in || '-'}</TableCell>
+                        <TableCell>
+                          <Badge className={STATUS_CONFIG[lead.status].color}>
+                            {STATUS_CONFIG[lead.status].label}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-sm">
+                          {lead.follow_up_date ? (
+                            <span className="flex items-center gap-1">
+                              <Calendar className="h-3 w-3" />
+                              {format(new Date(lead.follow_up_date), 'dd MMM yyyy')}
+                            </span>
+                          ) : '-'}
+                        </TableCell>
+                        <TableCell className="text-sm text-muted-foreground">
+                          {format(new Date(lead.created_at), 'dd MMM yyyy')}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-1">
+                            <SMSButton phone={lead.phone} name={lead.name} />
+                            <WhatsAppLeadButton phone={lead.phone} name={lead.name} />
+                            <Button variant="ghost" size="icon" onClick={() => openEdit(lead)}>
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="text-destructive hover:text-destructive"
+                              onClick={() => {
+                                if (confirm('এই লিড ডিলিট করতে চান?')) {
+                                  deleteLead.mutate(lead.id);
+                                }
+                              }}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </>
           )}
         </CardContent>
       </Card>

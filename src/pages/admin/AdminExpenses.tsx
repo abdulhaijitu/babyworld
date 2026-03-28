@@ -216,15 +216,14 @@ export default function AdminExpenses() {
   const totalExpenses = expensesData?.expenses?.reduce((sum: number, e: Expense) => sum + Number(e.amount), 0) || 0;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-4">
-
+      <div className="flex items-center justify-end gap-2">
         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
           <DialogTrigger asChild>
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              {'Add Expense'}
+            <Button size="sm">
+              <Plus className="w-4 h-4 lg:mr-2" />
+              <span className="hidden lg:inline">Add Expense</span>
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-md">
@@ -347,168 +346,143 @@ export default function AdminExpenses() {
 
       {/* Summary Card */}
       <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-lg">
-            {'Total Expenses'}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-3xl font-bold text-destructive">৳{totalExpenses.toLocaleString()}</div>
-          <p className="text-sm text-muted-foreground">
-            {format(startDate, 'dd MMM', { locale: undefined })} - {format(endDate, 'dd MMM yyyy', { locale: undefined })}
+        <CardContent className="p-3">
+          <p className="text-[10px] lg:text-xs text-muted-foreground">Total Expenses</p>
+          <div className="text-2xl lg:text-3xl font-bold text-destructive">৳{totalExpenses.toLocaleString()}</div>
+          <p className="text-[10px] lg:text-sm text-muted-foreground">
+            {format(startDate, 'dd MMM')} - {format(endDate, 'dd MMM yyyy')}
           </p>
         </CardContent>
       </Card>
 
       {/* Filters */}
       <Card>
-        <CardContent className="pt-6">
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-muted-foreground" />
-              <span className="text-sm font-medium">{'Filter:'}</span>
+        <CardContent className="p-3">
+          <div className="space-y-2">
+            <div className="grid grid-cols-2 gap-2 lg:flex lg:items-center lg:gap-3">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" size="sm" className="h-8 text-xs lg:text-sm w-full lg:w-auto">
+                    <CalendarIcon className="w-3 h-3 mr-1 lg:w-4 lg:h-4 lg:mr-2" />
+                    {format(startDate, 'dd MMM')} - {format(endDate, 'dd MMM')}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="range"
+                    selected={{ from: startDate, to: endDate }}
+                    onSelect={(range) => {
+                      if (range?.from) setStartDate(range.from);
+                      if (range?.to) setEndDate(range.to);
+                    }}
+                    numberOfMonths={1}
+                  />
+                </PopoverContent>
+              </Popover>
+              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <SelectTrigger className="h-8 text-xs lg:text-sm lg:w-[180px]">
+                  <SelectValue placeholder="All Categories" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  {expenseCategories.map(cat => (
+                    <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-
-            {/* Date Range */}
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline" size="sm">
-                  <CalendarIcon className="w-4 h-4 mr-2" />
-                  {format(startDate, 'dd MMM')} - {format(endDate, 'dd MMM')}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="range"
-                  selected={{ from: startDate, to: endDate }}
-                  onSelect={(range) => {
-                    if (range?.from) setStartDate(range.from);
-                    if (range?.to) setEndDate(range.to);
-                  }}
-                  numberOfMonths={2}
-                />
-              </PopoverContent>
-            </Popover>
-
-            {/* Category Filter */}
-            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder={'All Categories'} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{'All Categories'}</SelectItem>
-                {expenseCategories.map(cat => (
-                  <SelectItem key={cat.value} value={cat.value}>
-                    {cat.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
           </div>
         </CardContent>
       </Card>
 
-      {/* Expenses Table */}
+      {/* Expenses List */}
       <Card>
         <CardContent className="p-0">
           {isLoading ? (
             <div className="p-6 space-y-4">
-              {[1, 2, 3, 4, 5].map(i => (
-                <Skeleton key={i} className="h-12 w-full" />
-              ))}
+              {[1, 2, 3, 4, 5].map(i => (<Skeleton key={i} className="h-12 w-full" />))}
             </div>
           ) : expensesData?.expenses?.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <Receipt className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>{'No expenses recorded'}</p>
+              <p>No expenses recorded</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>{'Date'}</TableHead>
-                    <TableHead>{'Category'}</TableHead>
-                    <TableHead>{'Description'}</TableHead>
-                    <TableHead>{'Amount'}</TableHead>
-                    <TableHead>{'Payment'}</TableHead>
-                    <TableHead>{'Added By'}</TableHead>
-                    {isAdmin && <TableHead className="text-right">{'Actions'}</TableHead>}
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {expensesData?.expenses?.map((expense: Expense) => {
-                    const catInfo = getCategoryInfo(expense.category);
-                    const pmInfo = getPaymentMethodInfo(expense.payment_method);
-                    const PmIcon = pmInfo.icon;
+            <>
+              {/* Mobile Card View */}
+              <div className="lg:hidden divide-y">
+                {expensesData?.expenses?.map((expense: Expense) => {
+                  const catInfo = getCategoryInfo(expense.category);
+                  return (
+                    <div key={expense.id} className="p-2.5 space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-muted-foreground">{format(new Date(expense.expense_date), 'dd MMM yyyy')}</span>
+                        <Badge className={`${catInfo.color} text-[10px] px-1.5 py-0`}>{catInfo.label}</Badge>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium truncate mr-2">{expense.description}</span>
+                        <span className="font-semibold text-destructive text-sm whitespace-nowrap">৳{Number(expense.amount).toLocaleString()}</span>
+                      </div>
+                      {expense.notes && <p className="text-[10px] text-muted-foreground">{expense.notes}</p>}
+                      {isAdmin && (
+                        <div className="flex items-center justify-end gap-1 pt-1">
+                          <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => handleEdit(expense)}><Pencil className="w-3 h-3" /></Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive"><Trash2 className="w-3 h-3" /></Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader><AlertDialogTitle>Delete Expense?</AlertDialogTitle><AlertDialogDescription>This action cannot be undone.</AlertDialogDescription></AlertDialogHeader>
+                              <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => deleteMutation.mutate(expense.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Delete</AlertDialogAction></AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
 
-                    return (
-                      <TableRow key={expense.id}>
-                        <TableCell className="font-medium">
-                          {format(new Date(expense.expense_date), 'dd MMM yyyy', { locale: undefined })}
-                        </TableCell>
-                        <TableCell>
-                          <Badge className={catInfo.color}>
-                            {catInfo.label}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div>{expense.description}</div>
-                          {expense.notes && (
-                            <div className="text-xs text-muted-foreground">{expense.notes}</div>
+              {/* Desktop Table */}
+              <div className="hidden lg:block overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Date</TableHead><TableHead>Category</TableHead><TableHead>Description</TableHead><TableHead>Amount</TableHead><TableHead>Payment</TableHead><TableHead>Added By</TableHead>
+                      {isAdmin && <TableHead className="text-right">Actions</TableHead>}
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {expensesData?.expenses?.map((expense: Expense) => {
+                      const catInfo = getCategoryInfo(expense.category);
+                      const pmInfo = getPaymentMethodInfo(expense.payment_method);
+                      const PmIcon = pmInfo.icon;
+                      return (
+                        <TableRow key={expense.id}>
+                          <TableCell className="font-medium">{format(new Date(expense.expense_date), 'dd MMM yyyy')}</TableCell>
+                          <TableCell><Badge className={catInfo.color}>{catInfo.label}</Badge></TableCell>
+                          <TableCell><div>{expense.description}</div>{expense.notes && <div className="text-xs text-muted-foreground">{expense.notes}</div>}</TableCell>
+                          <TableCell className="font-semibold text-destructive">৳{Number(expense.amount).toLocaleString()}</TableCell>
+                          <TableCell><div className="flex items-center gap-1 text-sm"><PmIcon className="w-3 h-3" />{pmInfo.label}</div></TableCell>
+                          <TableCell className="text-sm text-muted-foreground">{expense.added_by_name}</TableCell>
+                          {isAdmin && (
+                            <TableCell className="text-right">
+                              <div className="flex justify-end gap-1">
+                                <Button size="sm" variant="ghost" onClick={() => handleEdit(expense)}><Pencil className="w-3 h-3" /></Button>
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild><Button size="sm" variant="ghost" className="text-destructive hover:text-destructive"><Trash2 className="w-3 h-3" /></Button></AlertDialogTrigger>
+                                  <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Delete Expense?</AlertDialogTitle><AlertDialogDescription>This action cannot be undone.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => deleteMutation.mutate(expense.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent>
+                                </AlertDialog>
+                              </div>
+                            </TableCell>
                           )}
-                        </TableCell>
-                        <TableCell className="font-semibold text-destructive">
-                          ৳{Number(expense.amount).toLocaleString()}
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-1 text-sm">
-                            <PmIcon className="w-3 h-3" />
-                            {pmInfo.label}
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-sm text-muted-foreground">
-                          {expense.added_by_name}
-                        </TableCell>
-                        {isAdmin && (
-                          <TableCell className="text-right">
-                            <div className="flex justify-end gap-1">
-                              <Button size="sm" variant="ghost" onClick={() => handleEdit(expense)}>
-                                <Pencil className="w-3 h-3" />
-                              </Button>
-                              <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                  <Button size="sm" variant="ghost" className="text-destructive hover:text-destructive">
-                                    <Trash2 className="w-3 h-3" />
-                                  </Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                  <AlertDialogHeader>
-                                    <AlertDialogTitle>{'Delete Expense?'}</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                      {'This expense will be permanently deleted. This action cannot be undone.'}
-                                    </AlertDialogDescription>
-                                  </AlertDialogHeader>
-                                  <AlertDialogFooter>
-                                    <AlertDialogCancel>{'Cancel'}</AlertDialogCancel>
-                                    <AlertDialogAction
-                                      onClick={() => deleteMutation.mutate(expense.id)}
-                                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                                    >
-                                      {'Delete'}
-                                    </AlertDialogAction>
-                                  </AlertDialogFooter>
-                                </AlertDialogContent>
-                              </AlertDialog>
-                            </div>
-                          </TableCell>
-                        )}
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </div>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </div>
+            </>
           )}
         </CardContent>
       </Card>

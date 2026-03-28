@@ -29,7 +29,6 @@ export default function AdminAttendance() {
   const [bulkDialogOpen, setBulkDialogOpen] = useState(false);
   const [form, setForm] = useState({ employee_id: '', check_in: '', check_out: '', status: 'present', notes: '' });
 
-  // Bulk marking state
   const [bulkStatus, setBulkStatus] = useState('present');
   const [bulkCheckIn, setBulkCheckIn] = useState('');
   const [bulkCheckOut, setBulkCheckOut] = useState('');
@@ -58,7 +57,6 @@ export default function AdminAttendance() {
     setForm({ employee_id: '', check_in: '', check_out: '', status: 'present', notes: '' });
   };
 
-  // Initialize bulk entries when dialog opens
   const openBulkDialog = () => {
     const markedIds = new Set(records.map((r: any) => r.employee_id));
     const entries: Record<string, string> = {};
@@ -111,51 +109,53 @@ export default function AdminAttendance() {
   const lateCount = records.filter((r: any) => r.status === 'late').length;
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-end flex-wrap gap-3">
-        <div className="flex items-center gap-3 flex-wrap">
-          <Input type="date" value={selectedDate} onChange={e => setSelectedDate(e.target.value)} className="w-auto" />
+    <div className="space-y-4">
+      <div className="flex items-center justify-end flex-wrap gap-2">
+        <Input type="date" value={selectedDate} onChange={e => setSelectedDate(e.target.value)} className="w-auto h-8 lg:h-10 text-xs lg:text-sm" />
 
-          <Button variant="outline" onClick={openBulkDialog}>
-            <Users className="h-4 w-4 mr-2" />Bulk Mark
-          </Button>
+        <Button variant="outline" size="sm" onClick={openBulkDialog}>
+          <Users className="h-4 w-4 lg:mr-2" />
+          <span className="hidden lg:inline">Bulk Mark</span>
+        </Button>
 
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild>
-              <Button><UserCheck className="h-4 w-4 mr-2" />Mark Attendance</Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader><DialogTitle>Mark Attendance</DialogTitle></DialogHeader>
-              <div className="space-y-4">
-                <div>
-                  <Label>Employee</Label>
-                  <Select value={form.employee_id} onValueChange={v => setForm(p => ({ ...p, employee_id: v }))}>
-                    <SelectTrigger><SelectValue placeholder="Select employee" /></SelectTrigger>
-                    <SelectContent>{employees.map((e: any) => <SelectItem key={e.id} value={e.id}>{e.name}</SelectItem>)}</SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label>Status</Label>
-                  <Select value={form.status} onValueChange={v => setForm(p => ({ ...p, status: v }))}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="present">Present</SelectItem>
-                      <SelectItem value="absent">Absent</SelectItem>
-                      <SelectItem value="late">Late</SelectItem>
-                      <SelectItem value="half_day">Half Day</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div><Label>Check In</Label><Input type="time" value={form.check_in} onChange={e => setForm(p => ({ ...p, check_in: e.target.value }))} /></div>
-                  <div><Label>Check Out</Label><Input type="time" value={form.check_out} onChange={e => setForm(p => ({ ...p, check_out: e.target.value }))} /></div>
-                </div>
-                <div><Label>Notes</Label><Input value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))} /></div>
-                <Button onClick={handleSubmit} className="w-full" disabled={upsertAttendance.isPending}>Save</Button>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <DialogTrigger asChild>
+            <Button size="sm">
+              <UserCheck className="h-4 w-4 lg:mr-2" />
+              <span className="hidden lg:inline">Mark Attendance</span>
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader><DialogTitle>Mark Attendance</DialogTitle></DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <Label>Employee</Label>
+                <Select value={form.employee_id} onValueChange={v => setForm(p => ({ ...p, employee_id: v }))}>
+                  <SelectTrigger><SelectValue placeholder="Select employee" /></SelectTrigger>
+                  <SelectContent>{employees.map((e: any) => <SelectItem key={e.id} value={e.id}>{e.name}</SelectItem>)}</SelectContent>
+                </Select>
               </div>
-            </DialogContent>
-          </Dialog>
-        </div>
+              <div>
+                <Label>Status</Label>
+                <Select value={form.status} onValueChange={v => setForm(p => ({ ...p, status: v }))}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="present">Present</SelectItem>
+                    <SelectItem value="absent">Absent</SelectItem>
+                    <SelectItem value="late">Late</SelectItem>
+                    <SelectItem value="half_day">Half Day</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div><Label>Check In</Label><Input type="time" value={form.check_in} onChange={e => setForm(p => ({ ...p, check_in: e.target.value }))} /></div>
+                <div><Label>Check Out</Label><Input type="time" value={form.check_out} onChange={e => setForm(p => ({ ...p, check_out: e.target.value }))} /></div>
+              </div>
+              <div><Label>Notes</Label><Input value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))} /></div>
+              <Button onClick={handleSubmit} className="w-full" disabled={upsertAttendance.isPending}>Save</Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Bulk Marking Dialog */}
@@ -165,7 +165,6 @@ export default function AdminAttendance() {
             <DialogTitle>Bulk Attendance — {selectedDate}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            {/* Global controls */}
             <div className="flex flex-wrap items-end gap-3 p-3 bg-muted rounded-lg">
               <div>
                 <Label className="text-xs">সবার স্ট্যাটাস</Label>
@@ -189,7 +188,6 @@ export default function AdminAttendance() {
               </div>
             </div>
 
-            {/* Per-employee status */}
             <div className="border rounded-lg overflow-hidden">
               <Table>
                 <TableHeader>
@@ -237,42 +235,89 @@ export default function AdminAttendance() {
         </DialogContent>
       </Dialog>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card><CardContent className="pt-6 flex items-center gap-3"><CalendarDays className="h-8 w-8 text-primary" /><div><p className="text-sm text-muted-foreground">Total</p><p className="text-2xl font-bold">{records.length}</p></div></CardContent></Card>
-        <Card><CardContent className="pt-6 flex items-center gap-3"><CheckCircle className="h-8 w-8 text-green-600" /><div><p className="text-sm text-muted-foreground">Present</p><p className="text-2xl font-bold">{presentCount}</p></div></CardContent></Card>
-        <Card><CardContent className="pt-6 flex items-center gap-3"><XCircle className="h-8 w-8 text-red-600" /><div><p className="text-sm text-muted-foreground">Absent</p><p className="text-2xl font-bold">{absentCount}</p></div></CardContent></Card>
-        <Card><CardContent className="pt-6 flex items-center gap-3"><Clock className="h-8 w-8 text-yellow-600" /><div><p className="text-sm text-muted-foreground">Late</p><p className="text-2xl font-bold">{lateCount}</p></div></CardContent></Card>
+      {/* Stats - always 4 cols compact */}
+      <div className="grid grid-cols-4 gap-2">
+        <Card>
+          <CardContent className="p-2">
+            <p className="text-lg lg:text-2xl font-bold">{records.length}</p>
+            <p className="text-[10px] lg:text-xs text-muted-foreground">Total</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-2">
+            <p className="text-lg lg:text-2xl font-bold text-green-600">{presentCount}</p>
+            <p className="text-[10px] lg:text-xs text-muted-foreground">Present</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-2">
+            <p className="text-lg lg:text-2xl font-bold text-red-600">{absentCount}</p>
+            <p className="text-[10px] lg:text-xs text-muted-foreground">Absent</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-2">
+            <p className="text-lg lg:text-2xl font-bold text-yellow-600">{lateCount}</p>
+            <p className="text-[10px] lg:text-xs text-muted-foreground">Late</p>
+          </CardContent>
+        </Card>
       </div>
 
       <Card>
-        <CardHeader><CardTitle>Attendance Records — {selectedDate}</CardTitle></CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Employee</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Check In</TableHead>
-                <TableHead>Check Out</TableHead>
-                <TableHead>Notes</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                <TableRow><TableCell colSpan={5} className="text-center py-8">Loading...</TableCell></TableRow>
-              ) : records.length === 0 ? (
-                <TableRow><TableCell colSpan={5} className="text-center py-8 text-muted-foreground">No records for this date</TableCell></TableRow>
-              ) : records.map((r: any) => (
-                <TableRow key={r.id}>
-                  <TableCell className="font-medium">{r.employees?.name}</TableCell>
-                  <TableCell><Badge className={statusColors[r.status] || ''}>{r.status}</Badge></TableCell>
-                  <TableCell>{r.check_in || '—'}</TableCell>
-                  <TableCell>{r.check_out || '—'}</TableCell>
-                  <TableCell className="text-muted-foreground">{r.notes || '—'}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base lg:text-lg">Attendance — {selectedDate}</CardTitle>
+        </CardHeader>
+        <CardContent className="p-0 lg:p-6 lg:pt-0">
+          {isLoading ? (
+            <div className="p-8 text-center text-muted-foreground">Loading...</div>
+          ) : records.length === 0 ? (
+            <div className="p-8 text-center text-muted-foreground">No records for this date</div>
+          ) : (
+            <>
+              {/* Mobile Card View */}
+              <div className="lg:hidden divide-y">
+                {records.map((r: any) => (
+                  <div key={r.id} className="p-2.5 flex items-center justify-between">
+                    <div>
+                      <p className="font-medium text-sm">{r.employees?.name}</p>
+                      <div className="flex items-center gap-2 text-[10px] text-muted-foreground mt-0.5">
+                        {r.check_in && <span>In: {r.check_in}</span>}
+                        {r.check_out && <span>Out: {r.check_out}</span>}
+                        {r.notes && <span>· {r.notes}</span>}
+                      </div>
+                    </div>
+                    <Badge className={`${statusColors[r.status] || ''} text-[10px] px-1.5 py-0`}>{r.status}</Badge>
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop Table */}
+              <div className="hidden lg:block">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Employee</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Check In</TableHead>
+                      <TableHead>Check Out</TableHead>
+                      <TableHead>Notes</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {records.map((r: any) => (
+                      <TableRow key={r.id}>
+                        <TableCell className="font-medium">{r.employees?.name}</TableCell>
+                        <TableCell><Badge className={statusColors[r.status] || ''}>{r.status}</Badge></TableCell>
+                        <TableCell>{r.check_in || '—'}</TableCell>
+                        <TableCell>{r.check_out || '—'}</TableCell>
+                        <TableCell className="text-muted-foreground">{r.notes || '—'}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </>
+          )}
         </CardContent>
       </Card>
     </div>
