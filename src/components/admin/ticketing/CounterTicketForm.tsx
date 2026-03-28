@@ -460,9 +460,9 @@ export function CounterTicketForm({ onSuccess }: CounterTicketFormProps) {
           </div>
 
           {/* RIGHT COLUMN — Form & Pricing */}
-          <div className="border rounded-lg bg-card overflow-hidden flex flex-col" style={{ maxHeight: '75vh' }}>
+          <div className="border rounded-lg bg-card overflow-hidden flex flex-col lg:max-h-[75vh]">
             <ScrollArea className="flex-1">
-              <div className="p-4 space-y-4">
+              <div className="p-3 lg:p-4 space-y-4">
                 {/* Entry No & Customer Name */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
