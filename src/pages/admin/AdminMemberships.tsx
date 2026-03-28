@@ -171,6 +171,28 @@ export default function AdminMemberships() {
     },
   });
 
+  // Fetch visit history for selected member
+  const { data: memberVisits = [], isLoading: visitsLoading } = useQuery({
+    queryKey: ['member-visits', selectedMember?.id],
+    queryFn: async () => {
+      if (!selectedMember) return [];
+      const { data, error } = await supabase
+        .from('membership_visits')
+        .select('*')
+        .eq('membership_id', selectedMember.id)
+        .order('check_in_at', { ascending: false })
+        .limit(20);
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: !!selectedMember,
+  });
+
+  // Get payment log for selected member
+  const selectedMemberPayment = selectedMember
+    ? paymentLogs.find(l => (l.details as any)?.membership_id === selectedMember.id)
+    : null;
+
   const updateStatusMutation = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
       const { data, error } = await supabase.functions.invoke('manage-membership?action=update-status', {
