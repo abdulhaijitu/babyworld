@@ -1,38 +1,60 @@
 
 
-## /admin/expense-categories রেসপনসিভ ফিক্স
+## /admin/reports রেসপনসিভ ফিক্স
 
-### সমস্যা (391px ভিউপোর্ট)
-1. **৬-কলাম টেবিল সরাসরি দেখানো হচ্ছে** — মোবাইলে কার্ড ভিউ নেই, টেবিল ওভারফ্লো করে
-2. **Root div-এ `overflow-hidden` নেই**
-3. **Add বাটন** মোবাইলে ফুল টেক্সট দেখায়, জায়গা নষ্ট হয়
-4. **DialogContent `max-w-md`** — বেস কম্পোনেন্টে ফিক্স হয়েছে কিন্তু এখানে explicit override আছে যা সরানো উচিত
+391px ভিউপোর্টে যে সমস্যাগুলো আছে:
 
-### পরিবর্তন — `AdminExpenseCategories.tsx`
+### সমস্যা চিহ্নিত
 
-**১. Root div**: `space-y-6` → `space-y-4 overflow-hidden`
+1. **AdminReports.tsx**: TabsList 5টি ট্যাব — মোবাইলে overflow হয়, Print/Export বাটন টেক্সট দেখায়
+2. **ReportsSummaryCards.tsx**: `grid-cols-2` ঠিক আছে কিন্তু `text-lg` value মোবাইলে বড়
+3. **RevenueReport.tsx**: `text-4xl` revenue মোবাইলে বড়, chart height 350px/300px অতিরিক্ত, `p-4` padding বড়, Payment Method কার্ডে `text-2xl` overflow করে
+4. **TicketSalesReport.tsx**: `grid-cols-2 md:grid-cols-4` summary cards ঠিক, কিন্তু chart 220px যথেষ্ট
+5. **FoodSalesReport.tsx**: PieChart label মোবাইলে overlap করে, All Items টেবিল মোবাইলে overflow
+6. **ComparisonCharts.tsx**: Weekly bar chart `YAxis width={100}` মোবাইলে অনেক জায়গা নেয়, chart heights বড়
+7. **PrintableReport.tsx**: `grid-cols-3` revenue summary মোবাইলে cramped, `grid-cols-2` ticket/food stats, `inset-4` মোবাইলে কম জায়গা
 
-**২. Add বাটন কমপ্যাক্ট**: মোবাইলে আইকন-অনলি, `size="sm"`
-```tsx
-<Button size="sm">
-  <Plus className="w-4 h-4 sm:mr-2" />
-  <span className="hidden sm:inline">Add Category</span>
-</Button>
-```
+### পরিবর্তন পরিকল্পনা — ৭টি ফাইল
 
-**৩. DialogContent**: `max-w-md` → `sm:max-w-md` (বেস `max-w-[95vw]` কাজ করবে)
+**১. AdminReports.tsx**
+- TabsList: `overflow-x-auto` যোগ, ট্যাব টেক্সট ছোট করা
+- Print/Export বাটন: মোবাইলে আইকন-অনলি (`hidden sm:inline`)
+- Root: `space-y-6` → `space-y-4 overflow-hidden`
 
-**৪. মোবাইল কার্ড ভিউ যোগ (`lg:hidden`)**
-প্রতিটি ক্যাটাগরি একটি কার্ডে:
-- Label + System Name (truncate)
-- Color badge, Icon name
-- Status switch + Edit/Delete বাটন একই row-তে
-- `divide-y` দিয়ে আলাদা করা
+**২. ReportsSummaryCards.tsx**
+- `grid-cols-3` → `grid-cols-2` মোবাইলে (already is), compact padding `p-2 sm:p-4`
+- Value: `text-lg` → `text-base sm:text-lg`, title: `text-[10px] sm:text-xs`
 
-**৫. ডেস্কটপ টেবিল `hidden lg:block`**
-বিদ্যমান Table শুধু lg+ এ দেখাবে
+**৩. RevenueReport.tsx**
+- Total Revenue: `text-4xl` → `text-2xl sm:text-4xl`, icon padding `p-2 sm:p-4`
+- Charts: height `350` → `250` মোবাইলে (use responsive height e.g. 220 on mobile)
+- Payment cards: `text-2xl` → `text-lg sm:text-2xl`, `p-4` → `p-3 sm:p-4`
+- Revenue breakdown grid: `grid-cols-2` → `p-2 sm:p-4` compact
+
+**৪. TicketSalesReport.tsx**
+- Summary cards: `p-4` → `p-2 sm:p-4`, icon `w-8 h-8` → `w-6 h-6 sm:w-8 sm:h-8`
+- Value: `text-2xl` → `text-lg sm:text-2xl`
+
+**৫. FoodSalesReport.tsx**
+- Summary cards: same compact treatment
+- PieChart: `innerRadius/outerRadius` ছোট, label off on mobile
+- All Items Table: মোবাইল কার্ড ভিউ (`lg:hidden`) + desktop table (`hidden lg:block`)
+
+**৬. ComparisonCharts.tsx**
+- Weekly bar chart: `YAxis width={100}` → `width={70}`, chart height reduce
+- Weekly comparison cards: `grid-cols-1 md:grid-cols-3` → `grid-cols-3` always with compact padding
+- Value: `text-2xl` → `text-base sm:text-2xl`
+
+**৭. PrintableReport.tsx**
+- `inset-4` → `inset-1 sm:inset-4`
+- Revenue grid: `grid-cols-3` → `grid-cols-1 sm:grid-cols-3`
+- Ticket/Food stats: `grid-cols-2` → `grid-cols-1 sm:grid-cols-2`
+- `p-8` → `p-3 sm:p-8`
+- Values: `text-2xl` → `text-lg sm:text-2xl`
 
 ### প্রভাব
-- শুধুমাত্র ১টি ফাইল পরিবর্তন
-- Income Categories পেইজের সাথে সামঞ্জস্যপূর্ণ প্যাটার্ন
+- সকল রিপোর্ট কম্পোনেন্ট 391px এ সঠিকভাবে ফিট করবে
+- চার্ট মোবাইলে কম উচ্চতা নেবে, স্ক্রল কমবে
+- টেবিল → কার্ড ভিউ প্যাটার্ন অনুসরণ করবে
+- প্রিন্ট প্রিভিউ মোবাইলে ব্যবহারযোগ্য হবে
 
