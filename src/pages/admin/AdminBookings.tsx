@@ -423,12 +423,10 @@ export default function AdminBookings() {
       {/* Bookings Table - List View */}
       {viewMode === 'list' && (
         <Card>
-          <CardHeader>
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <CardTitle>{'Booking List'}</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                {filteredBookings.length} {'bookings'}
-              </p>
+          <CardHeader className="p-3 lg:p-6">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base lg:text-lg">Booking List</CardTitle>
+              <p className="text-xs text-muted-foreground">{filteredBookings.length} bookings</p>
             </div>
             
             {/* Filters */}
