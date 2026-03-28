@@ -110,41 +110,30 @@ export default function AdminDailyCashSummary() {
   const isToday = format(selectedDate, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd');
 
   return (
-    <div className="space-y-6 print:p-2">
+    <div className="space-y-4 print:p-2">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-4">
-
-        <div className="flex items-center gap-2 print:hidden">
-          <Button variant="outline" size="icon" onClick={goToPreviousDay}>
-            <ChevronLeft className="w-4 h-4" />
-          </Button>
-
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline">
-                <CalendarIcon className="w-4 h-4 mr-2" />
-                {format(selectedDate, 'dd MMM yyyy')}
-                {isToday && <Badge variant="secondary" className="ml-2 text-xs">Today</Badge>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="center">
-              <Calendar
-                mode="single"
-                selected={selectedDate}
-                onSelect={(date) => date && setSelectedDate(date)}
-              />
-            </PopoverContent>
-          </Popover>
-
-          <Button variant="outline" size="icon" onClick={goToNextDay}>
-            <ChevronRight className="w-4 h-4" />
-          </Button>
-
-          <Button variant="outline" size="sm" onClick={() => window.print()} className="ml-2">
-            <Printer className="w-4 h-4 mr-1" />
-            Print
-          </Button>
-        </div>
+      <div className="flex items-center justify-end gap-1 lg:gap-2 print:hidden">
+        <Button variant="outline" size="icon" className="h-8 w-8" onClick={goToPreviousDay}>
+          <ChevronLeft className="w-4 h-4" />
+        </Button>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" size="sm" className="h-8 text-xs lg:text-sm">
+              <CalendarIcon className="w-3 h-3 mr-1 lg:w-4 lg:h-4 lg:mr-2" />
+              {format(selectedDate, 'dd MMM yyyy')}
+              {isToday && <Badge variant="secondary" className="ml-1 text-[10px] lg:text-xs">Today</Badge>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="center">
+            <Calendar mode="single" selected={selectedDate} onSelect={(date) => date && setSelectedDate(date)} />
+          </PopoverContent>
+        </Popover>
+        <Button variant="outline" size="icon" className="h-8 w-8" onClick={goToNextDay}>
+          <ChevronRight className="w-4 h-4" />
+        </Button>
+        <Button variant="outline" size="sm" className="h-8" onClick={() => window.print()}>
+          <Printer className="w-4 h-4 lg:mr-1" /><span className="hidden lg:inline">Print</span>
+        </Button>
       </div>
 
       {/* Print header */}
