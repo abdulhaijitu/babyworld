@@ -396,41 +396,41 @@ export default function AdminTicketing() {
         <div className="space-y-4">
           {/* Stats Cards - compact */}
           {loading ? (
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-4 gap-2 lg:gap-3">
               {[1, 2, 3, 4].map(i => <StatsCardSkeleton key={i} />)}
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-4 gap-2 lg:gap-3">
               <Card>
-                <CardHeader className="p-3 pb-2">
-                  <CardDescription className="flex items-center gap-1 text-xs">
+                <CardHeader className="p-2 pb-1 lg:p-3 lg:pb-2">
+                  <CardDescription className="flex items-center gap-1 text-[10px] lg:text-xs">
                     <CheckCircle className="w-3 h-3" /> Active
                   </CardDescription>
-                  <CardTitle className="text-xl text-green-600">{activeCount}</CardTitle>
+                  <CardTitle className="text-lg lg:text-xl text-green-600">{activeCount}</CardTitle>
                 </CardHeader>
               </Card>
               <Card>
-                <CardHeader className="p-3 pb-2">
-                  <CardDescription className="flex items-center gap-1 text-xs">
+                <CardHeader className="p-2 pb-1 lg:p-3 lg:pb-2">
+                  <CardDescription className="flex items-center gap-1 text-[10px] lg:text-xs">
                     <CalendarDays className="w-3 h-3" /> Today
                   </CardDescription>
-                  <CardTitle className="text-xl">{todayCount}</CardTitle>
+                  <CardTitle className="text-lg lg:text-xl">{todayCount}</CardTitle>
                 </CardHeader>
               </Card>
               <Card className="border-primary/30">
-                <CardHeader className="p-3 pb-2">
-                  <CardDescription className="flex items-center gap-1 text-xs">
+                <CardHeader className="p-2 pb-1 lg:p-3 lg:pb-2">
+                  <CardDescription className="flex items-center gap-1 text-[10px] lg:text-xs">
                     <Users className="w-3 h-3" /> Inside
                   </CardDescription>
-                  <CardTitle className="text-xl text-primary">{insideCount}</CardTitle>
+                  <CardTitle className="text-lg lg:text-xl text-primary">{insideCount}</CardTitle>
                 </CardHeader>
               </Card>
               <Card>
-                <CardHeader className="p-3 pb-2">
-                  <CardDescription className="flex items-center gap-1 text-xs">
+                <CardHeader className="p-2 pb-1 lg:p-3 lg:pb-2">
+                  <CardDescription className="flex items-center gap-1 text-[10px] lg:text-xs">
                     <Clock className="w-3 h-3" /> Used
                   </CardDescription>
-                  <CardTitle className="text-xl text-muted-foreground">{usedCount}</CardTitle>
+                  <CardTitle className="text-lg lg:text-xl text-muted-foreground">{usedCount}</CardTitle>
                 </CardHeader>
               </Card>
             </div>
