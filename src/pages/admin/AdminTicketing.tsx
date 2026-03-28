@@ -431,7 +431,7 @@ export default function AdminTicketing() {
           <Card>
             <CardHeader className="p-3 pb-2">
               {/* Filters - no duplicate title */}
-              <div className="flex flex-col md:flex-row gap-2">
+              <div className="flex flex-col gap-2">
                 <div className="relative flex-1">
                   <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
@@ -442,58 +442,60 @@ export default function AdminTicketing() {
                   />
                 </div>
                 
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-full md:w-[120px] h-9 text-sm">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All</SelectItem>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="used">Used</SelectItem>
-                    <SelectItem value="cancelled">Cancelled</SelectItem>
-                  </SelectContent>
-                </Select>
+                <div className="flex flex-wrap gap-2">
+                  <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger className="w-[100px] h-9 text-sm">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All</SelectItem>
+                      <SelectItem value="active">Active</SelectItem>
+                      <SelectItem value="used">Used</SelectItem>
+                      <SelectItem value="cancelled">Cancelled</SelectItem>
+                    </SelectContent>
+                  </Select>
 
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" size="sm" className="w-full md:w-auto h-9">
-                      <CalendarDays className="w-3.5 h-3.5 mr-1" />
-                      {dateFrom ? format(dateFrom, 'dd MMM') : 'From'}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar 
-                      mode="single" 
-                      selected={dateFrom} 
-                      onSelect={setDateFrom}
-                      className="p-3 pointer-events-auto"
-                    />
-                  </PopoverContent>
-                </Popover>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" size="sm" className="h-9 flex-1 min-w-[90px]">
+                        <CalendarDays className="w-3.5 h-3.5 mr-1" />
+                        {dateFrom ? format(dateFrom, 'dd MMM') : 'From'}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar 
+                        mode="single" 
+                        selected={dateFrom} 
+                        onSelect={setDateFrom}
+                        className="p-3 pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
 
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" size="sm" className="w-full md:w-auto h-9">
-                      <CalendarDays className="w-3.5 h-3.5 mr-1" />
-                      {dateTo ? format(dateTo, 'dd MMM') : 'To'}
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" size="sm" className="h-9 flex-1 min-w-[90px]">
+                        <CalendarDays className="w-3.5 h-3.5 mr-1" />
+                        {dateTo ? format(dateTo, 'dd MMM') : 'To'}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar 
+                        mode="single" 
+                        selected={dateTo} 
+                        onSelect={setDateTo}
+                        disabled={(date) => dateFrom ? date < dateFrom : false}
+                        className="p-3 pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  
+                  {hasActiveFilters && (
+                    <Button variant="ghost" size="icon" className="h-9 w-9" onClick={clearFilters}>
+                      <X className="w-4 h-4" />
                     </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar 
-                      mode="single" 
-                      selected={dateTo} 
-                      onSelect={setDateTo}
-                      disabled={(date) => dateFrom ? date < dateFrom : false}
-                      className="p-3 pointer-events-auto"
-                    />
-                  </PopoverContent>
-                </Popover>
-                
-                {hasActiveFilters && (
-                  <Button variant="ghost" size="icon" className="h-9 w-9" onClick={clearFilters}>
-                    <X className="w-4 h-4" />
-                  </Button>
-                )}
+                  )}
+                </div>
 
                 <div className="flex items-center gap-2 ml-auto">
                   <Badge variant="secondary" className="text-xs">
