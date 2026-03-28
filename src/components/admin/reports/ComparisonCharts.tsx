@@ -23,39 +23,29 @@ interface PeriodData {
 export function ComparisonCharts() {
   const today = new Date();
 
-  // Fetch weekly comparison data
   const { data: weeklyData, isLoading: weeklyLoading } = useQuery({
     queryKey: ['comparison-weekly'],
     queryFn: async () => {
       const thisWeekStart = format(startOfWeek(today, { weekStartsOn: 0 }), 'yyyy-MM-dd');
       const thisWeekEnd = format(endOfWeek(today, { weekStartsOn: 0 }), 'yyyy-MM-dd');
-      
       const lastWeekStart = format(startOfWeek(subWeeks(today, 1), { weekStartsOn: 0 }), 'yyyy-MM-dd');
       const lastWeekEnd = format(endOfWeek(subWeeks(today, 1), { weekStartsOn: 0 }), 'yyyy-MM-dd');
 
       const [thisWeek, lastWeek] = await Promise.all([
-        supabase.functions.invoke('get-reports-summary', {
-          body: { start_date: thisWeekStart, end_date: thisWeekEnd }
-        }),
-        supabase.functions.invoke('get-reports-summary', {
-          body: { start_date: lastWeekStart, end_date: lastWeekEnd }
-        })
+        supabase.functions.invoke('get-reports-summary', { body: { start_date: thisWeekStart, end_date: thisWeekEnd } }),
+        supabase.functions.invoke('get-reports-summary', { body: { start_date: lastWeekStart, end_date: lastWeekEnd } })
       ]);
 
       return {
         thisWeek: thisWeek.data,
         lastWeek: lastWeek.data,
-        labels: {
-          current: 'This Week',
-          previous: 'Last Week'
-        }
+        labels: { current: 'This Week', previous: 'Last Week' }
       };
     },
     staleTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false
   });
 
-  // Fetch monthly comparison data (last 6 months)
   const { data: monthlyData, isLoading: monthlyLoading } = useQuery({
     queryKey: ['comparison-monthly'],
     queryFn: async () => {
@@ -68,11 +58,7 @@ export function ComparisonCharts() {
       }
 
       const results = await Promise.all(
-        months.map(m => 
-          supabase.functions.invoke('get-reports-summary', {
-            body: { start_date: m.startDate, end_date: m.endDate }
-          })
-        )
+        months.map(m => supabase.functions.invoke('get-reports-summary', { body: { start_date: m.startDate, end_date: m.endDate } }))
       );
 
       return results.map((r, i) => ({
@@ -99,38 +85,27 @@ export function ComparisonCharts() {
     return { icon: Minus, color: 'text-gray-600', bg: 'bg-gray-50' };
   };
 
-  // Weekly comparison cards
   const weeklyComparisons: ComparisonData[] = weeklyData ? [
     {
       label: 'Total Revenue',
       current: weeklyData.thisWeek?.revenue?.combinedRevenue || 0,
       previous: weeklyData.lastWeek?.revenue?.combinedRevenue || 0,
-      change: calculateChange(
-        weeklyData.thisWeek?.revenue?.combinedRevenue || 0,
-        weeklyData.lastWeek?.revenue?.combinedRevenue || 0
-      )
+      change: calculateChange(weeklyData.thisWeek?.revenue?.combinedRevenue || 0, weeklyData.lastWeek?.revenue?.combinedRevenue || 0)
     },
     {
       label: 'Tickets Sold',
       current: weeklyData.thisWeek?.tickets?.total || 0,
       previous: weeklyData.lastWeek?.tickets?.total || 0,
-      change: calculateChange(
-        weeklyData.thisWeek?.tickets?.total || 0,
-        weeklyData.lastWeek?.tickets?.total || 0
-      )
+      change: calculateChange(weeklyData.thisWeek?.tickets?.total || 0, weeklyData.lastWeek?.tickets?.total || 0)
     },
     {
       label: 'Food Orders',
       current: weeklyData.thisWeek?.food?.completedOrders || 0,
       previous: weeklyData.lastWeek?.food?.completedOrders || 0,
-      change: calculateChange(
-        weeklyData.thisWeek?.food?.completedOrders || 0,
-        weeklyData.lastWeek?.food?.completedOrders || 0
-      )
+      change: calculateChange(weeklyData.thisWeek?.food?.completedOrders || 0, weeklyData.lastWeek?.food?.completedOrders || 0)
     }
   ] : [];
 
-  // Weekly bar chart data
   const weeklyChartData = weeklyData ? [
     {
       name: 'Revenue',
@@ -138,12 +113,12 @@ export function ComparisonCharts() {
       [weeklyData.labels.previous]: weeklyData.lastWeek?.revenue?.combinedRevenue || 0,
     },
     {
-      name: 'Ticket Revenue',
+      name: 'Tickets',
       [weeklyData.labels.current]: weeklyData.thisWeek?.revenue?.totalTicketRevenue || 0,
       [weeklyData.labels.previous]: weeklyData.lastWeek?.revenue?.totalTicketRevenue || 0,
     },
     {
-      name: 'Food Revenue',
+      name: 'Food',
       [weeklyData.labels.current]: weeklyData.thisWeek?.food?.totalRevenue || 0,
       [weeklyData.labels.previous]: weeklyData.lastWeek?.food?.totalRevenue || 0,
     }
@@ -151,17 +126,13 @@ export function ComparisonCharts() {
 
   if (weeklyLoading || monthlyLoading) {
     return (
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="space-y-4">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4">
           {[1, 2, 3].map(i => (
-            <Card key={i}>
-              <CardContent className="p-4">
-                <Skeleton className="h-16" />
-              </CardContent>
-            </Card>
+            <Card key={i}><CardContent className="p-2 sm:p-4"><Skeleton className="h-16" /></CardContent></Card>
           ))}
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <Card><CardContent className="p-6"><Skeleton className="h-64" /></CardContent></Card>
           <Card><CardContent className="p-6"><Skeleton className="h-64" /></CardContent></Card>
         </div>
@@ -170,36 +141,32 @@ export function ComparisonCharts() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Weekly Comparison Cards */}
       <div>
-        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-          <Calendar className="w-5 h-5" />
+        <h3 className="text-sm sm:text-lg font-semibold mb-3 sm:mb-4 flex items-center gap-2">
+          <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
           {'Weekly Comparison'}
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4">
           {weeklyComparisons.map((item, index) => {
             const { icon: Icon, color, bg } = getChangeIndicator(item.change);
             return (
               <Card key={index}>
-                <CardContent className="p-4">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="text-sm text-muted-foreground">{item.label}</p>
-                      <p className="text-2xl font-bold mt-1">
-                        {item.label.includes('আয়') || item.label.includes('Revenue') 
-                          ? formatBDT(item.current) 
-                          : item.current}
+                <CardContent className="p-2 sm:p-4">
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1">
+                    <div className="min-w-0">
+                      <p className="text-[10px] sm:text-sm text-muted-foreground truncate">{item.label}</p>
+                      <p className="text-base sm:text-2xl font-bold mt-0.5">
+                        {item.label.includes('Revenue') ? formatBDT(item.current) : item.current}
                       </p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {'Last week: '}
-                        {item.label.includes('আয়') || item.label.includes('Revenue') 
-                          ? formatBDT(item.previous) 
-                          : item.previous}
+                      <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5">
+                        {'Last: '}
+                        {item.label.includes('Revenue') ? formatBDT(item.previous) : item.previous}
                       </p>
                     </div>
-                    <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-sm font-medium ${bg} ${color}`}>
-                      <Icon className="w-3 h-3" />
+                    <div className={`flex items-center gap-0.5 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full text-[10px] sm:text-sm font-medium ${bg} ${color} self-start`}>
+                      <Icon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                       {item.change > 0 ? '+' : ''}{item.change}%
                     </div>
                   </div>
@@ -211,95 +178,66 @@ export function ComparisonCharts() {
       </div>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Weekly Comparison Bar Chart */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <BarChart3 className="w-5 h-5" />
-              {'Weekly Revenue Comparison'}
+          <CardHeader className="p-3 sm:p-6 pb-2 sm:pb-2">
+            <CardTitle className="flex items-center gap-2 text-sm sm:text-base">
+              <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />
+              {'Weekly Revenue'}
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-xs sm:text-sm">
               {'This week vs last week'}
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-2 sm:p-6 pt-0">
             {weeklyChartData.length > 0 ? (
-              <ResponsiveContainer width="100%" height={260}>
+              <ResponsiveContainer width="100%" height={220}>
                 <BarChart data={weeklyChartData} layout="vertical">
                   <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                  <XAxis type="number" tickFormatter={(v) => `৳${(v/1000).toFixed(0)}k`} />
-                  <YAxis dataKey="name" type="category" width={100} className="text-xs" />
+                  <XAxis type="number" tickFormatter={(v) => `৳${(v/1000).toFixed(0)}k`} tick={{ fontSize: 10 }} />
+                  <YAxis dataKey="name" type="category" width={55} className="text-xs" tick={{ fontSize: 10 }} />
                   <Tooltip 
                     formatter={(value: number) => [formatBDT(value), '']}
-                    contentStyle={{ 
-                      backgroundColor: 'hsl(var(--background))', 
-                      border: '1px solid hsl(var(--border))' 
-                    }}
+                    contentStyle={{ backgroundColor: 'hsl(var(--background))', border: '1px solid hsl(var(--border))' }}
                   />
-                  <Legend />
-                  <Bar 
-                    dataKey={weeklyData?.labels.current} 
-                    fill="hsl(var(--primary))" 
-                    radius={[0, 4, 4, 0]}
-                    name={weeklyData?.labels.current}
-                  />
-                  <Bar 
-                    dataKey={weeklyData?.labels.previous} 
-                    fill="hsl(var(--muted-foreground))" 
-                    radius={[0, 4, 4, 0]}
-                    name={weeklyData?.labels.previous}
-                  />
+                  <Legend wrapperStyle={{ fontSize: 11 }} />
+                  <Bar dataKey={weeklyData?.labels.current} fill="hsl(var(--primary))" radius={[0, 4, 4, 0]} name={weeklyData?.labels.current} />
+                  <Bar dataKey={weeklyData?.labels.previous} fill="hsl(var(--muted-foreground))" radius={[0, 4, 4, 0]} name={weeklyData?.labels.previous} />
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-[260px] flex items-center justify-center text-muted-foreground">
-                {'No data available'}
-              </div>
+              <div className="h-[220px] flex items-center justify-center text-muted-foreground">{'No data available'}</div>
             )}
           </CardContent>
         </Card>
 
         {/* Monthly Trend Line Chart */}
         <Card>
-          <CardHeader>
-            <CardTitle>{'Monthly Revenue Trend'}</CardTitle>
-            <CardDescription>
-              {'Last 6 months comparison'}
-            </CardDescription>
+          <CardHeader className="p-3 sm:p-6 pb-2 sm:pb-2">
+            <CardTitle className="text-sm sm:text-base">{'Monthly Revenue Trend'}</CardTitle>
+            <CardDescription className="text-xs sm:text-sm">{'Last 6 months comparison'}</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-2 sm:p-6 pt-0">
             {monthlyData && monthlyData.length > 0 ? (
-              <ResponsiveContainer width="100%" height={260}>
+              <ResponsiveContainer width="100%" height={220}>
                 <LineChart data={monthlyData}>
                   <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                  <XAxis dataKey="period" className="text-xs" />
-                  <YAxis tickFormatter={(v) => `৳${(v/1000).toFixed(0)}k`} className="text-xs" />
+                  <XAxis dataKey="period" className="text-xs" tick={{ fontSize: 10 }} />
+                  <YAxis tickFormatter={(v) => `৳${(v/1000).toFixed(0)}k`} className="text-xs" width={50} tick={{ fontSize: 10 }} />
                   <Tooltip 
                     formatter={(value: number, name: string) => {
                       if (name === 'revenue') return [formatBDT(value), 'Revenue'];
                       return [value, name];
                     }}
-                    contentStyle={{ 
-                      backgroundColor: 'hsl(var(--background))', 
-                      border: '1px solid hsl(var(--border))' 
-                    }}
+                    contentStyle={{ backgroundColor: 'hsl(var(--background))', border: '1px solid hsl(var(--border))' }}
                   />
-                  <Legend />
-                  <Line 
-                    type="monotone" 
-                    dataKey="revenue" 
-                    name={'Total Revenue'}
-                    stroke="hsl(var(--primary))" 
-                    strokeWidth={2}
-                    dot={{ fill: 'hsl(var(--primary))' }}
-                  />
+                  <Legend wrapperStyle={{ fontSize: 11 }} />
+                  <Line type="monotone" dataKey="revenue" name={'Total Revenue'} stroke="hsl(var(--primary))" strokeWidth={2} dot={{ fill: 'hsl(var(--primary))' }} />
                 </LineChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-[260px] flex items-center justify-center text-muted-foreground">
-                {'No data available'}
-              </div>
+              <div className="h-[220px] flex items-center justify-center text-muted-foreground">{'No data available'}</div>
             )}
           </CardContent>
         </Card>
@@ -307,44 +245,25 @@ export function ComparisonCharts() {
 
       {/* Monthly Stats Bar Chart */}
       <Card>
-        <CardHeader>
-          <CardTitle>{'Monthly Activity'}</CardTitle>
-          <CardDescription>
-            {'Tickets and food orders comparison'}
-          </CardDescription>
+        <CardHeader className="p-3 sm:p-6 pb-2 sm:pb-2">
+          <CardTitle className="text-sm sm:text-base">{'Monthly Activity'}</CardTitle>
+          <CardDescription className="text-xs sm:text-sm">{'Tickets and food orders comparison'}</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-2 sm:p-6 pt-0">
           {monthlyData && monthlyData.length > 0 ? (
-            <ResponsiveContainer width="100%" height={280}>
+            <ResponsiveContainer width="100%" height={220}>
               <BarChart data={monthlyData}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                <XAxis dataKey="period" className="text-xs" />
-                <YAxis className="text-xs" />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: 'hsl(var(--background))', 
-                    border: '1px solid hsl(var(--border))' 
-                  }}
-                />
-                <Legend />
-                <Bar 
-                  dataKey="tickets" 
-                  name={'Tickets'}
-                  fill="hsl(var(--primary))" 
-                  radius={[4, 4, 0, 0]}
-                />
-                <Bar 
-                  dataKey="foodOrders" 
-                  name={'Food Orders'}
-                  fill="hsl(var(--chart-2))" 
-                  radius={[4, 4, 0, 0]}
-                />
+                <XAxis dataKey="period" className="text-xs" tick={{ fontSize: 10 }} />
+                <YAxis className="text-xs" width={35} tick={{ fontSize: 10 }} />
+                <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--background))', border: '1px solid hsl(var(--border))' }} />
+                <Legend wrapperStyle={{ fontSize: 11 }} />
+                <Bar dataKey="tickets" name={'Tickets'} fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="foodOrders" name={'Food Orders'} fill="hsl(var(--chart-2))" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-[280px] flex items-center justify-center text-muted-foreground">
-              {'No data available'}
-            </div>
+            <div className="h-[220px] flex items-center justify-center text-muted-foreground">{'No data available'}</div>
           )}
         </CardContent>
       </Card>

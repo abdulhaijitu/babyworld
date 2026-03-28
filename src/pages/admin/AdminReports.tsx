@@ -184,8 +184,8 @@ export default function AdminReports() {
               onClick={() => setShowPrintPreview(true)}
               disabled={!data}
             >
-              <Printer className="w-4 h-4 mr-2" />
-              {'Print'}
+              <Printer className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">{'Print'}</span>
             </Button>
             <Button 
               variant="outline" 
@@ -193,8 +193,8 @@ export default function AdminReports() {
               onClick={() => exportToCSV('summary')}
               disabled={!data}
             >
-              <Download className="w-4 h-4 mr-2" />
-              {'Export'}
+              <Download className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">{'Export'}</span>
             </Button>
           </div>
         </div>

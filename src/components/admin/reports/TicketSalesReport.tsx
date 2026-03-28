@@ -13,19 +13,6 @@ interface TicketSalesReportProps {
 
 export function TicketSalesReport({ data, isLoading }: TicketSalesReportProps) {
 
-  const ticketTypeData = [
-    { 
-      name: 'Online', 
-      value: data?.tickets.online || 0,
-      color: 'hsl(var(--primary))'
-    },
-    { 
-      name: 'Physical', 
-      value: data?.tickets.physical || 0,
-      color: 'hsl(var(--chart-2))'
-    },
-  ];
-
   const statusData = [
     { 
       label: 'Used',
@@ -53,7 +40,7 @@ export function TicketSalesReport({ data, isLoading }: TicketSalesReportProps) {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <Card><CardContent className="p-6"><Skeleton className="h-64" /></CardContent></Card>
         <Card><CardContent className="p-6"><Skeleton className="h-64" /></CardContent></Card>
       </div>
@@ -61,75 +48,75 @@ export function TicketSalesReport({ data, isLoading }: TicketSalesReportProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Summary Row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
         <Card>
-          <CardContent className="p-4 text-center">
-            <Ticket className="w-8 h-8 mx-auto mb-2 text-primary" />
-            <p className="text-2xl font-bold">{data?.tickets.total || 0}</p>
-            <p className="text-sm text-muted-foreground">
+          <CardContent className="p-2 sm:p-4 text-center">
+            <Ticket className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-1 sm:mb-2 text-primary" />
+            <p className="text-lg sm:text-2xl font-bold">{data?.tickets.total || 0}</p>
+            <p className="text-[10px] sm:text-sm text-muted-foreground">
               {'Total Tickets'}
             </p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4 text-center">
-            <Globe className="w-8 h-8 mx-auto mb-2 text-chart-2" />
-            <p className="text-2xl font-bold">{data?.tickets.online || 0}</p>
-            <p className="text-sm text-muted-foreground">
+          <CardContent className="p-2 sm:p-4 text-center">
+            <Globe className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-1 sm:mb-2 text-chart-2" />
+            <p className="text-lg sm:text-2xl font-bold">{data?.tickets.online || 0}</p>
+            <p className="text-[10px] sm:text-sm text-muted-foreground">
               {'Online'}
             </p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4 text-center">
-            <Store className="w-8 h-8 mx-auto mb-2 text-chart-3" />
-            <p className="text-2xl font-bold">{data?.tickets.physical || 0}</p>
-            <p className="text-sm text-muted-foreground">
+          <CardContent className="p-2 sm:p-4 text-center">
+            <Store className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-1 sm:mb-2 text-chart-3" />
+            <p className="text-lg sm:text-2xl font-bold">{data?.tickets.physical || 0}</p>
+            <p className="text-[10px] sm:text-sm text-muted-foreground">
               {'Physical'}
             </p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4 text-center">
-            <CheckCircle className="w-8 h-8 mx-auto mb-2 text-green-600" />
-            <p className="text-2xl font-bold">{usedPercentage}%</p>
-            <p className="text-sm text-muted-foreground">
+          <CardContent className="p-2 sm:p-4 text-center">
+            <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-1 sm:mb-2 text-green-600" />
+            <p className="text-lg sm:text-2xl font-bold">{usedPercentage}%</p>
+            <p className="text-[10px] sm:text-sm text-muted-foreground">
               {'Usage Rate'}
             </p>
           </CardContent>
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Ticket Status Breakdown */}
         <Card>
-          <CardHeader>
-            <CardTitle>{'Ticket Status'}</CardTitle>
-            <CardDescription>
+          <CardHeader className="p-3 sm:p-6 pb-2 sm:pb-2">
+            <CardTitle className="text-sm sm:text-base">{'Ticket Status'}</CardTitle>
+            <CardDescription className="text-xs sm:text-sm">
               {'Breakdown by status'}
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="p-3 sm:p-6 pt-0 space-y-3 sm:space-y-4">
             {statusData.map((status, index) => {
               const Icon = status.icon;
               const percentage = data?.tickets.total 
                 ? Math.round((status.value / data.tickets.total) * 100) 
                 : 0;
               return (
-                <div key={index} className="space-y-2">
+                <div key={index} className="space-y-1.5 sm:space-y-2">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Icon className={`w-4 h-4 ${status.color}`} />
-                      <span className="text-sm font-medium">{status.label}</span>
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${status.color}`} />
+                      <span className="text-xs sm:text-sm font-medium">{status.label}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline">{status.value}</Badge>
-                      <span className="text-sm text-muted-foreground">{percentage}%</span>
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <Badge variant="outline" className="text-[10px] sm:text-xs">{status.value}</Badge>
+                      <span className="text-[10px] sm:text-sm text-muted-foreground">{percentage}%</span>
                     </div>
                   </div>
-                  <Progress value={percentage} className="h-2" />
+                  <Progress value={percentage} className="h-1.5 sm:h-2" />
                 </div>
               );
             })}
@@ -138,13 +125,13 @@ export function TicketSalesReport({ data, isLoading }: TicketSalesReportProps) {
 
         {/* Daily Ticket Sales Chart */}
         <Card>
-          <CardHeader>
-            <CardTitle>{'Daily Sales'}</CardTitle>
-            <CardDescription>
+          <CardHeader className="p-3 sm:p-6 pb-2 sm:pb-2">
+            <CardTitle className="text-sm sm:text-base">{'Daily Sales'}</CardTitle>
+            <CardDescription className="text-xs sm:text-sm">
               {'Ticket sales per day'}
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-2 sm:p-6 pt-0">
             {data?.dailyBreakdown && data.dailyBreakdown.length > 0 ? (
               <ResponsiveContainer width="100%" height={220}>
                 <BarChart data={data.dailyBreakdown.slice(-14)}>
@@ -153,8 +140,9 @@ export function TicketSalesReport({ data, isLoading }: TicketSalesReportProps) {
                     dataKey="date" 
                     className="text-xs"
                     tickFormatter={(value) => value.split('-')[2]}
+                    tick={{ fontSize: 10 }}
                   />
-                  <YAxis className="text-xs" allowDecimals={false} />
+                  <YAxis className="text-xs" allowDecimals={false} width={35} tick={{ fontSize: 10 }} />
                   <Tooltip 
                     formatter={(value: number) => [value, 'Tickets']}
                     labelFormatter={(label) => `${'Date'}: ${label}`}
@@ -177,26 +165,26 @@ export function TicketSalesReport({ data, isLoading }: TicketSalesReportProps) {
 
       {/* Popular Time Slots */}
       <Card>
-        <CardHeader>
-          <CardTitle>{'Popular Time Slots'}</CardTitle>
-          <CardDescription>
+        <CardHeader className="p-3 sm:p-6 pb-2 sm:pb-2">
+          <CardTitle className="text-sm sm:text-base">{'Popular Time Slots'}</CardTitle>
+          <CardDescription className="text-xs sm:text-sm">
             {'Most booked time slots'}
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-3">
+        <CardContent className="p-3 sm:p-6 pt-0">
+          <div className="flex flex-wrap gap-2 sm:gap-3">
             {data?.popularTimeSlots && data.popularTimeSlots.length > 0 ? (
               data.popularTimeSlots.map((slot, index) => (
                 <Badge 
                   key={index} 
                   variant={index === 0 ? "default" : "secondary"}
-                  className="text-sm px-3 py-1.5"
+                  className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-1.5"
                 >
                   {slot.slot} ({slot.count})
                 </Badge>
               ))
             ) : (
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 {'No data available'}
               </p>
             )}
