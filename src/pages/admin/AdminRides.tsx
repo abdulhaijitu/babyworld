@@ -321,7 +321,7 @@ export default function AdminRides() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 lg:space-y-6">
       {/* Header */}
       <div className="flex justify-end">
         <Button onClick={() => { resetForm(); setCreateOpen(true); }}>
@@ -330,38 +330,22 @@ export default function AdminRides() {
         </Button>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription className="flex items-center gap-1"><FerrisWheel className="w-3.5 h-3.5" /> Total Rides</CardDescription>
-            <CardTitle className="text-2xl">{totalRides}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription className="flex items-center gap-1"><Activity className="w-3.5 h-3.5" /> Active</CardDescription>
-            <CardTitle className="text-2xl text-green-600">{activeRides}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription className="flex items-center gap-1"><Ban className="w-3.5 h-3.5" /> Inactive</CardDescription>
-            <CardTitle className="text-2xl text-destructive">{inactiveRides}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription className="flex items-center gap-1"><DollarSign className="w-3.5 h-3.5" /> Paid</CardDescription>
-            <CardTitle className="text-2xl">{paidRides}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription className="flex items-center gap-1"><Gift className="w-3.5 h-3.5" /> Free</CardDescription>
-            <CardTitle className="text-2xl">{freeRides}</CardTitle>
-          </CardHeader>
-        </Card>
+      {/* Stats Cards — always 5 cols */}
+      <div className="grid grid-cols-5 gap-2 lg:gap-4">
+        {[
+          { icon: FerrisWheel, label: 'Total', value: totalRides, color: '' },
+          { icon: Activity, label: 'Active', value: activeRides, color: 'text-green-600' },
+          { icon: Ban, label: 'Inactive', value: inactiveRides, color: 'text-destructive' },
+          { icon: DollarSign, label: 'Paid', value: paidRides, color: '' },
+          { icon: Gift, label: 'Free', value: freeRides, color: '' },
+        ].map(({ icon: Icon, label, value, color }) => (
+          <Card key={label}>
+            <CardHeader className="p-2 pb-1 lg:p-4 lg:pb-2">
+              <CardDescription className="flex items-center gap-1 text-[10px] lg:text-xs"><Icon className="w-3 h-3 lg:w-3.5 lg:h-3.5" /> <span className="hidden sm:inline">{label}</span><span className="sm:hidden">{label.slice(0,3)}</span></CardDescription>
+              <CardTitle className={cn("text-lg lg:text-2xl", color)}>{value}</CardTitle>
+            </CardHeader>
+          </Card>
+        ))}
       </div>
 
       {/* Rides Table */}
@@ -370,34 +354,32 @@ export default function AdminRides() {
           <CardTitle>Ride List</CardTitle>
         </CardHeader>
         <CardContent>
-          {/* Controls: Show entries + Category Filter + Search */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-            <div className="flex items-center gap-3 text-sm">
-              <div className="flex items-center gap-2">
-                <span className="text-muted-foreground">Show</span>
-                <Select value={String(entriesPerPage)} onValueChange={(v) => { setEntriesPerPage(Number(v)); setCurrentPage(1); }}>
-                  <SelectTrigger className="w-[70px] h-8"><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="10">10</SelectItem>
-                    <SelectItem value="25">25</SelectItem>
-                    <SelectItem value="50">50</SelectItem>
-                  </SelectContent>
-                </Select>
-                <span className="text-muted-foreground">entries</span>
-              </div>
-              <Select value={filterCategory} onValueChange={(v) => { setFilterCategory(v); setCurrentPage(1); }}>
-                <SelectTrigger className="w-[120px] h-8"><SelectValue placeholder="Category" /></SelectTrigger>
+          {/* Controls: compact single row */}
+          <div className="flex flex-wrap items-center gap-2 mb-4">
+            <div className="flex items-center gap-1.5 text-sm">
+              <span className="text-muted-foreground hidden lg:inline">Show</span>
+              <Select value={String(entriesPerPage)} onValueChange={(v) => { setEntriesPerPage(Number(v)); setCurrentPage(1); }}>
+                <SelectTrigger className="w-[60px] h-8 text-xs"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  <SelectItem value="kids">Kids</SelectItem>
-                  <SelectItem value="family">Family</SelectItem>
-                  <SelectItem value="thrill">Thrill</SelectItem>
+                  <SelectItem value="10">10</SelectItem>
+                  <SelectItem value="25">25</SelectItem>
+                  <SelectItem value="50">50</SelectItem>
                 </SelectContent>
               </Select>
+              <span className="text-muted-foreground hidden lg:inline">entries</span>
             </div>
-            <div className="relative w-full sm:w-64">
+            <Select value={filterCategory} onValueChange={(v) => { setFilterCategory(v); setCurrentPage(1); }}>
+              <SelectTrigger className="w-[90px] h-8 text-xs"><SelectValue placeholder="Category" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="kids">Kids</SelectItem>
+                <SelectItem value="family">Family</SelectItem>
+                <SelectItem value="thrill">Thrill</SelectItem>
+              </SelectContent>
+            </Select>
+            <div className="relative flex-1 min-w-[120px]">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input placeholder="Search rides..." value={searchQuery} onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }} className="pl-8 h-8" />
+              <Input placeholder="Search..." value={searchQuery} onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }} className="pl-8 h-8" />
             </div>
           </div>
 
@@ -411,17 +393,59 @@ export default function AdminRides() {
               <p>No rides found</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <>
+            {/* Mobile Card View */}
+            <div className="lg:hidden space-y-2">
+              {paginatedRides.map((ride, idx) => (
+                <div key={ride.id} className={cn("flex items-center gap-3 p-2.5 rounded-lg border bg-card", !ride.is_active && 'opacity-50')}>
+                  {ride.image_url ? (
+                    <img src={ride.image_url} alt={ride.name} className="w-11 h-11 rounded-lg object-cover flex-shrink-0" />
+                  ) : (
+                    <div className="w-11 h-11 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
+                      <ImageIcon className="w-5 h-5 text-muted-foreground" />
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-sm truncate">{ride.name}</p>
+                    <div className="flex items-center gap-2 mt-0.5 text-xs">
+                      <span className={cn("font-semibold", (ride.ride_type || 'Paid') === 'Paid' ? 'text-green-600' : 'text-blue-600')}>
+                        {ride.ride_type || 'Paid'}
+                      </span>
+                      <span className="text-muted-foreground">·</span>
+                      <span className="font-medium">৳{ride.price}</span>
+                      {ride.offer_price > 0 && <span className="font-medium text-orange-600">৳{ride.offer_price}</span>}
+                      <Badge variant="outline" className={cn(
+                        "text-[10px] px-1.5 py-0 border-0",
+                        ride.is_active ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                      )}>
+                        {ride.is_active ? 'Active' : 'Off'}
+                      </Badge>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-0.5 flex-shrink-0">
+                    <Button variant="ghost" size="icon" className="h-7 w-7 text-amber-600" onClick={() => handleEdit(ride)}>
+                      <Edit className="w-3.5 h-3.5" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => handleDelete(ride)}>
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table View */}
+            <div className="hidden lg:block overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[50px]">SL</TableHead>
                     <TableHead className="w-[60px]">Image</TableHead>
                     <TableHead>Name</TableHead>
-                     <TableHead>Type</TableHead>
-                     <TableHead>Regular Price</TableHead>
-                     <TableHead>Offer Price</TableHead>
-                     <TableHead>Status</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead>Regular Price</TableHead>
+                    <TableHead>Offer Price</TableHead>
+                    <TableHead>Status</TableHead>
                     <TableHead className="text-right">Action</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -440,10 +464,7 @@ export default function AdminRides() {
                       </TableCell>
                       <TableCell><p className="font-medium">{ride.name}</p></TableCell>
                       <TableCell>
-                        <span className={cn(
-                          "text-sm font-semibold",
-                          (ride.ride_type || 'Paid') === 'Paid' ? 'text-green-600' : 'text-blue-600'
-                        )}>
+                        <span className={cn("text-sm font-semibold", (ride.ride_type || 'Paid') === 'Paid' ? 'text-green-600' : 'text-blue-600')}>
                           {ride.ride_type || 'Paid'}
                         </span>
                       </TableCell>
@@ -452,27 +473,17 @@ export default function AdminRides() {
                       <TableCell>
                         <Badge variant="outline" className={cn(
                           "text-xs font-semibold border-0",
-                          ride.is_active
-                            ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-                            : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                          ride.is_active ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
                         )}>
                           {ride.is_active ? 'Active' : 'Inactive'}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-1">
-                          <Button
-                            variant="ghost" size="icon"
-                            className="h-8 w-8 text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-900/20"
-                            onClick={() => handleEdit(ride)}
-                          >
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-900/20" onClick={() => handleEdit(ride)}>
                             <Edit className="w-4 h-4" />
                           </Button>
-                          <Button
-                            variant="ghost" size="icon"
-                            className="h-8 w-8 text-destructive hover:text-destructive hover:bg-red-50 dark:hover:bg-red-900/20"
-                            onClick={() => handleDelete(ride)}
-                          >
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive hover:bg-red-50 dark:hover:bg-red-900/20" onClick={() => handleDelete(ride)}>
                             <Trash2 className="w-4 h-4" />
                           </Button>
                         </div>
@@ -482,36 +493,33 @@ export default function AdminRides() {
                 </TableBody>
               </Table>
             </div>
+            </>
           )}
 
           {/* Pagination */}
           {filteredRides.length > 0 && (
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-4 text-sm">
+            <div className="flex items-center justify-between gap-2 mt-4 text-xs lg:text-sm">
               <p className="text-muted-foreground">
-                Showing {showingFrom} to {showingTo} of {filteredRides.length} entries
+                {showingFrom}-{showingTo} / {filteredRides.length}
               </p>
               <div className="flex items-center gap-1">
-                <Button variant="outline" size="sm" disabled={safePage <= 1} onClick={() => setCurrentPage(p => p - 1)} className="h-8">
+                <Button variant="outline" size="sm" disabled={safePage <= 1} onClick={() => setCurrentPage(p => p - 1)} className="h-8 px-2">
                   <ChevronLeft className="w-4 h-4" />
-                  Previous
+                  <span className="hidden lg:inline">Previous</span>
                 </Button>
                 {Array.from({ length: totalPages }, (_, i) => i + 1)
                   .filter(p => p === 1 || p === totalPages || Math.abs(p - safePage) <= 1)
                   .map((p, i, arr) => (
                     <span key={p}>
                       {i > 0 && arr[i - 1] !== p - 1 && <span className="px-1 text-muted-foreground">…</span>}
-                      <Button
-                        variant={p === safePage ? "default" : "outline"}
-                        size="sm" className="h-8 w-8 p-0"
-                        onClick={() => setCurrentPage(p)}
-                      >
+                      <Button variant={p === safePage ? "default" : "outline"} size="sm" className="h-8 w-8 p-0" onClick={() => setCurrentPage(p)}>
                         {p}
                       </Button>
                     </span>
                   ))
                 }
-                <Button variant="outline" size="sm" disabled={safePage >= totalPages} onClick={() => setCurrentPage(p => p + 1)} className="h-8">
-                  Next
+                <Button variant="outline" size="sm" disabled={safePage >= totalPages} onClick={() => setCurrentPage(p => p + 1)} className="h-8 px-2">
+                  <span className="hidden lg:inline">Next</span>
                   <ChevronRight className="w-4 h-4" />
                 </Button>
               </div>
