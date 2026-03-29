@@ -262,8 +262,8 @@ export default function AdminRides() {
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Duration (hr)</Label>
-            <Input type="number" value={formData.duration_hours} onChange={(e) => setFormData(prev => ({ ...prev, duration_hours: Number(e.target.value) }))} min={0} step={0.5} />
+            <Label>Duration (minutes)</Label>
+            <Input type="number" value={formData.duration_minutes} onChange={(e) => setFormData(prev => ({ ...prev, duration_minutes: Number(e.target.value) }))} min={0} step={1} />
           </div>
         </div>
       </div>
