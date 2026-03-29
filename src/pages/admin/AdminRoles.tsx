@@ -127,10 +127,10 @@ export default function AdminRoles() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 overflow-hidden">
 
       {/* Role Cards */}
-      <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 lg:gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 lg:gap-3">
         {ROLES.map(role => (
           <Card
             key={role.value}
@@ -159,22 +159,47 @@ export default function AdminRoles() {
       {selectedRoleInfo && (
         <Card>
           <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <CardTitle className="text-lg flex items-center gap-2">
+                <CardTitle className="text-base sm:text-lg flex items-center gap-2">
                   <Badge className={selectedRoleInfo.color}>{selectedRoleInfo.label}</Badge>
-                  Permission Matrix
+                  <span className="hidden sm:inline">Permission Matrix</span>
+                  <span className="sm:hidden">Permissions</span>
                 </CardTitle>
-                <CardDescription className="mt-1">{selectedRoleInfo.description}</CardDescription>
+                <CardDescription className="mt-1 text-xs">{selectedRoleInfo.description}</CardDescription>
               </div>
               <Button onClick={savePermissions} disabled={saving} size="sm">
-                {saving ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Save className="h-4 w-4 mr-1" />}
-                Save
+                {saving ? <Loader2 className="h-4 w-4 animate-spin sm:mr-1" /> : <Save className="h-4 w-4 sm:mr-1" />}
+                <span className="hidden sm:inline">Save</span>
               </Button>
             </div>
           </CardHeader>
-          <CardContent>
-            <div className="rounded-md border overflow-x-auto">
+          <CardContent className="p-2 sm:p-6">
+            {/* Mobile Card View */}
+            <div className="lg:hidden divide-y divide-border">
+              {MODULES.map(mod => {
+                const perm = getPermission(selectedRole, mod.value);
+                return (
+                  <div key={mod.value} className="py-2.5 first:pt-0 last:pb-0">
+                    <p className="font-medium text-sm mb-2">{mod.label}</p>
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
+                      {(['can_view', 'can_create', 'can_edit', 'can_delete'] as const).map(field => (
+                        <label key={field} className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <Checkbox
+                            checked={perm[field]}
+                            onCheckedChange={() => togglePermission(selectedRole, mod.value, field)}
+                          />
+                          {field === 'can_view' ? 'View' : field === 'can_create' ? 'Create' : field === 'can_edit' ? 'Edit' : 'Delete'}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Desktop Table View */}
+            <div className="hidden lg:block rounded-md border overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
