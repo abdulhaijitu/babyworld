@@ -54,7 +54,7 @@ const defaultFormData = {
   category: 'kids' as string,
   is_active: true,
   image_url: '' as string,
-  duration_hours: 0,
+  duration_minutes: 0,
   ride_type: 'Paid' as string,
 };
 
@@ -94,7 +94,7 @@ export default function AdminRides() {
         category: data.category as 'kids' | 'family' | 'thrill',
         is_active: data.is_active,
         image_url: data.image_url || null,
-        duration_minutes: Math.round((data.duration_hours || 0) * 60),
+        duration_minutes: data.duration_minutes || 0,
         ride_type: data.ride_type || 'Paid',
       }]);
       if (error) throw error;
@@ -119,7 +119,7 @@ export default function AdminRides() {
         category: data.category as 'kids' | 'family' | 'thrill',
         is_active: data.is_active,
         image_url: data.image_url || null,
-        duration_minutes: Math.round((data.duration_hours || 0) * 60),
+        duration_minutes: data.duration_minutes || 0,
         ride_type: data.ride_type || 'Paid',
       }).eq('id', id);
       if (error) throw error;
@@ -180,7 +180,7 @@ export default function AdminRides() {
       category: ride.category,
       is_active: ride.is_active,
       image_url: ride.image_url || '',
-      duration_hours: (ride.duration_minutes || 0) / 60,
+      duration_minutes: ride.duration_minutes || 0,
       ride_type: ride.ride_type || 'Paid',
     });
     setEditOpen(true);
@@ -262,8 +262,8 @@ export default function AdminRides() {
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Duration (hr)</Label>
-            <Input type="number" value={formData.duration_hours} onChange={(e) => setFormData(prev => ({ ...prev, duration_hours: Number(e.target.value) }))} min={0} step={0.5} />
+            <Label>Duration (minutes)</Label>
+            <Input type="number" value={formData.duration_minutes} onChange={(e) => setFormData(prev => ({ ...prev, duration_minutes: Number(e.target.value) }))} min={0} step={1} />
           </div>
         </div>
       </div>
