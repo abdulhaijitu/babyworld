@@ -330,6 +330,12 @@ const translations: Record<string, string> = {
   "footer.openingHours": "Opening Hours",
   "footer.everyday": "Every Day",
   "footer.developedBy": "Developed by",
+  "footer.newsletter": "Stay Updated",
+  "footer.newsletterDesc": "Subscribe for offers, events & updates",
+  "footer.subscribe": "Subscribe",
+  "footer.subscribeSuccess": "Successfully subscribed!",
+  "footer.subscribeError": "Subscription failed. Try again.",
+  "footer.alreadySubscribed": "You're already subscribed!",
 };
 
 /** Simple translation lookup — returns the English string for a key */

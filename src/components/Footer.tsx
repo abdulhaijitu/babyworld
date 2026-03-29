@@ -1,17 +1,81 @@
 import { Link } from "react-router-dom";
-import { Phone, Mail, MapPin, Clock } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Send, Loader2 } from "lucide-react";
 import { t } from "@/lib/translations";
 import { WhatsAppButton } from "./WhatsAppButton";
 import { SocialLinks } from "./SocialLinks";
 import babyWorldLogo from "@/assets/baby-world-logo.png";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
+import { toast } from "sonner";
 
 function formatTime(time24: string): string {
   const [h, m] = time24.split(':').map(Number);
   const ampm = h >= 12 ? 'PM' : 'AM';
   const hour12 = h % 12 || 12;
   return `${hour12}:${String(m).padStart(2, '0')} ${ampm}`;
+}
+
+function NewsletterForm() {
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = email.trim();
+    if (!trimmed || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) return;
+
+    setLoading(true);
+    try {
+      const { error } = await supabase
+        .from('newsletter_subscribers')
+        .insert({ email: trimmed });
+
+      if (error) {
+        if (error.code === '23505') {
+          toast.info(t("footer.alreadySubscribed"));
+        } else {
+          throw error;
+        }
+      } else {
+        toast.success(t("footer.subscribeSuccess"));
+        setEmail('');
+      }
+    } catch {
+      toast.error(t("footer.subscribeError"));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-3">
+      <h4 className="font-semibold text-lg">{t("footer.newsletter")}</h4>
+      <p className="text-sm opacity-70">{t("footer.newsletterDesc")}</p>
+      <form onSubmit={handleSubscribe} className="flex gap-2">
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="your@email.com"
+          required
+          className="flex-1 min-w-0 px-3 py-2 rounded-lg bg-background/10 border border-background/20 text-background placeholder:text-background/50 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+        />
+        <button
+          type="submit"
+          disabled={loading}
+          className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center gap-1.5 flex-shrink-0"
+        >
+          {loading ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <Send className="w-4 h-4" />
+          )}
+          <span className="hidden sm:inline">{t("footer.subscribe")}</span>
+        </button>
+      </form>
+    </div>
+  );
 }
 
 export function Footer() {
@@ -87,18 +151,22 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Opening Hours */}
-          <div className="space-y-4">
-            <h4 className="font-semibold text-lg">{t("footer.openingHours")}</h4>
-            <ul className="space-y-3">
-              <li className="flex items-start gap-2 text-sm opacity-70">
+          {/* Opening Hours + Newsletter */}
+          <div className="space-y-6">
+            {/* Opening Hours */}
+            <div className="space-y-3">
+              <h4 className="font-semibold text-lg">{t("footer.openingHours")}</h4>
+              <div className="flex items-start gap-2 text-sm opacity-70">
                 <Clock className="w-4 h-4 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-medium opacity-100">{t("footer.everyday")}</p>
                   <p>{formatTime(openingTime)} – {formatTime(closingTime)}</p>
                 </div>
-              </li>
-            </ul>
+              </div>
+            </div>
+
+            {/* Newsletter */}
+            <NewsletterForm />
           </div>
 
           {/* Contact */}
