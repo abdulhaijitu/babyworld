@@ -127,7 +127,7 @@ export function PricingSection() {
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Sparkles className="w-4 h-4 text-orange-500" />
-                  <span>Eid Offer: <strong className="text-orange-600">৳{packagePricing.rideZoneOffer}</strong></span>
+                  <span>Offer: <strong className="text-orange-600">৳{packagePricing.rideZoneOffer}</strong></span>
                 </div>
               </div>
             </div>
