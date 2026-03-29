@@ -414,6 +414,7 @@ export default function AdminRides() {
                       <span className="text-muted-foreground">·</span>
                       <span className="font-medium">৳{ride.price}</span>
                       {ride.offer_price > 0 && <span className="font-medium text-orange-600">৳{ride.offer_price}</span>}
+                      {ride.duration_minutes > 0 && <><span className="text-muted-foreground">·</span><span className="text-muted-foreground">{ride.duration_minutes}min</span></>}
                       <Badge variant="outline" className={cn(
                         "text-[10px] px-1.5 py-0 border-0",
                         ride.is_active ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
@@ -445,6 +446,7 @@ export default function AdminRides() {
                     <TableHead>Type</TableHead>
                     <TableHead>Regular Price</TableHead>
                     <TableHead>Offer Price</TableHead>
+                    <TableHead>Duration</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="text-right">Action</TableHead>
                   </TableRow>
@@ -470,6 +472,7 @@ export default function AdminRides() {
                       </TableCell>
                       <TableCell><span className="font-medium">৳{ride.price}</span></TableCell>
                       <TableCell><span className="font-medium text-orange-600">{ride.offer_price ? `৳${ride.offer_price}` : '—'}</span></TableCell>
+                      <TableCell><span className="text-sm text-muted-foreground">{ride.duration_minutes ? `${ride.duration_minutes} min` : '—'}</span></TableCell>
                       <TableCell>
                         <Badge variant="outline" className={cn(
                           "text-xs font-semibold border-0",
