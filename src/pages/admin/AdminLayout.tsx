@@ -43,6 +43,7 @@ const routeTitleMap: Record<string, string> = {
   '/admin/promotions': 'Promotions',
   '/admin/sms-campaigns': 'SMS Campaigns',
   '/admin/social-media': 'Social Media',
+  '/admin/newsletter': 'Newsletter Subscribers',
   '/admin/reports': 'Reports',
   '/admin/profit': 'Profit Reports',
   '/admin/expenses': 'Expenses',

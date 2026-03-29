@@ -58,6 +58,7 @@ const allMenuItems: MenuItem[] = [
     { id: 'promotions', label: 'Promotions', icon: Tag, path: '/admin/promotions' },
     { id: 'sms-campaigns', label: 'SMS Campaigns', icon: MessageSquare, path: '/admin/sms-campaigns' },
     { id: 'social-media', label: 'Social Media', icon: Share2, path: '/admin/social-media' },
+    { id: 'newsletter', label: 'Newsletter', icon: Mail, path: '/admin/newsletter' },
   ]},
   { id: 'hr', label: 'Human Resources', icon: Briefcase, path: '/admin/employees', module: 'hr', children: [
     { id: 'employees', label: 'Employees', icon: Users, path: '/admin/employees' },

@@ -69,6 +69,7 @@ import AdminLeads from "./pages/admin/AdminLeads";
 import AdminPromotions from "./pages/admin/AdminPromotions";
 import AdminSmsCampaigns from "./pages/admin/AdminSmsCampaigns";
 import AdminSocialMedia from "./pages/admin/AdminSocialMedia";
+import AdminNewsletter from "./pages/admin/AdminNewsletter";
 import AdminIncome from "./pages/admin/AdminIncome";
 import AdminIncomeCategories from "./pages/admin/AdminIncomeCategories";
 
@@ -118,6 +119,7 @@ const App = () => (
                   <Route path="promotions" element={<PermissionGuard module="marketing"><AdminPromotions /></PermissionGuard>} />
                   <Route path="sms-campaigns" element={<PermissionGuard module="marketing"><AdminSmsCampaigns /></PermissionGuard>} />
                   <Route path="social-media" element={<PermissionGuard module="marketing"><AdminSocialMedia /></PermissionGuard>} />
+                  <Route path="newsletter" element={<PermissionGuard module="marketing"><AdminNewsletter /></PermissionGuard>} />
                   <Route path="reports" element={<PermissionGuard module="reports"><AdminReports /></PermissionGuard>} />
                   <Route path="profit" element={<PermissionGuard module="accounts"><AdminProfitReports /></PermissionGuard>} />
                   <Route path="expenses" element={<PermissionGuard module="accounts"><AdminExpenses /></PermissionGuard>} />
