@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Baby World – অফলাইন</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Hind Siliguri', 'Plus Jakarta Sans', system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 40%, #f3e8ff 100%);
+      color: #2d1b4e;
+      text-align: center;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 420px;
+    }
+    .icon-wrapper {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 1.5rem;
+      background: white;
+      border-radius: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+    .icon-wrapper img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+    }
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: #c2185b;
+    }
+    p {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: #5a3d6e;
+      margin-bottom: 1.5rem;
+    }
+    .wifi-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1rem;
+      opacity: 0.3;
+    }
+    .retry-btn {
+      display: inline-block;
+      padding: 0.85rem 2.5rem;
+      background: linear-gradient(135deg, #c2185b, #9c27b0);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 15px rgba(194, 24, 91, 0.3);
+    }
+    .retry-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(194, 24, 91, 0.4);
+    }
+    .retry-btn:active {
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon-wrapper">
+      <img src="/favicon.png" alt="Baby World" />
+    </div>
+    <svg class="wifi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="2" y1="2" x2="22" y2="22" />
+      <path d="M8.5 16.5a5 5 0 017 0" />
+      <path d="M2 8.82a15 15 0 0 1 4.17-2.65" />
+      <path d="M10.66 5c4.01-.36 8.14.9 11.34 3.76" />
+      <path d="M16.85 11.25a10 10 0 012.22 1.68" />
+      <path d="M5 13a10 10 0 014.46-2.16" />
+      <line x1="12" y1="20" x2="12.01" y2="20" />
+    </svg>
+    <h1>ইন্টারনেট সংযোগ নেই</h1>
+    <p>
+      আপনি বর্তমানে অফলাইনে আছেন। অনুগ্রহ করে আপনার ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।
+    </p>
+    <button class="retry-btn" onclick="window.location.reload()">
+      আবার চেষ্টা করুন
+    </button>
+  </div>
+</body>
+</html>
