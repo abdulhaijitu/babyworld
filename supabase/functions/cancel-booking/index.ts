@@ -1,4 +1,5 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { corsHeaders } from '../_shared/cors.ts';
 import { createAdminClient } from '../_shared/supabase-admin.ts';
 
@@ -15,12 +16,62 @@ serve(async (req) => {
 
   try {
     const supabase = createAdminClient();
+
+    // --- Authentication & Authorization ---
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ error: 'Authentication required' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const token = authHeader.replace('Bearer ', '');
+    const authClient = createClient(
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_ANON_KEY')!
+    );
+    const { data: { user }, error: authError } = await authClient.auth.getUser(token);
+
+    if (authError || !user) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid authentication' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Check admin/manager/staff role
+    const { data: roles } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', user.id);
+
+    const allowedRoles = ['admin', 'manager', 'staff', 'super_admin', 'booking_manager'];
+    const hasPermission = roles?.some(r => allowedRoles.includes(r.role));
+
+    if (!hasPermission) {
+      return new Response(
+        JSON.stringify({ error: 'Insufficient permissions' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // --- Input Validation ---
     const body: CancelBookingRequest = await req.json();
     const { booking_id, refund = false, reason } = body;
 
-    if (!booking_id) {
+    if (!booking_id || typeof booking_id !== 'string') {
       return new Response(
-        JSON.stringify({ error: 'Booking ID is required' }),
+        JSON.stringify({ error: 'Valid Booking ID is required' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // UUID format validation
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(booking_id)) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid booking ID format' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -47,13 +98,14 @@ serve(async (req) => {
     }
 
     // Update booking status to cancelled
+    const sanitizedReason = reason ? reason.substring(0, 500) : 'No reason provided';
     const { error: updateError } = await supabase
       .from('bookings')
       .update({ 
         status: 'cancelled',
         notes: booking.notes 
-          ? `${booking.notes}\n[Cancelled: ${reason || 'No reason provided'}]`
-          : `[Cancelled: ${reason || 'No reason provided'}]`
+          ? `${booking.notes}\n[Cancelled by ${user.email}: ${sanitizedReason}]`
+          : `[Cancelled by ${user.email}: ${sanitizedReason}]`
       })
       .eq('id', booking_id);
 
@@ -76,7 +128,6 @@ serve(async (req) => {
     // Handle refund if requested and payment was made
     let refundResult = null;
     if (refund && booking.payment_status === 'paid') {
-      // Get payment record
       const { data: payment } = await supabase
         .from('payments')
         .select('*')
@@ -85,7 +136,6 @@ serve(async (req) => {
         .single();
 
       if (payment) {
-        // Mark as refunded in our system
         await supabase
           .from('payments')
           .update({
@@ -93,7 +143,8 @@ serve(async (req) => {
             metadata: {
               ...payment.metadata,
               refunded_at: new Date().toISOString(),
-              refund_reason: reason
+              refund_reason: sanitizedReason,
+              refunded_by: user.id
             }
           })
           .eq('id', payment.id);
@@ -110,6 +161,15 @@ serve(async (req) => {
         };
       }
     }
+
+    // Log the cancellation
+    await supabase.from('activity_logs').insert({
+      entity_type: 'booking',
+      entity_id: booking_id,
+      action: 'booking_cancelled',
+      user_id: user.id,
+      details: { reason: sanitizedReason, refund, refund_result: refundResult }
+    });
 
     // Send SMS notification about cancellation
     try {

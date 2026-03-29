@@ -1790,7 +1790,47 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      ride_reviews_public: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          is_approved: boolean | null
+          rating: number | null
+          review_text: string | null
+          reviewer_name: string | null
+          ride_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          is_approved?: boolean | null
+          rating?: number | null
+          review_text?: string | null
+          reviewer_name?: string | null
+          ride_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          is_approved?: boolean | null
+          rating?: number | null
+          review_text?: string | null
+          reviewer_name?: string | null
+          ride_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ride_reviews_ride_id_fkey"
+            columns: ["ride_id"]
+            isOneToOne: false
+            referencedRelation: "rides"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       has_any_role: {
