@@ -178,29 +178,25 @@ export function Footer() {
             <ul className="space-y-3">
               <li>
                 <a
-                  href="tel:09606990128"
+                  href={`tel:${phone.replace(/\s+/g, '')}`}
                   className="flex items-center gap-2 text-sm opacity-70 hover:opacity-100 transition-opacity"
                 >
                   <Phone className="w-4 h-4 flex-shrink-0" />
-                  09606990128
+                  {phone}
                 </a>
               </li>
               <li>
                 <a
-                  href="mailto:babyworld.dm@gmail.com"
+                  href={`mailto:${email}`}
                   className="flex items-center gap-2 text-sm opacity-70 hover:opacity-100 transition-opacity"
                 >
                   <Mail className="w-4 h-4 flex-shrink-0" />
-                  babyworld.dm@gmail.com
+                  {email}
                 </a>
               </li>
               <li className="flex items-start gap-2 text-sm opacity-70">
                 <MapPin className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                <span>
-                  {t("contact.addressLine1")}
-                  <br />
-                  {t("contact.addressLine2")}
-                </span>
+                <span>{address}</span>
               </li>
             </ul>
           </div>
