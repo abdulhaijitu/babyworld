@@ -6,7 +6,16 @@ import { AdminDashboardSkeleton } from '@/components/admin/AdminSkeleton';
 import { AdminErrorState } from '@/components/admin/AdminErrorState';
 import { NotificationBell } from '@/components/admin/NotificationBell';
 import { AdminMobileBottomNav } from '@/components/admin/AdminMobileBottomNav';
-import { Menu, ExternalLink, Plus } from 'lucide-react';
+import { Menu, ExternalLink, Plus, LogOut, User } from 'lucide-react';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import babyWorldLogo from '@/assets/baby-world-logo.png';
