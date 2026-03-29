@@ -1,40 +1,49 @@
 
 
-## /admin/roles রেসপনসিভ ফিক্স (390px ভিউপোর্ট)
+## Admin টপবার রিডিজাইন — ছবির মতো Breadcrumb + Quick Actions স্টাইল
 
-### সমস্যা চিহ্নিত
+### বর্তমান অবস্থা
+- সিম্পল `h-12` বার: বামে মোবাইল মেনু/লোগো, ডানে পেইজ টাইটেল + নোটিফিকেশন বেল
+- কোনো breadcrumb নেই, কোনো quick action বাটন নেই
 
-1. **Role Cards grid `grid-cols-3`** — 390px এ 10টি কার্ড 3 কলামে cramped, badge text ও description কাটা যায়
-2. **Permission Matrix টেবিল** — 5 কলাম (Module + 4 checkboxes) মোবাইলে overflow করে, `w-[200px]` + 4×`w-[100px]` = 600px মিনিমাম
-3. **CardHeader** — Badge + "Permission Matrix" টেক্সট + Save বাটন একই row-তে মোবাইলে overflow
-4. **Root div** — `overflow-hidden` নেই
-5. **Save বাটন** — টেক্সট দেখানো অপ্রয়োজনীয় মোবাইলে
+### রেফারেন্স ইমেজ বিশ্লেষণ
+- **বামে**: Breadcrumb (PAGES → DASHBOARD) ছোট uppercase টেক্সটে, নিচে বড় পেইজ টাইটেল "Overview"
+- **ডানে**: Quick action বাটন (Guest Checkout, E-commerce POS, Visit Website) + User avatar/dropdown
+- ক্লিন, minimal ডিজাইন, পর্যাপ্ত vertical spacing
 
-### পরিবর্তন — `AdminRoles.tsx` (১টি ফাইল)
+### পরিবর্তন পরিকল্পনা — `AdminLayout.tsx` (১টি ফাইল)
 
-**১. Root div**: `space-y-6` → `space-y-4 overflow-hidden`
+**১. টপবার উচ্চতা বাড়ানো**: `h-12` → `h-14 md:h-16` — breadcrumb + title দুই লাইনে জায়গা দিতে
 
-**২. Role Cards grid**: `grid-cols-3` → `grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5` — মোবাইলে 2 কলাম, কার্ড পড়তে সুবিধা
+**২. বাম পাশে Breadcrumb + Title (ডেস্কটপে)**
+- উপরে: `ADMIN → [Parent Section]` ছোট uppercase muted টেক্সটে, `→` separator সহ
+- নিচে: পেইজ টাইটেল bold, `text-lg`
+- Breadcrumb তৈরি হবে `routeTitleMap` + sidebar menu structure থেকে — route path দেখে parent group বের করা হবে (যেমন `/admin/create-ticket` → `ADMIN → TICKETING`)
 
-**৩. Role Card padding**: `p-3` → `p-2 sm:p-3`
+**৩. ডান পাশে Quick Actions (ডেস্কটপে)**
+- "Visit Website" বাটন (external link, নতুন ট্যাবে `/` ওপেন করবে)
+- "Create Ticket" বাটন (navigate `/admin/create-ticket`)
+- NotificationBell (আগের মতো)
+- বাটনগুলো dark variant, icon সহ, রেফারেন্সের মতো
 
-**৪. CardHeader**: flex direction মোবাইলে column, Save বাটন মোবাইলে icon-only
-```
-flex-col sm:flex-row gap-2
-```
-Save বাটন: `<span className="hidden sm:inline">Save</span>`
+**৪. মোবাইল ভিউ**
+- বামে: হ্যামবার্গার + লোগো (আগের মতো)
+- ডানে: শুধু পেইজ টাইটেল (ছোট) + NotificationBell
+- Breadcrumb ও quick action বাটন `hidden md:flex` — মোবাইলে লুকানো
 
-**৫. Permission Matrix — মোবাইল কার্ড ভিউ (`lg:hidden`)**
-প্রতিটি module একটি কার্ডে:
-- Module name (bold)
-- 4টি checkbox inline grid (2×2): View, Create, Edit, Delete — label সহ
-- `divide-y` দিয়ে আলাদা
+**৫. Breadcrumb লজিক**
+- `allMenuItems` থেকে parent-child ম্যাপিং ব্যবহার করে current route-এর parent section বের করা
+- যেমন: `/admin/payroll` → breadcrumb: `ADMIN → HUMAN RESOURCES`, title: `Payroll`
+- `/admin` → breadcrumb: `ADMIN`, title: `Dashboard`
 
-**৬. ডেস্কটপ টেবিল `hidden lg:block`**
-বিদ্যমান Table শুধু lg+ এ দেখাবে
+### ডিজাইন স্টাইল
+- Breadcrumb: `text-[11px] uppercase tracking-wider text-muted-foreground font-medium`
+- Separator: `→` character, `text-primary` রঙে
+- Title: `text-base md:text-lg font-semibold text-foreground`
+- Quick action buttons: `variant="default"` dark, `size="sm"`, icon + label
+- সামগ্রিক: ক্লিন, professional, রেফারেন্স ইমেজের aesthetic অনুসরণ
 
-### প্রভাব
-- শুধুমাত্র ১টি ফাইল পরিবর্তন
-- 390px এ Role cards ও Permission matrix সঠিকভাবে ফিট করবে
-- অন্যান্য পেইজের compact design standard অনুসরণ করবে
+### মোবাইল রেসপনসিভনেস
+- Breadcrumb ও quick actions শুধু `md:` breakpoint-এ দেখাবে
+- মোবাইলে compact `h-12` থাকবে, ডেস্কটপে `h-16`
 
