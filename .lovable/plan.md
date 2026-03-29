@@ -1,49 +1,40 @@
 
 
-## Admin টপবার রিডিজাইন — ছবির মতো Breadcrumb + Quick Actions স্টাইল
+## SEO ও Social অডিট রিপোর্ট ও ফিক্স প্ল্যান
 
-### বর্তমান অবস্থা
-- সিম্পল `h-12` বার: বামে মোবাইল মেনু/লোগো, ডানে পেইজ টাইটেল + নোটিফিকেশন বেল
-- কোনো breadcrumb নেই, কোনো quick action বাটন নেই
+### সমস্যা চিহ্নিত
 
-### রেফারেন্স ইমেজ বিশ্লেষণ
-- **বামে**: Breadcrumb (PAGES → DASHBOARD) ছোট uppercase টেক্সটে, নিচে বড় পেইজ টাইটেল "Overview"
-- **ডানে**: Quick action বাটন (Guest Checkout, E-commerce POS, Visit Website) + User avatar/dropdown
-- ক্লিন, minimal ডিজাইন, পর্যাপ্ত vertical spacing
+| # | সমস্যা | তীব্রতা |
+|---|--------|--------|
+| 1 | `index.html`-এ OG image = generic Lovable placeholder (`lovable.dev/opengraph-image-p98pqg.png`) | High |
+| 2 | `SEOHead.tsx`-এ OG images অস্তিত্বহীন ফাইলে পয়েন্ট করে (`/og-home.jpg` etc.) | High |
+| 3 | `robots.txt`-এ `Sitemap:` directive নেই | Medium |
+| 4 | কোনো `sitemap.xml` নেই | Medium |
+| 5 | Gallery পেইজে proper OG tags, canonical URL, structured data নেই | Medium |
+| 6 | JSON-LD structured data-তে Instagram ও TikTok `sameAs` লিঙ্ক নেই | Low |
+| 7 | `index.html`-এর static meta tags ও `SEOHead`-এর dynamic tags-এ conflict/duplicate | Low |
+| 8 | Admin routes indexable (crawlers `/admin/*` crawl করতে পারে) | Low |
 
-### পরিবর্তন পরিকল্পনা — `AdminLayout.tsx` (১টি ফাইল)
+### ফিক্স প্ল্যান (৪টি ফাইল)
 
-**১. টপবার উচ্চতা বাড়ানো**: `h-12` → `h-14 md:h-16` — breadcrumb + title দুই লাইনে জায়গা দিতে
+**১. `index.html` — Clean up static fallback meta**
+- OG image-কে favicon.png-তে পয়েন্ট করো (fallback হিসেবে), অথবা remove করো কারণ `SEOHead` override করে
+- Twitter image-ও একই ফিক্স
+- Static title/description রাখো কিন্তু Lovable placeholder image সরাও
 
-**২. বাম পাশে Breadcrumb + Title (ডেস্কটপে)**
-- উপরে: `ADMIN → [Parent Section]` ছোট uppercase muted টেক্সটে, `→` separator সহ
-- নিচে: পেইজ টাইটেল bold, `text-lg`
-- Breadcrumb তৈরি হবে `routeTitleMap` + sidebar menu structure থেকে — route path দেখে parent group বের করা হবে (যেমন `/admin/create-ticket` → `ADMIN → TICKETING`)
+**২. `src/components/SEOHead.tsx` — ফিক্স OG images + Gallery support + sameAs**
+- `ogImages` map-এর ভ্যালু favicon.png বা actual site URL-এ পয়েন্ট করো (কোনো `/og-home.jpg` ফাইল exist করে না)
+- `page` prop-এ `"gallery"` type যোগ করো, সংশ্লিষ্ট SEO data সহ
+- JSON-LD `sameAs`-এ `SOCIAL_LINKS.instagram` ও `SOCIAL_LINKS.tiktok` যোগ করো
 
-**৩. ডান পাশে Quick Actions (ডেস্কটপে)**
-- "Visit Website" বাটন (external link, নতুন ট্যাবে `/` ওপেন করবে)
-- "Create Ticket" বাটন (navigate `/admin/create-ticket`)
-- NotificationBell (আগের মতো)
-- বাটনগুলো dark variant, icon সহ, রেফারেন্সের মতো
+**৩. `src/pages/Gallery.tsx` — SEOHead ব্যবহার করো**
+- Inline `<Helmet>` সরিয়ে `<SEOHead page="gallery" />` ব্যবহার করো
 
-**৪. মোবাইল ভিউ**
-- বামে: হ্যামবার্গার + লোগো (আগের মতো)
-- ডানে: শুধু পেইজ টাইটেল (ছোট) + NotificationBell
-- Breadcrumb ও quick action বাটন `hidden md:flex` — মোবাইলে লুকানো
+**৪. `public/robots.txt` — Sitemap + Admin disallow**
+- `Sitemap: https://babyworld.lovable.app/sitemap.xml` যোগ করো
+- `Disallow: /admin` যোগ করো admin pages block করতে
 
-**৫. Breadcrumb লজিক**
-- `allMenuItems` থেকে parent-child ম্যাপিং ব্যবহার করে current route-এর parent section বের করা
-- যেমন: `/admin/payroll` → breadcrumb: `ADMIN → HUMAN RESOURCES`, title: `Payroll`
-- `/admin` → breadcrumb: `ADMIN`, title: `Dashboard`
-
-### ডিজাইন স্টাইল
-- Breadcrumb: `text-[11px] uppercase tracking-wider text-muted-foreground font-medium`
-- Separator: `→` character, `text-primary` রঙে
-- Title: `text-base md:text-lg font-semibold text-foreground`
-- Quick action buttons: `variant="default"` dark, `size="sm"`, icon + label
-- সামগ্রিক: ক্লিন, professional, রেফারেন্স ইমেজের aesthetic অনুসরণ
-
-### মোবাইল রেসপনসিভনেস
-- Breadcrumb ও quick actions শুধু `md:` breakpoint-এ দেখাবে
-- মোবাইলে compact `h-12` থাকবে, ডেস্কটপে `h-16`
+**৫. `public/sitemap.xml` — নতুন ফাইল তৈরি**
+- Static sitemap: `/`, `/play-booking`, `/birthday-events`, `/contact`, `/gallery`
+- `lastmod`, `changefreq`, `priority` সহ
 
