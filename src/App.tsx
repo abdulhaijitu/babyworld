@@ -119,6 +119,7 @@ const App = () => (
                   <Route path="promotions" element={<PermissionGuard module="marketing"><AdminPromotions /></PermissionGuard>} />
                   <Route path="sms-campaigns" element={<PermissionGuard module="marketing"><AdminSmsCampaigns /></PermissionGuard>} />
                   <Route path="social-media" element={<PermissionGuard module="marketing"><AdminSocialMedia /></PermissionGuard>} />
+                  <Route path="newsletter" element={<PermissionGuard module="marketing"><AdminNewsletter /></PermissionGuard>} />
                   <Route path="reports" element={<PermissionGuard module="reports"><AdminReports /></PermissionGuard>} />
                   <Route path="profit" element={<PermissionGuard module="accounts"><AdminProfitReports /></PermissionGuard>} />
                   <Route path="expenses" element={<PermissionGuard module="accounts"><AdminExpenses /></PermissionGuard>} />
