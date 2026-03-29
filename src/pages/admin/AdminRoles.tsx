@@ -139,7 +139,7 @@ export default function AdminRoles() {
             }`}
             onClick={() => setSelectedRole(role.value)}
           >
-            <CardContent className="p-3">
+            <CardContent className="p-2 sm:p-3">
               <div className="flex items-center justify-between mb-1">
                 <Badge variant="secondary" className={`text-[10px] px-1.5 py-0 ${role.color}`}>
                   {role.label}
