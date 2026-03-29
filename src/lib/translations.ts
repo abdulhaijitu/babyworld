@@ -326,6 +326,10 @@ const translations: Record<string, string> = {
   "footer.rights": "All rights reserved.",
   "footer.ageRange": "Ages 1–10 Years",
   "footer.followUs": "Follow Us",
+  "footer.gallery": "Gallery",
+  "footer.openingHours": "Opening Hours",
+  "footer.everyday": "Every Day",
+  "footer.developedBy": "Developed by",
 };
 
 /** Simple translation lookup — returns the English string for a key */
