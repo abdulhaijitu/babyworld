@@ -1,7 +1,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ImageIcon, SlidersHorizontal } from "lucide-react";
+import { ImageIcon, SlidersHorizontal, Newspaper } from "lucide-react";
 import AdminHeroCards from "./AdminHeroCards";
 import AdminHeroSlides from "./AdminHeroSlides";
+import NewsTickerManager from "@/components/admin/NewsTickerManager";
 
 export default function AdminHomepage() {
   return (
@@ -17,6 +18,10 @@ export default function AdminHomepage() {
             <ImageIcon className="w-4 h-4" />
             Offer & Event Cards
           </TabsTrigger>
+          <TabsTrigger value="news" className="gap-2">
+            <Newspaper className="w-4 h-4" />
+            News Ticker
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="slides" className="mt-4">
@@ -25,6 +30,10 @@ export default function AdminHomepage() {
 
         <TabsContent value="cards" className="mt-4">
           <AdminHeroCards embedded />
+        </TabsContent>
+
+        <TabsContent value="news" className="mt-4">
+          <NewsTickerManager />
         </TabsContent>
       </Tabs>
     </div>

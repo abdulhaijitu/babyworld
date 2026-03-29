@@ -11,6 +11,7 @@ import { EventsTrust } from "@/components/events/EventsTrust";
 import { SEOHead } from "@/components/SEOHead";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { NewsBar } from "@/components/NewsBar";
 
 const BirthdayEvents = () => {
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
@@ -34,6 +35,7 @@ const BirthdayEvents = () => {
       <SEOHead page="birthday-events" />
       <div className="min-h-screen bg-background overflow-x-hidden">
         <Navbar />
+        <NewsBar />
         <main>
           <EventsHero 
             onExplorePackages={scrollToPackages}
