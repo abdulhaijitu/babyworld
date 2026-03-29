@@ -1,40 +1,36 @@
 
 
-## SEO ও Social অডিট রিপোর্ট ও ফিক্স প্ল্যান
+## PWA সেটআপ প্ল্যান
 
-### সমস্যা চিহ্নিত
+### সতর্কতা
+PWA ফিচার (অফলাইন সাপোর্ট, ইনস্টল প্রম্পট) শুধু published/deployed ভার্সনে কাজ করবে — Lovable editor preview-তে কাজ করবে না।
 
-| # | সমস্যা | তীব্রতা |
-|---|--------|--------|
-| 1 | `index.html`-এ OG image = generic Lovable placeholder (`lovable.dev/opengraph-image-p98pqg.png`) | High |
-| 2 | `SEOHead.tsx`-এ OG images অস্তিত্বহীন ফাইলে পয়েন্ট করে (`/og-home.jpg` etc.) | High |
-| 3 | `robots.txt`-এ `Sitemap:` directive নেই | Medium |
-| 4 | কোনো `sitemap.xml` নেই | Medium |
-| 5 | Gallery পেইজে proper OG tags, canonical URL, structured data নেই | Medium |
-| 6 | JSON-LD structured data-তে Instagram ও TikTok `sameAs` লিঙ্ক নেই | Low |
-| 7 | `index.html`-এর static meta tags ও `SEOHead`-এর dynamic tags-এ conflict/duplicate | Low |
-| 8 | Admin routes indexable (crawlers `/admin/*` crawl করতে পারে) | Low |
+### পরিবর্তন
 
-### ফিক্স প্ল্যান (৪টি ফাইল)
+**১. `public/manifest.json` তৈরি**
+- `name`: "Baby World"
+- `short_name`: "BabyWorld"
+- `display`: "standalone"
+- `theme_color` ও `background_color`
+- Icons: `/favicon.png` কে 192x192 ও 512x512 আইকন হিসেবে ব্যবহার (existing `favicon.png`)
 
-**১. `index.html` — Clean up static fallback meta**
-- OG image-কে favicon.png-তে পয়েন্ট করো (fallback হিসেবে), অথবা remove করো কারণ `SEOHead` override করে
-- Twitter image-ও একই ফিক্স
-- Static title/description রাখো কিন্তু Lovable placeholder image সরাও
+**২. `index.html` — manifest লিঙ্ক যোগ**
+- `<link rel="manifest" href="/manifest.json" />`
+- `<meta name="theme-color">` যোগ
 
-**২. `src/components/SEOHead.tsx` — ফিক্স OG images + Gallery support + sameAs**
-- `ogImages` map-এর ভ্যালু favicon.png বা actual site URL-এ পয়েন্ট করো (কোনো `/og-home.jpg` ফাইল exist করে না)
-- `page` prop-এ `"gallery"` type যোগ করো, সংশ্লিষ্ট SEO data সহ
-- JSON-LD `sameAs`-এ `SOCIAL_LINKS.instagram` ও `SOCIAL_LINKS.tiktok` যোগ করো
+**৩. `vite.config.ts` — `vite-plugin-pwa` যোগ**
+- `registerType: "autoUpdate"`
+- `devOptions: { enabled: false }` (preview-তে সমস্যা এড়াতে)
+- `navigateFallbackDenylist: [/^\/~oauth/]`
+- manifest config icons সহ
 
-**৩. `src/pages/Gallery.tsx` — SEOHead ব্যবহার করো**
-- Inline `<Helmet>` সরিয়ে `<SEOHead page="gallery" />` ব্যবহার করো
+**৪. `src/main.tsx` — iframe/preview guard**
+- Preview host বা iframe-এ থাকলে service worker unregister করবে
+- এতে Lovable editor-এ stale cache সমস্যা হবে না
 
-**৪. `public/robots.txt` — Sitemap + Admin disallow**
-- `Sitemap: https://babyworld.lovable.app/sitemap.xml` যোগ করো
-- `Disallow: /admin` যোগ করো admin pages block করতে
+### ডিপেন্ডেন্সি
+- `vite-plugin-pwa` install
 
-**৫. `public/sitemap.xml` — নতুন ফাইল তৈরি**
-- Static sitemap: `/`, `/play-booking`, `/birthday-events`, `/contact`, `/gallery`
-- `lastmod`, `changefreq`, `priority` সহ
+### আইকন
+- বিদ্যমান `/favicon.png` ফাইলকেই PWA আইকন হিসেবে ব্যবহার করা হবে (192x192, 512x512 purpose: "any maskable")
 
