@@ -114,6 +114,23 @@ serve(async (req) => {
       );
     }
 
+    // Idempotency check - skip if already processed
+    if (payment.metadata?.webhook_processed_at) {
+      console.log('Webhook already processed for:', actualInvoiceId);
+      return new Response(
+        JSON.stringify({ success: true, message: 'Already processed' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (paymentError || !payment) {
+      console.error('Payment not found:', actualInvoiceId);
+      return new Response(
+        JSON.stringify({ error: 'Payment not found' }),
+        { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Map UddoktaPay status to our status
     let paymentStatus = 'pending';
     let bookingPaymentStatus = 'pending';
@@ -138,7 +155,8 @@ serve(async (req) => {
         metadata: {
           ...payment.metadata,
           webhook_data: webhookData,
-          completed_at: date
+          completed_at: date,
+          webhook_processed_at: new Date().toISOString()
         }
       })
       .eq('id', payment.id);
