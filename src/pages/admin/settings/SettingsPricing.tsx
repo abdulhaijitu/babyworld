@@ -75,7 +75,7 @@ export default function SettingsPricing() {
           <div>
             <p className="text-sm font-semibold mb-2">Family Package</p>
             <div className="grid grid-cols-2 gap-4">
-              {([['familyRegular', 'Regular'], ['familyOffer', 'Eid/Offer']] as const).map(([key, label]) => (
+              {([['familyRegular', 'Regular'], ['familyOffer', 'Offer']] as const).map(([key, label]) => (
                 <div key={key} className="space-y-2">
                   <Label>{label}</Label>
                   <div className="relative">
