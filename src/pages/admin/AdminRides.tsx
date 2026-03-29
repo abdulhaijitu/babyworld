@@ -180,7 +180,7 @@ export default function AdminRides() {
       category: ride.category,
       is_active: ride.is_active,
       image_url: ride.image_url || '',
-      duration_hours: (ride.duration_minutes || 0) / 60,
+      duration_minutes: ride.duration_minutes || 0,
       ride_type: ride.ride_type || 'Paid',
     });
     setEditOpen(true);
