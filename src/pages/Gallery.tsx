@@ -6,7 +6,7 @@ import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { ScrollFadeIn, StaggerContainer, StaggerItem } from "@/components/ScrollAnimations";
 import { ImageLightbox, GalleryItem } from "@/components/ImageLightbox";
-import { Helmet } from "react-helmet-async";
+import { SEOHead } from "@/components/SEOHead";
 import { Camera, Play, X } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -56,13 +56,6 @@ const Gallery = () => {
     },
   ];
 
-  const seoData = {
-    title: "Photo & Video Gallery | Baby World - Indoor Playground Dhaka",
-    description: "Explore our photo and video gallery showcasing the fun, safe, and exciting environment at Baby World indoor playground in Dhaka.",
-  };
-
-  const data = seoData;
-
   const openLightbox = (index: number) => {
     setSelectedImageIndex(index);
     setLightboxOpen(true);
@@ -70,10 +63,7 @@ const Gallery = () => {
 
   return (
     <PageTransition>
-      <Helmet>
-        <title>{data.title}</title>
-        <meta name="description" content={data.description} />
-      </Helmet>
+      <SEOHead page="gallery" />
       
       <div className="min-h-screen bg-background overflow-x-hidden">
         <Navbar />

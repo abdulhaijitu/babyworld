@@ -2,7 +2,7 @@ import { Helmet } from "react-helmet-async";
 import { SOCIAL_LINKS } from "./SocialLinks";
 
 interface SEOHeadProps {
-  page: "home" | "play-booking" | "birthday-events" | "contact";
+  page: "home" | "play-booking" | "birthday-events" | "contact" | "gallery";
 }
 
 const seoData = {
@@ -27,64 +27,61 @@ const seoData = {
       description: "Get in touch with Baby World. Visit us at Jannat Tower, Lalbagh, Dhaka. Call 09606990128 or send us a message via WhatsApp.",
       keywords: "Baby World contact, indoor playground Dhaka address, Lalbagh playground",
     },
+    gallery: {
+      title: "Photo & Video Gallery | Baby World - Indoor Playground Dhaka",
+      description: "Explore our photo and video gallery showcasing the fun, safe, and exciting environment at Baby World indoor playground in Dhaka.",
+      keywords: "Baby World gallery, indoor playground photos, kids play area videos, Dhaka playground images",
+    },
   },
 };
 
-const ogImages = {
-  home: "https://babyworld.lovable.app/og-home.jpg",
-  "play-booking": "https://babyworld.lovable.app/og-play.jpg",
-  "birthday-events": "https://babyworld.lovable.app/og-events.jpg",
-  contact: "https://babyworld.lovable.app/og-contact.jpg",
+const baseUrl = "https://babyworld.lovable.app";
+const defaultOgImage = `${baseUrl}/favicon.png`;
+
+const paths: Record<string, string> = {
+  home: "",
+  "play-booking": "/play-booking",
+  "birthday-events": "/birthday-events",
+  contact: "/contact",
+  gallery: "/gallery",
 };
 
 export function SEOHead({ page }: SEOHeadProps) {
   const data = seoData.en[page];
-  const baseUrl = "https://babyworld.lovable.app";
-  
-  const paths = {
-    home: "",
-    "play-booking": "/play-booking",
-    "birthday-events": "/birthday-events",
-    contact: "/contact",
-  };
-
   const canonicalUrl = `${baseUrl}${paths[page]}`;
 
   return (
     <Helmet>
-      {/* Primary Meta Tags */}
       <title>{data.title}</title>
       <meta name="title" content={data.title} />
       <meta name="description" content={data.description} />
       <meta name="keywords" content={data.keywords} />
       <link rel="canonical" href={canonicalUrl} />
-      
-      {/* Language */}
-      <html lang={"en"} />
+      <html lang="en" />
 
-      {/* Open Graph / Facebook */}
+      {/* Open Graph */}
       <meta property="og:type" content="website" />
       <meta property="og:url" content={canonicalUrl} />
       <meta property="og:title" content={data.title} />
       <meta property="og:description" content={data.description} />
-      <meta property="og:image" content={ogImages[page]} />
+      <meta property="og:image" content={defaultOgImage} />
       <meta property="og:site_name" content="Baby World" />
-      <meta property="og:locale" content={"en_US"} />
+      <meta property="og:locale" content="en_US" />
 
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:url" content={canonicalUrl} />
       <meta name="twitter:title" content={data.title} />
       <meta name="twitter:description" content={data.description} />
-      <meta name="twitter:image" content={ogImages[page]} />
+      <meta name="twitter:image" content={defaultOgImage} />
 
       {/* Additional SEO */}
       <meta name="robots" content="index, follow" />
       <meta name="author" content="Baby World" />
       <meta name="geo.region" content="BD-C" />
       <meta name="geo.placename" content="Dhaka" />
-      
-      {/* Structured Data - Local Business */}
+
+      {/* JSON-LD */}
       <script type="application/ld+json">
         {JSON.stringify({
           "@context": "https://schema.org",
@@ -122,10 +119,12 @@ export function SEOHead({ page }: SEOHeadProps) {
             }
           ],
           "priceRange": "৳৳",
-          "image": ogImages.home,
+          "image": defaultOgImage,
           "sameAs": [
             SOCIAL_LINKS.facebook,
-            SOCIAL_LINKS.youtube
+            SOCIAL_LINKS.youtube,
+            SOCIAL_LINKS.instagram,
+            SOCIAL_LINKS.tiktok
           ]
         })}
       </script>
