@@ -4,8 +4,32 @@ import { t } from "@/lib/translations";
 import { WhatsAppButton } from "./WhatsAppButton";
 import { SocialLinks } from "./SocialLinks";
 import babyWorldLogo from "@/assets/baby-world-logo.png";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+
+function formatTime(time24: string): string {
+  const [h, m] = time24.split(':').map(Number);
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const hour12 = h % 12 || 12;
+  return `${hour12}:${String(m).padStart(2, '0')} ${ampm}`;
+}
 
 export function Footer() {
+  const { data: businessInfo } = useQuery({
+    queryKey: ['business-info-footer'],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('settings')
+        .select('value')
+        .eq('key', 'business_info')
+        .maybeSingle();
+      return data?.value as Record<string, string> | null;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const openingTime = businessInfo?.openingTime || businessInfo?.openTime || '10:00';
+  const closingTime = businessInfo?.closingTime || businessInfo?.closeTime || '21:00';
 
   const quickLinks = [
     { label: t("nav.home"), href: "/" },
@@ -38,11 +62,8 @@ export function Footer() {
             </p>
             <p className="text-sm font-medium opacity-90">{t("hero.learnPlay")}</p>
             
-            {/* Social Links */}
             <div className="space-y-2">
-              <p className="text-xs opacity-60">
-                {t("footer.followUs")}
-              </p>
+              <p className="text-xs opacity-60">{t("footer.followUs")}</p>
               <SocialLinks variant="footer" />
             </div>
             
@@ -74,7 +95,7 @@ export function Footer() {
                 <Clock className="w-4 h-4 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-medium opacity-100">{t("footer.everyday")}</p>
-                  <p>10:00 AM – 9:00 PM</p>
+                  <p>{formatTime(openingTime)} – {formatTime(closingTime)}</p>
                 </div>
               </li>
             </ul>
