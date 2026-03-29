@@ -11,6 +11,7 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { SEOHead } from "@/components/SEOHead";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { PromoBanner } from "@/components/PromoBanner";
+import { NewsBar } from "@/components/NewsBar";
 
 const Index = () => {
   return (
@@ -19,6 +20,7 @@ const Index = () => {
       <div className="min-h-screen bg-background overflow-x-hidden">
         <PromoBanner />
         <Navbar />
+        <NewsBar />
         <main>
           <HeroSection />
           <AboutSection />

@@ -11,6 +11,7 @@ import { Camera, Play, X } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
+import { NewsBar } from "@/components/NewsBar";
 
 // Import images
 import arcadeGames from "@/assets/arcade-games.jpg";
@@ -67,6 +68,7 @@ const Gallery = () => {
       
       <div className="min-h-screen bg-background overflow-x-hidden">
         <Navbar />
+        <NewsBar />
         
         <main className="py-12 sm:py-16 lg:py-20">
           <div className="container mx-auto px-4 sm:px-6">

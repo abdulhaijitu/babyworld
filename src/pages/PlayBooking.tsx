@@ -8,6 +8,7 @@ import { PageTransition } from "@/components/PageTransition";
 import { SEOHead } from "@/components/SEOHead";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { NewsBar } from "@/components/NewsBar";
 
 const PlayBooking = () => {
   return (
@@ -15,6 +16,7 @@ const PlayBooking = () => {
       <SEOHead page="play-booking" />
       <div className="min-h-screen bg-background overflow-x-hidden">
         <Navbar />
+        <NewsBar />
         <main>
           <PricingSection />
           <BookingSection />
