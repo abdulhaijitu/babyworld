@@ -471,6 +471,7 @@ export default function AdminRides() {
                       </TableCell>
                       <TableCell><span className="font-medium">৳{ride.price}</span></TableCell>
                       <TableCell><span className="font-medium text-orange-600">{ride.offer_price ? `৳${ride.offer_price}` : '—'}</span></TableCell>
+                      <TableCell><span className="text-sm text-muted-foreground">{ride.duration_minutes ? `${ride.duration_minutes} min` : '—'}</span></TableCell>
                       <TableCell>
                         <Badge variant="outline" className={cn(
                           "text-xs font-semibold border-0",
