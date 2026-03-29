@@ -408,24 +408,24 @@ export default function AdminUsers() {
 
       {/* Users Table */}
       <Card>
-        <CardHeader>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <CardHeader className="pb-3">
+          <div className="flex flex-col gap-3">
             <div>
-              <CardTitle>User List</CardTitle>
-              <CardDescription>All users and their roles</CardDescription>
+              <CardTitle className="text-base sm:text-lg">User List</CardTitle>
+              <CardDescription className="text-xs">All users and their roles</CardDescription>
             </div>
             <div className="flex gap-2">
-              <div className="relative">
+              <div className="relative flex-1 min-w-0">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   placeholder="Search..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 w-[180px]"
+                  className="pl-9 w-full"
                 />
               </div>
               <Select value={roleFilter} onValueChange={setRoleFilter}>
-                <SelectTrigger className="w-[160px]">
+                <SelectTrigger className="w-[120px] sm:w-[160px] shrink-0">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
