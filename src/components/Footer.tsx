@@ -94,6 +94,9 @@ export function Footer() {
 
   const openingTime = businessInfo?.openingTime || businessInfo?.openTime || '10:00';
   const closingTime = businessInfo?.closingTime || businessInfo?.closeTime || '21:00';
+  const phone = businessInfo?.phone || '09606990128';
+  const email = businessInfo?.email || 'babyworld.dm@gmail.com';
+  const address = businessInfo?.address || '27/B, Jannat Tower (Lift #3), Lalbagh, Dhaka 1211';
 
   const quickLinks = [
     { label: t("nav.home"), href: "/" },
