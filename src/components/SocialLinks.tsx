@@ -82,7 +82,7 @@ export function SocialLinks({ variant = "footer", className, showLabels = false 
             "inline-flex items-center justify-center transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg",
             isHeader
               ? "p-2 text-muted-foreground hover:text-primary hover:bg-accent"
-              : "p-2.5 opacity-70 hover:opacity-100 bg-background/10 hover:bg-background/20"
+              : "p-2.5 opacity-70 hover:opacity-100 hover:scale-110 bg-background/10 hover:bg-background/20"
           )}
         >
           <link.icon 
