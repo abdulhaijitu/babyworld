@@ -54,7 +54,7 @@ const defaultFormData = {
   category: 'kids' as string,
   is_active: true,
   image_url: '' as string,
-  duration_hours: 0,
+  duration_minutes: 0,
   ride_type: 'Paid' as string,
 };
 
