@@ -445,6 +445,7 @@ export default function AdminRides() {
                     <TableHead>Type</TableHead>
                     <TableHead>Regular Price</TableHead>
                     <TableHead>Offer Price</TableHead>
+                    <TableHead>Duration</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="text-right">Action</TableHead>
                   </TableRow>
