@@ -1,14 +1,23 @@
 
 
-## Duration ফিল্ড পরিবর্তন — ঘণ্টা → মিনিট
+## "Eid" → "Offer" লেবেল পরিবর্তন
 
-### পরিবর্তন: `src/pages/admin/AdminRides.tsx`
+### পরিবর্তন: `src/components/PricingSection.tsx`
 
-1. **Form state**: `duration_hours` → `duration_minutes` (number, default `0`)
-2. **Form label**: "Duration (hr)" → "Duration (minutes)"
-3. **Input**: `step={0.5}` → `step={1}`, min=0
-4. **Save (insert/update)**: সরাসরি `formData.duration_minutes` পাঠাবে, আর `Math.round(hours*60)` কনভার্শন দরকার নেই
-5. **Edit load**: সরাসরি `ride.duration_minutes || 0` সেট হবে, `/60` কনভার্শন দরকার নেই
+দুই জায়গায় "Eid" টেক্সট "Offer" দিয়ে রিপ্লেস:
 
-শুধু একটি ফাইলে ৫-৬ লাইন পরিবর্তন।
+1. **Line 130** — Ride Zone Package কার্ডে:
+   - `Eid Offer:` → `Offer:`
+
+2. **Line 165** — Individual Ride Prices-এ:
+   - `Eid: ৳{ride.offer_price}` → `Offer: ৳{ride.offer_price}`
+
+### পরিবর্তন: `src/pages/admin/settings/SettingsPricing.tsx`
+
+Admin pricing settings-এও লেবেল আপডেট:
+
+1. **Line 78** — Family Package: `'Eid/Offer'` → `'Offer'`
+2. **Line 105** — Ride Zone Package: `'Eid/Offer'` → `'Offer'`
+
+মোট ৪টি লাইনে টেক্সট পরিবর্তন, ২টি ফাইলে।
 
