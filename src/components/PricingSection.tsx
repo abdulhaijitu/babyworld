@@ -127,7 +127,7 @@ export function PricingSection() {
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Sparkles className="w-4 h-4 text-orange-500" />
-                  <span>Eid Offer: <strong className="text-orange-600">৳{packagePricing.rideZoneOffer}</strong></span>
+                  <span>Offer: <strong className="text-orange-600">৳{packagePricing.rideZoneOffer}</strong></span>
                 </div>
               </div>
             </div>
@@ -162,7 +162,7 @@ export function PricingSection() {
                     <div className="text-right">
                       <span className="font-bold text-foreground">৳{ride.price}</span>
                       {ride.offer_price > 0 && (
-                        <span className="block text-xs text-orange-600">Eid: ৳{ride.offer_price}</span>
+                        <span className="block text-xs text-orange-600">Offer: ৳{ride.offer_price}</span>
                       )}
                     </div>
                   </div>
