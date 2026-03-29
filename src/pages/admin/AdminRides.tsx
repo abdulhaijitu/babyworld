@@ -94,7 +94,7 @@ export default function AdminRides() {
         category: data.category as 'kids' | 'family' | 'thrill',
         is_active: data.is_active,
         image_url: data.image_url || null,
-        duration_minutes: Math.round((data.duration_hours || 0) * 60),
+        duration_minutes: data.duration_minutes || 0,
         ride_type: data.ride_type || 'Paid',
       }]);
       if (error) throw error;
