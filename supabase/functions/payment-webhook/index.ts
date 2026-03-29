@@ -155,7 +155,8 @@ serve(async (req) => {
         metadata: {
           ...payment.metadata,
           webhook_data: webhookData,
-          completed_at: date
+          completed_at: date,
+          webhook_processed_at: new Date().toISOString()
         }
       })
       .eq('id', payment.id);
